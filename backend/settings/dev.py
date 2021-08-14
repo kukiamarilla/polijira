@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from firebase_admin import _FIREBASE_CONFIG_ENV_VAR
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
@@ -145,3 +147,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Insert Whitenoise Middleware at top but below Security Middleware
 # MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware',)
 # http://whitenoise.evans.io/en/stable/django.html#make-sure-staticfiles-is-configured-correctly
+
+FIREBASE_CONFIG = {
+    "type": "service_account",
+    "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace("\\n", "\n"),
+    "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+    "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+}

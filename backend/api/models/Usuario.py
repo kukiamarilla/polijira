@@ -5,12 +5,14 @@ class Usuario(models.Model):
     """Modela la clase Usuario
 
     Atributos:
+        nombre {CharField} -- nombre del usuario
         email {EmailField}  -- una direccion de correo electronico
         ESTADO  {choices} -- indica los diferentes estados del usuario
         estado {CharField} -- indica el estado actual del usuario
         firebase_uid {CharField} -- id del SSO firebase
     """
 
+    nombre = models.CharField(max_length=255)
     email = models.EmailField(
         verbose_name='email',
         max_length=255,
