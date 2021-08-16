@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.test import Client
 from django.conf import settings
 from django.contrib.auth.models import User
-import pyrebase
+import requests
 
 
 class AuthTestCase(TestCase):
@@ -14,41 +14,32 @@ class AuthTestCase(TestCase):
 
     def setUp(self):
         self.c = Client()
-        self.firebase = pyrebase.initialize_app(
-            settings.FIREBASE_CLIENT_CONFIG)
 
-    def getToken(self):
-        auth = self.firebase.auth()
-        u = auth.sign_in_with_email_and_password(
-            settings.TESTING_USER_EMAIL, settings.TESTING_USER_PASSWORD)
-        return u["idToken"]
+    def get_token(self):
+        api_key = settings.FIREBASE_CLIENT_CONFIG["apiKey"]
+        url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + api_key
+        data = {
+            "email": settings.TESTING_USER_EMAIL,
+            "password": settings.TESTING_USER_PASSWORD,
+            "returnSecureToken": True
+        }
+        response = requests.post(url, data=data).json()
+        return response['idToken']
 
     def test_login(self):
         print("\nProbando login de usuarios.")
-        headers = {"HTTP_AUTHORIZATION": "JWT " + self.getToken()}
+        headers = {"HTTP_AUTHORIZATION": "JWT " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
         self.assertEquals(response.status_code, 200)
 
     def test_me(self):
         print("\nProbando obtención perfil de usuario logueado.")
-        self.c.login(username="testing", password="testing")
+        self.c.login(username="testing", password="polijira2021")
         response = self.c.get("/api/usuarios/me/")
         body = response.json()
         u = User.objects.get(username="testing")
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body["id"], u.usuario.id)
-
-    def test_my_permissions(self):
-        print("\nProbando obtención permisos de usuario logueado.")
-        u = User.objects.get(username="testing")
-        u.is_staff = False
-        u.is_superuser = False
-        u.save()
-        self.c.login(username="testing", password="testing")
-        response = self.c.get("/api/usuarios/mis_permisos/")
-        body = response.json()
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(body), 12)
 
     def test_me_not_logged(self):
         print("\nProbando obtención de perfil de usuario sin loguearse.")
@@ -62,7 +53,7 @@ class AuthTestCase(TestCase):
         usuario = u.usuario
         usuario.estado = "I"
         usuario.save()
-        headers = {"HTTP_AUTHORIZATION": "JWT " + self.getToken()}
+        headers = {"HTTP_AUTHORIZATION": "JWT " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
         body = response.json()
         self.assertEquals(response.status_code, 403)

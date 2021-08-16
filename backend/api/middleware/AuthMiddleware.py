@@ -40,9 +40,6 @@ class AuthMiddleware(MiddlewareMixin):
         :param request:
         :return:
         """
-        if request.get_full_path() == "/":
-            return self.get_response(request)
-
         if request.user.is_authenticated:
             return self.get_response(request)
 
