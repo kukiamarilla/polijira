@@ -22,6 +22,11 @@ logger = logging.getLogger(__name__)
 
 
 class AuthMiddleware(MiddlewareMixin):
+    """
+    AuthMiddleware middleware que verifica la autenticación de los usuarios por medio
+    de firebase
+    """
+
     def __init__(self, get_response):
         """Constructor del AuthMiddleware
 
