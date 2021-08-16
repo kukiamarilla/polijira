@@ -40,10 +40,13 @@ class AuthMiddleware(MiddlewareMixin):
         :param request:
         :return:
         """
+        if request.get_full_path() == "/":
+            return self.get_response(request)
+
         if request.user.is_authenticated:
             return self.get_response(request)
 
-        if not (request.META["HTTP_AUTHORIZATION"]):
+        if not (request.META.get("HTTP_AUTHORIZATION")):
             return JsonResponse(
                 {
                     "message": "Debe autenticarse para realizar esta acción",
@@ -52,7 +55,7 @@ class AuthMiddleware(MiddlewareMixin):
                 status=PermissionDenied.status_code,
             )
 
-        authorization = request.META["HTTP_AUTHORIZATION"].split(" ")
+        authorization = request.META.get("HTTP_AUTHORIZATION").split(" ")
         if len(authorization) != 2:
             return JsonResponse(
                 {
