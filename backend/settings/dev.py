@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from firebase_admin import _FIREBASE_CONFIG_ENV_VAR
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
@@ -51,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'backend.api.middleware.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -89,7 +92,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -116,7 +118,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -145,3 +147,20 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Insert Whitenoise Middleware at top but below Security Middleware
 # MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware',)
 # http://whitenoise.evans.io/en/stable/django.html#make-sure-staticfiles-is-configured-correctly
+
+FIREBASE_CONFIG = {
+    "type": "service_account",
+    "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace("\\n", "\n"),
+    "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+    "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+}
+
+FIREBASE_CLIENT_CONFIG = {
+    "apiKey": os.environ.get('VUE_APP_FIREBASE_API_KEY'),
+    "authDomain": os.environ.get('VUE_APP_FIREBASE_AUTH_DOMAIN'),
+    "storageBucket": os.environ.get('VUE_APP_FIREBASE_STORAGE_BUCKET'),
+}
+
+TESTING_USER_EMAIL = os.environ.get('TESTING_USER_EMAIL'),
+TESTING_USER_PASSWORD = os.environ.get('TESTING_USER_PASSWORD'),
