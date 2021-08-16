@@ -10,4 +10,4 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ("id", "nombre", "email", "estado", "firebase_uid")
+        fields = ("id", "nombre", "email", "estado", "firebase_uid", "user")
