@@ -20,7 +20,6 @@ export default {
 <style scoped>
 .login {
   height: 100vh;
-  margin-top: -8rem;
   min-height: 550px;
   position: relative;
   width: 100%;

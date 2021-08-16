@@ -24,8 +24,8 @@ html {
 body {
   margin: 0;
 }
-
-#app {
-  margin-top: 8rem;
+html,
+body {
+  min-height: 100%;
 }
 </style>

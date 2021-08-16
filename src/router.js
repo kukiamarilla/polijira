@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/views/Login'
+import NoActivado from '@/views/NoActivado'
 
 Vue.use(Router)
 
@@ -10,6 +11,11 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/no-activado',
+      name: 'No Activado',
+      component: NoActivado
     }
   ]
 })
