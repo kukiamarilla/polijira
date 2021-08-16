@@ -1,1 +1,1 @@
-from .UsuarioTestCase import UsuarioTestCase
+from .AuthTestCase import AuthTestCase

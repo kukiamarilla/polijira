@@ -118,7 +118,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -155,3 +155,12 @@ FIREBASE_CONFIG = {
     "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
     "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
 }
+
+FIREBASE_CLIENT_CONFIG = {
+    "apiKey": os.environ.get('VUE_APP_FIREBASE_API_KEY'),
+    "authDomain": os.environ.get('VUE_APP_FIREBASE_AUTH_DOMAIN'),
+    "storageBucket": os.environ.get('VUE_APP_FIREBASE_STORAGE_BUCKET'),
+}
+
+TESTING_USER_EMAIL = os.environ.get('TESTING_USER_EMAIL'),
+TESTING_USER_PASSWORD = os.environ.get('TESTING_USER_PASSWORD'),
