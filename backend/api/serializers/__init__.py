@@ -1,2 +1,2 @@
-from .User import UserSerializer
-from .Usuario import UsuarioSerializer
+from .UserSerializer import UserSerializer
+from .UsuarioSerializer import UsuarioSerializer
