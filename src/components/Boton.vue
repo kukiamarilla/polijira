@@ -1,5 +1,5 @@
 <template>
-  <button :class="colorTema">{{ texto }}</button>
+  <button :class="colorTema" v-on:click="handleClick">{{ texto }}</button>
 </template>
 
 <script>
@@ -9,6 +9,11 @@ export default {
     colorTema() {
       const tema = this.tema;
       return `${tema} h4`;
+    },
+  },
+  methods: {
+    handleClick() {
+      this.$emit("click");
     },
   },
 };

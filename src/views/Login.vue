@@ -4,6 +4,7 @@
       frase="Accedé Ahora"
       botonTexto="Iniciar Sesión"
       color="var(--primary)"
+      @login="login"
     />
   </div>
 </template>
@@ -13,6 +14,9 @@ import MenuSemiCirculoDerecho from "@/components/MenuSemiCirculoDerecho";
 export default {
   components: {
     MenuSemiCirculoDerecho,
+  },
+  methods: {
+    login() {},
   },
 };
 </script>
