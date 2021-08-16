@@ -1,9 +1,20 @@
 <template>
   <div class="login">
     <div class="mitad-izquierda">
-      <ImagenConTitulo
-        titulo="Gestiona todos tus proyectos. Mas fácil. Mas rápido."
-      />
+      <div>
+        <h2>
+          Gestiona todos tus proyectos.<br />
+          Mas fácil. Mas rápido.
+        </h2>
+
+        <lottie-vue-player
+          src="https://assets2.lottiefiles.com/packages/lf20_0tue65cn.json"
+          :theme="options.theme"
+          :player-size="options.playerSize"
+          :player-controls="false"
+          style="width: 100%; height: auto"
+        />
+      </div>
     </div>
 
     <MenuSemiCirculoDerecho
@@ -16,14 +27,36 @@
 </template>
 
 <script>
-import ImagenConTitulo from "@/components/ImagenConTitulo";
 import MenuSemiCirculoDerecho from "@/components/MenuSemiCirculoDerecho";
 import authService from "@/services/authService";
 
 export default {
   components: {
-    ImagenConTitulo,
     MenuSemiCirculoDerecho,
+  },
+  data() {
+    return {
+      options: {
+        minimizable: false,
+        playerSize: "standard",
+        backgroundColor: "#fff",
+        backgroundStyle: "color",
+        theme: {
+          controlsView: "standard",
+          active: "light",
+          light: {
+            color: "#3D4852",
+            backgroundColor: "#fff",
+            opacity: "0.7",
+          },
+          dark: {
+            color: "#fff",
+            backgroundColor: "#202020",
+            opacity: "0.7",
+          },
+        },
+      },
+    };
   },
   methods: {
     login() {
@@ -55,12 +88,8 @@ export default {
 }
 
 .mitad-izquierda {
-  align-items: flex-end;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50%;
+  width: 40vw;
+  margin-left: 100px;
+  margin-top: 50px;
 }
 </style>

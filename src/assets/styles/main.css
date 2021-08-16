@@ -6,6 +6,9 @@
   box-sizing: border-box;
 }
 
+html { 
+  font-size: 14px;
+}
 body {
   font-family: "Roboto";
   font-size: 0.75rem;
