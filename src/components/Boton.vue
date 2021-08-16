@@ -1,5 +1,5 @@
 <template>
-  <button :class="colorTema">{{ texto }}</button>
+  <button :class="colorTema" v-on:click="handleClick">{{ texto }}</button>
 </template>
 
 <script>
@@ -7,8 +7,13 @@ export default {
   props: { texto: String, tema: String },
   computed: {
     colorTema() {
-      const tema = this.tema === "primary" ? this.tema : "secondary";
+      const tema = this.tema;
       return `${tema} h4`;
+    },
+  },
+  methods: {
+    handleClick() {
+      this.$emit("click");
     },
   },
 };

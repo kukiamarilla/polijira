@@ -11,7 +11,7 @@
 
     <div class="accion centrado-absoluto">
       <h1 class="frase">{{ frase }}</h1>
-      <Boton :texto="botonTexto" tema="secondary" />
+      <Boton :texto="botonTexto" tema="secondary" @click="handleClick" />
     </div>
   </div>
 </template>
@@ -29,6 +29,11 @@ export default {
   components: {
     Boton,
   },
+  methods: {
+    handleClick() {
+      this.$emit("login");
+    },
+  },
 };
 </script>
 
@@ -40,6 +45,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
+  max-width: 40vw;
 }
 
 .menu-derecho svg {
@@ -50,7 +56,7 @@ export default {
   align-items: center;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 300px;
 }
 
 .frase {

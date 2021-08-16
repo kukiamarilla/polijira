@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="content">
-        <h1 class="large">
+        <h1>
           Has iniciado sesión. <br />Sin embargo nadie ha activado tu cuenta.
         </h1>
         <lottie-vue-player

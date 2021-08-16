@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/views/Login'
 import NoActivado from '@/views/NoActivado'
+import guest from  '@/middleware/guest'
+import auth from  '@/middleware/auth'
 
 Vue.use(Router)
 
@@ -10,12 +12,18 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        middleware: guest
+      }
     },
     {
       path: '/no-activado',
       name: 'No Activado',
-      component: NoActivado
+      component: NoActivado,
+      meta: {
+        middleware: auth
+      }
     }
   ]
 })
