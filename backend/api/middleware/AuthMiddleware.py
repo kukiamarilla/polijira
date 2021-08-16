@@ -1,4 +1,8 @@
-import re, os, json, time, logging
+import re
+import os
+import json
+import time
+import logging
 from rest_framework.exceptions import (
     PermissionDenied,
     AuthenticationFailed,
@@ -39,7 +43,7 @@ class AuthMiddleware(MiddlewareMixin):
         if request.user.is_authenticated:
             return self.get_response(request)
 
-        if not ("Authorization" in request.headers):
+        if not (request.META["HTTP_AUTHORIZATION"]):
             return JsonResponse(
                 {
                     "message": "Debe autenticarse para realizar esta acción",
@@ -48,7 +52,7 @@ class AuthMiddleware(MiddlewareMixin):
                 status=PermissionDenied.status_code,
             )
 
-        authorization = request.headers["Authorization"].split(" ")
+        authorization = request.META["HTTP_AUTHORIZATION"].split(" ")
         if len(authorization) != 2:
             return JsonResponse(
                 {
