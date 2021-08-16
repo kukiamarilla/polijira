@@ -8,10 +8,14 @@
 
 <script>
 import Navbar from "@/components/Navbar";
+import authService from "@/services/authService";
 
 export default {
   components: {
     Navbar,
+  },
+  mounted() {
+    if (authService.isLoggedIn()) this.$store.commit("auth/login");
   },
 };
 </script>

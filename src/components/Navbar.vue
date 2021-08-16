@@ -2,12 +2,19 @@
   <nav>
     <Logo class="logo" />
     <div class="opciones">
-      <Boton tema="primary" texto="Cerrar Sesión" @click="logout()"></Boton>
+      <Boton
+        tema="primary"
+        texto="Cerrar Sesión"
+        @click="logout()"
+        v-if="isLoggedIn"
+      ></Boton>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import Logo from "@/components/Logo";
 import Boton from "@/components/Boton";
 import authService from "@/services/authService";
@@ -17,9 +24,15 @@ export default {
     Logo,
     Boton,
   },
+  computed: {
+    ...mapState({
+      isLoggedIn: (state) => state.auth.isLoggedIn,
+    }),
+  },
   methods: {
     logout() {
       authService.logout();
+      this.$store.commit("auth/logout");
       this.$router.push({ name: "Login" });
     },
   },
