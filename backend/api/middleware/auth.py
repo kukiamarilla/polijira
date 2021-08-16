@@ -1,8 +1,4 @@
-import re
-import os
-import json
-import time
-import logging
+import re, os, json, time, logging
 from rest_framework.exceptions import (
     PermissionDenied,
     AuthenticationFailed,
@@ -11,7 +7,8 @@ from rest_framework.exceptions import (
 from django.conf import settings
 from django.http.response import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
-from backend.api.models import Usuario
+from django.contrib.auth.models import User
+from backend.api.models.Usuario import Usuario
 import firebase_admin
 from firebase_admin import auth, credentials
 from firebase_admin._token_gen import ExpiredIdTokenError
@@ -73,13 +70,17 @@ class AuthMiddleware(MiddlewareMixin):
             userinfo = auth.verify_id_token(token)
             usuario = Usuario.objects.filter(firebase_uid=userinfo["uid"])
             if usuario.count() == 0:
-                usuario = Usuario.objects.create(
-                    nombre=userinfo["name"],
+                user = User.objects.create(
+                    first_name=userinfo["name"],
                     email=userinfo["email"],
-                    estado="I",
-                    firebase_uid=userinfo["uid"]
+                    username=str(int(time.time()))
+                    + userinfo["name"].lower().replace(" ", ""),
                 )
-                usuario.save()
+                user.set_password(user.username)
+                user.save()
+                usuario = Usuario.objects.create(
+                    user=user, estado="I", firebase_uid=userinfo["uid"]
+                )
             else:
                 usuario = usuario[0]
                 if usuario.estado == "I":
@@ -90,7 +91,8 @@ class AuthMiddleware(MiddlewareMixin):
                         },
                         status=PermissionDenied.status_code,
                     )
-            request._force_auth_user = usuario
+            user = usuario.user
+            request._force_auth_user = user
         except ExpiredIdTokenError:
             return JsonResponse(
                 {
