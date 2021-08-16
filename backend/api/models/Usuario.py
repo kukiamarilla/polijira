@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Usuario(models.Model):
@@ -12,7 +13,8 @@ class Usuario(models.Model):
         firebase_uid {CharField} -- id del SSO firebase
     """
 
-    nombre = models.CharField(max_length=255)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    nombre = models.CharField(max_length=255, default="")
     email = models.EmailField(
         verbose_name='email',
         max_length=255,
@@ -21,9 +23,6 @@ class Usuario(models.Model):
     ESTADO = (('A', 'Activo'), ('I', 'Inactivo'))
     estado = models.CharField(max_length=1, choices=ESTADO, default='I')
     firebase_uid = models.CharField(max_length=50, default='')
-
-    def __str__(self):
-        return self.email
 
     def tiene_permiso(self, permiso):
         """Comprueba si este usuario tiene el permiso especificado
