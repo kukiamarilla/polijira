@@ -63,6 +63,7 @@ export default {
       authService
         .login()
         .then(() => {
+          this.$store.commit("auth/login");
           this.$router.push({ name: "No Activado" });
         })
         .catch(function (error) {

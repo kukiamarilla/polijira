@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Login from '@/views/Login'
 import NoActivado from '@/views/NoActivado'
+import PageNotFound from '@/views/PageNotFound'
+
 import guest from  '@/middleware/guest'
 import auth from  '@/middleware/auth'
 
@@ -24,7 +27,8 @@ const router = new Router({
       meta: {
         middleware: auth
       }
-    }
+    },
+    { path: "*", component: PageNotFound }
   ]
 })
 
