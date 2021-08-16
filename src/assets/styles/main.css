@@ -5,6 +5,7 @@
 body {
   font-family: "Roboto";
   font-size: 0.75rem;
+  font-weight: normal;
   margin: 0;
   padding: 0;
 }
@@ -20,6 +21,7 @@ body {
 h6,
 .h6 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 0.875rem;
   margin: 0;
   padding: 0;
@@ -28,6 +30,7 @@ h6,
 h5,
 .h5 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 1.125rem;
   margin: 0;
   padding: 0;
@@ -36,6 +39,7 @@ h5,
 h4,
 .h4 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 1.25rem;
   margin: 0;
   padding: 0;
@@ -44,6 +48,7 @@ h4,
 h3,
 .h3 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 1.5rem;
   margin: 0;
   padding: 0;
@@ -52,6 +57,7 @@ h3,
 h2,
 .h2 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 1.875rem;
   margin: 0;
   padding: 0;
@@ -60,6 +66,7 @@ h2,
 h1,
 .h1 {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 2.25rem;
   margin: 0;
   padding: 0;
@@ -67,6 +74,7 @@ h1,
 
 .large {
   font-family: "Roboto Slab";
+  font-weight: normal;
   font-size: 3rem;
   margin: 0;
   padding: 0;
