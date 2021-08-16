@@ -13,7 +13,7 @@
     "@lottiefiles/vue-lottie-player": "^1.0.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "firebase": "^8.9.1",
+    "firebase": "^7.14.2",
     "js-cookie": "^2.2.0",
     "node-sass": "^6.0.1",
     "sass-loader": "^10",
