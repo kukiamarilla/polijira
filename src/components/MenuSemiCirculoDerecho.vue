@@ -36,8 +36,10 @@ export default {
 .menu-derecho {
   height: 100%;
   overflow: hidden;
+  min-height: 550px;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 .menu-derecho svg {

@@ -21,7 +21,6 @@ export default {
 .login {
   height: 100vh;
   min-height: 550px;
-  position: relative;
   width: 100%;
 }
 </style>
