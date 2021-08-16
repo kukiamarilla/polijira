@@ -18,13 +18,31 @@
 <script>
 import ImagenConTitulo from "@/components/ImagenConTitulo";
 import MenuSemiCirculoDerecho from "@/components/MenuSemiCirculoDerecho";
+import authService from "@/services/authService";
+
 export default {
   components: {
     ImagenConTitulo,
     MenuSemiCirculoDerecho,
   },
   methods: {
-    login() {},
+    login() {
+      authService
+        .login()
+        .then(() => {
+          this.$router.push({ name: "No Activado" });
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          console.log(errorCode);
+          alert(errorCode);
+
+          var errorMessage = error.message;
+          console.log(errorMessage);
+          alert(errorMessage);
+        });
+    },
   },
 };
 </script>
