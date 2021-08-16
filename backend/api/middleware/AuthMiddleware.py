@@ -45,6 +45,9 @@ class AuthMiddleware(MiddlewareMixin):
         :param request:
         :return:
         """
+        if not(request.get_full_path().startswith("/api")):
+            return self.get_response(request)
+
         if request.user.is_authenticated:
             return self.get_response(request)
 
