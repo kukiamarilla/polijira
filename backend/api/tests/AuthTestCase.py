@@ -1,4 +1,3 @@
-from backend.api.models.Usuario import Usuario
 from django.test import TestCase
 from django.test import Client
 from django.conf import settings
@@ -66,7 +65,7 @@ class AuthTestCase(TestCase):
         """
         print("\nProbando obtención de perfil de usuario sin loguearse.")
         response = self.c.get("/api/usuarios/me/")
-        body = response.json()
+        response.json()
         self.assertEquals(response.status_code, 403)
 
     def test_me_not_activated(self):
@@ -80,5 +79,5 @@ class AuthTestCase(TestCase):
         usuario.save()
         headers = {"HTTP_AUTHORIZATION": "JWT " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
-        body = response.json()
+        response.json()
         self.assertEquals(response.status_code, 403)

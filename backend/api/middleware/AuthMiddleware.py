@@ -1,6 +1,3 @@
-import re
-import os
-import json
 import time
 import logging
 from rest_framework.exceptions import (
@@ -37,7 +34,7 @@ class AuthMiddleware(MiddlewareMixin):
         cred = credentials.Certificate(settings.FIREBASE_CONFIG)
         try:
             firebase_admin.get_app()
-        except:
+        except ValueError:
             firebase_admin.initialize_app(cred)
 
     def __call__(self, request):
@@ -98,7 +95,8 @@ class AuthMiddleware(MiddlewareMixin):
                 if usuario.estado == "I":
                     return JsonResponse(
                         {
-                            "message": "Su usuario aún no fue activado, debe esperar la confirmación del administrador",
+                            "message": '''Su usuario aún no fue activado,
+                            debe esperar la confirmación del administrador''',
                             "error": "unauthenticated"
                         },
                         status=PermissionDenied.status_code,
