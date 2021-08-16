@@ -11,7 +11,7 @@
 
     <div class="accion centrado-absoluto">
       <h1 class="frase">{{ frase }}</h1>
-      <Boton :texto="botonTexto" tema="secondary" />
+      <Boton :texto="botonTexto" tema="secondary" @click="handleClick" />
     </div>
   </div>
 </template>
@@ -28,6 +28,11 @@ export default {
   },
   components: {
     Boton,
+  },
+  methods: {
+    handleClick() {
+      this.$emit("login");
+    },
   },
 };
 </script>
