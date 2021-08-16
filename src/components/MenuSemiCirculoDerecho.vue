@@ -40,6 +40,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
+  max-width: 40vw;
 }
 
 .menu-derecho svg {

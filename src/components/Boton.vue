@@ -7,7 +7,7 @@ export default {
   props: { texto: String, tema: String },
   computed: {
     colorTema() {
-      const tema = this.tema === "primary" ? this.tema : "secondary";
+      const tema = this.tema;
       return `${tema} h4`;
     },
   },
