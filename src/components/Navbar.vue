@@ -2,7 +2,7 @@
   <nav>
     <Logo class="logo" />
     <div class="opciones">
-      <Boton tema="primary" texto="Cerrar Sesión"></Boton>
+      <Boton tema="primary" texto="Cerrar Sesión" @click="logout()"></Boton>
     </div>
   </nav>
 </template>
@@ -10,11 +10,18 @@
 <script>
 import Logo from "@/components/Logo";
 import Boton from "@/components/Boton";
+import authService from "@/services/authService";
 
 export default {
   components: {
     Logo,
     Boton,
+  },
+  methods: {
+    logout() {
+      authService.logout();
+      this.$router.push({ name: "Login" });
+    },
   },
 };
 </script>
