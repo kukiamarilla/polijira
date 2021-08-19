@@ -1,7 +1,6 @@
 import time
 import logging
 from rest_framework.exceptions import (
-    PermissionDenied,
     AuthenticationFailed,
     NotAuthenticated,
 )
@@ -89,6 +88,14 @@ class AuthMiddleware(MiddlewareMixin):
                 user.save()
                 usuario = Usuario.objects.create(
                     user=user, nombre=user.first_name, email=user.email, estado="I", firebase_uid=userinfo["uid"]
+                )
+                return JsonResponse(
+                    {
+                        "message": '''Su usuario aún no fue activado,
+                            debe esperar la confirmación del administrador''',
+                        "error": "unauthenticated"
+                    },
+                    status=AuthenticationFailed.status_code,
                 )
             else:
                 usuario = usuario[0]
