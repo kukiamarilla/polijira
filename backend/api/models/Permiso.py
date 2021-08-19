@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import Permission
 
 
 class Permiso(models.Model):
@@ -13,4 +12,3 @@ class Permiso(models.Model):
 
     nombre = models.CharField(max_length=255, default="")
     codigo = models.CharField(max_length=255, default="")
-    permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
