@@ -54,7 +54,7 @@ class AuthMiddleware(MiddlewareMixin):
                     "message": "Debe autenticarse para realizar esta acción",
                     "error": "unauthenticated"
                 },
-                status=PermissionDenied.status_code,
+                status=AuthenticationFailed.status_code,
             )
 
         authorization = request.META.get("HTTP_AUTHORIZATION").split(" ")
@@ -64,7 +64,7 @@ class AuthMiddleware(MiddlewareMixin):
                     "message": "Debe autenticarse para realizar esta acción",
                     "error": "unauthenticated"
                 },
-                status=PermissionDenied.status_code,
+                status=AuthenticationFailed.status_code,
             )
         if authorization[0] != "JWT":
             return JsonResponse(
@@ -72,7 +72,7 @@ class AuthMiddleware(MiddlewareMixin):
                     "message": "Debe autenticarse para realizar esta acción",
                     "error": "unauthenticated"
                 },
-                status=PermissionDenied.status_code,
+                status=AuthenticationFailed.status_code,
             )
         token = authorization[1]
         try:
@@ -80,7 +80,7 @@ class AuthMiddleware(MiddlewareMixin):
             usuario = Usuario.objects.filter(firebase_uid=userinfo["uid"])
             if usuario.count() == 0:
                 user = User.objects.create(
-                    first_name=userinfo["name"],
+                    first_name="Default Name" if not("name" in userinfo.keys()) else userinfo['name'],
                     email=userinfo["email"],
                     username=str(int(time.time()))
                     + userinfo["name"].lower().replace(" ", ""),
@@ -88,7 +88,7 @@ class AuthMiddleware(MiddlewareMixin):
                 user.set_password(user.username)
                 user.save()
                 usuario = Usuario.objects.create(
-                    user=user, estado="I", firebase_uid=userinfo["uid"]
+                    user=user, nombre=user.first_name, email=user.email, estado="I", firebase_uid=userinfo["uid"]
                 )
             else:
                 usuario = usuario[0]
@@ -99,7 +99,7 @@ class AuthMiddleware(MiddlewareMixin):
                             debe esperar la confirmación del administrador''',
                             "error": "unauthenticated"
                         },
-                        status=PermissionDenied.status_code,
+                        status=AuthenticationFailed.status_code,
                     )
             user = usuario.user
             request._force_auth_user = user
