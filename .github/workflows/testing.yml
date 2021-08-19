@@ -55,7 +55,7 @@ jobs:
         npm install
     - name: Building Frontend
       run: |
-        npm build
+        npm run build
     - name: Run Django Unit Tests
       run: |
         coverage run --omit='*/venv/*' manage.py test
