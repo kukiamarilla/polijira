@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     """
-    Serilizer para el modelo User
+    Serializer para el modelo User
     """
 
     class Meta:
