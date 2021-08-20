@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from backend.api.models import Usuario
@@ -16,4 +16,19 @@ class UsuarioViewSet(viewsets.ViewSet):
         user = request.user
         usuario = Usuario.objects.get(user=user)
         serializer = UsuarioSerializer(usuario, many=False)
+        return Response(serializer.data)
+
+    def list(self, request):
+        """
+        list Lista todos los usuarios del sistema
+
+        Args:
+            request (Any): request
+
+        Returns:
+            json: lista de usuarios en formato json
+        """
+        # Falta incluir permisos
+        usuarios = Usuario.objects.all()
+        serializer = UsuarioSerializer(usuarios, many=True)
         return Response(serializer.data)
