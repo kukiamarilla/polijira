@@ -88,8 +88,11 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: usuario desactivado en formato json
         """
         try:
-            usuario = Usuario.objects.get(pk=pk)
             # Falta incluir permisos
+            usuario = Usuario.objects.get(pk=pk)
+            if request.user == usuario.user:
+                response = {"message": "No puedes desactivarte a ti mismo"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             usuario.desactivar()
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
