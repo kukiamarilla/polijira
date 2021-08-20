@@ -1,18 +1,19 @@
 <template>
   <div
-    class="svg"
     :style="{
       backgroundColor: colorIcono,
+      height: tamaño,
       mask: `url(${linkDelIcono}) no-repeat center / contain`,
+      width: tamaño,
     }"
   ></div>
 </template>
 
 <script>
-const iconosValidos = ["home", "key", "logout", "team"];
+const iconosValidos = ["home", "key", "logout", "team", "add"];
 
 export default {
-  props: { icono: String, color: String },
+  props: { icono: String, color: String, size: String },
   data() {
     return {
       iconos: iconosValidos,
@@ -30,13 +31,11 @@ export default {
     colorIcono() {
       return this.color ? this.color : "currentColor";
     },
+    tamaño() {
+      return this.size ? this.size : "24px";
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.svg {
-  height: 24px;
-  width: 24px;
-}
-</style>
+<style lang="scss" scoped></style>
