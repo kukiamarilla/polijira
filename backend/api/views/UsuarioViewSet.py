@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from backend.api.models import Usuario
@@ -64,3 +65,16 @@ class UsuarioViewSet(viewsets.ViewSet):
         usuario.activar()
         serializer = UsuarioSerializer(usuario, many=False)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'])
+    def desactivar(self, request, pk=None):
+
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+            # Falta incluir permisos
+            usuario.desactivar()
+            serializer = UsuarioSerializer(usuario, many=False)
+            return Response(serializer.data)
+        except Usuario.DoesNotExist:
+            response = {"message": "No existe el usuario"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
