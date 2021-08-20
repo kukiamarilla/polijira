@@ -41,3 +41,10 @@ class Usuario(models.Model):
         """
         self.estado = "A"
         self.save()
+
+    def desactivar(self):
+        """
+        desactivar Desactiva este usuario
+        """
+        self.estado = "I"
+        self.save()
