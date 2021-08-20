@@ -20,6 +20,9 @@ class PermisoTestCase(TestCase):
         self.client = Client()
 
     def test_listar_permisos(self):
+        """
+        test_listar_permisos lista todos los permisos
+        """
         print("\nProbando listado de permisos.")
         self.client.login(username="testing", password="polijira2021")
         response = self.client.get("/api/permisos/")
