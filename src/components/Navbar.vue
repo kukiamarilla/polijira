@@ -6,7 +6,7 @@
         tema="primary"
         texto="Cerrar Sesión"
         @click="logout()"
-        v-if="isLoggedIn"
+        v-if="mostrarLogout"
       ></Boton>
     </div>
   </nav>
@@ -19,12 +19,18 @@ import Logo from "@/components/Logo";
 import Boton from "@/components/Boton";
 import authService from "@/services/authService";
 
+const rutasConLogoutEnNavbar = ["No Activado", "No Autorizado"];
+
 export default {
   components: {
     Logo,
     Boton,
   },
   computed: {
+    mostrarLogout() {
+      const rutaActual = this.$router.currentRoute.name;
+      return rutasConLogoutEnNavbar.includes(rutaActual);
+    },
     ...mapState({
       isLoggedIn: (state) => state.auth.isLoggedIn,
     }),
