@@ -45,11 +45,17 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
+    - name: Install Dependencies Backend
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         cp .env.example .env
+    - name: Install Dependencies Frontend
+      run: |
+        npm install
+    - name: Building Frontend
+      run: |
+        npm run build
     - name: Run Django Unit Tests
       run: |
         coverage run --omit='*/venv/*' manage.py test
@@ -61,12 +67,8 @@ jobs:
         path: htmlcov
     - name: Setup Node
       uses: actions/setup-node@master
-    - name: Install dependencies
-      run: |
-        npm install
     - name: Run Vue Unit Tests
       run: |
-        npm run build
         npm run test:unit
     - name: Run Test Server
       run: |
