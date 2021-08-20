@@ -5,49 +5,27 @@
         <h1>
           Has iniciado sesión. <br />Sin embargo nadie ha activado tu cuenta.
         </h1>
-        <lottie-vue-player
+
+        <Lottie
+          height="400px"
           src="https://assets3.lottiefiles.com/private_files/lf30_j7ezldoy.json"
-          :theme="options.theme"
-          :player-size="options.playerSize"
-          :player-controls="false"
-          style="width: 100%; height: 400px"
+          width="100%"
         />
       </div>
     </div>
+
     <Waves />
   </div>
 </template>
 
 <script>
 import Waves from "@/components/Waves.vue";
+import Lottie from "@/components/Lottie.vue";
 
 export default {
   components: {
     Waves,
-  },
-  data() {
-    return {
-      options: {
-        minimizable: false,
-        playerSize: "standard",
-        backgroundColor: "#fff",
-        backgroundStyle: "color",
-        theme: {
-          controlsView: "standard",
-          active: "light",
-          light: {
-            color: "#3D4852",
-            backgroundColor: "#fff",
-            opacity: "0.7",
-          },
-          dark: {
-            color: "#fff",
-            backgroundColor: "#202020",
-            opacity: "0.7",
-          },
-        },
-      },
-    };
+    Lottie,
   },
 };
 </script>
