@@ -50,3 +50,17 @@ class UsuarioViewSet(viewsets.ViewSet):
             return Response(response, status=status.HTTP_404_NOT_FOUND)
         serializer = UsuarioSerializer(usuario[0], many=False)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'])
+    def activar(self, request, pk=None):
+
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+        except Exception:
+            response = {"message": "No existe el usuario"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+        # Falta incluir permisos
+        usuario.activar()
+        serializer = UsuarioSerializer(usuario, many=False)
+        return Response(serializer.data)
