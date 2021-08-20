@@ -10,12 +10,14 @@ from django.views.decorators.cache import never_cache
 from django.urls import path, include
 from rest_framework import routers
 from backend.api.views import UsuarioViewSet
+from backend.api.views import PermisoViewSet
 
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
 router = routers.DefaultRouter()
 router.register("usuarios", UsuarioViewSet, basename="usuarios")
+router.register("permisos", PermisoViewSet, basename="permisos")
 
 urlpatterns = [
 
