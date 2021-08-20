@@ -45,12 +45,13 @@ class UsuarioViewSet(viewsets.ViewSet):
         Returns:
             json: usuario obtenido en formato json
         """
-        usuario = Usuario.objects.filter(pk=pk)
-        if usuario.count() == 0:
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+            serializer = UsuarioSerializer(usuario[0], many=False)
+            return Response(serializer.data)
+        except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
-        serializer = UsuarioSerializer(usuario[0], many=False)
-        return Response(serializer.data)
 
     @action(detail=True, methods=['POST'])
     def activar(self, request, pk=None):
