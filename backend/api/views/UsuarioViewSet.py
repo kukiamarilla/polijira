@@ -55,7 +55,16 @@ class UsuarioViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['POST'])
     def activar(self, request, pk=None):
+        """
+        activar Activa el usuario con la pk especificada
 
+        Args:
+            request (Any): request
+            pk (integer, opcional): primary key. Defaults to None.
+
+        Returns:
+            json: usuario activado en formato json 
+        """
         try:
             usuario = Usuario.objects.get(pk=pk)
             # Falta incluir permisos
