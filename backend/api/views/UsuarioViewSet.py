@@ -57,14 +57,13 @@ class UsuarioViewSet(viewsets.ViewSet):
 
         try:
             usuario = Usuario.objects.get(pk=pk)
+            # Falta incluir permisos
+            usuario.activar()
+            serializer = UsuarioSerializer(usuario, many=False)
+            return Response(serializer.data)
         except Exception:
             response = {"message": "No existe el usuario"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
-
-        # Falta incluir permisos
-        usuario.activar()
-        serializer = UsuarioSerializer(usuario, many=False)
-        return Response(serializer.data)
 
     @action(detail=True, methods=['POST'])
     def desactivar(self, request, pk=None):
