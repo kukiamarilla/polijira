@@ -34,3 +34,10 @@ class Usuario(models.Model):
             bool: Verdadero; o Falso
         """
         return True
+
+    def activar(self):
+        """
+        activar Activa este usuario
+        """
+        self.estado = "A"
+        self.save()
