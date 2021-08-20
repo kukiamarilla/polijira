@@ -38,6 +38,7 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   width: 65px;
+  z-index: 1;
 }
 
 .principales {
