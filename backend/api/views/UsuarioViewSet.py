@@ -77,7 +77,16 @@ class UsuarioViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['POST'])
     def desactivar(self, request, pk=None):
+        """
+        desactivar Desactiva el usuario con la pk especificada
 
+        Args:
+            request (Any): request
+            pk (integer, opcional): primary key. Defaults to None.
+
+        Returns:
+            json: usuario desactivado en formato json
+        """
         try:
             usuario = Usuario.objects.get(pk=pk)
             # Falta incluir permisos
