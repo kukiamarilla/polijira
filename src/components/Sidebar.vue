@@ -33,10 +33,9 @@ export default {
   left: 0;
   min-height: 300px;
   max-height: 75vh;
-  position: fixed;
+  position: absolute;
   padding: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 128px;
   width: 65px;
   z-index: 1;
 }
