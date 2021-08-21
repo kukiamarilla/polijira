@@ -10,7 +10,16 @@
 </template>
 
 <script>
-const iconosValidos = ["home", "key", "logout", "team", "add"];
+const iconosValidos = [
+  "home",
+  "key",
+  "logout",
+  "team",
+  "add",
+  "options",
+  "watch",
+  "delete",
+];
 
 export default {
   props: { icono: String, color: String, size: String },
