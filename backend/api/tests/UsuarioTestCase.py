@@ -32,3 +32,14 @@ class UsuarioTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(body), Usuario.objects.count())
+
+    def test_obtener_usuario(self):
+        """
+        test_obtener_usuario Prueba obtener un usuario
+        """
+        print("\nProbando obtener un usuario")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.get("/api/usuarios/1/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body['id'], 1)
