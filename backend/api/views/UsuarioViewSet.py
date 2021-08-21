@@ -54,7 +54,7 @@ class UsuarioViewSet(viewsets.ViewSet):
         """
         try:
             usuario = Usuario.objects.get(pk=pk)
-            serializer = UsuarioSerializer(usuario[0], many=False)
+            serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
