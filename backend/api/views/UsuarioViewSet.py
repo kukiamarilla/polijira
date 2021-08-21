@@ -7,6 +7,13 @@ from backend.api.serializers import UsuarioSerializer
 
 
 class UsuarioViewSet(viewsets.ViewSet):
+    """
+    UsuarioViewSet View para el modelo Usuario
+
+    Args:
+        viewsets (module): tipo de clase basado en view
+
+    """
     @action(detail=False, methods=['GET'])
     def me(self, request):
         """Obtiene el usuario autenticado
