@@ -20,4 +20,15 @@ class UsuarioTestCase(TestCase):
         """
         setUp Configura el TestCase
         """
-        self.client = Client()
+        self._client = Client()
+
+    def test_listar_usuario(self):
+        """
+        test_listar_usuario Prueba listar todos los usuarios
+        """
+        print("\nProbando listar todos los usuarios")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.get("/api/usuarios/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(body), Usuario.objects.count())
