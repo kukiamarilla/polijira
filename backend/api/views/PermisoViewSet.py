@@ -6,18 +6,21 @@ from backend.api.serializers import PermisoSerializer
 
 class PermisoViewSet(viewsets.ViewSet):
     """
-    PermisoViewSet [summary]
+    PermisoViewSet View para el modelo Permiso
 
     Args:
-        viewsets ([type]): [description]
+        viewsets (module): tipo de clase basado en view
     """
 
     def list(self, request):
         """
-        list [summary]
+        list Lista todos los permisos del sistema 
 
         Args:
-            request ([type]): [description]
+            request (Any): Response
+
+        Return:
+            json: lista de permisos en formato json
         """
         permisos = Permiso.objects.all()
         serializer = PermisoSerializer(permisos, many=True)

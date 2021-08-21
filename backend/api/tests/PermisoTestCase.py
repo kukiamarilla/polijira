@@ -5,7 +5,7 @@ from django.test import Client
 
 class PermisoTestCase(TestCase):
     """
-    PermisoTestCase prueba las funcionalidades de Permisos
+    PermisoTestCase Prueba las funcionalidades de Permisos
     """
 
     fixtures = [
@@ -21,7 +21,7 @@ class PermisoTestCase(TestCase):
 
     def test_listar_permisos(self):
         """
-        test_listar_permisos lista todos los permisos
+        test_listar_permisos Prueba el listado todos los permisos
         """
         print("\nProbando listado de permisos.")
         self.client.login(username="testing", password="polijira2021")
