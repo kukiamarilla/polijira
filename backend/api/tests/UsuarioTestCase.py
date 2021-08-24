@@ -43,3 +43,12 @@ class UsuarioTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body['id'], 1)
+
+    def test_obtener_usuario_no_existente(self):
+        """
+        test_obtener_usuario_incorrecto Prueba obtener un usuario que no existe
+        """
+        print("\nProbando obtener un usuario que no existe")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.get("/api/usuarios/2/")
+        self.assertEquals(response.status_code, 404)
