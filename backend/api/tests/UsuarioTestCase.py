@@ -63,3 +63,12 @@ class UsuarioTestCase(TestCase):
         usuario = Usuario.objects.get(pk=1)
         self.assertEquals(usuario.estado, "A")
         self.assertEquals(response.status_code, 200)
+
+    def test_activar_usuario_no_existente(self):
+        """
+        test_activar_usuario Prueba activar un usuario no existente
+        """
+        print("\nProbando activar un usuario que no existe")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.post("/api/usuarios/2/activar/")
+        self.assertEquals(response.status_code, 404)
