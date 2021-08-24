@@ -78,7 +78,7 @@ class UsuarioViewSet(viewsets.ViewSet):
             usuario.activar()
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
-        except Exception:
+        except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
