@@ -96,3 +96,12 @@ class UsuarioTestCase(TestCase):
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/1/desactivar/")
         self.assertEquals(response.status_code, 409)
+
+    def test_desactivar_usuario_no_existente(self):
+        """
+        test_desactivar_usuario_no_existente Prueba desactivar un usuario que no existe
+        """
+        print("\nProbando desactivar un usuario que no existe")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.post("/api/usuarios/2/desactivar/")
+        self.assertEquals(response.status_code, 404)
