@@ -1,5 +1,4 @@
 from rest_framework import viewsets, status
-from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from backend.api.models import Usuario
@@ -70,7 +69,7 @@ class UsuarioViewSet(viewsets.ViewSet):
             pk (integer, opcional): primary key. Defaults to None.
 
         Returns:
-            json: usuario activado en formato json 
+            json: usuario activado en formato json
         """
         try:
             usuario = Usuario.objects.get(pk=pk)
