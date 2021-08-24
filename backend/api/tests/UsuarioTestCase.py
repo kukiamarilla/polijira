@@ -72,3 +72,18 @@ class UsuarioTestCase(TestCase):
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/2/activar/")
         self.assertEquals(response.status_code, 404)
+
+    def test_desactivar_usuario(self):
+        """
+        test_desactivar_usuario Prueba desactivar un usuario
+        """
+        print("\nProbando desactivar un usuario")
+        self._client.login(username="testing", password="polijira2021")
+        usuario = Usuario.objects.create(
+            email="uncorreo@correo.com",
+            estado="A"
+        )
+        response = self._client.post("/api/usuarios/"+str(usuario.id)+"/desactivar/")
+        usuario = Usuario.objects.get(pk=usuario.id)
+        self.assertEquals(usuario.estado, "I")
+        self.assertEquals(response.status_code, 200)
