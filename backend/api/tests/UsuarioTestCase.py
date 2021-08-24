@@ -52,3 +52,14 @@ class UsuarioTestCase(TestCase):
         self._client.login(username="testing", password="polijira2021")
         response = self._client.get("/api/usuarios/2/")
         self.assertEquals(response.status_code, 404)
+
+    def test_activar_usuario(self):
+        """
+        test_activar_usuario Prueba activar un usuario
+        """
+        print("\nProbando activar un usuario")
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.post("/api/usuarios/1/activar/")
+        usuario = Usuario.objects.get(pk=1)
+        self.assertEquals(usuario.estado, "A")
+        self.assertEquals(response.status_code, 200)
