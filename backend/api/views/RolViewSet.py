@@ -5,6 +5,7 @@ from rest_framework import response
 from rest_framework.response import Response
 from backend.api.models import Rol, Permiso
 from backend.api.serializers import RolSerializer, PermisoSerializer
+from django.db import transaction
 
 
 class RolViewSet(viewsets.ViewSet):
@@ -56,6 +57,7 @@ class RolViewSet(viewsets.ViewSet):
             response = {"message": "No existe el rol"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
     def create(self, request):
         """
         create Crea un rol de sistema
@@ -70,15 +72,21 @@ class RolViewSet(viewsets.ViewSet):
         #    response = {
         #        "message": "No tiene permisos para realizar esta acción"}
         #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
-        permisos = request.data["permisos"]
-        if len(permisos) == 0:
-            response = {"message": "Debe tener al menos un permiso"}
-            return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        rol = Rol.objects.create(nombre=request.data["nombre"])
-        for p in permisos:
-            rol.agregar_permiso(p)
-        serializer = RolSerializer(rol, many=False)
-        return Response(serializer.data)
+        try:
+            permisos = request.data["permisos"]
+            if len(permisos) == 0:
+                response = {"message": "Debe tener al menos un permiso"}
+                return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            rol = Rol.objects.create(nombre=request.data["nombre"])
+            for p in permisos:
+                perm = Permiso.objects.get(pk=p["id"])
+                rol.agregar_permiso(perm)
+            serializer = RolSerializer(rol, many=False)
+            return Response(serializer.data)
+        except Permiso.DoesNotExist:
+            transaction.rollback()
+            response = {"message": "No existe el permiso"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, pk=None):
         """
