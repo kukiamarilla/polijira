@@ -22,6 +22,7 @@ class PermisoViewSet(viewsets.ViewSet):
         Return:
             json: lista de permisos en formato json
         """
+        # Falta el coso de validar si tiene permiso
         permisos = Permiso.objects.all()
         serializer = PermisoSerializer(permisos, many=True)
         return Response(serializer.data)
