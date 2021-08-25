@@ -1,13 +1,13 @@
 <template>
   <button :class="tema" v-on:click="handleClick">
     <Icon :icono="icono" />
-    <span class="descripcion">{{ descripcion }}</span>
+    <Tooltip :texto="descripcion" direccion="derecha" />
   </button>
 </template>
 
 <script>
 import Icon from "@/components/Icon";
-
+import Tooltip from "@/components/Tooltip";
 export default {
   props: { icono: String, link: String, activo: Boolean, descripcion: String },
   computed: {
@@ -19,6 +19,7 @@ export default {
   },
   components: {
     Icon,
+    Tooltip,
   },
   methods: {
     handleClick() {
@@ -34,37 +35,6 @@ button {
   border: none;
   cursor: pointer;
   position: relative;
-}
-
-button > .descripcion {
-  display: none;
-}
-
-button:hover > .descripcion {
-  background-color: black;
-  border-radius: 10px;
-  color: white;
-  cursor: auto;
-  display: block;
-  font-family: "Roboto";
-  font-size: 12px;
-  left: calc(100% + 8px);
-  padding: 5px 0;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 109px;
-}
-
-.descripcion::before {
-  background-color: black;
-  content: "";
-  height: 8px;
-  left: 0;
-  position: absolute;
-  top: 50%;
-  transform: translate(-45%, -50%) rotate(45deg);
-  width: 8px;
 }
 
 .icono {
