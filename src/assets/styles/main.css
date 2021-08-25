@@ -6,15 +6,17 @@
   box-sizing: border-box;
 }
 
-html { 
-  font-size: 14px;
+html {
+  font-size: 16px;
 }
+
 body {
   font-family: "Roboto";
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: normal;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 .highlight {
@@ -99,13 +101,36 @@ h1,
   --success: #6be78d;
   --info: #51abff;
   --warning: #ffb800;
+
+  --gray-1: #333333;
+  --gray-2: #4f4f4f;
+  --gray-3: #828282;
+  --gray-4: #bdbdbd;
+  --gray-5: #e0e0e0;
+  --gray-6: #f2f2f2;
 }
 
 /* stilos globales */
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
 
 .centrado-absoluto {
   left: 50%;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.text-center {
+  text-align: center;
 }

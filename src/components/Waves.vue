@@ -25,7 +25,7 @@ export default {};
 
 <style lang="scss" scoped>
 svg {
-  width: 100vw;
+  width: 100%;
   z-index: -1;
 }
 </style>

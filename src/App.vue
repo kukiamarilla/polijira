@@ -21,16 +21,7 @@ export default {
 </script>
 
 <style>
-html {
-  font-size: 16px;
-}
-
-body {
-  margin: 0;
-}
-html,
-body {
+#app {
   min-height: 100vh;
-  position: relative;
 }
 </style>

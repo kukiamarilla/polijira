@@ -1,14 +1,19 @@
 <template>
-  <button :class="colorTema" v-on:click="handleClick">{{ texto }}</button>
+  <button :class="colorTema" v-on:click="handleClick" :style="{ width: ancho }">
+    {{ texto }}
+  </button>
 </template>
 
 <script>
 export default {
-  props: { texto: String, tema: String },
+  props: { texto: String, tema: String, width: String },
   computed: {
     colorTema() {
       const tema = this.tema;
       return `${tema} h4`;
+    },
+    ancho() {
+      return this.width ? this.width : "auto";
     },
   },
   methods: {
