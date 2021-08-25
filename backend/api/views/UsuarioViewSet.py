@@ -1,5 +1,4 @@
 from rest_framework import viewsets, status
-from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from backend.api.models import Usuario
@@ -7,6 +6,13 @@ from backend.api.serializers import UsuarioSerializer
 
 
 class UsuarioViewSet(viewsets.ViewSet):
+    """
+    UsuarioViewSet View para el modelo Usuario
+
+    Args:
+        viewsets (module): tipo de clase basado en view
+
+    """
     @action(detail=False, methods=['GET'])
     def me(self, request):
         """Obtiene el usuario autenticado
@@ -47,7 +53,7 @@ class UsuarioViewSet(viewsets.ViewSet):
         """
         try:
             usuario = Usuario.objects.get(pk=pk)
-            serializer = UsuarioSerializer(usuario[0], many=False)
+            serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
@@ -63,7 +69,7 @@ class UsuarioViewSet(viewsets.ViewSet):
             pk (integer, opcional): primary key. Defaults to None.
 
         Returns:
-            json: usuario activado en formato json 
+            json: usuario activado en formato json
         """
         try:
             usuario = Usuario.objects.get(pk=pk)
@@ -71,7 +77,7 @@ class UsuarioViewSet(viewsets.ViewSet):
             usuario.activar()
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
-        except Exception:
+        except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
@@ -92,7 +98,7 @@ class UsuarioViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(pk=pk)
             if request.user == usuario.user:
                 response = {"message": "No puedes desactivarte a ti mismo"}
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
+                return Response(response, status=status.HTTP_409_CONFLICT)
             usuario.desactivar()
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
