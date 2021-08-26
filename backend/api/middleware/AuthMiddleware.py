@@ -93,7 +93,7 @@ class AuthMiddleware(MiddlewareMixin):
                     {
                         "message": '''Su usuario aún no fue activado,
                             debe esperar la confirmación del administrador''',
-                        "error": "unauthenticated"
+                        "error": "unactivated"
                     },
                     status=AuthenticationFailed.status_code,
                 )
@@ -104,7 +104,7 @@ class AuthMiddleware(MiddlewareMixin):
                         {
                             "message": '''Su usuario aún no fue activado,
                             debe esperar la confirmación del administrador''',
-                            "error": "unauthenticated"
+                            "error": "unactivated"
                         },
                         status=AuthenticationFailed.status_code,
                     )
