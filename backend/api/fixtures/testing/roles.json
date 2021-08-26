@@ -1,0 +1,25 @@
+[
+    {
+        "model": "api.rol",
+        "pk": 1,
+        "fields": {
+            "nombre": "Administrador",
+            "permisos": [
+                1,
+                3
+            ]
+        }
+    },
+    {
+        "model": "api.rol",
+        "pk": 2,
+        "fields": {
+            "nombre": "CEO",
+            "permisos": [
+                1,
+                2,
+                3
+            ]
+        }
+    }
+]

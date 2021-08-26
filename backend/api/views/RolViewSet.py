@@ -84,7 +84,7 @@ class RolViewSet(viewsets.ViewSet):
             serializer = RolSerializer(rol, many=False)
             return Response(serializer.data)
         except Permiso.DoesNotExist:
-            transaction.rollback()
+            transaction.set_rollback(True)
             response = {"message": "No existe el permiso"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 

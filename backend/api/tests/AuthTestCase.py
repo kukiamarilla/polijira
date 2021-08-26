@@ -80,8 +80,9 @@ class AuthTestCase(TestCase):
         usuario.save()
         headers = {"HTTP_AUTHORIZATION": "JWT " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
-        response.json()
+        body = response.json()
         self.assertEquals(response.status_code, 401)
+        self.assertEquals(body["error"], "unactivated")
 
     def test_wrong_start_path(self):
         """
@@ -127,6 +128,8 @@ class AuthTestCase(TestCase):
             estado="I",
             firebase_uid="A4rxPBjYBfQKrIUlElklVF2OTRI3"
         )
+        body = response.json()
+        self.assertEquals(body["error"], "unactivated")
         self.assertEquals(usuario.count(), 1)
         self.assertEquals(response.status_code, 401)
 
