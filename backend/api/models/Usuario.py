@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from backend.api.models import Permiso
 
 
 class Usuario(models.Model):
@@ -23,8 +24,9 @@ class Usuario(models.Model):
     ESTADO = (('A', 'Activo'), ('I', 'Inactivo'))
     estado = models.CharField(max_length=1, choices=ESTADO, default='I')
     firebase_uid = models.CharField(max_length=50, default='')
+    rol = models.ForeignKey('Rol', on_delete=models.CASCADE, null=True, related_name='usuarios')
 
-    def tiene_permiso(self, permiso):
+    def tiene_permiso(self, permiso_codigo):
         """Comprueba si este usuario tiene el permiso especificado
 
         Args:
@@ -33,7 +35,11 @@ class Usuario(models.Model):
         Returns:
             bool: Verdadero; o Falso
         """
-        return True
+        try:
+            self.rol.permisos.get(codigo=permiso_codigo)
+            return True
+        except Permiso.DoesNotExist:
+            return False
 
     def activar(self):
         """
@@ -47,4 +53,11 @@ class Usuario(models.Model):
         desactivar Desactiva este usuario
         """
         self.estado = "I"
+        self.save()
+
+    def asignar_rol(self, rol):
+        """
+        asignar_rol Asigna un rol a este usuario
+        """
+        self.rol = rol
         self.save()
