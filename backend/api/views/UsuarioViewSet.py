@@ -127,6 +127,8 @@ class UsuarioViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             rol = Rol.objects.get(pk=request.data['id'])
             usuario.asignar_rol(rol)
+            serializer = UsuarioSerializer(usuario, many=False)
+            return Response(serializer.data)
         except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
