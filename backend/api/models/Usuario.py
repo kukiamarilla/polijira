@@ -12,6 +12,7 @@ class Usuario(models.Model):
         ESTADO  {choices} -- indica los diferentes estados del usuario
         estado {CharField} -- indica el estado actual del usuario
         firebase_uid {CharField} -- id del SSO firebase
+        rol {ForeignKey} -- rol relacionado a este usuario
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -30,10 +31,10 @@ class Usuario(models.Model):
         """Comprueba si este usuario tiene el permiso especificado
 
         Args:
-            permiso (Permiso): el permiso
+            permiso_codigo (String): el codigo del permiso
 
         Returns:
-            bool: Verdadero; o Falso
+            bool: True, False
         """
         try:
             self.rol.permisos.get(codigo=permiso_codigo)

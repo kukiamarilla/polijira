@@ -110,6 +110,16 @@ class UsuarioViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=['POST'])
     def asignar_rol(self, request, pk=None):
+        """
+        asignar_rol Asigna un rol a un usuario
+
+        Args:
+            request (Any): request
+            pk (int, opcional): primary key. Defaults to None.
+
+        Returns:
+            json: html response
+        """
         try:
             usuario = Usuario.objects.get(pk=pk)
             if not usuario.tiene_permiso("asignar_roles"):
