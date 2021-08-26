@@ -1,0 +1,26 @@
+[
+    {
+        "model": "api.permiso",
+        "pk": 1,
+        "fields": {
+            "nombre": "Ver Permisos",
+            "codigo": "ver_permisos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 2,
+        "fields": {
+            "nombre": "Ver Roles",
+            "codigo": "ver_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 3,
+        "fields": {
+            "nombre": "Ver Usuarios",
+            "codigo": "ver_usuarios"
+        }
+    }
+]
