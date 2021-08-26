@@ -9,6 +9,8 @@ import Unauthorized from "@/views/Unauthorized";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
+import activated from "@/middleware/activated";
+import unactivated from "@/middleware/unactivated";
 
 Vue.use(Router);
 
@@ -26,13 +28,16 @@ const router = new Router({
       path: "/",
       name: "Home",
       component: Home,
+      meta: {
+        middleware: [auth, activated]
+      },
     },
     {
       path: "/no-activado",
       name: "No Activado",
       component: NoActivado,
       meta: {
-        middleware: auth,
+        middleware: [auth, unactivated]
       },
     },
     {

@@ -7,5 +7,13 @@ export default function auth({ router, next }) {
   }
   session = JSON.parse(session);
   api.defaults.headers.common["Authorization"] = "JWT " + session.token;
-  next();
+  api.get('/usuarios/me/').then(() => {
+    next();
+  }).catch(err => {
+    if(err.response && err.response.data.error == "unauthenticated") {
+      localStorage.removeItem("session");
+      router.push({name: "Login"});
+    }
+    next()
+  });
 }
