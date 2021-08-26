@@ -1,7 +1,9 @@
+from django.db.models.base import ModelStateFieldsCacheDescriptor
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from backend.api.models import Usuario
+from backend.api.models import Rol
 from backend.api.serializers import UsuarioSerializer
 
 
@@ -104,4 +106,32 @@ class UsuarioViewSet(viewsets.ViewSet):
             return Response(serializer.data)
         except Usuario.DoesNotExist:
             response = {"message": "No existe el usuario"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['POST'])
+    def asignar_rol(self, request, pk=None):
+        """
+        asignar_rol Asigna un rol a un usuario
+
+        Args:
+            request (Any): request
+            pk (int, opcional): primary key. Defaults to None.
+
+        Returns:
+            json: html response
+        """
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+            if not usuario.tiene_permiso("asignar_roles"):
+                response = {"message": "Debe tener permiso para asignar roles"}
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            rol = Rol.objects.get(pk=request.data['id'])
+            usuario.asignar_rol(rol)
+            serializer = UsuarioSerializer(usuario, many=False)
+            return Response(serializer.data)
+        except Usuario.DoesNotExist:
+            response = {"message": "No existe el usuario"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Rol.DoesNotExist:
+            response = {"message": "No existe el rol"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
