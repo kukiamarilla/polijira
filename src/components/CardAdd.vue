@@ -1,5 +1,5 @@
 <template>
-  <div class="card-add" v-on:click="handleClick">
+  <div class="card card-add" v-on:click="handleClick">
     <Icon icono="add" color="currentColor" size="38px" />
   </div>
 </template>

@@ -2,14 +2,19 @@
   <div>
     <Sidebar />
 
-    <div v-if="proyectos" class="proyectos">
-      <ProyectoCard nombre="Proyecto 1" estado="Finalizado" />
-    </div>
-    <div v-else>
-      <h1 class="text-center">Aun no hay ningún proyecto creado. Crea uno.</h1>
+    <div class="container">
+      <div v-if="proyectos.length > 0" class="proyectos">
+        <ProyectoCard class="card" nombre="Proyecto 1" estado="Finalizado" />
+        <ProyectoCard class="card" nombre="Proyecto 2" estado="Pendiente" />
+        <ProyectoCard class="card" nombre="Proyecto 3" estado="Cancelado" />
+        <CardAdd />
+      </div>
+      <div v-else class="sin-proyectos">
+        <h1 class="text-center">
+          Aun no hay ningún proyecto creado. Crea uno.
+        </h1>
 
-      <div class="d-flex justify-content-center">
-        <CardAdd class="big-add m-auto" />
+        <CardAdd class="add-card m-auto" />
       </div>
     </div>
 
@@ -26,7 +31,7 @@ import ProyectoCard from "@/components/ProyectoCard";
 export default {
   data() {
     return {
-      proyectos: [""],
+      proyectos: [1],
     };
   },
   components: {
@@ -39,12 +44,31 @@ export default {
 };
 </script>
 
-<style scoped>
-.proyectos {
-  margin: 0 88px 120px 130px;
+<style lang="scss" scoped>
+.container {
+  margin-left: 110px;
+  margin-right: 32px;
 }
 
-.big-add,
+.proyectos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
+  place-items: center;
+
+  & > .card {
+    max-width: 100%;
+    min-width: 300px;
+  }
+}
+
+.sin-proyectos {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.sin-proyectos > .add-card,
 .waves {
   margin-top: 120px;
 }
