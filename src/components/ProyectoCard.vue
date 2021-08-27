@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card shadow">
     <h3>{{ nombre }}</h3>
 
     <div class="estado">
@@ -49,7 +49,6 @@ export default {
 <style lang="scss" scoped>
 .card {
   border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   height: 190px;
