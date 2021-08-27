@@ -19,17 +19,20 @@ import Logo from "@/components/Logo";
 import Boton from "@/components/Boton";
 import authService from "@/services/authService";
 
-const rutasConLogoutEnNavbar = ["No Activado", "No Autorizado"];
-
 export default {
   components: {
     Logo,
     Boton,
   },
+  data() {
+    return {
+      rutasConLogoutEnNavbar: ["No Activado", "No Autorizado"],
+    };
+  },
   computed: {
     mostrarLogout() {
       const rutaActual = this.$router.currentRoute.name;
-      return rutasConLogoutEnNavbar.includes(rutaActual);
+      return this.rutasConLogoutEnNavbar.includes(rutaActual);
     },
     ...mapState({
       isLoggedIn: (state) => state.auth.isLoggedIn,

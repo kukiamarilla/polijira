@@ -21,11 +21,15 @@
 <script>
 import Waves from "@/components/Waves.vue";
 import Lottie from "@/components/Lottie.vue";
+import authService from "@/services/authService";
 
 export default {
   components: {
     Waves,
     Lottie,
+  },
+  mounted() {
+    if (authService.isLoggedIn()) this.$store.commit("auth/login");
   },
 };
 </script>
