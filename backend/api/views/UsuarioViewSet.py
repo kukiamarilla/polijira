@@ -1,4 +1,3 @@
-from django.db.models.base import ModelStateFieldsCacheDescriptor
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -121,8 +120,9 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: html response
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
             usuario = Usuario.objects.get(pk=pk)
-            if not usuario.tiene_permiso("asignar_roles"):
+            if not usuario_request.tiene_permiso("asignar_roles"):
                 response = {"message": "Debe tener permiso para asignar roles"}
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             rol = Rol.objects.get(pk=request.data['id'])
