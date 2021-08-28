@@ -14,11 +14,9 @@ class PermisoViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        list Lista todos los permisos del sistema 
-
+        list Lista todos los permisos del sistema
         Args:
             request (Any): Response
-
         Return:
             json: lista de permisos en formato json
         """

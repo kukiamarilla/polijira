@@ -1,4 +1,3 @@
-from backend.api.models.Permiso import Permiso
 from django.test import TestCase
 from django.test import Client
 
