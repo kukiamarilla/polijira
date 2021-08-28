@@ -1,4 +1,3 @@
-from backend.api.models.Permiso import Permiso
 from django.test import TestCase
 from django.test import Client
 
@@ -11,6 +10,8 @@ class PermisoTestCase(TestCase):
     fixtures = [
         "backend/api/fixtures/testing/auth.json",
         "backend/api/fixtures/testing/usuarios.json",
+        "backend/api/fixtures/testing/permisos.json",
+        "backend/api/fixtures/testing/roles.json"
     ]
 
     def setUp(self):

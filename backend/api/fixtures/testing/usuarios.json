@@ -7,7 +7,20 @@
             "nombre": "",
             "email": "",
             "estado": "A",
-            "firebase_uid": "A4rxPBjYBfQKrIUlElklVF2OTRI3"
+            "firebase_uid": "A4rxPBjYBfQKrIUlElklVF2OTRI3",
+            "rol": 2
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "nombre": "Usuario Testing",
+            "email": "usuariotest@polijira.com",
+            "estado": "A",
+            "firebase_uid": "jooBXYiOWoSxMIV3v7O0uy0Hq5B3",
+            "rol": 2
         }
     }
 ]

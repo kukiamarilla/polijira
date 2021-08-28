@@ -1,4 +1,3 @@
-from inspect import Attribute
 from django.db import models
 from django.contrib.auth.models import User
 from backend.api.models import Permiso

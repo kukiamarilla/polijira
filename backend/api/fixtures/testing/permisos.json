@@ -22,5 +22,29 @@
             "nombre": "Ver Usuarios",
             "codigo": "ver_usuarios"
         }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 4,
+        "fields": {
+            "nombre": "Asignar roles",
+            "codigo": "asignar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 5,
+        "fields": {
+            "nombre": "Activar Usuarios",
+            "codigo": "activar_usuarios"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 6,
+        "fields": {
+            "nombre": "Desactivar Usuarios",
+            "codigo": "desactivar_usuarios"
+        }
     }
 ]
