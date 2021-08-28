@@ -14,6 +14,8 @@ class AuthTestCase(TestCase):
     fixtures = [
         "backend/api/fixtures/testing/auth.json",
         "backend/api/fixtures/testing/usuarios.json",
+        "backend/api/fixtures/testing/permisos.json",
+        "backend/api/fixtures/testing/roles.json"
     ]
 
     def setUp(self):
