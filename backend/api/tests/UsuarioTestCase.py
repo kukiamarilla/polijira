@@ -34,6 +34,18 @@ class UsuarioTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(body), Usuario.objects.count())
 
+    def test_listar_usuario_sin_permiso(self):
+        """
+        test_asignar_rol_sin_permiso Prueba listar todos los usuarios sin tener permiso ver usuarios
+        """
+        print("\nProbando listar los usuarios sin tener permiso ver usuarios")
+        self._client.login(username="testing", password="polijira2021")
+        rol = Rol.objects.get(pk=2)
+        permiso = Permiso.objects.get(pk=1)
+        rol.eliminar_permiso(permiso)
+        response = self._client.get("/api/usuarios/")
+        self.assertEquals(response.status_code, 401)
+
     def test_obtener_usuario(self):
         """
         test_obtener_usuario Prueba obtener un usuario
@@ -44,6 +56,18 @@ class UsuarioTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body['id'], 1)
+
+    def test_obtener_usuario_sin_permiso(self):
+        """
+        test_obtener_usuario Prueba obtener un usuario sin tener permiso ver usuarios
+        """
+        print("\nProbando obtener un usuario sin tener permiso ver usuarios")
+        self._client.login(username="testing", password="polijira2021")
+        rol = Rol.objects.get(pk=2)
+        permiso = Permiso.objects.get(pk=1)
+        rol.eliminar_permiso(permiso)
+        response = self._client.get("/api/usuarios/1/")
+        self.assertEquals(response.status_code, 401)
 
     def test_obtener_usuario_no_existente(self):
         """
@@ -64,6 +88,18 @@ class UsuarioTestCase(TestCase):
         usuario = Usuario.objects.get(pk=1)
         self.assertEquals(usuario.estado, "A")
         self.assertEquals(response.status_code, 200)
+
+    def test_activar_usuario_sin_permiso(self):
+        """
+        test_activar_usuario Prueba activar un usuario sin tener permiso activar usuario
+        """
+        print("\nProbando activar un usuario sin tener permiso activar usuario")
+        self._client.login(username="testing", password="polijira2021")
+        rol = Rol.objects.get(pk=2)
+        permiso = Permiso.objects.get(pk=2)
+        rol.eliminar_permiso(permiso)
+        response = self._client.post("/api/usuarios/1/activar/")
+        self.assertEquals(response.status_code, 401)
 
     def test_activar_usuario_no_existente(self):
         """
@@ -88,6 +124,22 @@ class UsuarioTestCase(TestCase):
         usuario = Usuario.objects.get(pk=usuario.id)
         self.assertEquals(usuario.estado, "I")
         self.assertEquals(response.status_code, 200)
+
+    def test_desactivar_usuario_sin_permiso(self):
+        """
+        test_desactivar_usuario Prueba desactivar un usuario sin tener permiso desactivar usuario
+        """
+        print("\nProbando desactivar un usuario sin tener permiso desactivar usuario")
+        self._client.login(username="testing", password="polijira2021")
+        usuario = Usuario.objects.create(
+            email="uncorreo@correo.com",
+            estado="A"
+        )
+        rol = Rol.objects.get(pk=2)
+        permiso = Permiso.objects.get(pk=3)
+        rol.eliminar_permiso(permiso)
+        response = self._client.post("/api/usuarios/"+str(usuario.id)+"/desactivar/")
+        self.assertEquals(response.status_code, 401)
 
     def test_desactivar_el_mismo_usuario(self):
         """
@@ -129,7 +181,7 @@ class UsuarioTestCase(TestCase):
         print("\nProbando asignar rol sin permisos")
         self._client.login(username="testing", password="polijira2021")
         rol = Rol.objects.get(pk=2)
-        permiso = Permiso.objects.get(pk=4)
+        permiso = Permiso.objects.get(pk=9)
         rol.eliminar_permiso(permiso)
         body = {
             "id": 1
