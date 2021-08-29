@@ -6,6 +6,7 @@ import NoActivado from "@/views/NoActivado";
 import PageNotFound from "@/views/PageNotFound";
 import Home from "@/views/Home";
 import Unauthorized from "@/views/Unauthorized";
+import Usuarios from "@/views/Usuarios";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -29,15 +30,20 @@ const router = new Router({
       name: "Home",
       component: Home,
       meta: {
-        middleware: [auth, activated]
+        middleware: [auth, activated],
       },
+    },
+    {
+      path: "/usuarios",
+      name: "Usuarios",
+      component: Usuarios,
     },
     {
       path: "/no-activado",
       name: "No Activado",
       component: NoActivado,
       meta: {
-        middleware: [auth, unactivated]
+        middleware: [auth, unactivated],
       },
     },
     {
