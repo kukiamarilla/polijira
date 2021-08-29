@@ -129,7 +129,7 @@ class UsuarioTestCase(TestCase):
         print("\nProbando asignar rol sin permisos")
         self._client.login(username="testing", password="polijira2021")
         rol = Rol.objects.get(pk=2)
-        permiso = Permiso.objects.get(pk=4)
+        permiso = Permiso.objects.get(pk=9)
         rol.eliminar_permiso(permiso)
         body = {
             "id": 1
