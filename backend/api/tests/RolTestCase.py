@@ -1,4 +1,4 @@
-from backend.api.models import Usuario, Permiso, Rol
+from backend.api.models import Usuario, Rol
 from django.test import TestCase, Client
 from django.db.models import Q
 

@@ -1,8 +1,6 @@
-from inspect import BoundArguments
-from django.http import response
 from django.test import TestCase
 from django.test import Client
-from backend.api.models import Usuario, Permiso, Rol
+from backend.api.models import Usuario
 
 
 class PermisoTestCase(TestCase):
@@ -36,7 +34,8 @@ class PermisoTestCase(TestCase):
 
     def test_listar_permisos_sin_permiso(self):
         """
-        test_listar_permisos_sin_permiso Prueba el listado de todos los permisos con un usuario sin permiso para realizar la acción
+        test_listar_permisos_sin_permiso Prueba el listado de todos los permisos
+        con un usuario sin permiso para realizar la acción
         """
         print("\nProbando listar los permisos sin permiso.")
         rol = Usuario.objects.get(nombre="testing").rol

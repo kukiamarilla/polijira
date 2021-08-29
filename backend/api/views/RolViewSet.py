@@ -1,7 +1,5 @@
-from backend.api.serializers.PermisoSerializer import PermisoSerializer
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework import response
 from rest_framework.response import Response
 from backend.api.models import Rol, Permiso, Usuario
 from backend.api.serializers import RolSerializer, PermisoSerializer
@@ -140,7 +138,8 @@ class RolViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("ver_roles") and usuario_request.tiene_permiso("modificar_roles")):
+            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("ver_roles")
+                    and usuario_request.tiene_permiso("modificar_roles")):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
@@ -200,7 +199,8 @@ class RolViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("modificar_roles")):
+            if not (usuario_request.tiene_permiso("ver_permisos")
+                    and usuario_request.tiene_permiso("modificar_roles")):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
@@ -232,7 +232,8 @@ class RolViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("modificar_roles")):
+            if not (usuario_request.tiene_permiso("ver_permisos")
+                    and usuario_request.tiene_permiso("modificar_roles")):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
