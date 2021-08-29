@@ -45,5 +45,6 @@ class PermisoTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         response = self.client.get("/api/permisos/")
         body = response.json()
-        self.assertEquals(response.status_code, 401)
-        self.assertEquals(body["message"], "No tiene permisos para ver permisos")
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ['ver_permisos'])

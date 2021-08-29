@@ -22,8 +22,11 @@ class PermisoViewSet(viewsets.ViewSet):
         """
         usuario_request = Usuario.objects.get(user=request.user)
         if not usuario_request.tiene_permiso("ver_permisos"):
-            response = {"message": "No tiene permisos para ver permisos"}
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": ["ver_permisos"]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
         permisos = Permiso.objects.all()
         serializer = PermisoSerializer(permisos, many=True)
         return Response(serializer.data)
