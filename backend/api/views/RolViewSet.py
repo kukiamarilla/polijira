@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework import response
 from rest_framework.response import Response
-from backend.api.models import Rol, Permiso
+from backend.api.models import Rol, Permiso, Usuario
 from backend.api.serializers import RolSerializer, PermisoSerializer
 from django.db import transaction
 
@@ -26,10 +26,13 @@ class RolViewSet(viewsets.ViewSet):
         Return:
             json: lista de roles de sistema en formato json
         """
-        # if (False):   #########CAMBIAR A SI EL USUARIO NO TIENE PERMISO
-        #     response = {
-        #         "message": "No tiene permisos para realizar esta acción"}
-        #     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not usuario_request.tiene_permiso("ver_roles"):
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": ["ver_roles"]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
         roles = Rol.objects.all()
         serializer = RolSerializer(roles, many=True)
         return Response(serializer.data)
@@ -45,11 +48,14 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: rol de sistema obtenido en formato json
         """
-        # if (False):    #########CAMBIAR A SI EL USUARIO NO TIENE PERMISO
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("ver_roles"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_roles"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             serializer = RolSerializer(rol, many=False)
             return Response(serializer.data)
@@ -68,11 +74,17 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: rol de sistema creado en formato json
         """
-        # if (False):    #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not (usuario_request.tiene_permiso("crear_roles") and usuario_request.tiene_permiso("ver_permisos")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_permisos",
+                        "crear_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             permisos = request.data["permisos"]
             if len(permisos) == 0:
                 response = {"message": "Debe tener al menos un permiso"}
@@ -96,11 +108,17 @@ class RolViewSet(viewsets.ViewSet):
             request (Any): request
             pk (integer, opcional): primary key. Defaults to None.
         """
-        # if (False):   #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not (usuario_request.tiene_permiso("ver_roles") and usuario_request.tiene_permiso("eliminar_roles")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_roles",
+                        "eliminar_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             rol.delete()
             response = {"message": "Rol Eliminado."}
@@ -120,11 +138,18 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: rol de sistema modificado en formato json
         """
-        # if (False):   #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("ver_roles") and usuario_request.tiene_permiso("modificar_roles")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_permisos",
+                        "ver_roles",
+                        "modificar_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             rol.nombre = request.data["nombre"]
             rol.save()
@@ -145,11 +170,14 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: lista de permisos de un rol de sistema
         """
-        # if (False):   #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("ver_roles"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_roles"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             permisos = rol.permisos.all()
             serializer = PermisoSerializer(permisos, many=True)
@@ -170,11 +198,17 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: rol de sistema con nuevo permiso agregado en formato json
         """
-        # if (False):   #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("modificar_roles")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_permisos",
+                        "modificar_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             permiso = Permiso.objects.get(pk=request.data["permiso_id"])
             rol.agregar_permiso(permiso)
@@ -196,11 +230,17 @@ class RolViewSet(viewsets.ViewSet):
             request (Any): request
             pk (integer, opcional): primary key. Defaults to None.
         """
-        # if (False):   #########CAMBIAR A "SI EL USUARIO NO TIENE PERMISO"
-        #    response = {
-        #        "message": "No tiene permisos para realizar esta acción"}
-        #    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not (usuario_request.tiene_permiso("ver_permisos") and usuario_request.tiene_permiso("modificar_roles")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_permisos",
+                        "modificar_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             permiso = Permiso.objects.get(pk=request.data["permiso_id"])
             rol.eliminar_permiso(permiso)
