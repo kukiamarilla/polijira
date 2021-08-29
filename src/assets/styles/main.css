@@ -112,6 +112,19 @@ h1,
 
 /* stilos globales */
 
+:root {
+  /* absolute = contenido que esta bajo el header y ocupa el resto de la pantalla,
+		 menos un peque;o margen inferior */
+  --header-height: 8rem;
+  --absolute-content-bottom-space: 75px;
+  --absolute-remaining-height: calc(
+    100% - var(--header-height) - var(--absolute-content-bottom-space)
+  );
+  --absolute-remaining-min-height: calc(
+    400px + var(--absolute-content-bottom-space)
+  );
+}
+
 .d-flex {
   display: flex;
 }
