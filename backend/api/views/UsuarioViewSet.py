@@ -1,4 +1,3 @@
-from django.db.models.base import ModelStateFieldsCacheDescriptor
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -22,9 +21,8 @@ class UsuarioViewSet(viewsets.ViewSet):
         Args:
             request (Any): request
         """
-        user = request.user
-        usuario = Usuario.objects.get(user=user)
-        serializer = UsuarioSerializer(usuario, many=False)
+        usuario_request = Usuario.objects.get(user=request.user)
+        serializer = UsuarioSerializer(usuario_request, many=False)
         return Response(serializer.data)
 
     def list(self, request):
@@ -37,7 +35,10 @@ class UsuarioViewSet(viewsets.ViewSet):
         Returns:
             json: lista de usuarios en formato json
         """
-        # Falta incluir permisos
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not usuario_request.tiene_permiso("ver_usuarios"):
+            response = {"message": "No tiene permiso para ver usuarios"}
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         usuarios = Usuario.objects.all()
         serializer = UsuarioSerializer(usuarios, many=True)
         return Response(serializer.data)
@@ -54,6 +55,10 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: usuario obtenido en formato json
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("ver_usuarios"):
+                response = {"message": "No tiene permiso para ver usuarios"}
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             usuario = Usuario.objects.get(pk=pk)
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
@@ -74,8 +79,11 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: usuario activado en formato json
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("activar_usuarios"):
+                response = {"message": "No tiene permiso para activar usuarios"}
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             usuario = Usuario.objects.get(pk=pk)
-            # Falta incluir permisos
             usuario.activar()
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
@@ -96,9 +104,12 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: usuario desactivado en formato json
         """
         try:
-            # Falta incluir permisos
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("desactivar_usuarios"):
+                response = {"message": "No tiene permiso para desactivar usuarios"}
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             usuario = Usuario.objects.get(pk=pk)
-            if request.user == usuario.user:
+            if usuario_request == usuario:
                 response = {"message": "No puedes desactivarte a ti mismo"}
                 return Response(response, status=status.HTTP_409_CONFLICT)
             usuario.desactivar()
@@ -121,8 +132,9 @@ class UsuarioViewSet(viewsets.ViewSet):
             json: html response
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
             usuario = Usuario.objects.get(pk=pk)
-            if not usuario.tiene_permiso("asignar_roles"):
+            if not usuario_request.tiene_permiso("asignar_roles"):
                 response = {"message": "Debe tener permiso para asignar roles"}
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             rol = Rol.objects.get(pk=request.data['id'])

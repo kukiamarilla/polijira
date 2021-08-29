@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Permiso
+from backend.api.models import Permiso, Usuario
 from backend.api.serializers import PermisoSerializer
 
 
@@ -14,15 +14,19 @@ class PermisoViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        list Lista todos los permisos del sistema 
-
+        list Lista todos los permisos del sistema
         Args:
             request (Any): Response
-
         Return:
             json: lista de permisos en formato json
         """
-        # Falta el coso de validar si tiene permiso
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not usuario_request.tiene_permiso("ver_permisos"):
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": ["ver_permisos"]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
         permisos = Permiso.objects.all()
         serializer = PermisoSerializer(permisos, many=True)
         return Response(serializer.data)

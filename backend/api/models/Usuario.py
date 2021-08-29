@@ -39,7 +39,7 @@ class Usuario(models.Model):
         try:
             self.rol.permisos.get(codigo=permiso_codigo)
             return True
-        except Permiso.DoesNotExist:
+        except Permiso.Permiso.DoesNotExist:
             return False
 
     def activar(self):

@@ -1,4 +1,6 @@
 from backend.api.models.Usuario import Usuario
+from backend.api.models import Rol
+from backend.api.models import Permiso
 from django.test import TestCase
 from django.test import Client
 
@@ -11,6 +13,8 @@ class UsuarioTestCase(TestCase):
     fixtures = [
         "backend/api/fixtures/testing/auth.json",
         "backend/api/fixtures/testing/usuarios.json",
+        "backend/api/fixtures/testing/permisos.json",
+        "backend/api/fixtures/testing/roles.json"
     ]
 
     def setUp(self):
@@ -47,7 +51,7 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando obtener un usuario que no existe")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.get("/api/usuarios/2/")
+        response = self._client.get("/api/usuarios/3/")
         self.assertEquals(response.status_code, 404)
 
     def test_activar_usuario(self):
@@ -67,7 +71,7 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando activar un usuario que no existe")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.post("/api/usuarios/2/activar/")
+        response = self._client.post("/api/usuarios/3/activar/")
         self.assertEquals(response.status_code, 404)
 
     def test_desactivar_usuario(self):
@@ -100,5 +104,59 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando desactivar un usuario que no existe")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.post("/api/usuarios/2/desactivar/")
+        response = self._client.post("/api/usuarios/3/desactivar/")
+        self.assertEquals(response.status_code, 404)
+
+    def test_asignar_rol(self):
+        """
+        test_asignar_rol Prueba asignar un rol a un usuario
+        """
+        print("\nProbando asignar rol a un usuario")
+        self._client.login(username="testing", password="polijira2021")
+        body = {
+            "id": 1
+        }
+        response = self._client.post("/api/usuarios/2/asignar_rol/", body)
+        usuario = Usuario.objects.get(pk=2)
+        rol = usuario.rol
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(rol.id, 1)
+
+    def test_asignar_rol_sin_permiso(self):
+        """
+        test_asignar_rol_sin_permiso Prueba asginar un rol a un usuario sin tener permiso para asignar roles
+        """
+        print("\nProbando asignar rol sin permisos")
+        self._client.login(username="testing", password="polijira2021")
+        rol = Rol.objects.get(pk=2)
+        permiso = Permiso.objects.get(pk=9)
+        rol.eliminar_permiso(permiso)
+        body = {
+            "id": 1
+        }
+        response = self._client.post("/api/usuarios/2/asignar_rol/", body)
+        self.assertEquals(response.status_code, 401)
+
+    def test_asignar_rol_no_existente(self):
+        """
+        test_asignar_rol_no_existente Prueba asignar un rol que no existe a un usuario
+        """
+        print("\nProbando asignar un rol que no existe")
+        self._client.login(username="testing", password="polijira2021")
+        body = {
+            "id": 3
+        }
+        response = self._client.post("/api/usuarios/1/asignar_rol/", body)
+        self.assertEquals(response.status_code, 404)
+
+    def test_asignar_rol_a_usuario_inexistente(self):
+        """
+        test_asignar_rol_a_usuario_inexistente Prueba asignar un rol a un usuario que no existe
+        """
+        print("\nProbando asignar rol a un usuario que no existe")
+        self._client.login(username="testing", password="polijira2021")
+        body = {
+            "id": 1
+        }
+        response = self._client.post("/api/usuarios/3/asignar_rol/", body)
         self.assertEquals(response.status_code, 404)
