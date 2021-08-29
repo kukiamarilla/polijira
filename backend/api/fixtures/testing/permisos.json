@@ -3,37 +3,13 @@
         "model": "api.permiso",
         "pk": 1,
         "fields": {
-            "nombre": "Ver Permisos",
-            "codigo": "ver_permisos"
-        }
-    },
-    {
-        "model": "api.permiso",
-        "pk": 2,
-        "fields": {
-            "nombre": "Ver Roles",
-            "codigo": "ver_roles"
-        }
-    },
-    {
-        "model": "api.permiso",
-        "pk": 3,
-        "fields": {
             "nombre": "Ver Usuarios",
             "codigo": "ver_usuarios"
         }
     },
     {
         "model": "api.permiso",
-        "pk": 4,
-        "fields": {
-            "nombre": "Asignar roles",
-            "codigo": "asignar_roles"
-        }
-    },
-    {
-        "model": "api.permiso",
-        "pk": 5,
+        "pk": 2,
         "fields": {
             "nombre": "Activar Usuarios",
             "codigo": "activar_usuarios"
@@ -41,10 +17,58 @@
     },
     {
         "model": "api.permiso",
-        "pk": 6,
+        "pk": 3,
         "fields": {
             "nombre": "Desactivar Usuarios",
             "codigo": "desactivar_usuarios"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 4,
+        "fields": {
+            "nombre": "Ver Permisos",
+            "codigo": "ver_permisos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 5,
+        "fields": {
+            "nombre": "Ver Roles",
+            "codigo": "ver_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 6,
+        "fields": {
+            "nombre": "Crear Roles",
+            "codigo": "crear_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 7,
+        "fields": {
+            "nombre": "Modificar Roles",
+            "codigo": "modificar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 8,
+        "fields": {
+            "nombre": "Eliminar Roles",
+            "codigo": "eliminar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 9,
+        "fields": {
+            "nombre": "Asignar Roles",
+            "codigo": "asignar_roles"
         }
     }
 ]
