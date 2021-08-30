@@ -19,7 +19,9 @@
             <div style="width: 5%">{{ usuario.ID }}</div>
             <div style="width: 25%">{{ usuario.Nombre }}</div>
             <div style="width: 25%">{{ usuario.Email }}</div>
-            <div style="width: 25%">{{ usuario.Rol }}</div>
+            <div style="width: 25%">
+              <Select :options="roles" v-model="usuario.Rol" />
+            </div>
             <div style="width: 20%">
               <Checkbox v-model="usuario.Activado" />
             </div>
@@ -36,42 +38,48 @@
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Checkbox from "@/components/Checkbox";
+import Select from "@/components/Select";
 
 export default {
   components: {
     Sidebar,
     Waves,
     Checkbox,
+    Select,
   },
   data() {
     return {
+      roles: {
+        1: "Tirano",
+        2: "Esclavo",
+      },
       usuarios: [
         {
           ID: 1,
           Nombre: "Isaac Gabriel Amarilla Benítez",
           Email: "sc.amarilla@gmail.com",
-          Rol: "Tirano",
+          Rol: 1,
           Activado: true,
         },
         {
           ID: 2,
           Nombre: "Ramon Francisco Perdomo Rivas",
           Email: "rperdomorivas@gmail.com",
-          Rol: "Esclavo",
+          Rol: 2,
           Activado: true,
         },
         {
           ID: 3,
           Nombre: "Nerea Monserrat Ortiz Martinez",
           Email: "nmoortiz@gmail.com",
-          Rol: "Esclavo",
+          Rol: 2,
           Activado: true,
         },
         {
           ID: 4,
           Nombre: "Jorge Sebastián Cane Avalos",
           Email: "canesi12@gmail.com",
-          Rol: "Esclavo",
+          Rol: 2,
           Activado: true,
         },
       ],
@@ -98,7 +106,7 @@ h2 {
 .table {
   --space-between-rows: 12px;
   --space-between-columns: 36px;
-  height: 150px;
+  height: 400px;
 }
 
 .body {

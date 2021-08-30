@@ -2,9 +2,9 @@
   <div
     :style="{
       backgroundColor: colorIcono,
-      height: tamaño,
+      height: tamanho,
       mask: `url(${linkDelIcono}) no-repeat center / contain`,
-      width: tamaño,
+      width: tamanho,
     }"
   ></div>
 </template>
@@ -19,6 +19,7 @@ const iconosValidos = [
   "options",
   "watch",
   "delete",
+  "check",
 ];
 
 export default {
@@ -40,7 +41,7 @@ export default {
     colorIcono() {
       return this.color ? this.color : "currentColor";
     },
-    tamaño() {
+    tamanho() {
       return this.size ? this.size : "24px";
     },
   },
