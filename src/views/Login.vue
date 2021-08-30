@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div>
     <div class="mitad-izquierda">
       <div>
         <h2>
@@ -66,7 +66,7 @@ export default {
           this.$store.commit("auth/login");
           this.$router.push({ name: "No Activado" });
         })
-        .catch(function (error) {
+        .catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           console.log(errorCode);
@@ -82,15 +82,9 @@ export default {
 </script>
 
 <style scoped>
-.login {
-  height: 100vh;
-  min-height: 550px;
-  width: 100%;
-}
-
 .mitad-izquierda {
+  padding-left: 100px;
+  padding-top: 50px;
   width: 40vw;
-  margin-left: 100px;
-  margin-top: 50px;
 }
 </style>

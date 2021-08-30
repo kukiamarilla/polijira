@@ -39,13 +39,12 @@ export default {
 
 <style scoped>
 .menu-derecho {
-  height: 100%;
   overflow: hidden;
-  min-height: 550px;
+  height: var(--app-height);
+  min-height: var(--app-min-height);
   position: absolute;
   right: 0;
   top: 0;
-  max-width: 40vw;
 }
 
 .menu-derecho svg {
