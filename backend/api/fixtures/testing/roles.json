@@ -27,5 +27,15 @@
                 9
             ]
         }
+    },
+    {
+        "model": "api.rol",
+        "pk": 3,
+        "fields": {
+            "nombre": "Usuario",
+            "permisos": [
+                1
+            ]
+        }
     }
 ]
