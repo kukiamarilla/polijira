@@ -1,5 +1,3 @@
-from backend.api.models.Permiso import Permiso
-from rest_framework import response
 from backend.api.models import Usuario, Rol
 from django.test import TestCase, Client
 from django.db.models import Q
