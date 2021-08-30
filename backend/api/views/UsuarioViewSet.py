@@ -37,8 +37,11 @@ class UsuarioViewSet(viewsets.ViewSet):
         """
         usuario_request = Usuario.objects.get(user=request.user)
         if not usuario_request.tiene_permiso("ver_usuarios"):
-            response = {"message": "No tiene permiso para ver usuarios"}
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": ["ver_usuarios"]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
         usuarios = Usuario.objects.all()
         serializer = UsuarioSerializer(usuarios, many=True)
         return Response(serializer.data)
@@ -57,8 +60,11 @@ class UsuarioViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             if not usuario_request.tiene_permiso("ver_usuarios"):
-                response = {"message": "No tiene permiso para ver usuarios"}
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_usuarios"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             usuario = Usuario.objects.get(pk=pk)
             serializer = UsuarioSerializer(usuario, many=False)
             return Response(serializer.data)
@@ -81,8 +87,11 @@ class UsuarioViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             if not usuario_request.tiene_permiso("activar_usuarios"):
-                response = {"message": "No tiene permiso para activar usuarios"}
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["activar_usuarios"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             usuario = Usuario.objects.get(pk=pk)
             usuario.activar()
             serializer = UsuarioSerializer(usuario, many=False)
@@ -106,8 +115,11 @@ class UsuarioViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             if not usuario_request.tiene_permiso("desactivar_usuarios"):
-                response = {"message": "No tiene permiso para desactivar usuarios"}
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["desactivar_usuarios"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             usuario = Usuario.objects.get(pk=pk)
             if usuario_request == usuario:
                 response = {"message": "No puedes desactivarte a ti mismo"}
@@ -134,9 +146,20 @@ class UsuarioViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             usuario = Usuario.objects.get(pk=pk)
-            if not usuario_request.tiene_permiso("asignar_roles"):
-                response = {"message": "Debe tener permiso para asignar roles"}
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            if not (usuario_request.tiene_permiso("ver_usuarios") and usuario_request.tiene_permiso("ver_roles")
+                    and usuario_request.tiene_permiso("asignar_roles")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_usuarios",
+                        "ver_roles",
+                        "asignar_roles"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if usuario_request == usuario:
+                response = {"message": "No puede asignarse roles a sí mismo"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=request.data['id'])
             usuario.asignar_rol(rol)
             serializer = UsuarioSerializer(usuario, many=False)
