@@ -27,29 +27,59 @@ class UsuarioTestCase(TestCase):
         """
         test_listar_usuario Prueba listar todos los usuarios
         """
-        print("\nProbando listar todos los usuarios")
+        print("\nProbando listar todos los usuarios.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.get("/api/usuarios/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(len(body), Usuario.objects.count())
 
+    def test_listar_usuario_sin_permiso(self):
+        """
+        test_listar_usuario_sin_permiso Prueba listar todos los usuarios sin permiso
+        """
+        print("\nProbando listar todos los usuarios sin permiso.")
+        rol = Usuario.objects.get(nombre="testing").rol
+        permiso = rol.permisos.get(codigo="ver_usuarios")
+        rol.eliminar_permiso(permiso)
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.get("/api/usuarios/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ['ver_usuarios'])
+
     def test_obtener_usuario(self):
         """
         test_obtener_usuario Prueba obtener un usuario
         """
-        print("\nProbando obtener un usuario")
+        print("\nProbando obtener un usuario.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.get("/api/usuarios/1/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body['id'], 1)
 
+    def test_obtener_usuario_sin_permiso(self):
+        """
+        test_obtener_usuario_sin_permiso Prueba obtener un usuario sin permiso
+        """
+        print("\nProbando obtener un usuario sin permiso.")
+        rol = Usuario.objects.get(nombre="testing").rol
+        permiso = rol.permisos.get(codigo="ver_usuarios")
+        rol.eliminar_permiso(permiso)
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.get("/api/usuarios/2/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ['ver_usuarios'])
+
     def test_obtener_usuario_no_existente(self):
         """
         test_obtener_usuario_incorrecto Prueba obtener un usuario que no existe
         """
-        print("\nProbando obtener un usuario que no existe")
+        print("\nProbando obtener un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.get("/api/usuarios/3/")
         self.assertEquals(response.status_code, 404)
@@ -58,18 +88,36 @@ class UsuarioTestCase(TestCase):
         """
         test_activar_usuario Prueba activar un usuario
         """
-        print("\nProbando activar un usuario")
+        print("\nProbando activar un usuario.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/1/activar/")
         usuario = Usuario.objects.get(pk=1)
         self.assertEquals(usuario.estado, "A")
         self.assertEquals(response.status_code, 200)
 
+    def test_activar_usuario_sin_permiso(self):
+        """
+        test_activar_usuario_sin_permiso Prueba activar un usuario sin permiso
+        """
+        print("\nProbando activar un usuario sin permiso.")
+        rol = Usuario.objects.get(nombre="testing").rol
+        permiso = rol.permisos.get(codigo="activar_usuarios")
+        rol.eliminar_permiso(permiso)
+        usuario = Usuario.objects.get(pk=2)
+        usuario.estado = 'I'
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.post("/api/usuarios/2/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ['activar_usuarios'])
+        self.assertEquals(usuario.estado, "I")
+
     def test_activar_usuario_no_existente(self):
         """
         test_activar_usuario Prueba activar un usuario no existente
         """
-        print("\nProbando activar un usuario que no existe")
+        print("\nProbando activar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/3/activar/")
         self.assertEquals(response.status_code, 404)
@@ -78,7 +126,7 @@ class UsuarioTestCase(TestCase):
         """
         test_desactivar_usuario Prueba desactivar un usuario
         """
-        print("\nProbando desactivar un usuario")
+        print("\nProbando desactivar un usuario.")
         self._client.login(username="testing", password="polijira2021")
         usuario = Usuario.objects.create(
             email="uncorreo@correo.com",
@@ -89,11 +137,29 @@ class UsuarioTestCase(TestCase):
         self.assertEquals(usuario.estado, "I")
         self.assertEquals(response.status_code, 200)
 
+    def test_desactivar_usuario_sin_permiso(self):
+        """
+        test_desactivar_usuario_sin_permiso Prueba desactivar un usuario sin permiso
+        """
+        print("\nProbando desactivar un usuario sin permiso.")
+        rol = Usuario.objects.get(nombre="testing").rol
+        permiso = rol.permisos.get(codigo="desactivar_usuarios")
+        rol.eliminar_permiso(permiso)
+        usuario = Usuario.objects.get(pk=2)
+        usuario.estado = 'A'
+        self._client.login(username="testing", password="polijira2021")
+        response = self._client.post("/api/usuarios/2/desactivar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ['desactivar_usuarios'])
+        self.assertEquals(usuario.estado, "A")
+
     def test_desactivar_el_mismo_usuario(self):
         """
         test_desactivar_usuario Prueba desactivar un usuario a si mismo
         """
-        print("\nProbando desactivar un usuario a si mismo")
+        print("\nProbando desactivar un usuario a si mismo.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/1/desactivar/")
         self.assertEquals(response.status_code, 409)
@@ -102,7 +168,7 @@ class UsuarioTestCase(TestCase):
         """
         test_desactivar_usuario_no_existente Prueba desactivar un usuario que no existe
         """
-        print("\nProbando desactivar un usuario que no existe")
+        print("\nProbando desactivar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/3/desactivar/")
         self.assertEquals(response.status_code, 404)
@@ -111,7 +177,7 @@ class UsuarioTestCase(TestCase):
         """
         test_asignar_rol Prueba asignar un rol a un usuario
         """
-        print("\nProbando asignar rol a un usuario")
+        print("\nProbando asignar rol a un usuario.")
         self._client.login(username="testing", password="polijira2021")
         body = {
             "id": 1
@@ -124,9 +190,9 @@ class UsuarioTestCase(TestCase):
 
     def test_asignar_rol_sin_permiso(self):
         """
-        test_asignar_rol_sin_permiso Prueba asginar un rol a un usuario sin tener permiso para asignar roles
+        test_asignar_rol_sin_permiso Prueba asignar un rol a un usuario sin tener permiso para asignar roles
         """
-        print("\nProbando asignar rol sin permisos")
+        print("\nProbando asignar rol sin permisos.")
         self._client.login(username="testing", password="polijira2021")
         rol = Rol.objects.get(pk=2)
         permiso = Permiso.objects.get(pk=9)
@@ -135,25 +201,42 @@ class UsuarioTestCase(TestCase):
             "id": 1
         }
         response = self._client.post("/api/usuarios/2/asignar_rol/", body)
-        self.assertEquals(response.status_code, 401)
+        self.assertEquals(response.status_code, 403)
+
+    def test_asignar_rol_a_si_mismo(self):
+        """
+        test_asignar_rol_a_si_mismo Prueba asignar un rol a sí mismo
+        """
+        print("\nProbando asignar un rol a sí mismo.")
+        self._client.login(username="testing", password="polijira2021")
+        rol = {
+            "id": 1
+        }
+        usuario = Usuario.objects.get(nombre="testing")
+        response = self._client.post("/api/usuarios/"+str(usuario.id)+"/asignar_rol/", rol)
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No puede asignarse roles a sí mismo")
+        # permiso = rol.permisos.get(codigo="desactivar_usuarios")
+        # rol.eliminar_permiso(permiso)
 
     def test_asignar_rol_no_existente(self):
         """
         test_asignar_rol_no_existente Prueba asignar un rol que no existe a un usuario
         """
-        print("\nProbando asignar un rol que no existe")
+        print("\nProbando asignar un rol que no existe.")
         self._client.login(username="testing", password="polijira2021")
         body = {
-            "id": 3
+            "id": 33
         }
-        response = self._client.post("/api/usuarios/1/asignar_rol/", body)
+        response = self._client.post("/api/usuarios/2/asignar_rol/", body)
         self.assertEquals(response.status_code, 404)
 
     def test_asignar_rol_a_usuario_inexistente(self):
         """
         test_asignar_rol_a_usuario_inexistente Prueba asignar un rol a un usuario que no existe
         """
-        print("\nProbando asignar rol a un usuario que no existe")
+        print("\nProbando asignar rol a un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         body = {
             "id": 1
