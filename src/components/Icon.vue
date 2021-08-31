@@ -1,7 +1,8 @@
 <template>
   <div
     :style="{
-      backgroundColor: colorIcono,
+      '--hovercolor': hover,
+      '--color': colorIcono,
       height: tamanho,
       mask: `url(${linkDelIcono}) no-repeat center / contain`,
       width: tamanho,
@@ -20,10 +21,11 @@ const iconosValidos = [
   "watch",
   "delete",
   "check",
+  "edit",
 ];
 
 export default {
-  props: { icono: String, color: String, size: String },
+  props: { icono: String, color: String, size: String, hover: String },
   data() {
     return {
       iconos: iconosValidos,
@@ -48,4 +50,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+div {
+  background-color: var(--color);
+  &:hover {
+    background-color: var(--hovercolor);
+  }
+}
+</style>
