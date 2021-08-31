@@ -4,7 +4,7 @@
     <div class="container shadow">
       <h2>Usuarios</h2>
 
-      <Table>
+      <Table height="300px">
         <TableHeader>
           <Th width="20%">ID</Th>
           <Th width="20%">Nombre</Th>
