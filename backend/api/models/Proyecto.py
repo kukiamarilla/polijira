@@ -17,6 +17,8 @@ class Proyecto(models.Model):
     fecha_fin = models.DateField()
     ESTADO = (('A', 'Activo'), ('F', 'Finalizado'), ('P', 'Pendiente'), ('C', 'Cancelado'))
     estado = models.CharField(max_length=1, choices=ESTADO, default='P')
+    scrum_master = models.ForeignKey('Usuario', on_delete=models.CASCADE,
+                                     related_name='proyecto_scrum_master', null=True)
 
     def iniciar(self):
         """
