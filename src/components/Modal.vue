@@ -1,0 +1,74 @@
+<template>
+  <div :class="`modal modal-bg ${modalState}`" v-on:click.self="handleClick">
+    <div
+      class="modal-box shadow"
+      :style="{ height: getHeight, width: getWidth }"
+    >
+      <slot />
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: { show: Boolean, height: String, width: String },
+  data() {
+    return {
+      shown: false,
+    };
+  },
+  mounted() {
+    this.shown = this.show;
+  },
+  computed: {
+    modalState() {
+      return this.shown ? "show" : "";
+    },
+    getHeight() {
+      return this.height ? this.height : "auto";
+    },
+    getWidth() {
+      return this.width ? this.width : "735px";
+    },
+  },
+  methods: {
+    handleClick() {
+      this.shown = false;
+    },
+  },
+  watch: {
+    show(newValue) {
+      this.show = newValue;
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.modal {
+  display: none;
+
+  &.show {
+    display: flex;
+  }
+
+  &.modal-bg {
+    background-color: rgba(0, 0, 0, 0.25);
+    height: 100vh;
+    justify-content: center;
+    left: 0;
+    padding: 50px;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 3;
+  }
+
+  .modal-box {
+    background-color: white;
+    border-radius: 20px;
+    padding: 40px;
+    z-index: 2;
+  }
+}
+</style>
