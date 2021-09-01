@@ -14,4 +14,4 @@ class RolSerializer(serializers.ModelSerializer):
          Metadatos de RolSerializer
         """
         model = Rol
-        fields = ("nombre", "permisos")
+        fields = ("id", "nombre", "permisos")

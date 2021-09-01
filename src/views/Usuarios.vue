@@ -14,14 +14,16 @@
         </TableHeader>
         <TableBody>
           <Tr v-for="(usuario, idx) in usuarios" :key="idx">
-            <Td width="20%">{{ usuario.ID }}</Td>
-            <Td width="20%">{{ usuario.Nombre }}</Td>
-            <Td width="20%">{{ usuario.Email }}</Td>
+            <Td width="20%">{{ usuario.id }}</Td>
+            <Td width="20%">{{ usuario.nombre }}</Td>
+            <Td width="20%">{{ usuario.email }}</Td>
             <Td width="20%">
-              <Select :options="roles" v-model="usuario.Rol" />
+              <div class="select-container">
+                <Select :options="roles" v-model="usuario.rol.id" />
+              </div>
             </Td>
             <Td width="20%">
-              <Checkbox v-model="usuario.Activado" />
+              <Checkbox v-model="usuario.activo" />
             </Td>
           </Tr>
         </TableBody>
@@ -37,6 +39,7 @@ import Waves from "@/components/Waves";
 import Checkbox from "@/components/Checkbox";
 import Select from "@/components/Select";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
+import usuarioService from "@/services/usuarioService";
 
 export default {
   components: {
@@ -51,42 +54,18 @@ export default {
     Tr,
     Td,
   },
+  mounted() {
+    usuarioService.list().then((usuarios) => {
+      this.usuarios = usuarios.map((u) => ({ ...u, activo: u.estado == "A" }));
+    });
+  },
   data() {
     return {
       roles: {
         1: "Tirano",
         2: "Esclavo",
       },
-      usuarios: [
-        {
-          ID: 1,
-          Nombre: "Isaac Gabriel Amarilla Benítez",
-          Email: "sc.amarilla@gmail.com",
-          Rol: 1,
-          Activado: true,
-        },
-        {
-          ID: 2,
-          Nombre: "Ramon Francisco Perdomo Rivas",
-          Email: "rperdomorivas@gmail.com",
-          Rol: 2,
-          Activado: true,
-        },
-        {
-          ID: 3,
-          Nombre: "Nerea Monserrat Ortiz Martinez",
-          Email: "nmoortiz@gmail.com",
-          Rol: 2,
-          Activado: true,
-        },
-        {
-          ID: 4,
-          Nombre: "Jorge Sebastián Cane Avalos",
-          Email: "canesi12@gmail.com",
-          Rol: 2,
-          Activado: true,
-        },
-      ],
+      usuarios: [],
     };
   },
 };
