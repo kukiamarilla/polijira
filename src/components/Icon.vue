@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      '--hovercolor': hover,
+      '--hovercolor': hoverColor,
       '--color': colorIcono,
       height: tamanho,
       mask: `url(${linkDelIcono}) no-repeat center / contain`,
@@ -22,6 +22,8 @@ const iconosValidos = [
   "delete",
   "check",
   "edit",
+  "success",
+  "warning",
 ];
 
 export default {
@@ -42,6 +44,9 @@ export default {
     },
     colorIcono() {
       return this.color ? this.color : "currentColor";
+    },
+    hoverColor() {
+      return this.hover ? this.hover : this.color;
     },
     tamanho() {
       return this.size ? this.size : "24px";
