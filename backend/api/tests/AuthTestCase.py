@@ -1,4 +1,4 @@
-from backend.api.models.Usuario import Usuario
+from backend.api.models import Usuario, Rol
 from django.test import TestCase
 from django.test import Client
 from django.conf import settings
@@ -90,7 +90,7 @@ class AuthTestCase(TestCase):
         """
         test_wrong_start_path Prueba si el path del request no inicia con /api
         """
-        print("\nProbando obtener el path del request que no inicia con /api")
+        print("\nProbando obtener el path del request que no inicia con /api.")
         response = self.c.get("/")
         response.json
         self.assertEquals(response.status_code, 200)
@@ -99,7 +99,7 @@ class AuthTestCase(TestCase):
         """
         test_token_formato_incorrecto_sin_jwt Prueba si el header tiene jwt
         """
-        print("\nProbando enviar un formato sin JWT en el header")
+        print("\nProbando enviar un formato sin JWT en el header.")
         headers = {"HTTP_AUTHORIZATION": "fjdlajdkffd"}
         response = self.c.get("/api/usuarios/me/", **headers)
         self.assertEquals(response.status_code, 401)
@@ -108,7 +108,7 @@ class AuthTestCase(TestCase):
         """
         test_token_formato_incorrecto_jwt Prueba si el jwt es correcto
         """
-        print("\nProbando enviar un formato JWT incorrecto en el header")
+        print("\nProbando enviar un formato JWT incorrecto en el header.")
         headers = {"HTTP_AUTHORIZATION": "JW " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
         self.assertEquals(response.status_code, 401)
@@ -117,18 +117,20 @@ class AuthTestCase(TestCase):
         """
         test_usuario_nuevo_logueado Prueba si un usuario ingresa por primera vez en el sistema
         """
-        print("\nProbando ingresar con un usuario nuevo al sistema")
+        print("\nProbando ingresar con un usuario nuevo al sistema.")
         user = User.objects.get(username="testing")
         user.delete()
         headers = {"HTTP_AUTHORIZATION": "JWT " + self.get_token()}
         response = self.c.get("/api/usuarios/me/", **headers)
+        rol_default = Rol.objects.get(pk=2)
         usuario = Usuario.objects.filter(
             user__first_name="Test PoliJira",
             user__email="test@polijira.com",
             nombre="Test PoliJira",
             email="test@polijira.com",
             estado="I",
-            firebase_uid="A4rxPBjYBfQKrIUlElklVF2OTRI3"
+            firebase_uid="A4rxPBjYBfQKrIUlElklVF2OTRI3",
+            rol=rol_default
         )
         body = response.json()
         self.assertEquals(body["error"], "unactivated")
@@ -139,7 +141,7 @@ class AuthTestCase(TestCase):
         """
         test_token_invalido Prueba cuando el token enviado es invalido
         """
-        print("\nProbando utilizar un token incorrecto")
+        print("\nProbando utilizar un token incorrecto.")
         headers = {"HTTP_AUTHORIZATION": "JWT " + "fjdklsfjlskaf"}
         response = self.c.get("/api/usuarios/me/", **headers)
         self.assertEquals(response.status_code, 401)

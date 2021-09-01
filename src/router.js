@@ -38,6 +38,9 @@ const router = new Router({
       path: "/usuarios",
       name: "Usuarios",
       component: Usuarios,
+      meta: {
+        middleware: [auth, activated]
+      }
     },
     {
       path: "/autorizacion",

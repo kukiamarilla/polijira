@@ -70,5 +70,37 @@
             "nombre": "Asignar Roles",
             "codigo": "asignar_roles"
         }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 10,
+        "fields": {
+            "nombre": "Ver Proyectos",
+            "codigo": "ver_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 11,
+        "fields": {
+            "nombre": "Crear Proyectos",
+            "codigo": "crear_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 12,
+        "fields": {
+            "nombre": "Modificar Proyectos",
+            "codigo": "modificar_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 13,
+        "fields": {
+            "nombre": "Eliminar Proyectos",
+            "codigo": "eliminar_proyectos"
+        }
     }
 ]
