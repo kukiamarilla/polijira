@@ -5,10 +5,7 @@
     <div class="container">
       <div class="box create-role shadow">
         <h2 class="title">Nuevo Rol</h2>
-
-        <label class="highlight">Nombre</label>
-        <input type="text" />
-
+        <InputText title="Nombre" v-model="nuevo.nombre" />
         <div class="align-self-end">
           <Boton texto="Guardar" tema="primary" width="163px" />
         </div>
@@ -77,7 +74,10 @@
         </Table>
       </div>
     </div>
-
+    <Modal :show="true">
+      <h1>Seleccione los Permisos</h1>
+      <br />
+    </Modal>
     <Waves class="waves" />
   </div>
 </template>
@@ -87,6 +87,8 @@ import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
 import Icon from "@/components/Icon";
+import Modal from "@/components/Modal";
+import InputText from "@/components/InputText";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 
 export default {
@@ -101,9 +103,15 @@ export default {
     Tr,
     Td,
     Icon,
+    Modal,
+    InputText,
   },
   data() {
     return {
+      nuevo: {
+        nombre: "",
+        permisos: [],
+      },
       roles: [
         {
           id: 1,
@@ -221,18 +229,6 @@ export default {
 
   .title {
     margin-bottom: 40px;
-  }
-
-  label {
-    margin-bottom: 14px;
-  }
-
-  input[type="text"] {
-    border: 1px solid var(--gray-4);
-    border-radius: 5px;
-    margin-bottom: 32px;
-    padding: 8px 16px;
-    width: 100%;
   }
 
   .create-role {
