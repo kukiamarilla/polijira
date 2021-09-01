@@ -40,7 +40,7 @@ export default {
 <style scoped>
 .menu-derecho {
   overflow: hidden;
-  height: var(--app-height);
+  height: 100vh;
   min-height: var(--app-min-height);
   position: absolute;
   right: 0;

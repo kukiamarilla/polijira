@@ -1,6 +1,6 @@
 <template>
   <button :class="tema" v-on:click="handleClick">
-    <Icon :icono="icono" />
+    <Icon :icono="icono" hover="#9480ff" />
     <Tooltip :texto="descripcion" direccion="derecha" />
   </button>
 </template>
