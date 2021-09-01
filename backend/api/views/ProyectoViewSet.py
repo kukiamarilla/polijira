@@ -1,8 +1,11 @@
+from backend.api.decorators.FormValidator import FormValidator
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Proyecto, Usuario
 from backend.api.serializers import ProyectoSerializer
+from backend.api.forms import CreateProyectoForm
+from backend.api.decorators import FormValidator
 
 
 class ProyectoViewSet(viewsets.ViewSet):
@@ -58,6 +61,7 @@ class ProyectoViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @FormValidator(form=CreateProyectoForm)
     def create(self, request):
         """
         create Crea un proyecto
