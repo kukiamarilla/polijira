@@ -11,7 +11,7 @@ export default {};
 <style scoped>
 .body {
   padding-top: var(--space-between-rows);
-  max-height: 100%;
+  max-height: calc(100% - 50px);
   overflow: scroll;
 }
 </style>
