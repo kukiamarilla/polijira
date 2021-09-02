@@ -1,6 +1,6 @@
 <template>
   <div :class="`modal ${modalState}`">
-    <div class="modal-bg" v-on:click.self="$emit('close')">
+    <div class="modal-bg" v-on:click.self="$emit('input', false)">
       <div
         class="modal-box shadow"
         :style="{ height: getHeight, width: getWidth }"
@@ -13,10 +13,10 @@
 
 <script>
 export default {
-  props: { show: Boolean, height: String, width: String },
+  props: { value: Boolean, height: String, width: String },
   computed: {
     modalState() {
-      return this.show ? "show" : "";
+      return this.value ? "show" : "";
     },
     getHeight() {
       return this.height ? this.height : "auto";
