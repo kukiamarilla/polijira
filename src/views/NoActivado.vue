@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar :mostrarLogout="true" />
     <div class="container">
       <div class="content">
         <h1>
@@ -19,12 +20,14 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
 import Waves from "@/components/Waves.vue";
 import Lottie from "@/components/Lottie.vue";
 import authService from "@/services/authService";
 
 export default {
   components: {
+    Navbar,
     Waves,
     Lottie,
   },

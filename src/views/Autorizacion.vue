@@ -1,9 +1,10 @@
 <template>
   <div>
+    <Navbar />
     <Sidebar />
 
     <div class="container">
-      <div class="box create-role shadow" v-if="hasPermission('crear_rol')">
+      <div class="box create-role shadow" v-if="hasPermission('crear_roles')">
         <h2 class="title">Nuevo Rol</h2>
         <InputText title="Nombre" v-model="nuevo.nombre" />
         <div class="align-self-end">
@@ -83,6 +84,7 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
@@ -94,6 +96,7 @@ import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 
 export default {
   components: {
+    Navbar,
     Sidebar,
     Waves,
     Boton,

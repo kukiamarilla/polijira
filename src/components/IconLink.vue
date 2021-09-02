@@ -23,7 +23,8 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$router.push(this.link);
+      if (this.link) this.$router.push(this.link);
+      this.$emit("click");
     },
   },
 };

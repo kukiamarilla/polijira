@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar :mostrarLogout="true" />
     <div class="container">
       <div class="content">
         <h1>No encontramos lo que estás buscando.</h1>
@@ -17,11 +18,13 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
 import Waves from "@/components/Waves.vue";
 
 export default {
   components: {
     Waves,
+    Navbar,
   },
   data() {
     return {

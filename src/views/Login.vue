@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar />
     <div class="mitad-izquierda">
       <div>
         <h2>
@@ -29,10 +30,12 @@
 <script>
 import MenuSemiCirculoDerecho from "@/components/MenuSemiCirculoDerecho";
 import authService from "@/services/authService";
+import Navbar from "@/components/Navbar";
 
 export default {
   components: {
     MenuSemiCirculoDerecho,
+    Navbar,
   },
   data() {
     return {
@@ -66,7 +69,7 @@ export default {
           this.$store.commit("auth/login");
           this.$router.push({ name: "No Activado" });
         })
-        .catch(function(error) {
+        .catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code;
           console.log(errorCode);

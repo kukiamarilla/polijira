@@ -18,6 +18,7 @@ const authStore = {
       state.isLoggedIn = true
     },
     logout(state) {
+      localStorage.removeItem("session")
       state.isLoggedIn = false
     },
     me(state, me) {

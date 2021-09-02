@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar />
     <Sidebar />
     <div class="container shadow">
       <h2>Usuarios</h2>
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Checkbox from "@/components/Checkbox";
@@ -67,6 +69,7 @@ import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
+    Navbar,
     Sidebar,
     Waves,
     Checkbox,

@@ -1,23 +1,17 @@
 <template>
   <div id="app">
-    <Navbar />
-
-    <Alert :show="alert.show" :message="alert.message" :type="alert.type" />
-
     <router-view class="view" />
+    <Alert :show="alert.show" :message="alert.message" :type="alert.type" />
   </div>
 </template>
 
 <script>
-import Navbar from "@/components/Navbar";
 import authService from "@/services/authService";
 import Alert from "@/components/Alert";
-
 import { mapState } from "vuex";
 
 export default {
   components: {
-    Navbar,
     Alert,
   },
   mounted() {

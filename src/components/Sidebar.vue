@@ -18,7 +18,12 @@
       />
     </div>
 
-    <IconLink class="icono" icono="logout" descripcion="Cerrar Sesión" />
+    <IconLink
+      class="icono"
+      icono="logout"
+      descripcion="Cerrar Sesión"
+      @click="logout"
+    />
   </div>
 </template>
 
@@ -36,6 +41,12 @@ export default {
       hasPermissions: "auth/hasPermissions",
       hasAnyPermission: "auth/hasAnyPermission",
     }),
+  },
+  methods: {
+    logout() {
+      this.$store.commit("auth/logout");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
