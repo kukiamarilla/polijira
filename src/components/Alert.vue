@@ -1,11 +1,5 @@
 <template>
-  <Modal
-    :show="show"
-    height="387px"
-    width="735px"
-    v-on:ack="$emit('ack')"
-    v-on:close="$emit('ack')"
-  >
+  <Modal :show="show" height="387px" width="735px">
     <div class="alert-container">
       <h2>{{ title }}</h2>
 
