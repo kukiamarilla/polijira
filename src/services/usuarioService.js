@@ -6,6 +6,8 @@ export default {
   },
   list() {
     return api.get("/usuarios/").then(response => response.data)
-
+  },
+  asignarRol(id, data) {
+    return api.post(`/usuarios/${id}/asignar_rol/`, data).then(response => response.data)
   }
 }

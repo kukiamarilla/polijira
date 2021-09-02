@@ -20,9 +20,16 @@
             <Td width="20%">
               <div
                 class="select-container"
-                v-if="hasPermissions(['ver_roles', 'asignar_roles'])"
+                v-if="
+                  hasPermissions(['ver_roles', 'asignar_roles']) &&
+                  usuario.id != me.id
+                "
               >
-                <Select :options="roles" v-model="usuario.rol.id" />
+                <Select
+                  :options="rolesSelect"
+                  v-model="usuario.rolSelect"
+                  @input="asignarRol(usuario)"
+                />
               </div>
               <template v-else>
                 {{ usuario.rol.nombre }}
@@ -33,7 +40,8 @@
                 v-model="usuario.activo"
                 :disabled="
                   (usuario.activo && !canDeactivate) ||
-                  (!usuario.activo && !canActivate)
+                  (!usuario.activo && !canActivate) ||
+                  usuario.id == me.id
                 "
               />
             </Td>
@@ -52,7 +60,9 @@ import Checkbox from "@/components/Checkbox";
 import Select from "@/components/Select";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import usuarioService from "@/services/usuarioService";
-import { mapGetters } from "vuex";
+import rolService from "@/services/rolService";
+import Alert from "@/helpers/alert";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -72,9 +82,7 @@ export default {
       this.$router.back();
   },
   mounted() {
-    usuarioService.list().then((usuarios) => {
-      this.usuarios = usuarios.map((u) => ({ ...u, activo: u.estado == "A" }));
-    });
+    this.load();
   },
   computed: {
     ...mapGetters({
@@ -82,21 +90,49 @@ export default {
       hasPermissions: "auth/hasPermissions",
       hasAnyPermission: "auth/hasAnyPermission",
     }),
+    ...mapState({
+      me: (state) => state.auth.me,
+    }),
     canActivate() {
       return this.hasPermission("activar_usuarios");
     },
     canDeactivate() {
       return this.hasPermission("desactivar_usuarios");
     },
+    rolesSelect() {
+      return this.roles.map((rol) => rol.nombre);
+    },
   },
   data() {
     return {
-      roles: {
-        1: "Tirano",
-        2: "Esclavo",
-      },
+      roles: [],
       usuarios: [],
     };
+  },
+  methods: {
+    load() {
+      rolService.list().then((roles) => {
+        this.roles = roles;
+        usuarioService.list().then((usuarios) => {
+          this.usuarios = usuarios.map((u) => ({
+            ...u,
+            activo: u.estado == "A",
+            rolSelect: this.roles.findIndex((rol) => u.rol.id == rol.id),
+          }));
+          this.usuarios = this.usuarios.sort((a, b) => a.id > b.id);
+        });
+      });
+    },
+    asignarRol(usuario) {
+      usuarioService
+        .asignarRol(usuario.id, this.roles[usuario.rolSelect])
+        .then(() => {
+          Alert.success("Se ha asignado correctamente el nuevo rol");
+        })
+        .catch(() => {
+          this.load();
+        });
+    },
   },
 };
 </script>
