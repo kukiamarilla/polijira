@@ -1,5 +1,11 @@
 <template>
-  <Modal :show="true" height="387px" width="735px">
+  <Modal
+    :show="show"
+    height="387px"
+    width="735px"
+    v-on:ack="$emit('ack')"
+    v-on:close="$emit('ack')"
+  >
     <div class="alert-container">
       <h2>{{ title }}</h2>
 
@@ -7,7 +13,7 @@
 
       <div class="highlight">{{ message }}</div>
 
-      <Boton texto="Aceptar" tema="primary" />
+      <Boton texto="Aceptar" tema="primary" v-on:click="$emit('ack')" />
     </div>
   </Modal>
 </template>
