@@ -43,6 +43,7 @@
                   (!usuario.activo && !canActivate) ||
                   usuario.id == me.id
                 "
+                @input="toggleActivado(usuario)"
               />
             </Td>
           </Tr>
@@ -132,6 +133,27 @@ export default {
         .catch(() => {
           this.load();
         });
+    },
+    toggleActivado(usuario) {
+      if (!usuario.activo) {
+        usuarioService
+          .desactivar(usuario.id)
+          .then(() => {
+            Alert.success("Usuario desactivado correctamente");
+          })
+          .catch(() => {
+            this.load();
+          });
+      } else {
+        usuarioService
+          .activar(usuario.id)
+          .then(() => {
+            Alert.success("Usuario activado correctamente");
+          })
+          .catch(() => {
+            this.load();
+          });
+      }
     },
   },
 };
