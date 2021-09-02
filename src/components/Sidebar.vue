@@ -1,9 +1,21 @@
 <template>
   <div class="sidebar">
     <div class="principales">
-      <IconLink class="icono" icono="home" descripcion="Home" activo />
-      <IconLink class="icono" icono="team" descripcion="Equipo" />
-      <IconLink class="icono" icono="key" descripcion="Autorización" />
+      <IconLink class="icono" icono="home" descripcion="Home" link="/" activo />
+      <IconLink
+        class="icono"
+        icono="team"
+        descripcion="Equipo"
+        link="/usuarios"
+        v-if="hasPermission('ver_usuarios')"
+      />
+      <IconLink
+        class="icono"
+        icono="key"
+        descripcion="Autorización"
+        link="/autorizacion"
+        v-if="hasPermissions(['ver_roles', 'ver_permisos'])"
+      />
     </div>
 
     <IconLink class="icono" icono="logout" descripcion="Cerrar Sesión" />
@@ -12,10 +24,18 @@
 
 <script>
 import IconLink from "@/components/IconLink";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     IconLink,
+  },
+  computed: {
+    ...mapGetters({
+      hasPermission: "auth/hasPermission",
+      hasPermissions: "auth/hasPermissions",
+      hasAnyPermission: "auth/hasAnyPermission",
+    }),
   },
 };
 </script>

@@ -54,6 +54,10 @@ export default {
     Tr,
     Td,
   },
+  created() {
+    if (!this.$store.getters["auth/hasPermission"]("ver_usuarios"))
+      this.$router.back();
+  },
   mounted() {
     usuarioService.list().then((usuarios) => {
       this.usuarios = usuarios.map((u) => ({ ...u, activo: u.estado == "A" }));

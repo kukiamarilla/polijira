@@ -3,7 +3,7 @@
     <Sidebar />
 
     <div class="container">
-      <div class="box create-role shadow">
+      <div class="box create-role shadow" v-if="hasPermission('crear_rol')">
         <h2 class="title">Nuevo Rol</h2>
         <InputText title="Nombre" v-model="nuevo.nombre" />
         <div class="align-self-end">
@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="box role-list shadow">
+      <div class="box role-list shadow" v-if="hasPermission('ver_roles')">
         <h2 class="title">Roles</h2>
         <Table height="160px">
           <TableHeader>
@@ -56,7 +56,7 @@
         </Table>
       </div>
 
-      <div class="box permissions shadow">
+      <div class="box permissions shadow" v-if="hasPermission('ver_permisos')">
         <h2 class="title">Permisos</h2>
         <Table height="540px">
           <TableHeader>
@@ -89,6 +89,7 @@ import Boton from "@/components/Boton";
 import Icon from "@/components/Icon";
 import Modal from "@/components/Modal";
 import InputText from "@/components/InputText";
+import { mapGetters } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 
 export default {
@@ -105,6 +106,16 @@ export default {
     Icon,
     Modal,
     InputText,
+  },
+  created() {
+    if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
+      this.$router.back();
+  },
+  computed: {
+    ...mapGetters({
+      hasAnyPermission: "auth/hasAnyPermission",
+      hasPermission: "auth/hasPermission",
+    }),
   },
   data() {
     return {
@@ -206,6 +217,7 @@ export default {
       ],
     };
   },
+  methods: {},
 };
 </script>
 
@@ -219,8 +231,6 @@ export default {
   padding: 0 64px 75px 128px;
   position: relative;
   width: 100%;
-  z-index: 1;
-
   .box {
     background-color: white;
     border-radius: 20px;
