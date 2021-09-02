@@ -3,28 +3,27 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 
-class CreateProyectoForm(forms.Form):
+class UpdateProyectoForm(forms.Form):
     nombre = forms.CharField(
         max_length=255,
-        empty_value='',
         required=True,
         error_messages={
-            "required": "No se especificó ningun nombre",
-            "max_length": "Sobrepasó el limite de caracteres"
+            "max_length": "Sobrepasó el limite de caracteres",
+            "required": "No se especificó ningun nombre"
         }
     )
     fecha_inicio = forms.DateField(
         required=True,
         error_messages={
-            "required": "No se especificó ninguna fecha de inicio",
-            "invalid": "Fecha inválida"
+            "invalid": "Fecha de inicio inválida",
+            "required": "No se especificó ninguna fecha de inicio"
         }
     )
     fecha_fin = forms.DateField(
         required=True,
         error_messages={
-            "required": "No se especificó ninguna fecha de fin",
-            "invalid": "Fecha inválida"
+            "invalid": "Fecha de fin inválida",
+            "required": "No se especificó ninguna fecha de fin"
         }
     )
     estado = forms.CharField(
