@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" height="387px" width="735px">
+  <Modal :value="show" height="387px" width="735px">
     <div class="alert-container">
       <h2>{{ title }}</h2>
 
@@ -7,7 +7,7 @@
 
       <div class="highlight">{{ message }}</div>
 
-      <Boton texto="Aceptar" tema="primary" v-on:click="$emit('ack')" />
+      <Boton texto="Aceptar" tema="primary" v-on:click="hideAlert" />
     </div>
   </Modal>
 </template>
@@ -16,6 +16,8 @@
 import Modal from "@/components/Modal";
 import Icon from "@/components/Icon";
 import Boton from "@/components/Boton";
+
+import { mapMutations } from "vuex";
 
 export default {
   props: { show: Boolean, message: String, type: String },
@@ -34,6 +36,9 @@ export default {
     Modal,
     Icon,
     Boton,
+  },
+  methods: {
+    ...mapMutations("alert", ["hideAlert"]),
   },
 };
 </script>
