@@ -1,10 +1,12 @@
 <template>
-  <div :class="`modal modal-bg ${modalState}`" v-on:click.self="handleClick">
-    <div
-      class="modal-box shadow"
-      :style="{ height: getHeight, width: getWidth }"
-    >
-      <slot />
+  <div :class="`modal ${modalState}`">
+    <div class="modal-bg" v-on:click.self="$emit('close')">
+      <div
+        class="modal-box shadow"
+        :style="{ height: getHeight, width: getWidth }"
+      >
+        <slot />
+      </div>
     </div>
   </div>
 </template>
@@ -12,33 +14,15 @@
 <script>
 export default {
   props: { show: Boolean, height: String, width: String },
-  data() {
-    return {
-      shown: false,
-    };
-  },
-  mounted() {
-    this.shown = this.show;
-  },
   computed: {
     modalState() {
-      return this.shown ? "show" : "";
+      return this.show ? "show" : "";
     },
     getHeight() {
       return this.height ? this.height : "auto";
     },
     getWidth() {
       return this.width ? this.width : "735px";
-    },
-  },
-  methods: {
-    handleClick() {
-      this.shown = false;
-    },
-  },
-  watch: {
-    show(newValue) {
-      this.show = newValue;
     },
   },
 };
@@ -49,10 +33,11 @@ export default {
   display: none;
 
   &.show {
-    display: flex;
+    display: block;
   }
 
-  &.modal-bg {
+  .modal-bg {
+    display: flex;
     background-color: rgba(0, 0, 0, 0.25);
     height: 100vh;
     justify-content: center;
