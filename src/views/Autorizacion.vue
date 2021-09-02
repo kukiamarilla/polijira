@@ -4,14 +4,6 @@
     <Sidebar />
 
     <div class="container">
-      <div class="box create-role shadow" v-if="hasPermission('crear_roles')">
-        <h2 class="title">Nuevo Rol</h2>
-        <InputText title="Nombre" v-model="nuevo.nombre" />
-        <div class="align-self-end">
-          <Boton texto="Guardar" tema="primary" width="163px" />
-        </div>
-      </div>
-
       <div class="box role-list shadow" v-if="hasPermission('ver_roles')">
         <h2 class="title">Roles</h2>
         <Table height="160px">
@@ -57,6 +49,14 @@
         </Table>
       </div>
 
+      <div class="box create-role shadow" v-if="hasPermission('crear_roles')">
+        <h2 class="title">Nuevo Rol</h2>
+        <InputText title="Nombre" v-model="nuevoRol.nombre" />
+        <div class="align-self-end">
+          <Boton texto="Guardar" tema="primary" width="163px" />
+        </div>
+      </div>
+
       <div class="box permissions shadow" v-if="hasPermission('ver_permisos')">
         <h2 class="title">Permisos</h2>
         <Table height="540px">
@@ -93,6 +93,8 @@ import Modal from "@/components/Modal";
 import InputText from "@/components/InputText";
 import { mapGetters } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
+import permisoService from "@/services/permisoService";
+import rolService from "@/services/rolService";
 
 export default {
   components: {
@@ -114,6 +116,9 @@ export default {
     if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
       this.$router.back();
   },
+  mounted() {
+    this.load();
+  },
   computed: {
     ...mapGetters({
       hasAnyPermission: "auth/hasAnyPermission",
@@ -122,105 +127,24 @@ export default {
   },
   data() {
     return {
-      nuevo: {
+      nuevoRol: {
         nombre: "",
         permisos: [],
       },
-      roles: [
-        {
-          id: 1,
-          nombre: "Administrador",
-        },
-        {
-          id: 2,
-          nombre: "Usuario",
-        },
-      ],
-      permisos: [
-        {
-          id: 1,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 2,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 3,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 4,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 5,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 6,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 7,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 8,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 9,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 10,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 11,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 12,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 13,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 14,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 15,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-        {
-          id: 16,
-          nombre: "Ver Usuario",
-          codigo: "ver_usuario",
-        },
-      ],
+      roles: [],
+      permisos: [],
     };
   },
-  methods: {},
+  methods: {
+    load() {
+      permisoService.list().then((permisos) => {
+        this.permisos = permisos;
+      });
+      rolService.list().then((roles) => {
+        this.roles = roles;
+      });
+    },
+  },
 };
 </script>
 
@@ -248,12 +172,12 @@ export default {
     display: flex;
     flex-direction: column;
     grid-column: 1 / 2;
-    grid-row: 1 / 2;
+    grid-row: 2 / 3;
   }
 
   .role-list {
     grid-column: 1 / 2;
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
   }
 
   .permissions {
