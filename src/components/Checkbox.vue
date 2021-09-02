@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ switch: true, active: value }" @click="toggle">
+  <div
+    :class="{ switch: true, active: value, disabled: disabled }"
+    @click="toggle"
+  >
     <div class="switch-background"></div>
     <div class="switch-control"></div>
   </div>
@@ -7,10 +10,10 @@
 
 <script>
 export default {
-  props: ["value"],
+  props: ["value", "disabled"],
   methods: {
     toggle() {
-      this.$emit("input", !this.value);
+      if (!this.disabled) this.$emit("input", !this.value);
     },
   },
 };
@@ -18,7 +21,6 @@ export default {
 
 <style scoped lang="scss">
 .switch {
-  cursor: pointer;
   position: relative;
   height: 20px;
   width: 60px;
@@ -50,6 +52,9 @@ export default {
     .switch-control {
       left: 40px;
     }
+  }
+  &:not(.disabled) {
+    cursor: pointer;
   }
 }
 </style>

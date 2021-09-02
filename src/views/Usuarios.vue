@@ -18,12 +18,24 @@
             <Td width="20%">{{ usuario.nombre }}</Td>
             <Td width="20%">{{ usuario.email }}</Td>
             <Td width="20%">
-              <div class="select-container">
+              <div
+                class="select-container"
+                v-if="hasPermissions(['ver_roles', 'asignar_roles'])"
+              >
                 <Select :options="roles" v-model="usuario.rol.id" />
               </div>
+              <template v-else>
+                {{ usuario.rol.nombre }}
+              </template>
             </Td>
             <Td width="20%">
-              <Checkbox v-model="usuario.activo" />
+              <Checkbox
+                v-model="usuario.activo"
+                :disabled="
+                  (usuario.activo && !canDeactivate) ||
+                  (!usuario.activo && !canActivate)
+                "
+              />
             </Td>
           </Tr>
         </TableBody>
@@ -40,6 +52,7 @@ import Checkbox from "@/components/Checkbox";
 import Select from "@/components/Select";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import usuarioService from "@/services/usuarioService";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -62,6 +75,19 @@ export default {
     usuarioService.list().then((usuarios) => {
       this.usuarios = usuarios.map((u) => ({ ...u, activo: u.estado == "A" }));
     });
+  },
+  computed: {
+    ...mapGetters({
+      hasPermission: "auth/hasPermission",
+      hasPermissions: "auth/hasPermissions",
+      hasAnyPermission: "auth/hasAnyPermission",
+    }),
+    canActivate() {
+      return this.hasPermission("activar_usuarios");
+    },
+    canDeactivate() {
+      return this.hasPermission("desactivar_usuarios");
+    },
   },
   data() {
     return {
