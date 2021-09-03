@@ -6,7 +6,7 @@
         tema="primary"
         texto="Cerrar Sesión"
         @click="logout()"
-        v-if="isLoggedIn"
+        v-if="mostrarLogout"
       ></Boton>
     </div>
   </nav>
@@ -24,6 +24,7 @@ export default {
     Logo,
     Boton,
   },
+  props: ["mostrarLogout"],
   computed: {
     ...mapState({
       isLoggedIn: (state) => state.auth.isLoggedIn,

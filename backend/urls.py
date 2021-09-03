@@ -4,18 +4,22 @@ The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
 """
 
+from backend.api.views.RolViewSet import RolViewSet
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
 from django.urls import path, include
 from rest_framework import routers
 from backend.api.views import UsuarioViewSet
+from backend.api.views import PermisoViewSet
 
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
 router = routers.DefaultRouter()
 router.register("usuarios", UsuarioViewSet, basename="usuarios")
+router.register("permisos", PermisoViewSet, basename="permisos")
+router.register("roles", RolViewSet, basename="roles")
 
 urlpatterns = [
 

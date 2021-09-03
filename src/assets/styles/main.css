@@ -6,15 +6,17 @@
   box-sizing: border-box;
 }
 
-html { 
-  font-size: 14px;
+html {
+  font-size: 16px;
 }
+
 body {
   font-family: "Roboto";
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: normal;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 .highlight {
@@ -99,13 +101,57 @@ h1,
   --success: #6be78d;
   --info: #51abff;
   --warning: #ffb800;
+
+  --gray-1: #333333;
+  --gray-2: #4f4f4f;
+  --gray-3: #828282;
+  --gray-4: #bdbdbd;
+  --gray-5: #e0e0e0;
+  --gray-6: #f2f2f2;
 }
 
 /* stilos globales */
+
+:root {
+  /* absolute = contenido que esta bajo el header y ocupa el resto de la pantalla,
+		 menos un peque;o margen inferior */
+  --header-height: 8rem;
+  --absolute-content-bottom-space: 75px;
+  --absolute-remaining-height: calc(
+    100% - var(--header-height) - var(--absolute-content-bottom-space)
+  );
+  --absolute-remaining-min-height: calc(
+    400px + var(--absolute-content-bottom-space)
+  );
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-self-end {
+  align-self: flex-end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
 
 .centrado-absoluto {
   left: 50%;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.shadow {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
 }

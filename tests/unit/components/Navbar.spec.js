@@ -9,7 +9,7 @@ localVue.use(Vuex)
 
 describe('Navbar.vue', () => {
 
-  it('No se muestra el botón Cerrar Sesión si no está logueado.', () => {
+  it('No se muestra el botón Cerrar Sesión si mostrarLogout no es true.', () => {
     const wrapper = mount(Navbar, {
       localVue,
       store,
@@ -18,10 +18,13 @@ describe('Navbar.vue', () => {
     expect(button.exists()).toBe(false);
   })
 
-  it('So se muestra el botón Cerrar Sesión si está logueado.', async () => {
+  it('Se muestra el botón Cerrar Sesión si mostrarLogout es true.', async () => {
     const wrapper = mount(Navbar, {
       localVue,
       store,
+      propsData: {
+        mostrarLogout: true
+      }
     })
     store.commit("auth/login")
     await Vue.nextTick();

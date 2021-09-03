@@ -1,37 +1,71 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-import Login from '@/views/Login'
-import NoActivado from '@/views/NoActivado'
-import PageNotFound from '@/views/PageNotFound'
+import Login from "@/views/Login";
+import NoActivado from "@/views/NoActivado";
+import PageNotFound from "@/views/PageNotFound";
+import Home from "@/views/Home";
+import Unauthorized from "@/views/Unauthorized";
+import Usuarios from "@/views/Usuarios";
+import Autorizacion from "@/views/Autorizacion";
 
-import guest from  '@/middleware/guest'
-import auth from  '@/middleware/auth'
+import guest from "@/middleware/guest";
+import auth from "@/middleware/auth";
+import activated from "@/middleware/activated";
+import unactivated from "@/middleware/unactivated";
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
     {
-      path: '/login',
-      name: 'Login',
+      path: "/login",
+      name: "Login",
       component: Login,
       meta: {
-        middleware: guest
+        middleware: guest,
+      },
+    },
+    {
+      path: "/",
+      name: "Home",
+      component: Home,
+      meta: {
+        middleware: [auth, activated],
+      },
+    },
+    {
+      path: "/usuarios",
+      name: "Usuarios",
+      component: Usuarios,
+      meta: {
+        middleware: [auth, activated]
       }
     },
     {
-      path: '/no-activado',
-      name: 'No Activado',
-      component: NoActivado,
+      path: "/autorizacion",
+      name: "Autorizacion",
+      component: Autorizacion,
       meta: {
-        middleware: auth
+        middleware: [auth, activated]
       }
     },
-    { path: "*", component: PageNotFound }
-  ]
-})
-
+    {
+      path: "/no-activado",
+      name: "No Activado",
+      component: NoActivado,
+      meta: {
+        middleware: [auth, unactivated],
+      },
+    },
+    {
+      path: "/no-autorizado",
+      name: "No Autorizado",
+      component: Unauthorized,
+    },
+    { path: "*", component: PageNotFound },
+  ],
+});
 
 function nextFactory(context, middleware, index) {
   const subsequentMiddleware = middleware[index];
@@ -53,7 +87,7 @@ router.beforeEach((to, from, next) => {
       from,
       next,
       to,
-      router
+      router,
     };
     const nextMiddleware = nextFactory(context, middleware, 1);
     return middleware[0]({ ...context, next: nextMiddleware });
