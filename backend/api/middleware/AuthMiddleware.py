@@ -38,8 +38,9 @@ class AuthMiddleware(MiddlewareMixin):
 
     def __call__(self, request):
         """
-        :param request:
-        :return:
+        Aplicación de lógica del Middleware
+        Args:
+            request (Request): Consulta del usuario
         """
         if not(request.get_full_path().startswith("/api")):
             return self.get_response(request)
