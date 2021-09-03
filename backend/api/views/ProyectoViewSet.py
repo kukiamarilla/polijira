@@ -1,4 +1,4 @@
-# from rest_framework.decorators import action
+from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Proyecto, Usuario
@@ -198,42 +198,50 @@ class ProyectoViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-    # TODO
-    # @action(detail=True, methods=['POST'])
-    # def activar(self, request, pk=None):
-    #     """
-    #     activar Activa el Proyecto
+    @action(detail=True, methods=['POST'])
+    def activar(self, request, pk=None):
+        """
+        activar Activa el Proyecto
 
-    #     Args:
-    #         request (Any): request
-    #         pk (integer, optional): primary key. Defaults to None.
+        Args:
+            request (Any): request
+            pk (integer, optional): primary key. Defaults to None.
 
-    #     Returns:
-    #         json: Proyecto
-    #     """
-    #     try:
-    #         usuario_request = Usuario.objects.get(user=request.user)
-    #         if not usuario_request.tiene_permiso("activar_proyectos"):
-    #             response = {
-    #                 "message": "No tiene permiso para realizar esta accion",
-    #                 "permission_required": ["activar_proyectos"],
-    #                 "error": "forbidden"
-    #             }
-    #             return Response(response, status=status.HTTP_403_FORBIDDEN)
-    #         proyecto = Proyecto.objects.get(pk=pk)
-    #         if proyecto.estado != 'P':
-    #             response = {
-    #                 "message": "No puedes activar el Proyecto en su estado actual",
-    #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
-    #                 "error": "bad_request"
-    #             }
-    #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-    #         proyecto.iniciar()
-    #         serializer = ProyectoSerializer(proyecto, many=False)
-    #         return Response(serializer.data)
-    #     except Proyecto.DoesNotExist:
-    #         response = {"message": "El proyecto no existe"}
-    #         return Response(response, status=status.HTTP_404_NOT_FOUND)
+        Returns:
+            json: Proyecto
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            # if not usuario_request.tiene_permiso("activar_proyectos"):
+            #     response = {
+            #         "message": "No tiene permiso para realizar esta accion",
+            #         "permission_required": ["activar_proyectos"],
+            #         "error": "forbidden"
+            #     }
+            #     return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.get(pk=pk)
+            if proyecto.scrum_master.id != usuario_request.id:
+                response = {
+                    "message": "Debe ser Scrum Master para realizar esta accion",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if proyecto.estado != 'P' and proyecto.estado != "A":
+                response = {
+                    "message": "No puedes activar el Proyecto en su estado actual",
+                    "estado": dict(proyecto.ESTADO)[proyecto.estado],
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            proyecto.iniciar()
+            serializer = ProyectoSerializer(proyecto, many=False)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
