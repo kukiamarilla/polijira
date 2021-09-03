@@ -20,8 +20,8 @@ export default {
     getStyle() {
       const styles = {};
 
-      if (this.height) styles.height = this.height;
-      if (this.width) styles.width = this.width;
+      styles.height = this.height ? this.height : "auto";
+      styles.width = this.width ? this.width : "735px";
 
       return styles;
     },

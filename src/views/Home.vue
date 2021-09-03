@@ -26,7 +26,7 @@
 
     <Modal v-model="verCrearProyecto" width="498px">
       <h2>Crear Proyecto</h2>
-
+      <br /><br />
       <InputText title="Nombre:" v-model="nuevo.nombre" />
       <InputDate title="Fecha de Inicio:" v-model="nuevo.fecha_inicio" />
       <InputDate title="Fecha de Fin:" v-model="nuevo.fecha_fin" />
@@ -56,7 +56,7 @@ import InputDate from "@/components/InputDate";
 import Boton from "@/components/Boton";
 import Select from "@/components/Select";
 import InputSelect from "@/components/InputSelect";
-
+import Alert from "@/helpers/alert";
 import proyectoService from "@/services/proyectoService";
 import usuarioService from "@/services/usuarioService";
 
@@ -75,21 +75,11 @@ export default {
     InputSelect,
   },
   mounted() {
-    this.cargarProyectos();
-    this.cargarUsuarios();
+    this.load();
   },
   data() {
     return {
-      proyectos: [
-        {
-          id: "1",
-          nombre: "Proyecto 1",
-          fecha_inicio: "2021-09-02",
-          fecha_fin: "2021-10-02",
-          estado: "Pendiente",
-          scrum_master: {},
-        },
-      ],
+      proyectos: [],
       verCrearProyecto: false,
       nuevo: {
         id: "",
@@ -109,35 +99,49 @@ export default {
     },
   },
   methods: {
+    load() {
+      this.cargarProyectos();
+      this.cargarUsuarios();
+    },
     abrirCrearProyecto() {
       this.verCrearProyecto = true;
     },
     cargarProyectos() {
-      proyectoService.list().then(() => {});
+      proyectoService.list().then((proyectos) => {
+        this.proyectos = proyectos;
+      });
     },
     cargarUsuarios() {
-      usuarioService.list().then((data) => {
-        this.usuarios = data;
+      usuarioService.list().then((usuarios) => {
+        this.usuarios = usuarios;
       });
     },
     crearProyecto() {
       const validacion =
-        this.nuevo.nombre.lenght > 0 &&
+        this.nuevo.nombre.length > 0 &&
         this.nuevo.fecha_inicio &&
         this.nuevo.fecha_fin &&
-        this.nuevo.fecha_inicio < this.nuevo.fecha_fin &&
+        new Date(this.nuevo.fecha_inicio) < new Date(this.nuevo.fecha_fin) &&
         this.nuevo.scrum_master;
 
       if (validacion) {
+        let nuevo = this.nuevo;
+        nuevo.fecha_inicio = nuevo.fecha_inicio.toISOString().substr(0, 10);
+        nuevo.fecha_fin = nuevo.fecha_fin.toISOString().substr(0, 10);
+        nuevo.scrum_master_id = nuevo.scrum_master.id;
+        this.nuevo = nuevo;
         proyectoService.create(this.nuevo).then(() => {
           this.verCrearProyecto = false;
+          Alert.success("El proyecto ha sido creado con éxito.");
         });
+      } else {
+        Alert.error("Error de validación.");
       }
     },
   },
   watch: {
     usuarioSeleccionado(nuevoValor) {
-      this.nuevo.scrum_master = this.usuariosSelect[nuevoValor];
+      this.nuevo.scrum_master = this.usuarios[nuevoValor];
     },
   },
 };
