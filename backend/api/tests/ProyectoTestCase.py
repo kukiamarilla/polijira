@@ -403,7 +403,7 @@ class ProyectoTestCase(TestCase):
     def test_modificar_proyecto_sin_permiso_ver_proyectos(self):
         """
         test_modificar_proyecto_sin_permiso_ver_proyectos
-        Prueba modificar un proyecto sin tener permiso ver proyetos
+        Prueba modificar un proyecto sin tener permiso ver proyectos
         """
         print("\nProbando modificar un proyecto sin permiso ver proyectos")
         self.client.login(username="testing", password="polijira2021")
@@ -423,7 +423,7 @@ class ProyectoTestCase(TestCase):
     def test_modificar_proyecto_sin_permiso_ver_usuarios(self):
         """
         test_modificar_proyecto_sin_permiso_ver_proyectos
-        Prueba modificar un proyecto sin tener permiso ver proyetos
+        Prueba modificar un proyecto sin tener permiso ver usuarios 
         """
         print("\nProbando modificar un proyecto sin permiso ver proyectos")
         self.client.login(username="testing", password="polijira2021")
@@ -621,7 +621,7 @@ class ProyectoTestCase(TestCase):
 
     def test_eliminar_proyecto_con_estado_activo(self):
         """
-        test_eliminar_proyecto_con_estado_activoPrueba eliminar un proyecto con estado Activado
+        test_eliminar_proyecto_con_estado_activo Prueba eliminar un proyecto con estado Activado
         """
         print("\nProbando eliminar un proyecto con estado Activo")
         self.client.login(username="testing", password="polijira2021")
