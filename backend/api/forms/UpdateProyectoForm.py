@@ -4,6 +4,12 @@ from django.core.exceptions import ValidationError
 
 
 class UpdateProyectoForm(forms.Form):
+    """
+    AgregarPermisoRolForm Valida si la consulta de modificar proyecto es correcta
+
+    Raises:
+        ValidationError: Si no se pasaron las validaciones
+    """
     nombre = forms.CharField(
         max_length=255,
         required=True,

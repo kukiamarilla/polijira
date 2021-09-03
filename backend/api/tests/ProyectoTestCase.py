@@ -214,7 +214,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["nombre"], ["Sobrepasó el limite de caracteres"])
@@ -231,7 +231,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["nombre"], ["No se especificó ningun nombre"])
@@ -249,7 +249,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["fecha_inicio"], ["No se especificó ninguna fecha de inicio"])
@@ -267,7 +267,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["fecha_fin"], ["No se especificó ninguna fecha de fin"])
@@ -285,7 +285,7 @@ class ProyectoTestCase(TestCase):
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["scrum_master_id"], ["No se especificó el Scrum Master"])
@@ -492,7 +492,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["nombre"], ["Sobrepasó el limite de caracteres"])
@@ -510,7 +510,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["nombre"], ["No se especificó ningun nombre"])
@@ -528,7 +528,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["fecha_inicio"], ["No se especificó ninguna fecha de inicio"])
@@ -546,7 +546,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 3
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["fecha_fin"], ["No se especificó ninguna fecha de fin"])
@@ -564,7 +564,7 @@ class ProyectoTestCase(TestCase):
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]), 1)
         self.assertEquals(body["errors"]["scrum_master_id"], ["No se especificó el Scrum Master"])
@@ -674,7 +674,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body["errors"]["fecha_inicio"], ["La fecha de inicio no puede estar en el pasado"])
 
@@ -692,7 +692,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body["errors"]["fecha_fin"], ["La fecha de fin no puede ser menor a la de inicio"])
 
@@ -709,7 +709,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body["errors"]["fecha_inicio"], ["La fecha de inicio no puede estar en el pasado"])
 
@@ -727,7 +727,7 @@ class ProyectoTestCase(TestCase):
             "scrum_master_id": 2
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
-        self.assertEquals(response.status_code, 400)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body["errors"]["fecha_fin"], ["La fecha de fin no puede ser menor a la de inicio"])
 

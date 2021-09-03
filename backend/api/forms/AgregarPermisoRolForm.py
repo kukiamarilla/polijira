@@ -4,6 +4,12 @@ from backend.api.models import Permiso
 
 
 class AgregarPermisoRolForm(forms.Form):
+    """
+    AgregarPermisoRolForm Valida si la consulta de agregar permiso a rol es correcta
+
+    Raises:
+        ValidationError: Si no se pasaron las validaciones
+    """
     id = forms.IntegerField(
         required=True,
         error_messages={
