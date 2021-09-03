@@ -23,14 +23,10 @@ class ProyectoViewSet(viewsets.ViewSet):
             json: Proyecto[]
         """
         usuario_request = Usuario.objects.get(user=request.user)
-        if not usuario_request.tiene_permiso("ver_proyectos"):
+        proyectos = Proyecto.objects.filter(scrum_master=usuario_request)
+        if usuario_request.tiene_permiso("ver_proyectos"):
             # Falta el modelo Miembro para traer los proyectos al que pertenece
-            response = {
-                "message": "No tiene permiso para ver proyectos",
-                "error": "bad_request"
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        proyectos = Proyecto.objects.all()
+            proyectos = Proyecto.objects.all()
         serializer = ProyectoSerializer(proyectos, many=True)
         return Response(serializer.data)
 
