@@ -1,15 +1,15 @@
 <template>
   <div :class="tema" :style="{ height: altura }">
     <button class="btn-icon" v-on:click="handleClick">
-      <Icon icono="options" />
+      <Icon icono="options" color="var(--gray-4)" hover="var(--info)" />
     </button>
 
     <button class="btn-icon">
-      <Icon icono="watch" />
+      <Icon icono="watch" color="var(--gray-4)" hover="var(--info)" />
     </button>
 
     <button class="btn-icon">
-      <Icon icono="delete" />
+      <Icon icono="delete" color="var(--gray-4)" hover="var(--info)" />
     </button>
   </div>
 </template>
