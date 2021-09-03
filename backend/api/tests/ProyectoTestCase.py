@@ -1,4 +1,6 @@
 import datetime
+
+from rest_framework import status
 from backend.api.models import Proyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
@@ -730,3 +732,69 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 400)
         body = response.json()
         self.assertEquals(body["errors"]["fecha_fin"], ["La fecha de fin no puede ser menor a la de inicio"])
+
+    def test_activar_proyecto(self):
+        """
+        test_activar_proyecto Prueba activar un proyecto
+        """
+        print("\nProbando activar un proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/proyectos/1/activar/")
+        self.assertEquals(response.status_code, 200)
+        proyecto = Proyecto.objects.get(pk=1)
+        self.assertEquals(proyecto.estado, "A")
+
+    def test_activar_proyecto_sin_rol_sm(self):
+        """
+        test_activar_proyecto_sin_rol_sm Prueba activar un proyecto no siendo Scrum Master
+        """
+        print("\nProbando activar un proyecto sin ser Scrum Master")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.scrum_master = Usuario.objects.get(pk=2)
+        proyecto.save()
+        response = self.client.post("/api/proyectos/1/activar/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_proyecto_no_existente(self):
+        """
+        test_activar_proyecto_no_existente Prueba activar un proyecto que no existe
+        """
+        print("\nProbando activar un proyecto que no existe")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/proyectos/2/activar/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_activar_proyecto_cancelado(self):
+        """
+        test_activar_proyecto_activado Prueba activar un proyecto cancelado
+        """
+        print("\nProbando activar un proyecto cancelado")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.estado = "C"
+        proyecto.save()
+        response = self.client.post("/api/proyectos/1/activar/")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body["estado"], "Cancelado")
+        self.assertEquals(body["error"], "bad_request")
+
+    def test_activar_proyecto_finalizado(self):
+        """
+        test_activar_proyecto_activado Prueba activar un proyecto finalizado
+        """
+        print("\nProbando activar un proyecto finalizado")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.estado = "F"
+        proyecto.save()
+        response = self.client.post("/api/proyectos/1/activar/")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body["estado"], "Finalizado")
+        self.assertEquals(body["error"], "bad_request")
