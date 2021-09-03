@@ -13,15 +13,20 @@ export default {
       text: this.value,
     };
   },
+  watch: {
+    value() {
+      this.text = this.value;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-input[type="text"] {
+input {
   border: 1px solid var(--gray-4);
   border-radius: 5px;
-  margin: 16px 0 32px 0;
+  margin: 16px 2px 32px 2px;
   padding: 8px 16px;
-  width: 100%;
+  width: calc(100% - 4px);
 }
 </style>
