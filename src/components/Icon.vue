@@ -1,10 +1,11 @@
 <template>
   <div
     :style="{
-      backgroundColor: colorIcono,
-      height: tamaño,
+      '--hovercolor': hoverColor,
+      '--color': colorIcono,
+      height: tamanho,
       mask: `url(${linkDelIcono}) no-repeat center / contain`,
-      width: tamaño,
+      width: tamanho,
     }"
   ></div>
 </template>
@@ -19,10 +20,14 @@ const iconosValidos = [
   "options",
   "watch",
   "delete",
+  "check",
+  "edit",
+  "success",
+  "warning",
 ];
 
 export default {
-  props: { icono: String, color: String, size: String },
+  props: { icono: String, color: String, size: String, hover: String },
   data() {
     return {
       iconos: iconosValidos,
@@ -40,11 +45,21 @@ export default {
     colorIcono() {
       return this.color ? this.color : "currentColor";
     },
-    tamaño() {
+    hoverColor() {
+      return this.hover ? this.hover : this.color;
+    },
+    tamanho() {
       return this.size ? this.size : "24px";
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+div {
+  background-color: var(--color);
+  &:hover {
+    background-color: var(--hovercolor);
+  }
+}
+</style>

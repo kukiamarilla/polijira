@@ -1,5 +1,6 @@
 <template>
-  <div class="login">
+  <div>
+    <Navbar />
     <div class="mitad-izquierda">
       <div>
         <h2>
@@ -29,10 +30,12 @@
 <script>
 import MenuSemiCirculoDerecho from "@/components/MenuSemiCirculoDerecho";
 import authService from "@/services/authService";
+import Navbar from "@/components/Navbar";
 
 export default {
   components: {
     MenuSemiCirculoDerecho,
+    Navbar,
   },
   data() {
     return {
@@ -82,15 +85,9 @@ export default {
 </script>
 
 <style scoped>
-.login {
-  height: 100vh;
-  min-height: 550px;
-  width: 100%;
-}
-
 .mitad-izquierda {
+  padding-left: 100px;
+  padding-top: 50px;
   width: 40vw;
-  margin-left: 100px;
-  margin-top: 50px;
 }
 </style>

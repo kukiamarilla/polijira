@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar />
     <Sidebar />
 
     <div class="container">
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar";
 import CardAdd from "@/components/CardAdd.vue";
 import Waves from "@/components/Waves";
@@ -35,6 +37,7 @@ export default {
     };
   },
   components: {
+    Navbar,
     Sidebar,
     CardAdd,
     Waves,

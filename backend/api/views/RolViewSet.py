@@ -117,6 +117,9 @@ class RolViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if Usuario.objects.filter(rol__pk=pk).count():
+                response = {"message": "Rol asignado a usuario, no se puede eliminar"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             rol.delete()
             response = {"message": "Rol Eliminado."}
@@ -148,6 +151,9 @@ class RolViewSet(viewsets.ViewSet):
                         "modificar_roles"
                     ]
                 }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if (usuario_request.rol.pk == int(pk)):
+                response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             rol.nombre = request.data["nombre"]
@@ -209,6 +215,9 @@ class RolViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if (usuario_request.rol.pk == int(pk)):
+                response = {"message": "No puedes modificar tu propio rol"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             permiso = Permiso.objects.get(pk=request.data["permiso_id"])
             rol.agregar_permiso(permiso)
@@ -242,8 +251,14 @@ class RolViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if (usuario_request.rol.pk == int(pk)):
+                response = {"message": "No puedes modificar tu propio rol"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
             permiso = Permiso.objects.get(pk=request.data["permiso_id"])
+            if rol.permisos.all().count() < 2:
+                response = {"message": "El rol no se puede quedar sin permisos"}
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol.eliminar_permiso(permiso)
             serializer = RolSerializer(rol, many=False)
             return Response(serializer.data)

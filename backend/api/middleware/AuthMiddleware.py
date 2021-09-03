@@ -8,7 +8,7 @@ from django.conf import settings
 from django.http.response import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth.models import User
-from backend.api.models.Usuario import Usuario
+from backend.api.models import Usuario, Rol
 import firebase_admin
 from firebase_admin import auth, credentials
 from firebase_admin._token_gen import ExpiredIdTokenError
@@ -86,8 +86,9 @@ class AuthMiddleware(MiddlewareMixin):
                 )
                 user.set_password(user.username)
                 user.save()
+                rol_default = Rol.objects.get(pk=2)
                 usuario = Usuario.objects.create(
-                    user=user, nombre=user.first_name, email=user.email, estado="I", firebase_uid=userinfo["uid"]
+                    user=user, nombre=user.first_name, email=user.email, estado="I", firebase_uid=userinfo["uid"], rol=rol_default
                 )
                 return JsonResponse(
                     {

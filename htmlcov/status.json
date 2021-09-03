@@ -1,1 +1,647 @@
-{"format":2,"version":"5.5","globals":"fcb78fa690c5f31ab7503319eed323f7","files":{"backend___init___py":{"hash":"af9d0d0de0ea3b71d198bc63f1499a7d","index":{"nums":[1,0,0,0,0,0,0],"html_filename":"backend___init___py.html","relative_filename":"backend/__init__.py"}},"backend_api___init___py":{"hash":"af9d0d0de0ea3b71d198bc63f1499a7d","index":{"nums":[1,0,0,0,0,0,0],"html_filename":"backend_api___init___py.html","relative_filename":"backend/api/__init__.py"}},"backend_api_admin_py":{"hash":"af9d0d0de0ea3b71d198bc63f1499a7d","index":{"nums":[1,0,0,0,0,0,0],"html_filename":"backend_api_admin_py.html","relative_filename":"backend/api/admin.py"}},"backend_api_decorators_FormValidator_py":{"hash":"b834d23119e53aa3e1111485730b836f","index":{"nums":[1,15,0,0,0,0,0],"html_filename":"backend_api_decorators_FormValidator_py.html","relative_filename":"backend/api/decorators/FormValidator.py"}},"backend_api_decorators___init___py":{"hash":"5d03ee31eb02aebbcc8d66d496f8f70f","index":{"nums":[1,1,0,0,0,0,0],"html_filename":"backend_api_decorators___init___py.html","relative_filename":"backend/api/decorators/__init__.py"}},"backend_api_forms_CreateProyectoForm_py":{"hash":"7e2b98a98475d0359ebb156fe4247f1a","index":{"nums":[1,24,0,0,0,0,0],"html_filename":"backend_api_forms_CreateProyectoForm_py.html","relative_filename":"backend/api/forms/CreateProyectoForm.py"}},"backend_api_forms_UpdateProyectoForm_py":{"hash":"ed8f2222f461dd8cb374a8d592695e65","index":{"nums":[1,24,0,0,0,0,0],"html_filename":"backend_api_forms_UpdateProyectoForm_py.html","relative_filename":"backend/api/forms/UpdateProyectoForm.py"}},"backend_api_forms___init___py":{"hash":"be1f72edd66b862825e7438df275c179","index":{"nums":[1,2,0,0,0,0,0],"html_filename":"backend_api_forms___init___py.html","relative_filename":"backend/api/forms/__init__.py"}},"backend_api_middleware_AuthMiddleware_py":{"hash":"389026b8f9049c0850640f1d9e15c6cf","index":{"nums":[1,53,0,1,0,0,0],"html_filename":"backend_api_middleware_AuthMiddleware_py.html","relative_filename":"backend/api/middleware/AuthMiddleware.py"}},"backend_api_middleware___init___py":{"hash":"3a3078805faff8914accb0c9b1174085","index":{"nums":[1,1,0,0,0,0,0],"html_filename":"backend_api_middleware___init___py.html","relative_filename":"backend/api/middleware/__init__.py"}},"backend_api_migrations_0001_initial_py":{"hash":"a24690b7e5704a6c4b44f455ffae184e","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0001_initial_py.html","relative_filename":"backend/api/migrations/0001_initial.py"}},"backend_api_migrations_0002_delete_message_py":{"hash":"5af5e1da4b1d72b5bf4bfd4e2a731ed2","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0002_delete_message_py.html","relative_filename":"backend/api/migrations/0002_delete_message.py"}},"backend_api_migrations_0003_usuario_py":{"hash":"c6f4b2a1c98625f5d966922fcca14a41","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0003_usuario_py.html","relative_filename":"backend/api/migrations/0003_usuario.py"}},"backend_api_migrations_0004_remove_usuario_admin_py":{"hash":"5a26bd5c78a9c95a8e10131ff1c03d7d","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0004_remove_usuario_admin_py.html","relative_filename":"backend/api/migrations/0004_remove_usuario_admin.py"}},"backend_api_migrations_0005_usuario_nombre_py":{"hash":"3242ad4ec1ea8da7729331f46e395de3","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0005_usuario_nombre_py.html","relative_filename":"backend/api/migrations/0005_usuario_nombre.py"}},"backend_api_migrations_0006_usuario_user_py":{"hash":"74d05329198e01f84dc444d463064181","index":{"nums":[1,6,0,0,0,0,0],"html_filename":"backend_api_migrations_0006_usuario_user_py.html","relative_filename":"backend/api/migrations/0006_usuario_user.py"}},"backend_api_migrations_0007_permiso_py":{"hash":"86f380d951f6807e5d4603d24d31f41e","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0007_permiso_py.html","relative_filename":"backend/api/migrations/0007_permiso.py"}},"backend_api_migrations_0008_auto_20210821_0037_py":{"hash":"b2b5c4a34c56fed16883cf29c328e631","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0008_auto_20210821_0037_py.html","relative_filename":"backend/api/migrations/0008_auto_20210821_0037.py"}},"backend_api_migrations_0009_rol_usuario_py":{"hash":"05ab80796ba7899d2246ef941753e191","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0009_rol_usuario_py.html","relative_filename":"backend/api/migrations/0009_rol_usuario.py"}},"backend_api_migrations_0010_usuario_rol_py":{"hash":"5c08223dc06d5c85f566b2047c2a0cab","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0010_usuario_rol_py.html","relative_filename":"backend/api/migrations/0010_usuario_rol.py"}},"backend_api_migrations_0011_remove_rol_usuario_py":{"hash":"d2f7ebf4013ff13b7cc70acbad5863af","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0011_remove_rol_usuario_py.html","relative_filename":"backend/api/migrations/0011_remove_rol_usuario.py"}},"backend_api_migrations_0012_proyecto_py":{"hash":"83cb2707665fccc57d63a277c6939ef2","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_migrations_0012_proyecto_py.html","relative_filename":"backend/api/migrations/0012_proyecto.py"}},"backend_api_migrations_0013_proyecto_scrum_master_py":{"hash":"f68cfcadd10f80ffaa77d40a8b3710d6","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_migrations_0013_proyecto_scrum_master_py.html","relative_filename":"backend/api/migrations/0013_proyecto_scrum_master.py"}},"backend_api_migrations___init___py":{"hash":"af9d0d0de0ea3b71d198bc63f1499a7d","index":{"nums":[1,0,0,0,0,0,0],"html_filename":"backend_api_migrations___init___py.html","relative_filename":"backend/api/migrations/__init__.py"}},"backend_api_models_Permiso_py":{"hash":"284201a54bc9d1719fe91b866dee9c37","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_models_Permiso_py.html","relative_filename":"backend/api/models/Permiso.py"}},"backend_api_models_Proyecto_py":{"hash":"0bb8bbe2389208f5d4e04e71c430f9da","index":{"nums":[1,17,0,6,0,0,0],"html_filename":"backend_api_models_Proyecto_py.html","relative_filename":"backend/api/models/Proyecto.py"}},"backend_api_models_Rol_py":{"hash":"6760f26f400f543813f8a73fbd2e9093","index":{"nums":[1,9,0,0,0,0,0],"html_filename":"backend_api_models_Rol_py.html","relative_filename":"backend/api/models/Rol.py"}},"backend_api_models_Usuario_py":{"hash":"88a660b7e659cbb7499188f2020c77ab","index":{"nums":[1,26,0,0,0,0,0],"html_filename":"backend_api_models_Usuario_py.html","relative_filename":"backend/api/models/Usuario.py"}},"backend_api_models___init___py":{"hash":"0c0fd32e20e4ae3f838e90f6f2f91e90","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_models___init___py.html","relative_filename":"backend/api/models/__init__.py"}},"backend_api_serializers_PermisoSerializer_py":{"hash":"e7d757d1e1c3190936f133b7031b6b8e","index":{"nums":[1,6,0,0,0,0,0],"html_filename":"backend_api_serializers_PermisoSerializer_py.html","relative_filename":"backend/api/serializers/PermisoSerializer.py"}},"backend_api_serializers_ProyectoSerializer_py":{"hash":"e63d433f4aeb3ad02fb3ba4ff201affb","index":{"nums":[1,8,0,0,0,0,0],"html_filename":"backend_api_serializers_ProyectoSerializer_py.html","relative_filename":"backend/api/serializers/ProyectoSerializer.py"}},"backend_api_serializers_RolSerializer_py":{"hash":"8e5d94bc5cba15e1abca2249734a082c","index":{"nums":[1,8,0,0,0,0,0],"html_filename":"backend_api_serializers_RolSerializer_py.html","relative_filename":"backend/api/serializers/RolSerializer.py"}},"backend_api_serializers_UserSerializer_py":{"hash":"1d00214d5dbc071339d54abd36161de0","index":{"nums":[1,6,0,0,0,0,0],"html_filename":"backend_api_serializers_UserSerializer_py.html","relative_filename":"backend/api/serializers/UserSerializer.py"}},"backend_api_serializers_UsuarioSerializer_py":{"hash":"81f37ea3d29235b2b39b4316438de7da","index":{"nums":[1,10,0,0,0,0,0],"html_filename":"backend_api_serializers_UsuarioSerializer_py.html","relative_filename":"backend/api/serializers/UsuarioSerializer.py"}},"backend_api_serializers___init___py":{"hash":"9bc79b5da9174f88c0d5e8ac17dd6ab3","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_serializers___init___py.html","relative_filename":"backend/api/serializers/__init__.py"}},"backend_api_tests_AuthTestCase_py":{"hash":"42c8c9a2ce150f81b71806a615f6396c","index":{"nums":[1,76,0,0,0,0,0],"html_filename":"backend_api_tests_AuthTestCase_py.html","relative_filename":"backend/api/tests/AuthTestCase.py"}},"backend_api_tests_PermisoTestCase_py":{"hash":"a7983034a09f1d23af3a40daae322e89","index":{"nums":[1,25,0,0,0,0,0],"html_filename":"backend_api_tests_PermisoTestCase_py.html","relative_filename":"backend/api/tests/PermisoTestCase.py"}},"backend_api_tests_ProyectoTestCase_py":{"hash":"22e7f6e2171612e870904ca9d605d269","index":{"nums":[1,383,0,0,0,0,0],"html_filename":"backend_api_tests_ProyectoTestCase_py.html","relative_filename":"backend/api/tests/ProyectoTestCase.py"}},"backend_api_tests_RolTestCase_py":{"hash":"4c362478fdae1421bb3e440b30b3e866","index":{"nums":[1,269,0,0,0,0,0],"html_filename":"backend_api_tests_RolTestCase_py.html","relative_filename":"backend/api/tests/RolTestCase.py"}},"backend_api_tests_UsuarioTestCase_py":{"hash":"606296413dae6fa384a038348d9c66a9","index":{"nums":[1,88,0,0,0,0,0],"html_filename":"backend_api_tests_UsuarioTestCase_py.html","relative_filename":"backend/api/tests/UsuarioTestCase.py"}},"backend_api_tests___init___py":{"hash":"9eb8e4378d4949b3f32b3a20382c0c94","index":{"nums":[1,5,0,0,0,0,0],"html_filename":"backend_api_tests___init___py.html","relative_filename":"backend/api/tests/__init__.py"}},"backend_api_views_PermisoViewSet_py":{"hash":"21ad05c75adde01279a78a5502ebaf1e","index":{"nums":[1,13,0,0,0,0,0],"html_filename":"backend_api_views_PermisoViewSet_py.html","relative_filename":"backend/api/views/PermisoViewSet.py"}},"backend_api_views_ProyectoViewSet_py":{"hash":"5cc73a930a1e95e3b6f25b3585c96a50","index":{"nums":[1,78,0,1,0,0,0],"html_filename":"backend_api_views_ProyectoViewSet_py.html","relative_filename":"backend/api/views/ProyectoViewSet.py"}},"backend_api_views_RolViewSet_py":{"hash":"b352eeb6c2eaab1294ee62e2d41f8c1d","index":{"nums":[1,125,0,0,0,0,0],"html_filename":"backend_api_views_RolViewSet_py.html","relative_filename":"backend/api/views/RolViewSet.py"}},"backend_api_views_UsuarioViewSet_py":{"hash":"2b78801ea23fd9ad6954173759f5163e","index":{"nums":[1,81,0,8,0,0,0],"html_filename":"backend_api_views_UsuarioViewSet_py.html","relative_filename":"backend/api/views/UsuarioViewSet.py"}},"backend_api_views___init___py":{"hash":"8dedb09b1fbae2f09e4966e8806f51fb","index":{"nums":[1,4,0,0,0,0,0],"html_filename":"backend_api_views___init___py.html","relative_filename":"backend/api/views/__init__.py"}},"backend_settings___init___py":{"hash":"af9d0d0de0ea3b71d198bc63f1499a7d","index":{"nums":[1,0,0,0,0,0,0],"html_filename":"backend_settings___init___py.html","relative_filename":"backend/settings/__init__.py"}},"backend_settings_dev_py":{"hash":"f7b51f154528aee61cacb1e7313f38e7","index":{"nums":[1,28,0,0,0,0,0],"html_filename":"backend_settings_dev_py.html","relative_filename":"backend/settings/dev.py"}},"backend_urls_py":{"hash":"bcd051bf7c0bd2db656c3ed02234efc6","index":{"nums":[1,14,0,0,0,0,0],"html_filename":"backend_urls_py.html","relative_filename":"backend/urls.py"}},"manage_py":{"hash":"6478d4a208946dd0daf792d7bc6a402f","index":{"nums":[1,11,0,2,0,0,0],"html_filename":"manage_py.html","relative_filename":"manage.py"}}}}
+{
+    "format": 2,
+    "version": "5.5",
+    "globals": "e87bb3d96108f1ac9d4a6ebc563eeba6",
+    "files": {
+        "backend___init___py": {
+            "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+            "index": {
+                "nums": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend___init___py.html",
+                "relative_filename": "backend/__init__.py"
+            }
+        },
+        "backend_api___init___py": {
+            "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+            "index": {
+                "nums": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api___init___py.html",
+                "relative_filename": "backend/api/__init__.py"
+            }
+        },
+        "backend_api_admin_py": {
+            "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+            "index": {
+                "nums": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_admin_py.html",
+                "relative_filename": "backend/api/admin.py"
+            }
+        },
+        "backend_api_middleware_AuthMiddleware_py": {
+            "hash": "2509e6225212cd6dc2729fde459ee6d1",
+            "index": {
+                "nums": [
+                    1,
+                    54,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_middleware_AuthMiddleware_py.html",
+                "relative_filename": "backend/api/middleware/AuthMiddleware.py"
+            }
+        },
+        "backend_api_middleware___init___py": {
+            "hash": "3a3078805faff8914accb0c9b1174085",
+            "index": {
+                "nums": [
+                    1,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_middleware___init___py.html",
+                "relative_filename": "backend/api/middleware/__init__.py"
+            }
+        },
+        "backend_api_migrations_0001_initial_py": {
+            "hash": "a24690b7e5704a6c4b44f455ffae184e",
+            "index": {
+                "nums": [
+                    1,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0001_initial_py.html",
+                "relative_filename": "backend/api/migrations/0001_initial.py"
+            }
+        },
+        "backend_api_migrations_0002_delete_message_py": {
+            "hash": "5af5e1da4b1d72b5bf4bfd4e2a731ed2",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0002_delete_message_py.html",
+                "relative_filename": "backend/api/migrations/0002_delete_message.py"
+            }
+        },
+        "backend_api_migrations_0003_usuario_py": {
+            "hash": "c6f4b2a1c98625f5d966922fcca14a41",
+            "index": {
+                "nums": [
+                    1,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0003_usuario_py.html",
+                "relative_filename": "backend/api/migrations/0003_usuario.py"
+            }
+        },
+        "backend_api_migrations_0004_remove_usuario_admin_py": {
+            "hash": "5a26bd5c78a9c95a8e10131ff1c03d7d",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0004_remove_usuario_admin_py.html",
+                "relative_filename": "backend/api/migrations/0004_remove_usuario_admin.py"
+            }
+        },
+        "backend_api_migrations_0005_usuario_nombre_py": {
+            "hash": "3242ad4ec1ea8da7729331f46e395de3",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0005_usuario_nombre_py.html",
+                "relative_filename": "backend/api/migrations/0005_usuario_nombre.py"
+            }
+        },
+        "backend_api_migrations_0006_usuario_user_py": {
+            "hash": "74d05329198e01f84dc444d463064181",
+            "index": {
+                "nums": [
+                    1,
+                    6,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0006_usuario_user_py.html",
+                "relative_filename": "backend/api/migrations/0006_usuario_user.py"
+            }
+        },
+        "backend_api_migrations_0007_permiso_py": {
+            "hash": "86f380d951f6807e5d4603d24d31f41e",
+            "index": {
+                "nums": [
+                    1,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0007_permiso_py.html",
+                "relative_filename": "backend/api/migrations/0007_permiso.py"
+            }
+        },
+        "backend_api_migrations_0008_auto_20210821_0037_py": {
+            "hash": "b2b5c4a34c56fed16883cf29c328e631",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0008_auto_20210821_0037_py.html",
+                "relative_filename": "backend/api/migrations/0008_auto_20210821_0037.py"
+            }
+        },
+        "backend_api_migrations_0009_rol_usuario_py": {
+            "hash": "05ab80796ba7899d2246ef941753e191",
+            "index": {
+                "nums": [
+                    1,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0009_rol_usuario_py.html",
+                "relative_filename": "backend/api/migrations/0009_rol_usuario.py"
+            }
+        },
+        "backend_api_migrations_0010_usuario_rol_py": {
+            "hash": "5c08223dc06d5c85f566b2047c2a0cab",
+            "index": {
+                "nums": [
+                    1,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0010_usuario_rol_py.html",
+                "relative_filename": "backend/api/migrations/0010_usuario_rol.py"
+            }
+        },
+        "backend_api_migrations_0011_remove_rol_usuario_py": {
+            "hash": "d2f7ebf4013ff13b7cc70acbad5863af",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations_0011_remove_rol_usuario_py.html",
+                "relative_filename": "backend/api/migrations/0011_remove_rol_usuario.py"
+            }
+        },
+        "backend_api_migrations___init___py": {
+            "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+            "index": {
+                "nums": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_migrations___init___py.html",
+                "relative_filename": "backend/api/migrations/__init__.py"
+            }
+        },
+        "backend_api_models_Permiso_py": {
+            "hash": "284201a54bc9d1719fe91b866dee9c37",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_models_Permiso_py.html",
+                "relative_filename": "backend/api/models/Permiso.py"
+            }
+        },
+        "backend_api_models_Rol_py": {
+            "hash": "6760f26f400f543813f8a73fbd2e9093",
+            "index": {
+                "nums": [
+                    1,
+                    9,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_models_Rol_py.html",
+                "relative_filename": "backend/api/models/Rol.py"
+            }
+        },
+        "backend_api_models_Usuario_py": {
+            "hash": "88a660b7e659cbb7499188f2020c77ab",
+            "index": {
+                "nums": [
+                    1,
+                    26,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_models_Usuario_py.html",
+                "relative_filename": "backend/api/models/Usuario.py"
+            }
+        },
+        "backend_api_models___init___py": {
+            "hash": "adf0d924bc1df1ae5f4fac2b017d6d8e",
+            "index": {
+                "nums": [
+                    1,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_models___init___py.html",
+                "relative_filename": "backend/api/models/__init__.py"
+            }
+        },
+        "backend_api_serializers_PermisoSerializer_py": {
+            "hash": "e7d757d1e1c3190936f133b7031b6b8e",
+            "index": {
+                "nums": [
+                    1,
+                    6,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_serializers_PermisoSerializer_py.html",
+                "relative_filename": "backend/api/serializers/PermisoSerializer.py"
+            }
+        },
+        "backend_api_serializers_RolSerializer_py": {
+            "hash": "8e5d94bc5cba15e1abca2249734a082c",
+            "index": {
+                "nums": [
+                    1,
+                    8,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_serializers_RolSerializer_py.html",
+                "relative_filename": "backend/api/serializers/RolSerializer.py"
+            }
+        },
+        "backend_api_serializers_UserSerializer_py": {
+            "hash": "1d00214d5dbc071339d54abd36161de0",
+            "index": {
+                "nums": [
+                    1,
+                    6,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_serializers_UserSerializer_py.html",
+                "relative_filename": "backend/api/serializers/UserSerializer.py"
+            }
+        },
+        "backend_api_serializers_UsuarioSerializer_py": {
+            "hash": "81f37ea3d29235b2b39b4316438de7da",
+            "index": {
+                "nums": [
+                    1,
+                    10,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_serializers_UsuarioSerializer_py.html",
+                "relative_filename": "backend/api/serializers/UsuarioSerializer.py"
+            }
+        },
+        "backend_api_serializers___init___py": {
+            "hash": "230be4ca4f83bf1e9f8c9e054172cf70",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_serializers___init___py.html",
+                "relative_filename": "backend/api/serializers/__init__.py"
+            }
+        },
+        "backend_api_tests_AuthTestCase_py": {
+            "hash": "5b256324ca9988a47461f27e536a0281",
+            "index": {
+                "nums": [
+                    1,
+                    77,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_tests_AuthTestCase_py.html",
+                "relative_filename": "backend/api/tests/AuthTestCase.py"
+            }
+        },
+        "backend_api_tests_PermisoTestCase_py": {
+            "hash": "a7983034a09f1d23af3a40daae322e89",
+            "index": {
+                "nums": [
+                    1,
+                    25,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_tests_PermisoTestCase_py.html",
+                "relative_filename": "backend/api/tests/PermisoTestCase.py"
+            }
+        },
+        "backend_api_tests_RolTestCase_py": {
+            "hash": "3122eff620107958133aac8ffa7ea42a",
+            "index": {
+                "nums": [
+                    1,
+                    319,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_tests_RolTestCase_py.html",
+                "relative_filename": "backend/api/tests/RolTestCase.py"
+            }
+        },
+        "backend_api_tests_UsuarioTestCase_py": {
+            "hash": "905407783a7a438a0b3e81cc001f214f",
+            "index": {
+                "nums": [
+                    1,
+                    147,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_tests_UsuarioTestCase_py.html",
+                "relative_filename": "backend/api/tests/UsuarioTestCase.py"
+            }
+        },
+        "backend_api_tests___init___py": {
+            "hash": "69d45ce62235e16256108c5cd1d862b6",
+            "index": {
+                "nums": [
+                    1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_tests___init___py.html",
+                "relative_filename": "backend/api/tests/__init__.py"
+            }
+        },
+        "backend_api_views_PermisoViewSet_py": {
+            "hash": "21ad05c75adde01279a78a5502ebaf1e",
+            "index": {
+                "nums": [
+                    1,
+                    13,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_views_PermisoViewSet_py.html",
+                "relative_filename": "backend/api/views/PermisoViewSet.py"
+            }
+        },
+        "backend_api_views_RolViewSet_py": {
+            "hash": "d5b33c9efcd6873bad9fe2e9be02477c",
+            "index": {
+                "nums": [
+                    1,
+                    140,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_views_RolViewSet_py.html",
+                "relative_filename": "backend/api/views/RolViewSet.py"
+            }
+        },
+        "backend_api_views_UsuarioViewSet_py": {
+            "hash": "0e995ca50b1e3137db31e3008fea22e3",
+            "index": {
+                "nums": [
+                    1,
+                    84,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_views_UsuarioViewSet_py.html",
+                "relative_filename": "backend/api/views/UsuarioViewSet.py"
+            }
+        },
+        "backend_api_views___init___py": {
+            "hash": "11611b1e21112b62f581d2b99034668c",
+            "index": {
+                "nums": [
+                    1,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_views___init___py.html",
+                "relative_filename": "backend/api/views/__init__.py"
+            }
+        },
+        "backend_settings___init___py": {
+            "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+            "index": {
+                "nums": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_settings___init___py.html",
+                "relative_filename": "backend/settings/__init__.py"
+            }
+        },
+        "backend_settings_dev_py": {
+            "hash": "f7b51f154528aee61cacb1e7313f38e7",
+            "index": {
+                "nums": [
+                    1,
+                    28,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_settings_dev_py.html",
+                "relative_filename": "backend/settings/dev.py"
+            }
+        },
+        "backend_urls_py": {
+            "hash": "95204e832710603f9284dd5b31467848",
+            "index": {
+                "nums": [
+                    1,
+                    14,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_urls_py.html",
+                "relative_filename": "backend/urls.py"
+            }
+        },
+        "manage_py": {
+            "hash": "6478d4a208946dd0daf792d7bc6a402f",
+            "index": {
+                "nums": [
+                    1,
+                    11,
+                    0,
+                    2,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "manage_py.html",
+                "relative_filename": "manage.py"
+            }
+        },
+        "backend_api_forms_RolForm_py": {
+            "hash": "7f44a689574876fb23d8cbe5383ac36d",
+            "index": {
+                "nums": [
+                    1,
+                    13,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0
+                ],
+                "html_filename": "backend_api_forms_RolForm_py.html",
+                "relative_filename": "backend/api/forms/RolForm.py"
+            }
+        }
+    }
+}
