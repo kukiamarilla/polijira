@@ -58,9 +58,9 @@ class ProyectoTestCase(TestCase):
         """
         test_obtener_proyecto Prueba obtener detalles de un proyecto sin tener permiso para ver proyectos
         """
-        print("\nProbando obtener detalles de un proyecto sin tener permiso.")
+        print("\nProbando obtener detalles de un proyecto sin tener permiso para ver proyectos.")
         self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=13).delete()
+        Permiso.objects.get(pk=10).delete()
         scrum_master = Usuario.objects.get(pk=2)
         proyecto = Proyecto.objects.create(
             nombre="ProyectoTest",
@@ -148,7 +148,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando crear proyecto sin permiso crear proyectos")
         self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=10).delete()
+        Permiso.objects.get(pk=11).delete()
         proyecto_body = {
             "nombre": "ProyectoTestCrear",
             "fecha_inicio": datetime.date.today(),
@@ -382,12 +382,12 @@ class ProyectoTestCase(TestCase):
 
     def test_modificar_proyecto_sin_permiso_modificar_proyectos(self):
         """
-        test_crear_proyecto_sin_permiso_crear_proyectos
+        test_modificar_proyecto_sin_permiso_crear_proyectos
         Prueba modificar un proyecto sin tener permiso modificar proyectos
         """
         print("\nProbando modificar proyecto sin permiso crear proyectos")
         self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=11).delete()
+        Permiso.objects.get(pk=12).delete()
         proyecto_body = {
             "nombre": "ProyectoTestModificar",
             "fecha_inicio": datetime.date.today(),
@@ -407,7 +407,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando modificar un proyecto sin permiso ver proyectos")
         self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=13).delete()
+        Permiso.objects.get(pk=10).delete()
         proyecto_body = {
             "nombre": "ProyectoTestModificar",
             "fecha_inicio": datetime.date.today(),
@@ -587,7 +587,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando eliminar proyecto sin permiso eliminar proyecto")
         self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=12).delete()
+        Permiso.objects.get(pk=13).delete()
         response = self.client.delete("/api/proyectos/1/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
