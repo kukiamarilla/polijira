@@ -13,6 +13,11 @@ export default {
       text: this.value,
     };
   },
+  watch: {
+    value() {
+      this.text = this.value;
+    },
+  },
 };
 </script>
 

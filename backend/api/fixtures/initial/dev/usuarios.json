@@ -1,0 +1,50 @@
+[
+    {
+        "model": "api.usuario",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "nombre": "Isaac Amarilla",
+            "email": "sc.amarilla@gmail.com",
+            "estado": "A",
+            "firebase_uid": "ytuo1pkhFiOG5BN5XhnDd0gplW42",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "nombre": "Nerea Ortiz",
+            "email": "nmoortiz@gmail.com ",
+            "estado": "A",
+            "firebase_uid": "inatCNlTBVgntPuAjnWRNIKnvHN2",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "nombre": "Ramon Perdomo",
+            "email": "rperdomorivas@gmail.com ",
+            "estado": "A",
+            "firebase_uid": "YIWQchfL8OXbKLcEw5ih5hwI1Cj2",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "nombre": "Sebastian Cane",
+            "email": "canesi12@gmail.com ",
+            "estado": "A",
+            "firebase_uid": "euZfUKH8zra8DLcSXnJO8qeR0aC2",
+            "rol": 1
+        }
+    }
+]

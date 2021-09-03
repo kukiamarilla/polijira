@@ -18,7 +18,7 @@
               <Td width="40%">{{ rol.nombre }}</Td>
               <Td width="40%">
                 <div class="acciones" style="display: flex">
-                  <a href="#">
+                  <a href="#" @click.prevent="verRol(rol)">
                     <Icon
                       icono="watch"
                       size="16px"
@@ -26,7 +26,13 @@
                       hover="#51ABFF"
                     />
                   </a>
-                  <a href="#">
+                  <a
+                    href="#"
+                    @click.prevent="eliminarRol(rol)"
+                    v-if="
+                      hasPermission('eliminar_roles') && me.rol.id != rol.id
+                    "
+                  >
                     <Icon
                       icono="delete"
                       size="16px"
@@ -34,7 +40,13 @@
                       hover="#F25656"
                     />
                   </a>
-                  <a href="#">
+                  <a
+                    href="#"
+                    @click.prevent="abrirModificarModal(rol)"
+                    v-if="
+                      hasPermission('modificar_roles') && me.rol.id != rol.id
+                    "
+                  >
                     <Icon
                       icono="edit"
                       size="16px"
@@ -85,6 +97,23 @@
       v-model="nuevoRolModal"
       @save="crearRol($event)"
     />
+    <VerRolModal
+      :permisos="permisos"
+      v-model="verRolModal"
+      :rol="rolSelected"
+    />
+    <Modal v-model="modificarRolModal" height="350px">
+      <h1>Modificar Rol</h1>
+      <br /><br /><br />
+      <InputText title="Nombre" v-model="rolSelected.nombre" />
+      <br /><br />
+      <Boton
+        texto="Guardar"
+        tema="primary"
+        width="163px"
+        @click="modificarRol()"
+      />
+    </Modal>
     <Waves class="waves" />
   </div>
 </template>
@@ -92,12 +121,14 @@
 <script>
 import Navbar from "@/components/Navbar";
 import NuevoRolModal from "@/components/NuevoRolModal";
+import VerRolModal from "@/components/VerRolModal";
+import Modal from "@/components/Modal";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
 import Icon from "@/components/Icon";
 import InputText from "@/components/InputText";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import permisoService from "@/services/permisoService";
 import rolService from "@/services/rolService";
@@ -118,6 +149,8 @@ export default {
     Icon,
     InputText,
     NuevoRolModal,
+    VerRolModal,
+    Modal,
   },
   created() {
     if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
@@ -127,6 +160,9 @@ export default {
     this.load();
   },
   computed: {
+    ...mapState({
+      me: (state) => state.auth.me,
+    }),
     ...mapGetters({
       hasAnyPermission: "auth/hasAnyPermission",
       hasPermission: "auth/hasPermission",
@@ -136,6 +172,12 @@ export default {
     return {
       buscar: "",
       nuevoRolModal: false,
+      verRolModal: false,
+      modificarRolModal: false,
+      rolSelected: {
+        nombre: "",
+        permisos: [],
+      },
       nuevoRol: {
         nombre: "",
         permisos: [],
@@ -165,6 +207,31 @@ export default {
         this.roles = [...this.roles, rol];
       });
       this.nuevoRolModal = false;
+    },
+    verRol(rol) {
+      this.rolSelected = rol;
+      this.verRolModal = true;
+    },
+    eliminarRol(rol) {
+      let confirmation = confirm(
+        "¿Está seguro que desea eliminar este rol?. Esta acción es irreversible."
+      );
+      if (confirmation)
+        rolService.delete(rol.id).then(() => {
+          Alert.success("Rol eliminado correctamente.");
+          this.load();
+        });
+    },
+    abrirModificarModal(rol) {
+      this.rolSelected = rol;
+      this.modificarRolModal = true;
+    },
+    modificarRol() {
+      rolService.update(this.rolSelected.id, this.rolSelected).then(() => {
+        Alert.success("Rol modificado correctamente.");
+        this.load();
+        this.modificarRolModal = false;
+      });
     },
   },
 };
