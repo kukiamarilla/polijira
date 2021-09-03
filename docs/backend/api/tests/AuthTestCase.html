@@ -20,7 +20,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">backend.api.models.Usuario</span> <span class="kn">import</span> <span class="n">Usuario</span>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Rol</span>
 <span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">Client</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
@@ -52,6 +52,8 @@
       <div class="highlight"><pre>    <span class="n">fixtures</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;backend/api/fixtures/testing/auth.json&quot;</span><span class="p">,</span>
         <span class="s2">&quot;backend/api/fixtures/testing/usuarios.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/permisos.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/roles.json&quot;</span>
     <span class="p">]</span></pre></div>
     </div>
   </div>
@@ -193,8 +195,8 @@
     <div class='code'>
       <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtención de perfil de usuario sin loguearse.&quot;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">)</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span></pre></div>
+        <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -226,9 +228,221 @@
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_token</span><span class="p">()}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">headers</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
-
-</pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;unactivated&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>test_wrong_start_path Prueba si el path del request no inicia con /api</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_wrong_start_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener el path del request que no inicia con /api.&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">json</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>test_token_formato_incorrecto_sin_jwt Prueba si el header tiene jwt</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_token_formato_incorrecto_sin_jwt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando enviar un formato sin JWT en el header.&quot;</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">:</span> <span class="s2">&quot;fjdlajdkffd&quot;</span><span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">headers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>test_token_formato_incorrecto_jwt Prueba si el jwt es correcto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_token_formato_incorrecto_jwt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando enviar un formato JWT incorrecto en el header.&quot;</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">:</span> <span class="s2">&quot;JW &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_token</span><span class="p">()}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">headers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>test_usuario_nuevo_logueado Prueba si un usuario ingresa por primera vez en el sistema</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_usuario_nuevo_logueado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando ingresar con un usuario nuevo al sistema.&quot;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_token</span><span class="p">()}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">rol_default</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">user__first_name</span><span class="o">=</span><span class="s2">&quot;Test PoliJira&quot;</span><span class="p">,</span>
+            <span class="n">user__email</span><span class="o">=</span><span class="s2">&quot;test@polijira.com&quot;</span><span class="p">,</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;Test PoliJira&quot;</span><span class="p">,</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@polijira.com&quot;</span><span class="p">,</span>
+            <span class="n">estado</span><span class="o">=</span><span class="s2">&quot;I&quot;</span><span class="p">,</span>
+            <span class="n">firebase_uid</span><span class="o">=</span><span class="s2">&quot;A4rxPBjYBfQKrIUlElklVF2OTRI3&quot;</span><span class="p">,</span>
+            <span class="n">rol</span><span class="o">=</span><span class="n">rol_default</span>
+        <span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;unactivated&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>test_token_invalido Prueba cuando el token enviado es invalido</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_token_invalido</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando utilizar un token incorrecto.&quot;</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="s2">&quot;fjdklsfjlskaf&quot;</span><span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/usuarios/me/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">headers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>TODO
+def test_token_expirado(self):</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="c1">#     &quot;&quot;&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <pre><code>test_token_invalido Prueba cuando el token enviado esta expirado
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="c1">#     &quot;&quot;&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <pre><code>print("\nProbando utilizar un token expirado")
+headers = {"HTTP_AUTHORIZATION": "JWT "
+           + "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2NGU4NTQ1NzI5OWQ5NzIx"
+           + "YjczNDQyZGNiNTQ3Y2U2ZDk4NGRmNTkiLCJ0eXAiOiJKV1QifQ.ey"
+           + "JuYW1lIjoiU2ViYXMgQ2FuZSIsInBpY3R1cmUiOiJodHRwczovL2xo"
+           + "My5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHZ2F1TWJjM2"
+           + "9EZ284VUZQR1hCS1ExTXM0Y3hkV1R5b3oybG1QejY9czk2LWMiLCJp"
+           + "c3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcG9saW"
+           + "ppcmEtY2MxNDciLCJhdWQiOiJwb2xpamlyYS1jYzE0NyIsImF1dGhf"
+           + "dGltZSI6MTYyOTI2MTI0MCwidXNlcl9pZCI6ImV1WmZVS0g4enJhOE"
+           + "RMY1NYbkpPOHFlUjBhQzIiLCJzdWIiOiJldVpmVUtIOHpyYThETGNT"
+           + "WG5KTzhxZVIwYUMyIiwiaWF0IjoxNjI5MjYxMjQwLCJleHAiOjE2Mjk"
+           + "yNjQ4NDAsImVtYWlsIjoiY2FuZXNpMTJAZ21haWwuY29tIiwiZW1haW"
+           + "xfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiO"
+           + "nsiZ29vZ2xlLmNvbSI6WyIxMDM1NzAyMjEwMzE5NzgzMjg5MTIiXSwi"
+           + "ZW1haWwiOlsiY2FuZXNpMTJAZ21haWwuY29tIl19LCJzaWduX2luX3B"
+           + "yb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.iiRgqoCwMv9b70wiTesdzoT"
+           + "vm_QDou4pkkBsiTeI9wi6pY-xFhAWIIPE7AsNszI1YC_tUNn6SWLEUD"
+           + "9Pe-FLFfYiDyk2DKbzuCy45qGH3JHXVWLNbYjS56Ol_Jpx4MgRdIPBm"
+           + "73XWf6YyF-oPP4DJjzd-K_51Bmt1i0w5XgAiWq02f7hld2KXK8GERqx"
+           + "1P8pWTWlpBuwZGByJGZzmyxMgECz3WtvGPYoJt9GYZeMW-j5yqf4YUO"
+           + "DjRu7qFI4NEr8UjnBfaYVURGTR5cHt46sx9maGb8dlNkmW9xRTUhuNP"
+           + "cTFw968M3pmsO_AKkWkSwOGSRK9JrrcFIcaMNTxu4HHw"}
+response = self.c.get("/api/usuarios/me/", **headers)
+self.assertEquals(response.status_code, 401)
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

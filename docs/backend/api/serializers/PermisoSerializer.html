@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <title>UserSerializer.py</title>
+  <title>PermisoSerializer.py</title>
   <link rel="stylesheet" href="../../../pycco.css">
 </head>
 <body>
 <div id='container'>
   <div id="background"></div>
   <div class='section'>
-    <div class='docs'><h1>UserSerializer.py</h1></div>
+    <div class='docs'><h1>PermisoSerializer.py</h1></div>
   </div>
   <div class='clearall'>
   <div class='section' id='section-0'>
@@ -21,7 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span></pre></div>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Permiso</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -30,10 +30,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>Serializer para el modelo User</p>
+      <p>Serializer de Permiso</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span> <span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">PermisoSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -54,7 +54,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Metadatos del User Serializer</p>
+      <p>Metadatos de PermisoSerializer</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span></pre></div>
@@ -69,8 +69,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="n">model</span> <span class="o">=</span> <span class="n">Permiso</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="s2">&quot;codigo&quot;</span><span class="p">)</span>
 
 </pre></div>
     </div>

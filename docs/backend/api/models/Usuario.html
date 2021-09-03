@@ -21,7 +21,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span></pre></div>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Permiso</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -47,7 +48,8 @@
     email {EmailField}  &ndash; una direccion de correo electronico
     ESTADO  {choices} &ndash; indica los diferentes estados del usuario
     estado {CharField} &ndash; indica el estado actual del usuario
-    firebase_uid {CharField} &ndash; id del SSO firebase</p>
+    firebase_uid {CharField} &ndash; id del SSO firebase
+    rol {ForeignKey} &ndash; rol relacionado a este usuario</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -59,7 +61,8 @@
     <span class="p">)</span>
     <span class="n">ESTADO</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Activo&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;Inactivo&#39;</span><span class="p">))</span>
     <span class="n">estado</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADO</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">)</span>
-    <span class="n">firebase_uid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></pre></div>
+    <span class="n">firebase_uid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">rol</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;Rol&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;usuarios&#39;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -71,7 +74,7 @@
       <p>Comprueba si este usuario tiene el permiso especificado</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">tiene_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permiso</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">tiene_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permiso_codigo</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -81,12 +84,91 @@
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <p>Args:
-    permiso (Permiso): el permiso</p>
+    permiso_codigo (String): el codigo del permiso</p>
 <p>Returns:
-    bool: Verdadero; o Falso</p>
+    bool: True, False</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="kc">True</span>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="o">.</span><span class="n">permisos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codigo</span><span class="o">=</span><span class="n">permiso_codigo</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">Permiso</span><span class="o">.</span><span class="n">Permiso</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>activar Activa este usuario</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">activar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>desactivar Desactiva este usuario</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">desactivar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>asignar_rol Asigna un rol a este usuario</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">asignar_rol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rol</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">=</span> <span class="n">rol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
 </pre></div>
     </div>

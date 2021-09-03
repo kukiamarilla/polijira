@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>ProyectoViewSet.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>ProyectoViewSet.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">action</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="p">,</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">Usuario</span>
+<span class="kn">from</span> <span class="nn">backend.api.serializers</span> <span class="kn">import</span> <span class="n">ProyectoSerializer</span>
+<span class="kn">from</span> <span class="nn">backend.api.forms</span> <span class="kn">import</span> <span class="n">CreateProyectoForm</span><span class="p">,</span> <span class="n">UpdateProyectoForm</span>
+<span class="kn">from</span> <span class="nn">backend.api.decorators</span> <span class="kn">import</span> <span class="n">FormValidator</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>ProyectoViewSet View para el modelo Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ProyectoViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ViewSet</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>list Lista todos los proyectos</p>
+<p>Args:
+    request (Any): request</p>
+<p>Returns:
+    json: Proyecto[]</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">proyectos</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scrum_master</span><span class="o">=</span><span class="n">usuario_request</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Falta el modelo Miembro para traer los proyectos al que pertenece</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">proyectos</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">ProyectoSerializer</span><span class="p">(</span><span class="n">proyectos</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>retrieve Obtiene un proyecto</p>
+<p>Args:
+    request (Any): request
+    pk (integer, optional): primary key. Defaults to None.</p>
+<p>Returns:
+    json: Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta accion&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">ProyectoSerializer</span><span class="p">(</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No existe el proyecto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>create Crea un proyecto</p>
+<p>Args:
+    request (Any): request</p>
+<p>Returns:
+    json: Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@FormValidator</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">CreateProyectoForm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;crear_proyectos&quot;</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_usuarios&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta accion&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;crear_proyectos&quot;</span><span class="p">,</span> <span class="s2">&quot;ver_usuarios&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">nombre</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span>
+                <span class="n">fecha_fin</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span>
+                <span class="n">scrum_master</span><span class="o">=</span><span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;scrum_master_id&#39;</span><span class="p">])</span>
+            <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Falta agregar al scrum master como miembro del proyecto
+Falta agregar el rol de proyecto scrum master al usuario asignado como scrum master</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">serializer</span> <span class="o">=</span> <span class="n">ProyectoSerializer</span><span class="p">(</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No existe el Scum Master&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>update Modifica un Proyecto</p>
+<p>Args:
+    request (Any): request
+    pk (integer, optional): primary key. Defaults to None.</p>
+<p>Returns:
+    json: Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@FormValidator</span><span class="p">(</span><span class="n">UpdateProyectoForm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;modificar_proyectos&quot;</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_usuarios&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta accion&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;modificar_proyectos&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ver_proyectos&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ver_usuarios&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Solo puedes modificar un proyecto en estado Pendiente&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;bad_request&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+            <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">nombre</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span>
+                <span class="n">fecha_fin</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span>
+                <span class="n">scrum_master</span><span class="o">=</span><span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;scrum_master_id&#39;</span><span class="p">])</span>
+            <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Falta verificar si se agrega un nuevo scrum master, si es asi
+el scrum master anterior deja de ser miembro del proyecto; y
+el nuevo pasa a ser miembro del proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">ProyectoSerializer</span><span class="p">(</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;El proyecto no existe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No existe el Scrum Master&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>destroy Elimina un Proyecto</p>
+<p>Args:
+    request (Any): request
+    pk (integer, optional): primary key. Defaults to None.</p>
+<p>Returns:
+    http request: 200</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;eliminar_proyectos&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta accion&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;ver_proyectos&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;eliminar_proyectos&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;El proyecto debe estar en estado Pendiente para ser eliminado&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;bad_request&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+            <span class="n">proyecto</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Proyecto Eliminado&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;El proyecto no existe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>activar Activa el Proyecto</p>
+<p>Args:
+    request (Any): request
+    pk (integer, optional): primary key. Defaults to None.</p>
+<p>Returns:
+    json: Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@action</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">activar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario_request</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>if not usuario_request.tiene_permiso(&ldquo;activar_proyectos&rdquo;):
+    response = {
+        &ldquo;message&rdquo;: &ldquo;No tiene permiso para realizar esta accion&rdquo;,
+        &ldquo;permission_required&rdquo;: [&ldquo;activar_proyectos&rdquo;],
+        &ldquo;error&rdquo;: &ldquo;forbidden&rdquo;
+    }
+    return Response(response, status=status.HTTP_403_FORBIDDEN)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">usuario_request</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Debe ser Scrum Master para realizar esta accion&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No puedes activar el Proyecto en su estado actual&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;estado&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">ESTADO</span><span class="p">)[</span><span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span><span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;bad_request&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+            <span class="n">proyecto</span><span class="o">.</span><span class="n">iniciar</span><span class="p">()</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">ProyectoSerializer</span><span class="p">(</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;El proyecto no existe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>@action(detail=True, methods=[&lsquo;POST&rsquo;])
+def finalizar(self, request, pk=None):
+    try:
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not usuario_request.tiene_permiso(&ldquo;finalizar_proyectos&rdquo;):
+            response = {
+                &ldquo;message&rdquo;: &ldquo;No tiene permiso para realizar esta accion&rdquo;,
+                &ldquo;permission_required&rdquo;: [&ldquo;finalizar_proyectos&rdquo;],
+                &ldquo;error&rdquo;: &ldquo;forbidden&rdquo;
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        proyecto = Proyecto.objects.get(pk=pk)
+        if proyecto.estado != &lsquo;A&rsquo;:
+            response = {
+                &ldquo;message&rdquo;: &ldquo;No puedes finalizar el Proyecto en su estado actual&rdquo;,
+                &ldquo;estado&rdquo;: dict(proyecto.ESTADO)[proyecto.estado],
+                &ldquo;error&rdquo;: &ldquo;bad_request&rdquo;
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        proyecto.finalizar()
+        serializer = ProyectoSerializer(proyecto, many=False)
+        return Response(serializer.data)
+    except Proyecto.DoesNotExist:
+        response = {&ldquo;message&rdquo;: &ldquo;El proyecto no existe&rdquo;}
+        return Response(response, status=status.HTTP_404_NOT_FOUND)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>@action(detail=True, methods=[&lsquo;POST&rsquo;])
+def cancelar(self, request, pk=None):
+    try:
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not usuario_request.tiene_permiso(&ldquo;cancelar_proyectos&rdquo;):
+            response = {
+                &ldquo;message&rdquo;: &ldquo;No tiene permiso para realizar esta accion&rdquo;,
+                &ldquo;permission_required&rdquo;: [&ldquo;cancelar_proyectos&rdquo;],
+                &ldquo;error&rdquo;: &ldquo;forbidden&rdquo;
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        proyecto = Proyecto.objects.get(pk=pk)
+        if proyecto.estado != &lsquo;A&rsquo;:
+            response = {
+                &ldquo;message&rdquo;: &ldquo;No puedes cancelar el Proyecto en su estado actual&rdquo;,
+                &ldquo;estado&rdquo;: dict(proyecto.ESTADO)[proyecto.estado],
+                &ldquo;error&rdquo;: &ldquo;bad_request&rdquo;
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        proyecto.cancelar()
+        serializer = ProyectoSerializer(proyecto, many=False)
+        return Response(serializer.data)
+    except Proyecto.DoesNotExist:
+        response = {&ldquo;message&rdquo;: &ldquo;El proyecto no existe&rdquo;}
+        return Response(response, status=status.HTTP_404_NOT_FOUND)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
