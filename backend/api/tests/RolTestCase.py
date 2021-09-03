@@ -151,7 +151,7 @@ class RolTestCase(TestCase):
         response = self.client.post("/api/roles/", rol, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 422)
-        self.assertEquals(body["message"], "Debe tener al menos un permiso")
+        self.assertEquals(body["errors"]["permisos"], ["Se debe especificar al menos un permiso"])
         rol_db = Rol.objects.filter(nombre=rol["nombre"])
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(Rol.objects.count(), roles_cant)
@@ -176,8 +176,8 @@ class RolTestCase(TestCase):
         roles_cant = Rol.objects.count()
         response = self.client.post("/api/roles/", rol, content_type="application/json")
         body = response.json()
-        self.assertEquals(response.status_code, 404)
-        self.assertEquals(body["message"], "No existe el permiso")
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["errors"]["permisos"], ["No se encontró algunos de los permisos especificados"])
         rol_db = Rol.objects.filter(Q(permisos__id=1) and Q(permisos__id=88) and Q(nombre=rol["nombre"]))
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(Rol.objects.count(), roles_cant)
@@ -381,7 +381,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando agregar un permiso a un rol de sistema propio.")
         permiso = {
-            "permiso_id": 9
+            "id": 9
         }
         r = Rol.objects.get(pk=2)
         Usuario.objects.get(nombre="testing").asignar_rol(r)
@@ -398,7 +398,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando agregar un permiso a un rol de sistema inexistente.")
         permiso = {
-            "permiso_id": 2
+            "id": 2
         }
         self.client.login(username="testing", password="polijira2021")
         response = self.client.post("/api/roles/99/permisos/", permiso, content_type="application/json")
@@ -418,8 +418,8 @@ class RolTestCase(TestCase):
         permisos_cant = Rol.objects.get(pk=1).permisos.count()
         response = self.client.post("/api/roles/1/permisos/", permiso, content_type="application/json")
         body = response.json()
-        self.assertEquals(response.status_code, 404)
-        self.assertEquals(body["message"], "No existe el permiso")
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["errors"]["id"], ["No existe el permiso en la base de datos"])
         rol = Rol.objects.get(pk=1)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
@@ -519,3 +519,71 @@ class RolTestCase(TestCase):
         self.assertEquals(body["message"], "No existe el permiso")
         rol = Rol.objects.get(pk=1)
         self.assertEquals(rol.permisos.count(), permisos_cant)
+
+    def test_crear_rol_sin_nombre(self):
+        """
+        test_crear_rol_sin_nombre Prueba crear un rol sin especificar el nombre
+        """
+        print("\nProbando crear un rol sin especificar el nombre")
+        self.client.login(username="testing", password="polijira2021")
+        rol = {
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                }
+            ]
+        }
+        response = self.client.post("/api/roles/", rol, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body["errors"]["nombre"], ["No se especificó ningun nombre"])
+
+    def test_crear_rol_con_nombre_superior_a_max_length(self):
+        """
+        test_crear_rol_con_nombre_superior_a_max_length
+        Prueba crear un rol superando el límite máximo de caracteres
+        """
+        print("\nProbando crear un rol superando el límite máximo de caracteres")
+        self.client.login(username="testing", password="polijira2021")
+        nombre = ""
+        for i in range(0, 256):
+            nombre += "A"
+        rol = {
+            "nombre": nombre,
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                }
+            ]
+        }
+        response = self.client.post("/api/roles/", rol, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body["errors"]["nombre"], ["El nombre superó el máximo número de caracteres"])
+
+    def test_modificar_rol_sin_especificar_nombre(self):
+        """
+        test_modificar_rol_sin_especificar_nombre Prueba modificar un rol sin especificar el campo nombre
+        """
+        print("\nProbando modificar un rol sin especificar el campo nombre")
+        self.client.login(username="testing", password="polijira2021")
+        rol = {
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                }
+            ]
+        }
+        response = self.client.put("/api/roles/1/", rol, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body["errors"]["nombre"], ["No se especificó ningun nombre"])
