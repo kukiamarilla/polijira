@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 class UpdateProyectoForm(forms.Form):
     """
-    AgregarPermisoRolForm Valida si la consulta de modificar proyecto es correcta
+    UpdateProyectoForm Valida si la consulta de modificar proyecto es correcta
 
     Raises:
         ValidationError: Si no se pasaron las validaciones
