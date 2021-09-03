@@ -11,6 +11,7 @@
           :nombre="proyecto.nombre"
           :estado="proyecto.estado"
           :key="proyecto.id"
+          @clickDelete="deleteProyecto(proyecto)"
         />
 
         <CardAdd @click="abrirCrearProyecto" />
@@ -113,7 +114,7 @@ export default {
     },
     cargarUsuarios() {
       usuarioService.list().then((usuarios) => {
-        this.usuarios = usuarios;
+        this.usuarios = usuarios.filter((u) => u.estado == "A");
       });
     },
     crearProyecto() {
@@ -168,6 +169,16 @@ export default {
       } else {
         Alert.error("Error de validación.");
       }
+    },
+    deleteProyecto(proyecto) {
+      let confimation = confirm(
+        "¿Estás seguro que desea eliminar este proyecto?. Esta acción es irreversible."
+      );
+      if (confimation)
+        proyectoService.delete(proyecto.id).then(() => {
+          Alert.success("Proyecto eliminado exitosamente.");
+          this.load();
+        });
     },
   },
   watch: {

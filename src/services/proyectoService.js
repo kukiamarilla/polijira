@@ -13,6 +13,6 @@ export default {
       .then((response) => response.data);
   },
   delete(id) {
-    return api.put(`/proyectos/${id}/`).then((response) => response.data);
+    return api.delete(`/proyectos/${id}/`).then((response) => response.data);
   },
 };

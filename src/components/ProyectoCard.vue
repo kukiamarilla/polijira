@@ -10,7 +10,10 @@
 
     <Boton texto="Ir al Proyecto" tema="primary" width="100%" />
 
-    <IconosPlegables />
+    <IconosPlegables
+      @clickDelete="$emit('clickDelete')"
+      @clickWatch="$emit('clickWatch')"
+    />
   </div>
 </template>
 

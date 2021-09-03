@@ -1,15 +1,15 @@
 <template>
   <div :class="tema" :style="{ height: altura }">
     <button class="btn-icon" v-on:click="handleClick">
-      <Icon icono="options" color="var(--gray-4)" hover="var(--info)" />
+      <Icon icono="options" color="var(--gray-4)" hover="var(--gray-4)" />
     </button>
 
-    <button class="btn-icon">
+    <button class="btn-icon" @click="$emit('clickWatch')">
       <Icon icono="watch" color="var(--gray-4)" hover="var(--info)" />
     </button>
 
-    <button class="btn-icon">
-      <Icon icono="delete" color="var(--gray-4)" hover="var(--info)" />
+    <button class="btn-icon" @click="$emit('clickDelete')">
+      <Icon icono="delete" color="var(--gray-4)" hover="var(--danger)" />
     </button>
   </div>
 </template>
@@ -55,7 +55,7 @@ export default {
   overflow: hidden;
   transition-property: height, background-color, color;
   transition-timing-function: ease;
-  transition-duration: 0.5s;
+  transition-duration: 0.2s;
   z-index: 1;
 
   .btn-icon {
