@@ -42,6 +42,7 @@
                   </a>
                   <a
                     href="#"
+                    @click.prevent="abrirModificarModal(rol)"
                     v-if="
                       hasPermission('modificar_roles') && me.rol.id != rol.id
                     "
@@ -101,6 +102,18 @@
       v-model="verRolModal"
       :rol="rolSelected"
     />
+    <Modal v-model="modificarRolModal" height="350px">
+      <h1>Modificar Rol</h1>
+      <br /><br /><br />
+      <InputText title="Nombre" v-model="rolSelected.nombre" />
+      <br /><br />
+      <Boton
+        texto="Guardar"
+        tema="primary"
+        width="163px"
+        @click="modificarRol()"
+      />
+    </Modal>
     <Waves class="waves" />
   </div>
 </template>
@@ -109,6 +122,7 @@
 import Navbar from "@/components/Navbar";
 import NuevoRolModal from "@/components/NuevoRolModal";
 import VerRolModal from "@/components/VerRolModal";
+import Modal from "@/components/Modal";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
@@ -136,6 +150,7 @@ export default {
     InputText,
     NuevoRolModal,
     VerRolModal,
+    Modal,
   },
   created() {
     if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
@@ -158,6 +173,7 @@ export default {
       buscar: "",
       nuevoRolModal: false,
       verRolModal: false,
+      modificarRolModal: false,
       rolSelected: {
         nombre: "",
         permisos: [],
@@ -201,10 +217,21 @@ export default {
         "¿Está seguro que desea eliminar este rol?. Esta acción es irreversible."
       );
       if (confirmation)
-        rolService.eliminar(rol.id).then(() => {
+        rolService.delete(rol.id).then(() => {
           Alert.success("Rol eliminado correctamente.");
           this.load();
         });
+    },
+    abrirModificarModal(rol) {
+      this.rolSelected = rol;
+      this.modificarRolModal = true;
+    },
+    modificarRol() {
+      rolService.update(this.rolSelected.id, this.rolSelected).then(() => {
+        Alert.success("Rol modificado correctamente.");
+        this.load();
+        this.modificarRolModal = false;
+      });
     },
   },
 };

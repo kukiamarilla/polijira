@@ -7,7 +7,10 @@ export default {
     create(data) {
         return api.post("/roles/", data).then(response => response.data)
     },
-    eliminar(id) {
+    update(id, data) {
+        return api.put(`/roles/${id}/`, data).then(response => response.data)
+    },
+    delete(id) {
         return api.delete(`/roles/${id}/`).then(response => response.data)
     },
     agregarPermiso(id, data) {
