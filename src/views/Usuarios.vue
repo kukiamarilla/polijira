@@ -82,8 +82,7 @@ export default {
     Td,
   },
   created() {
-    if (!this.$store.getters["auth/hasPermission"]("ver_usuarios"))
-      this.$router.back();
+    if (!this.hasPermission("ver_usuarios")) this.$router.back();
   },
   mounted() {
     this.load();

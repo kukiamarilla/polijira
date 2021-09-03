@@ -53,7 +53,12 @@
         <h2 class="title">Nuevo Rol</h2>
         <InputText title="Nombre" v-model="nuevoRol.nombre" />
         <div class="align-self-end">
-          <Boton texto="Guardar" tema="primary" width="163px" />
+          <Boton
+            texto="Siguiente"
+            tema="primary"
+            width="163px"
+            @click="seleccionarPermisos"
+          />
         </div>
       </div>
 
@@ -75,26 +80,28 @@
         </Table>
       </div>
     </div>
-    <Modal :show="true">
-      <h1>Seleccione los Permisos</h1>
-      <br />
-    </Modal>
+    <NuevoRolModal
+      :permisos="permisos"
+      v-model="nuevoRolModal"
+      @save="crearRol($event)"
+    />
     <Waves class="waves" />
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar";
+import NuevoRolModal from "@/components/NuevoRolModal";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
 import Icon from "@/components/Icon";
-import Modal from "@/components/Modal";
 import InputText from "@/components/InputText";
 import { mapGetters } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import permisoService from "@/services/permisoService";
 import rolService from "@/services/rolService";
+import Alert from "@/helpers/alert";
 
 export default {
   components: {
@@ -109,8 +116,8 @@ export default {
     Tr,
     Td,
     Icon,
-    Modal,
     InputText,
+    NuevoRolModal,
   },
   created() {
     if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
@@ -127,6 +134,8 @@ export default {
   },
   data() {
     return {
+      buscar: "",
+      nuevoRolModal: false,
       nuevoRol: {
         nombre: "",
         permisos: [],
@@ -143,6 +152,19 @@ export default {
       rolService.list().then((roles) => {
         this.roles = roles;
       });
+    },
+    seleccionarPermisos() {
+      this.nuevoRolModal = true;
+    },
+    crearRol(permisos) {
+      let nuevoRol = this.nuevoRol;
+      nuevoRol.permisos = permisos;
+      this.nuevoRol = nuevoRol;
+      rolService.create(this.nuevoRol).then((rol) => {
+        Alert.success("El Rol se ha creado correctamente.");
+        this.roles = [...this.roles, rol];
+      });
+      this.nuevoRolModal = false;
     },
   },
 };
