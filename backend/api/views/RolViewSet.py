@@ -219,7 +219,7 @@ class RolViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
-            permiso = Permiso.objects.get(pk=request.data["permiso_id"])
+            permiso = Permiso.objects.get(pk=request.data["id"])
             rol.agregar_permiso(permiso)
             serializer = RolSerializer(rol, many=False)
             return Response(serializer.data)
@@ -255,7 +255,7 @@ class RolViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
-            permiso = Permiso.objects.get(pk=request.data["permiso_id"])
+            permiso = Permiso.objects.get(pk=request.data["id"])
             if rol.permisos.all().count() < 2:
                 response = {"message": "El rol no se puede quedar sin permisos"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
