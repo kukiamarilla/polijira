@@ -44,22 +44,38 @@
     <Modal v-model="verDetalleProyecto" width="498px">
       <h2>Detalle de Proyecto</h2>
       <br /><br />
-      <InputText title="Nombre:" v-model="proyectoSelected.nombre" />
+
+      <InputText
+        title="Nombre:"
+        v-model="proyectoSelected.nombre"
+        :disabled="!hasPermission('modificar_proyectos')"
+      />
       <InputDate
         title="Fecha de Inicio:"
         v-model="proyectoSelected.fecha_inicio"
+        :disabled="!hasPermission('modificar_proyectos')"
       />
-      <InputDate title="Fecha de Fin:" v-model="proyectoSelected.fecha_fin" />
+      <InputDate
+        title="Fecha de Fin:"
+        v-model="proyectoSelected.fecha_fin"
+        :disabled="!hasPermission('modificar_proyectos')"
+      />
       <label class="highlight">Scrum Master:</label>
       <InputSelect>
         <Select
           :options="usuariosSelect"
           v-model="proyectoSelected.usuarioSeleccionado"
+          :disabled="!hasPermission('modificar_proyectos')"
         />
       </InputSelect>
 
       <div class="d-flex justify-content-end">
-        <Boton texto="Guardar" tema="primary" @click="modificarProyecto" />
+        <Boton
+          texto="Guardar"
+          tema="primary"
+          @click="modificarProyecto"
+          v-if="hasPermission('modificar_proyectos')"
+        />
       </div>
     </Modal>
 
@@ -82,6 +98,7 @@ import InputSelect from "@/components/InputSelect";
 import Alert from "@/helpers/alert";
 import proyectoService from "@/services/proyectoService";
 import usuarioService from "@/services/usuarioService";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -127,6 +144,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      hasPermission: "auth/hasPermission",
+    }),
     usuariosSelect() {
       return this.usuarios.map((usuario) => usuario.nombre);
     },

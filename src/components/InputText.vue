@@ -1,13 +1,18 @@
 <template>
   <div>
     <label class="highlight">{{ title }}</label>
-    <input type="text" v-model="text" @input="$emit('input', text)" />
+    <input
+      type="text"
+      v-model="text"
+      @input="$emit('input', text)"
+      :disabled="disabled"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  props: ["title", "value"],
+  props: ["title", "value", "disabled"],
   data() {
     return {
       text: this.value,

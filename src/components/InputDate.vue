@@ -9,6 +9,7 @@
       type="date"
       placeholder="Seleccionar fecha"
       @input="$emit('input', text)"
+      :disabled="disabled"
     ></DatePicker>
   </div>
 </template>
@@ -22,7 +23,7 @@ export default {
   components: {
     DatePicker,
   },
-  props: ["title", "value"],
+  props: ["title", "value", "disabled"],
   data() {
     return {
       text: this.value,

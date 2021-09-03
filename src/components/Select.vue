@@ -1,10 +1,10 @@
 <template>
-  <div class="select" v-click-outside="hide">
-    <span class="text" @click="active = true" v-if="value != -1">
-      {{ options[value] }} &nbsp; <span class="caret"></span>
+  <div :class="{ select: true, disabled: disabled }" v-click-outside="hide">
+    <span class="text" @click="show" v-if="value != -1">
+      {{ options[value] }} &nbsp; <span class="caret" v-if="!disabled"></span>
     </span>
-    <span class="text" @click="active = true" v-else>
-      Seleccione un valor &nbsp; <span class="caret"></span>
+    <span class="text" @click="show" v-else>
+      Seleccione un valor &nbsp; <span class="caret" v-if="!disabled"></span>
     </span>
     <div class="options" v-if="active">
       <div
@@ -28,7 +28,7 @@ import ClickOutside from "vue-click-outside";
 
 export default {
   components: { Icon },
-  props: ["options", "value"],
+  props: ["options", "value", "disabled"],
   data() {
     return {
       active: false,
@@ -37,6 +37,9 @@ export default {
   methods: {
     hide() {
       if (this.active) this.active = false;
+    },
+    show() {
+      if (!this.disabled) this.active = true;
     },
     select(idx) {
       this.active = false;
@@ -52,8 +55,10 @@ export default {
 <style scoped lang="scss">
 .select {
   position: relative;
-  span.text {
-    cursor: pointer;
+  &:not(.disabled) {
+    span.text {
+      cursor: pointer;
+    }
   }
   .options {
     padding: 16px;
