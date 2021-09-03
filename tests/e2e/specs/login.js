@@ -10,14 +10,14 @@ describe('Testing Flujo de Login', () => {
     cy.visit('/#/no-activado')
     cy.contains('h2', 'Gestiona todos tus proyectos')
   })
-  it('Redirecciona a no activado si está logueado', () => {
-    localStorage.setItem("session", "true")
-    cy.visit('/#/login')
-    cy.contains('h1', 'Has iniciado sesión.')
-  })
-  it('Visita la pagina de login estando logueado', () => {
-    localStorage.setItem("session", "true")
-    cy.visit('/#/no-activado')
-    cy.contains('h1', 'Has iniciado sesión.')
-  })
+  // it('Redirecciona a no activado si está logueado', () => {
+  //   localStorage.setItem("session", "true")
+  //   cy.visit('/#/login')
+  //   cy.contains('h1', 'Has iniciado sesión.')
+  // })
+  // it('Visita la pagina de login estando logueado', () => {
+  //   localStorage.setItem("session", "true")
+  //   cy.visit('/#/no-activado')
+  //   cy.contains('h1', 'Has iniciado sesión.')
+  // })
 })
