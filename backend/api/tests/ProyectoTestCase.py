@@ -423,7 +423,7 @@ class ProyectoTestCase(TestCase):
     def test_modificar_proyecto_sin_permiso_ver_usuarios(self):
         """
         test_modificar_proyecto_sin_permiso_ver_proyectos
-        Prueba modificar un proyecto sin tener permiso ver usuarios 
+        Prueba modificar un proyecto sin tener permiso ver usuarios
         """
         print("\nProbando modificar un proyecto sin permiso ver proyectos")
         self.client.login(username="testing", password="polijira2021")
