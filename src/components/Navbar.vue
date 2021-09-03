@@ -24,16 +24,8 @@ export default {
     Logo,
     Boton,
   },
-  data() {
-    return {
-      rutasConLogoutEnNavbar: ["No Activado", "No Autorizado"],
-    };
-  },
+  props: ["mostrarLogout"],
   computed: {
-    mostrarLogout() {
-      const rutaActual = this.$router.currentRoute.name;
-      return this.rutasConLogoutEnNavbar.includes(rutaActual);
-    },
     ...mapState({
       isLoggedIn: (state) => state.auth.isLoggedIn,
     }),

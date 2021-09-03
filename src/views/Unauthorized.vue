@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <Navbar :mostrarLogout="true" />
+
     <h1 class="text-center">
       No tienes permisos suficientes para acceder aquí.
     </h1>
@@ -26,6 +28,7 @@
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
 import Waves from "@/components/Waves.vue";
 import Lottie from "@/components/Lottie.vue";
 
@@ -33,6 +36,7 @@ export default {
   components: {
     Waves,
     Lottie,
+    Navbar,
   },
 };
 </script>
