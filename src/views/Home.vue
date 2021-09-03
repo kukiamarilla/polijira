@@ -129,7 +129,7 @@ export default {
         this.nuevo.scrum_master;
 
       if (validacion) {
-        proyectoService.create(this.nuevo).then((result) => {
+        proyectoService.create(this.nuevo).then(() => {
           this.verCrearProyecto = false;
         });
       }
