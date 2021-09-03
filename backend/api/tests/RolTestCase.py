@@ -347,13 +347,13 @@ class RolTestCase(TestCase):
         """
         print("\nProbando agregar un permiso a un rol de sistema.")
         permiso = {
-            "permiso_id": 2
+            "id": 2
         }
         self.client.login(username="testing", password="polijira2021")
         response = self.client.post("/api/roles/1/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        rol_db = Rol.objects.filter(permisos__id=permiso["permiso_id"], pk=1)
+        rol_db = Rol.objects.filter(permisos__id=permiso["id"], pk=1)
         self.assertEquals(len(rol_db), 1)
         self.assertEquals(rol_db[0].permisos.count(), len(body["permisos"]))
 
@@ -412,7 +412,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando agregar un permiso inexistente a un rol de sistema.")
         permiso = {
-            "permiso_id": 88
+            "id": 88
         }
         self.client.login(username="testing", password="polijira2021")
         permisos_cant = Rol.objects.get(pk=1).permisos.count()
@@ -429,7 +429,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar un permiso a un rol de sistema.")
         permiso = {
-            "permiso_id": 1
+            "id": 1
         }
         self.client.login(username="testing", password="polijira2021")
         response = self.client.delete("/api/roles/1/permisos/", permiso, content_type="application/json")
@@ -479,7 +479,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar todos los permisos de un rol de sistema.")
         permiso = {
-            "permiso_id": 1
+            "id": 1
         }
         self.client.login(username="testing", password="polijira2021")
         response = self.client.delete("/api/roles/3/permisos/", permiso, content_type="application/json")
@@ -509,7 +509,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar un permiso inexistente a un rol de sistema.")
         permiso = {
-            "permiso_id": 88
+            "id": 88
         }
         self.client.login(username="testing", password="polijira2021")
         permisos_cant = Rol.objects.get(pk=1).permisos.count()
