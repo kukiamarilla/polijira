@@ -1,5 +1,5 @@
 <template>
-  <Modal :value="show" height="387px" width="735px">
+  <Modal :value="show" width="735px">
     <div class="alert-container">
       <h2>{{ title }}</h2>
 
