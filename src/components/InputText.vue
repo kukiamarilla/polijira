@@ -1,13 +1,18 @@
 <template>
   <div>
     <label class="highlight">{{ title }}</label>
-    <input type="text" v-model="text" @input="$emit('input', text)" />
+    <input
+      type="text"
+      v-model="text"
+      @input="$emit('input', text)"
+      :disabled="disabled"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  props: ["title", "value"],
+  props: ["title", "value", "disabled"],
   data() {
     return {
       text: this.value,
@@ -22,11 +27,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-input[type="text"] {
+input {
   border: 1px solid var(--gray-4);
   border-radius: 5px;
-  margin: 16px 0 32px 0;
+  margin: 16px 2px 32px 2px;
   padding: 8px 16px;
-  width: 100%;
+  width: calc(100% - 4px);
 }
 </style>

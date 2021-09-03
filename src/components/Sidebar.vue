@@ -1,13 +1,20 @@
 <template>
   <div class="sidebar">
     <div class="principales">
-      <IconLink class="icono" icono="home" descripcion="Home" link="/" activo />
+      <IconLink
+        class="icono"
+        icono="home"
+        descripcion="Home"
+        link="/"
+        :activo="current == 'home'"
+      />
       <IconLink
         class="icono"
         icono="team"
         descripcion="Equipo"
         link="/usuarios"
         v-if="hasPermission('ver_usuarios')"
+        :activo="current == 'usuarios'"
       />
       <IconLink
         class="icono"
@@ -15,6 +22,7 @@
         descripcion="Autorización"
         link="/autorizacion"
         v-if="hasPermissions(['ver_roles', 'ver_permisos'])"
+        :activo="current == 'autorizacion'"
       />
     </div>
 
@@ -32,6 +40,7 @@ import IconLink from "@/components/IconLink";
 import { mapGetters } from "vuex";
 
 export default {
+  props: ["current"],
   components: {
     IconLink,
   },

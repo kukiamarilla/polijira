@@ -1,11 +1,10 @@
 <template>
   <div :class="`modal ${modalState}`">
     <div class="modal-bg" v-on:click.self="$emit('input', false)">
-      <div
-        class="modal-box shadow"
-        :style="{ height: getHeight, width: getWidth }"
-      >
-        <slot />
+      <div class="modal-box shadow" :style="getStyle">
+        <div class="overflow-y-scroll h-100">
+          <slot />
+        </div>
       </div>
     </div>
   </div>
@@ -18,11 +17,13 @@ export default {
     modalState() {
       return this.value ? "show" : "";
     },
-    getHeight() {
-      return this.height ? this.height : "auto";
-    },
-    getWidth() {
-      return this.width ? this.width : "735px";
+    getStyle() {
+      const styles = {};
+
+      styles.height = this.height ? this.height : "auto";
+      styles.width = this.width ? this.width : "735px";
+
+      return styles;
     },
   },
 };
@@ -37,6 +38,7 @@ export default {
   }
 
   .modal-bg {
+    align-items: flex-start;
     display: flex;
     background-color: rgba(0, 0, 0, 0.25);
     height: 100vh;

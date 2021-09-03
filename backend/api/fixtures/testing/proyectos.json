@@ -1,0 +1,13 @@
+[
+    {
+        "model": "api.proyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "ProyectoTest",
+            "fecha_inicio": "2030-03-10",
+            "fecha_fin": "2030-05-10",
+            "estado": "P",
+            "scrum_master": 1
+        }
+    }
+]

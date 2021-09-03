@@ -20,13 +20,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">time</span>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">rest_framework.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">PermissionDenied</span><span class="p">,</span>
     <span class="n">AuthenticationFailed</span><span class="p">,</span>
     <span class="n">NotAuthenticated</span><span class="p">,</span>
 <span class="p">)</span>
@@ -34,7 +30,7 @@
 <span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
 <span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="kn">import</span> <span class="n">MiddlewareMixin</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="kn">from</span> <span class="nn">backend.api.models.Usuario</span> <span class="kn">import</span> <span class="n">Usuario</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Rol</span>
 <span class="kn">import</span> <span class="nn">firebase_admin</span>
 <span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">auth</span><span class="p">,</span> <span class="n">credentials</span>
 <span class="kn">from</span> <span class="nn">firebase_admin._token_gen</span> <span class="kn">import</span> <span class="n">ExpiredIdTokenError</span>
@@ -94,7 +90,7 @@ de firebase</p>
         <span class="n">cred</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">Certificate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FIREBASE_CONFIG</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">firebase_admin</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">firebase_admin</span><span class="o">.</span><span class="n">initialize_app</span><span class="p">(</span><span class="n">cred</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -120,7 +116,10 @@ de firebase</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/api&quot;</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">)):</span>
@@ -129,7 +128,7 @@ de firebase</p>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Debe autenticarse para realizar esta acción&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unauthenticated&quot;</span>
                 <span class="p">},</span>
-                <span class="n">status</span><span class="o">=</span><span class="n">PermissionDenied</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">AuthenticationFailed</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">authorization</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_AUTHORIZATION&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
@@ -139,7 +138,7 @@ de firebase</p>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Debe autenticarse para realizar esta acción&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unauthenticated&quot;</span>
                 <span class="p">},</span>
-                <span class="n">status</span><span class="o">=</span><span class="n">PermissionDenied</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">AuthenticationFailed</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">authorization</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;JWT&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span>
@@ -147,7 +146,7 @@ de firebase</p>
                     <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Debe autenticarse para realizar esta acción&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unauthenticated&quot;</span>
                 <span class="p">},</span>
-                <span class="n">status</span><span class="o">=</span><span class="n">PermissionDenied</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">AuthenticationFailed</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="n">token</span> <span class="o">=</span> <span class="n">authorization</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
@@ -155,25 +154,40 @@ de firebase</p>
             <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">firebase_uid</span><span class="o">=</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;uid&quot;</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">usuario</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-                    <span class="n">first_name</span><span class="o">=</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;Default Name&quot;</span> <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">userinfo</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">else</span> <span class="n">userinfo</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
                     <span class="n">email</span><span class="o">=</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">],</span>
                     <span class="n">username</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
                     <span class="o">+</span> <span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">rol_default</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
                 <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-                    <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">firebase_uid</span><span class="o">=</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;uid&quot;</span><span class="p">]</span>
+                    <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                    <span class="n">nombre</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                    <span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+                    <span class="n">estado</span><span class="o">=</span><span class="s2">&quot;I&quot;</span><span class="p">,</span>
+                    <span class="n">firebase_uid</span><span class="o">=</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;uid&quot;</span><span class="p">],</span>
+                    <span class="n">rol</span><span class="o">=</span><span class="n">rol_default</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;Su usuario aún no fue activado,</span>
+<span class="s1">                            debe esperar la confirmación del administrador&#39;&#39;&#39;</span><span class="p">,</span>
+                        <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unactivated&quot;</span>
+                    <span class="p">},</span>
+                    <span class="n">status</span><span class="o">=</span><span class="n">AuthenticationFailed</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">usuario</span> <span class="o">=</span> <span class="n">usuario</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">usuario</span><span class="o">.</span><span class="n">estado</span> <span class="o">==</span> <span class="s2">&quot;I&quot;</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span>
                         <span class="p">{</span>
-                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Su usuario aún no fue activado, debe esperar la confirmación del administrador&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unauthenticated&quot;</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;Su usuario aún no fue activado,</span>
+<span class="s1">                            debe esperar la confirmación del administrador&#39;&#39;&#39;</span><span class="p">,</span>
+                            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;unactivated&quot;</span>
                         <span class="p">},</span>
-                        <span class="n">status</span><span class="o">=</span><span class="n">PermissionDenied</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                        <span class="n">status</span><span class="o">=</span><span class="n">AuthenticationFailed</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
                     <span class="p">)</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">usuario</span><span class="o">.</span><span class="n">user</span>
             <span class="n">request</span><span class="o">.</span><span class="n">_force_auth_user</span> <span class="o">=</span> <span class="n">user</span>
