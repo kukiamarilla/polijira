@@ -9,8 +9,9 @@ class Proyecto(models.Model):
         nombre {CharField} -- Nombre del proyecto
         fecha_inicio {DateField}  -- Fecha en que inicia el proyecto
         fecha_fin {DateField} -- Fecha en que termina el proyecto
-        ESTADO  {choices} -- Indica los diferentes estados del proyecto
-        estado {CharField} -- Indica el estado del proyecto
+        ESTADO  {choices} -- Diferentes estados del proyecto
+        estado {CharField} -- Estado del proyecto
+        scrum_master {ForeignKey} -- Scrum Master del proyecto
     """
     nombre = models.CharField(max_length=255, default='')
     fecha_inicio = models.DateField()
