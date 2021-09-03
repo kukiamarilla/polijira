@@ -5,11 +5,21 @@
     </button>
 
     <button class="btn-icon" @click="$emit('clickWatch')">
-      <Icon icono="watch" color="var(--gray-4)" hover="var(--info)" />
+      <Icon
+        icono="watch"
+        color="var(--gray-4)"
+        hover="var(--info)"
+        v-if="!hideWatch"
+      />
     </button>
 
     <button class="btn-icon" @click="$emit('clickDelete')">
-      <Icon icono="delete" color="var(--gray-4)" hover="var(--danger)" />
+      <Icon
+        icono="delete"
+        color="var(--gray-4)"
+        hover="var(--danger)"
+        v-if="!hideDelete"
+      />
     </button>
   </div>
 </template>
@@ -18,6 +28,7 @@
 import Icon from "@/components/Icon";
 
 export default {
+  props: ["hideDelete", "hideWatch"],
   data() {
     return {
       active: false,

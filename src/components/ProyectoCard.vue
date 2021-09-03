@@ -13,6 +13,7 @@
     <IconosPlegables
       @clickDelete="$emit('clickDelete')"
       @clickWatch="$emit('clickWatch')"
+      :hideDelete="estado != 'P'"
     />
   </div>
 </template>
