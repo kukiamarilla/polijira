@@ -1,6 +1,4 @@
 import datetime
-
-from rest_framework import status
 from backend.api.models import Proyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
