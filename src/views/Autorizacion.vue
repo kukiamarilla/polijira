@@ -24,6 +24,7 @@
                       size="16px"
                       color="#bdbdbd"
                       hover="#51ABFF"
+                      @click.native="ver(rol)"
                     />
                   </a>
                   <a href="#">
@@ -85,6 +86,11 @@
       v-model="nuevoRolModal"
       @save="crearRol($event)"
     />
+    <VerRolModal
+      :permisos="permisos"
+      v-model="verRolModal"
+      :rol="rolSelected"
+    />
     <Waves class="waves" />
   </div>
 </template>
@@ -92,6 +98,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import NuevoRolModal from "@/components/NuevoRolModal";
+import VerRolModal from "@/components/VerRolModal";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
@@ -118,6 +125,7 @@ export default {
     Icon,
     InputText,
     NuevoRolModal,
+    VerRolModal,
   },
   created() {
     if (!this.hasAnyPermission(["ver_roles", "ver_permisos"]))
@@ -136,6 +144,11 @@ export default {
     return {
       buscar: "",
       nuevoRolModal: false,
+      verRolModal: false,
+      rolSelected: {
+        nombre: "",
+        permisos: [],
+      },
       nuevoRol: {
         nombre: "",
         permisos: [],
@@ -165,6 +178,10 @@ export default {
         this.roles = [...this.roles, rol];
       });
       this.nuevoRolModal = false;
+    },
+    ver(rol) {
+      this.rolSelected = rol;
+      this.verRolModal = true;
     },
   },
 };
