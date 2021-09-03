@@ -1,9 +1,10 @@
+from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from backend.api.models import Rol, Permiso, Usuario
 from backend.api.serializers import RolSerializer, PermisoSerializer
-from django.db import transaction
+from backend.api.forms import CreateRolForm, UpdateRolForm, AgregarPermisoRolForm
 
 
 class RolViewSet(viewsets.ViewSet):
@@ -72,31 +73,31 @@ class RolViewSet(viewsets.ViewSet):
         Returns:
             json: rol de sistema creado en formato json
         """
-        try:
-            usuario_request = Usuario.objects.get(user=request.user)
-            if not (usuario_request.tiene_permiso("crear_roles") and usuario_request.tiene_permiso("ver_permisos")):
-                response = {
-                    "message": "No tiene permiso para realizar esta acción",
-                    "permission_required": [
-                        "ver_permisos",
-                        "crear_roles"
-                    ]
-                }
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
-            permisos = request.data["permisos"]
-            if len(permisos) == 0:
-                response = {"message": "Debe tener al menos un permiso"}
-                return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-            rol = Rol.objects.create(nombre=request.data["nombre"])
-            for p in permisos:
-                perm = Permiso.objects.get(pk=p["id"])
-                rol.agregar_permiso(perm)
-            serializer = RolSerializer(rol, many=False)
-            return Response(serializer.data)
-        except Permiso.DoesNotExist:
-            transaction.set_rollback(True)
-            response = {"message": "No existe el permiso"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+        usuario_request = Usuario.objects.get(user=request.user)
+        if not (usuario_request.tiene_permiso("crear_roles") and usuario_request.tiene_permiso("ver_permisos")):
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": [
+                    "ver_permisos",
+                    "crear_roles"
+                ]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        form = CreateRolForm(request.data)
+        if not form.is_valid():
+            response = {
+                "message": "Error de validacion",
+                "errors": form.errors
+            }
+            return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        permisos = request.data["permisos"]
+        rol = Rol.objects.create(nombre=request.data["nombre"])
+        for p in permisos:
+            perm = Permiso.objects.get(pk=p["id"])
+            rol.agregar_permiso(perm)
+        serializer = RolSerializer(rol, many=False)
+        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
         """
@@ -152,6 +153,13 @@ class RolViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            form = UpdateRolForm(request.data)
+            if not form.is_valid():
+                response = {
+                    "message": "Error de validación",
+                    "errors": form.errors
+                }
+                return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
             if (usuario_request.rol.pk == int(pk)):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
@@ -215,6 +223,13 @@ class RolViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            form = AgregarPermisoRolForm(request.data)
+            if not form.is_valid():
+                response = {
+                    "message": "Error de validacion",
+                    "errors": form.errors
+                }
+                return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
             if (usuario_request.rol.pk == int(pk)):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
@@ -223,9 +238,6 @@ class RolViewSet(viewsets.ViewSet):
             rol.agregar_permiso(permiso)
             serializer = RolSerializer(rol, many=False)
             return Response(serializer.data)
-        except Permiso.DoesNotExist:
-            response = {"message": "No existe el permiso"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
         except Rol.DoesNotExist:
             response = {"message": "No existe el rol"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)

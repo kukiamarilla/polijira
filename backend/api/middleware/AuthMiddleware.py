@@ -90,7 +90,8 @@ class AuthMiddleware(MiddlewareMixin):
                 usuario = Usuario.objects.create(
                     user=user,
                     nombre=user.first_name,
-                    email=user.email, estado="I",
+                    email=user.email,
+                    estado="I",
                     firebase_uid=userinfo["uid"],
                     rol=rol_default
                 )
