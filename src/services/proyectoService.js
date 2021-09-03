@@ -15,4 +15,7 @@ export default {
   delete(id) {
     return api.delete(`/proyectos/${id}/`).then((response) => response.data);
   },
+  activar(id) {
+    return api.post(`/proyectos/${id}/activar/`).then((response) => response.data);
+  },
 };

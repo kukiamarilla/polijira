@@ -48,24 +48,36 @@
       <InputText
         title="Nombre:"
         v-model="proyectoSelected.nombre"
-        :disabled="!hasPermission('modificar_proyectos')"
+        :disabled="
+          !hasPermission('modificar_proyectos') ||
+          proyectoSelected.estado != 'P'
+        "
       />
       <InputDate
         title="Fecha de Inicio:"
         v-model="proyectoSelected.fecha_inicio"
-        :disabled="!hasPermission('modificar_proyectos')"
+        :disabled="
+          !hasPermission('modificar_proyectos') ||
+          proyectoSelected.estado != 'P'
+        "
       />
       <InputDate
         title="Fecha de Fin:"
         v-model="proyectoSelected.fecha_fin"
-        :disabled="!hasPermission('modificar_proyectos')"
+        :disabled="
+          !hasPermission('modificar_proyectos') ||
+          proyectoSelected.estado != 'P'
+        "
       />
       <label class="highlight">Scrum Master:</label>
       <InputSelect>
         <Select
           :options="usuariosSelect"
           v-model="proyectoSelected.usuarioSeleccionado"
-          :disabled="!hasPermission('modificar_proyectos')"
+          :disabled="
+            !hasPermission('modificar_proyectos') ||
+            proyectoSelected.estado != 'P'
+          "
         />
       </InputSelect>
 
@@ -74,7 +86,20 @@
           texto="Guardar"
           tema="primary"
           @click="modificarProyecto"
-          v-if="hasPermission('modificar_proyectos')"
+          v-if="
+            hasPermission('modificar_proyectos') &&
+            proyectoSelected.estado == 'P'
+          "
+        />
+        &nbsp; &nbsp;
+        <Boton
+          texto="Iniciar Proyecto"
+          tema="success"
+          @click="activarProyecto"
+          v-if="
+            proyectoSelected.scrum_master.id == me.id &&
+            proyectoSelected.estado == 'P'
+          "
         />
       </div>
     </Modal>
@@ -98,7 +123,7 @@ import InputSelect from "@/components/InputSelect";
 import Alert from "@/helpers/alert";
 import proyectoService from "@/services/proyectoService";
 import usuarioService from "@/services/usuarioService";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -146,6 +171,9 @@ export default {
   computed: {
     ...mapGetters({
       hasPermission: "auth/hasPermission",
+    }),
+    ...mapState({
+      me: (state) => state.auth.me,
     }),
     usuariosSelect() {
       return this.usuarios.map((usuario) => usuario.nombre);
@@ -259,6 +287,13 @@ export default {
             this.load();
           });
       }
+    },
+    activarProyecto() {
+      proyectoService.activar(this.proyectoSelected.id).then(() => {
+        this.verDetalleProyecto = false;
+        Alert.success("El proyecto ha sido activado con éxito.");
+        this.load();
+      });
     },
   },
   watch: {

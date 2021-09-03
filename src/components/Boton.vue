@@ -24,7 +24,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$primary: var(--primary);
+$success: var(--success);
 button {
   border: none;
   border-radius: 2rem;
@@ -56,5 +58,17 @@ button {
 
 .secondary:active {
   background-color: #ddd;
+}
+.success {
+  color: white;
+  background-color: var(--success);
+}
+
+.success:hover {
+  background-color: darken(#6be78d, 20%);
+}
+
+.success:active {
+  background-color: darken(#6be78d, 20%);
 }
 </style>
