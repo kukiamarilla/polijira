@@ -1,7 +1,10 @@
 <template>
   <div class="select" v-click-outside="hide">
-    <span class="text" @click="active = true">
+    <span class="text" @click="active = true" v-if="value != -1">
       {{ options[value] }} &nbsp; <span class="caret"></span>
+    </span>
+    <span class="text" @click="active = true" v-else>
+      Seleccione un valor &nbsp; <span class="caret"></span>
     </span>
     <div class="options" v-if="active">
       <div

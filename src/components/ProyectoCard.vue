@@ -4,7 +4,7 @@
 
     <div class="estado">
       <span class="highlight" :style="{ color: colorEstado }">
-        {{ estado }}
+        {{ estadoTexto }}
       </span>
     </div>
 
@@ -28,15 +28,24 @@ export default {
     IconosPlegables,
   },
   computed: {
+    estadoTexto() {
+      let estados = {
+        F: "Finalizado",
+        A: "Activo",
+        P: "Pendiente",
+        C: "Cancelado",
+      };
+      return estados[this.estado];
+    },
     colorEstado() {
       switch (this.estado) {
-        case "Finalizado":
+        case "F":
           return "var(--success)";
-        case "En Curso":
+        case "A":
           return "var(--warning)";
-        case "Cancelado":
+        case "C":
           return "var(--danger)";
-        case "Pendiente":
+        case "P":
           return "var(--info)";
         default:
           return "currentColor";

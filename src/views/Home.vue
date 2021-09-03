@@ -90,7 +90,7 @@ export default {
         scrum_master: {},
       },
       usuarios: [],
-      usuarioSeleccionado: 0,
+      usuarioSeleccionado: -1,
     };
   },
   computed: {
@@ -124,6 +124,36 @@ export default {
         new Date(this.nuevo.fecha_inicio) < new Date(this.nuevo.fecha_fin) &&
         this.nuevo.scrum_master;
 
+      if (this.nuevo.nombre.length == 0) {
+        Alert.error("El campo Nombre es obligatorio.");
+        return;
+      }
+      if (!this.nuevo.fecha_inicio) {
+        Alert.error("El campo Fecha de Inicio es obligatorio.");
+        return;
+      }
+      if (
+        this.nuevo.fecha_inicio.toISOString().substr(0, 10) <
+        new Date().toISOString().substr(0, 10)
+      ) {
+        Alert.error("La Fecha de Inicio no puede estar en el pasado.");
+        return;
+      }
+      if (!this.nuevo.fecha_fin) {
+        Alert.error("El campo Fecha de Fin es obligatorio.");
+        return;
+      }
+      if (new Date(this.nuevo.fecha_inicio) >= new Date(this.nuevo.fecha_fin)) {
+        Alert.error(
+          "La Fecha de Fin debe ser ser posterior a la fecha de Inicio."
+        );
+        return;
+      }
+      if (this.usuarioSeleccionado == -1) {
+        Alert.error("El campo Scrum Master   es obligatorio.");
+        return;
+      }
+
       if (validacion) {
         let nuevo = this.nuevo;
         nuevo.fecha_inicio = nuevo.fecha_inicio.toISOString().substr(0, 10);
@@ -133,6 +163,7 @@ export default {
         proyectoService.create(this.nuevo).then(() => {
           this.verCrearProyecto = false;
           Alert.success("El proyecto ha sido creado con éxito.");
+          this.load();
         });
       } else {
         Alert.error("Error de validación.");
