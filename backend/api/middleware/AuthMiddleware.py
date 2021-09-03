@@ -88,7 +88,11 @@ class AuthMiddleware(MiddlewareMixin):
                 user.save()
                 rol_default = Rol.objects.get(pk=2)
                 usuario = Usuario.objects.create(
-                    user=user, nombre=user.first_name, email=user.email, estado="I", firebase_uid=userinfo["uid"], rol=rol_default
+                    user=user,
+                    nombre=user.first_name,
+                    email=user.email, estado="I",
+                    firebase_uid=userinfo["uid"],
+                    rol=rol_default
                 )
                 return JsonResponse(
                     {
