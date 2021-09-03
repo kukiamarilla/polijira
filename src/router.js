@@ -46,6 +46,9 @@ const router = new Router({
       path: "/autorizacion",
       name: "Autorizacion",
       component: Autorizacion,
+      meta: {
+        middleware: [auth, activated]
+      }
     },
     {
       path: "/no-activado",
