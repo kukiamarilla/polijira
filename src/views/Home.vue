@@ -113,9 +113,7 @@ export default {
       this.verCrearProyecto = true;
     },
     cargarProyectos() {
-      proyectoService.list().then((data) => {
-        console.log(data);
-      });
+      proyectoService.list().then(() => {});
     },
     cargarUsuarios() {
       usuarioService.list().then((data) => {
@@ -123,7 +121,6 @@ export default {
       });
     },
     crearProyecto() {
-      console.log(this.nuevo.fecha_inicio < this.nuevo.fecha_fin);
       const validacion =
         this.nuevo.nombre.lenght > 0 &&
         this.nuevo.fecha_inicio &&
@@ -132,10 +129,8 @@ export default {
         this.nuevo.scrum_master;
 
       if (validacion) {
-        console.log("holi");
         proyectoService.create(this.nuevo).then((result) => {
           this.verCrearProyecto = false;
-          console.log(result);
         });
       }
     },
