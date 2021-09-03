@@ -33,6 +33,12 @@ class UpdateProyectoForm(forms.Form):
             "max_length": "El estado solo puede tener un caracter"
         }
     )
+    scrum_master_id = forms.IntegerField(
+        required=True,
+        error_messages={
+            "required": "No se especificó el Scrum Master"
+        }
+    )
 
     def clean_fecha_inicio(self):
         cleaned_data = super().clean()
