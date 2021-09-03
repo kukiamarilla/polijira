@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Sidebar />
+    <Sidebar current="home" />
 
     <div class="container">
       <div v-if="proyectos.length > 0" class="proyectos">

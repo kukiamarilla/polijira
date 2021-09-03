@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Sidebar />
+    <Sidebar current="autorizacion" />
 
     <div class="container">
       <div class="box role-list shadow" v-if="hasPermission('ver_roles')">

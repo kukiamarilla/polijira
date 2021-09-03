@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Sidebar />
+    <Sidebar current="usuarios" />
     <div class="container shadow">
       <h2>Usuarios</h2>
 

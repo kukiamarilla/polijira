@@ -1,6 +1,8 @@
 <template>
   <nav>
-    <Logo class="logo" />
+    <div class="brand" @click="$router.push('/')">
+      <Logo class="logo" />
+    </div>
     <div class="opciones">
       <Boton
         tema="primary"
@@ -53,6 +55,9 @@ nav {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+  .brand {
+    cursor: pointer;
   }
 }
 </style>
