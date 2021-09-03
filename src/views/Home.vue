@@ -11,6 +11,7 @@
           :nombre="proyecto.nombre"
           :estado="proyecto.estado"
           :key="proyecto.id"
+          @clickWatch="detalleProyecto(proyecto)"
           @clickDelete="deleteProyecto(proyecto)"
         />
 
@@ -33,11 +34,32 @@
       <InputDate title="Fecha de Fin:" v-model="nuevo.fecha_fin" />
       <label class="highlight">Scrum Master:</label>
       <InputSelect>
-        <Select :options="usuariosSelect" v-model="usuarioSeleccionado" />
+        <Select :options="usuariosSelect" v-model="nuevo.usuarioSeleccionado" />
       </InputSelect>
 
       <div class="d-flex justify-content-end">
         <Boton texto="Guardar" tema="primary" @click="crearProyecto" />
+      </div>
+    </Modal>
+    <Modal v-model="verDetalleProyecto" width="498px">
+      <h2>Detalle de Proyecto</h2>
+      <br /><br />
+      <InputText title="Nombre:" v-model="proyectoSelected.nombre" />
+      <InputDate
+        title="Fecha de Inicio:"
+        v-model="proyectoSelected.fecha_inicio"
+      />
+      <InputDate title="Fecha de Fin:" v-model="proyectoSelected.fecha_fin" />
+      <label class="highlight">Scrum Master:</label>
+      <InputSelect>
+        <Select
+          :options="usuariosSelect"
+          v-model="proyectoSelected.usuarioSeleccionado"
+        />
+      </InputSelect>
+
+      <div class="d-flex justify-content-end">
+        <Boton texto="Guardar" tema="primary" @click="modificarProyecto" />
       </div>
     </Modal>
 
@@ -82,6 +104,7 @@ export default {
     return {
       proyectos: [],
       verCrearProyecto: false,
+      verDetalleProyecto: false,
       nuevo: {
         id: "",
         nombre: "",
@@ -89,9 +112,18 @@ export default {
         fecha_fin: "",
         estado: "",
         scrum_master: {},
+        usuarioSeleccionado: -1,
+      },
+      proyectoSelected: {
+        id: "",
+        nombre: "",
+        fecha_inicio: "",
+        fecha_fin: "",
+        estado: "",
+        scrum_master: {},
+        usuarioSeleccionado: -1,
       },
       usuarios: [],
-      usuarioSeleccionado: -1,
     };
   },
   computed: {
@@ -117,46 +149,43 @@ export default {
         this.usuarios = usuarios.filter((u) => u.estado == "A");
       });
     },
-    crearProyecto() {
-      const validacion =
-        this.nuevo.nombre.length > 0 &&
-        this.nuevo.fecha_inicio &&
-        this.nuevo.fecha_fin &&
-        new Date(this.nuevo.fecha_inicio) < new Date(this.nuevo.fecha_fin) &&
-        this.nuevo.scrum_master;
-
-      if (this.nuevo.nombre.length == 0) {
+    validar(proyecto) {
+      if (proyecto.nombre.length == 0) {
         Alert.error("El campo Nombre es obligatorio.");
-        return;
+        return false;
       }
-      if (!this.nuevo.fecha_inicio) {
+      if (!proyecto.fecha_inicio) {
         Alert.error("El campo Fecha de Inicio es obligatorio.");
-        return;
+        return false;
       }
       if (
-        this.nuevo.fecha_inicio.toISOString().substr(0, 10) <
+        proyecto.fecha_inicio.toISOString().substr(0, 10) <
         new Date().toISOString().substr(0, 10)
       ) {
         Alert.error("La Fecha de Inicio no puede estar en el pasado.");
-        return;
+        return false;
       }
-      if (!this.nuevo.fecha_fin) {
+      if (!proyecto.fecha_fin) {
         Alert.error("El campo Fecha de Fin es obligatorio.");
-        return;
+        return false;
       }
-      if (new Date(this.nuevo.fecha_inicio) >= new Date(this.nuevo.fecha_fin)) {
+      if (new Date(proyecto.fecha_inicio) >= new Date(proyecto.fecha_fin)) {
         Alert.error(
           "La Fecha de Fin debe ser ser posterior a la fecha de Inicio."
         );
-        return;
+        return false;
       }
-      if (this.usuarioSeleccionado == -1) {
-        Alert.error("El campo Scrum Master   es obligatorio.");
-        return;
+      if (proyecto.usuarioSeleccionado == -1) {
+        Alert.error("El campo Scrum Master es obligatorio.");
+        return false;
       }
-
+      return true;
+    },
+    crearProyecto() {
+      let validacion = this.validar(this.nuevo);
       if (validacion) {
         let nuevo = this.nuevo;
+        nuevo.scrum_master = this.usuarios[nuevo.usuarioSeleccionado];
         nuevo.fecha_inicio = nuevo.fecha_inicio.toISOString().substr(0, 10);
         nuevo.fecha_fin = nuevo.fecha_fin.toISOString().substr(0, 10);
         nuevo.scrum_master_id = nuevo.scrum_master.id;
@@ -166,8 +195,6 @@ export default {
           Alert.success("El proyecto ha sido creado con éxito.");
           this.load();
         });
-      } else {
-        Alert.error("Error de validación.");
       }
     },
     deleteProyecto(proyecto) {
@@ -179,6 +206,39 @@ export default {
           Alert.success("Proyecto eliminado exitosamente.");
           this.load();
         });
+    },
+    detalleProyecto(proyecto) {
+      let proyectoCopy = { ...proyecto };
+      proyectoCopy.fecha_inicio = new Date(
+        proyectoCopy.fecha_inicio + "T00:00:00"
+      );
+      proyectoCopy.fecha_fin = new Date(proyectoCopy.fecha_fin + "T00:00:00");
+      proyectoCopy.usuarioSeleccionado = this.usuarios.findIndex(
+        (u) => u.id == proyectoCopy.scrum_master.id
+      );
+      this.proyectoSelected = proyectoCopy;
+      this.verDetalleProyecto = true;
+    },
+    modificarProyecto() {
+      let validacion = this.validar(this.proyectoSelected);
+
+      if (validacion) {
+        let proyecto = this.proyectoSelected;
+        proyecto.scrum_master = this.usuarios[proyecto.usuarioSeleccionado];
+        proyecto.fecha_inicio = proyecto.fecha_inicio
+          .toISOString()
+          .substr(0, 10);
+        proyecto.fecha_fin = proyecto.fecha_fin.toISOString().substr(0, 10);
+        proyecto.scrum_master_id = proyecto.scrum_master.id;
+        this.proyectoSelected = proyecto;
+        proyectoService
+          .update(this.proyectoSelected.id, this.proyectoSelected)
+          .then(() => {
+            this.verDetalleProyecto = false;
+            Alert.success("El proyecto ha sido modificado con éxito.");
+            this.load();
+          });
+      }
     },
   },
   watch: {
