@@ -18,16 +18,21 @@
               <Td width="40%">{{ rol.nombre }}</Td>
               <Td width="40%">
                 <div class="acciones" style="display: flex">
-                  <a href="#">
+                  <a href="#" @click.prevent="verRol(rol)">
                     <Icon
                       icono="watch"
                       size="16px"
                       color="#bdbdbd"
                       hover="#51ABFF"
-                      @click.native="ver(rol)"
                     />
                   </a>
-                  <a href="#">
+                  <a
+                    href="#"
+                    @click.prevent="eliminarRol(rol)"
+                    v-if="
+                      hasPermission('eliminar_roles') && me.rol.id != rol.id
+                    "
+                  >
                     <Icon
                       icono="delete"
                       size="16px"
@@ -35,7 +40,12 @@
                       hover="#F25656"
                     />
                   </a>
-                  <a href="#">
+                  <a
+                    href="#"
+                    v-if="
+                      hasPermission('modificar_roles') && me.rol.id != rol.id
+                    "
+                  >
                     <Icon
                       icono="edit"
                       size="16px"
@@ -104,7 +114,7 @@ import Waves from "@/components/Waves";
 import Boton from "@/components/Boton";
 import Icon from "@/components/Icon";
 import InputText from "@/components/InputText";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import permisoService from "@/services/permisoService";
 import rolService from "@/services/rolService";
@@ -135,6 +145,9 @@ export default {
     this.load();
   },
   computed: {
+    ...mapState({
+      me: (state) => state.auth.me,
+    }),
     ...mapGetters({
       hasAnyPermission: "auth/hasAnyPermission",
       hasPermission: "auth/hasPermission",
@@ -179,9 +192,19 @@ export default {
       });
       this.nuevoRolModal = false;
     },
-    ver(rol) {
+    verRol(rol) {
       this.rolSelected = rol;
       this.verRolModal = true;
+    },
+    eliminarRol(rol) {
+      let confirmation = confirm(
+        "¿Está seguro que desea eliminar este rol?. Esta acción es irreversible."
+      );
+      if (confirmation)
+        rolService.eliminar(rol.id).then(() => {
+          Alert.success("Rol eliminado correctamente.");
+          this.load();
+        });
     },
   },
 };
