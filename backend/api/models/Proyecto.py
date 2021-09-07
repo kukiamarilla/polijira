@@ -1,17 +1,21 @@
+from datetime import date
 from django.db import models
 
 
 class Proyecto(models.Model):
     """
-    Proyecto Modela la clase Proyecto
+    Proyecto Modela el Proyecto
 
-    Atributos:
-        nombre {CharField} -- Nombre del proyecto
-        fecha_inicio {DateField}  -- Fecha en que inicia el proyecto
-        fecha_fin {DateField} -- Fecha en que termina el proyecto
-        ESTADO  {choices} -- Diferentes estados del proyecto
-        estado {CharField} -- Estado del proyecto
-        scrum_master {ForeignKey} -- Scrum Master del proyecto
+    Args:
+        models (Model): Modelo de Django
+
+    Atributes:
+        nombre (CharField): Nombre del Proyecto
+        fecha_inicio (DateField): Fecha estimada de inicio
+        fecha_fin (DateField): Fecha estimada de fin
+        ESTADO (tuple): Definicion de diferentes estados que puede tener el Proyecto
+        estado (CharField): Estado del Proyecto
+        scrum_master (ForeignKey): Scrum Master del proyecto
     """
     nombre = models.CharField(max_length=255, default='')
     fecha_inicio = models.DateField()
@@ -26,6 +30,7 @@ class Proyecto(models.Model):
         iniciar Inicia este Proyecto
         """
         self.estado = 'A'
+        self.fecha_inicio = str(date.today())
         self.save()
 
     def finalizar(self):

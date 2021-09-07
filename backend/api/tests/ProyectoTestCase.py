@@ -741,6 +741,7 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         proyecto = Proyecto.objects.get(pk=1)
         self.assertEquals(proyecto.estado, "A")
+        self.assertEquals(proyecto.fecha_inicio, datetime.date.today())
 
     def test_activar_proyecto_sin_rol_sm(self):
         """
