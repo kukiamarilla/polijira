@@ -31,7 +31,7 @@
       <br /><br />
       <InputText title="Nombre:" v-model="nuevo.nombre" />
       <InputDate title="Fecha de Inicio:" v-model="nuevo.fecha_inicio" />
-      <InputDate title="Fecha de Fin:" v-model="nuevo.fecha_fin" />
+      <InputDate title="Fecha estimada de Fin:" v-model="nuevo.fecha_fin" />
       <label class="highlight">Scrum Master:</label>
       <InputSelect>
         <Select :options="usuariosSelect" v-model="nuevo.usuarioSeleccionado" />
@@ -50,7 +50,7 @@
         v-model="proyectoSelected.nombre"
         :disabled="
           !hasPermission('modificar_proyectos') ||
-          proyectoSelected.estado != 'P'
+            proyectoSelected.estado != 'P'
         "
       />
       <InputDate
@@ -58,15 +58,15 @@
         v-model="proyectoSelected.fecha_inicio"
         :disabled="
           !hasPermission('modificar_proyectos') ||
-          proyectoSelected.estado != 'P'
+            proyectoSelected.estado != 'P'
         "
       />
       <InputDate
-        title="Fecha de Fin:"
+        title="Fecha estimada de Fin:"
         v-model="proyectoSelected.fecha_fin"
         :disabled="
           !hasPermission('modificar_proyectos') ||
-          proyectoSelected.estado != 'P'
+            proyectoSelected.estado != 'P'
         "
       />
       <label class="highlight">Scrum Master:</label>
@@ -76,7 +76,7 @@
           v-model="proyectoSelected.usuarioSeleccionado"
           :disabled="
             !hasPermission('modificar_proyectos') ||
-            proyectoSelected.estado != 'P'
+              proyectoSelected.estado != 'P'
           "
         />
       </InputSelect>
@@ -88,7 +88,7 @@
           @click="modificarProyecto"
           v-if="
             hasPermission('modificar_proyectos') &&
-            proyectoSelected.estado == 'P'
+              proyectoSelected.estado == 'P'
           "
         />
         &nbsp; &nbsp;
@@ -98,7 +98,7 @@
           @click="activarProyecto"
           v-if="
             proyectoSelected.scrum_master.id == me.id &&
-            proyectoSelected.estado == 'P'
+              proyectoSelected.estado == 'P'
           "
         />
       </div>
