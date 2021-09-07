@@ -55,10 +55,10 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando obtener un usuario.")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.get("/api/usuarios/1/")
+        response = self._client.get("/api/usuarios/2/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body['id'], 1)
+        self.assertEquals(body['id'], 2)
 
     def test_obtener_usuario_sin_permiso(self):
         """
@@ -82,7 +82,9 @@ class UsuarioTestCase(TestCase):
         print("\nProbando obtener un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.get("/api/usuarios/3/")
+        body = response.json()
         self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el usuario")
 
     def test_activar_usuario(self):
         """
@@ -90,9 +92,10 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando activar un usuario.")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.post("/api/usuarios/1/activar/")
-        usuario = Usuario.objects.get(pk=1)
-        self.assertEquals(usuario.estado, "A")
+        Usuario.objects.get(pk=2).estado = 'I'
+        response = self._client.post("/api/usuarios/2/activar/")
+        usuario_db = Usuario.objects.get(pk=2)
+        self.assertEquals(usuario_db.estado, "A")
         self.assertEquals(response.status_code, 200)
 
     def test_activar_usuario_sin_permiso(self):
@@ -120,7 +123,9 @@ class UsuarioTestCase(TestCase):
         print("\nProbando activar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/3/activar/")
+        body = response.json()
         self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el usuario")
 
     def test_desactivar_usuario(self):
         """
@@ -145,15 +150,15 @@ class UsuarioTestCase(TestCase):
         rol = Usuario.objects.get(nombre="testing").rol
         permiso = rol.permisos.get(codigo="desactivar_usuarios")
         rol.eliminar_permiso(permiso)
-        usuario = Usuario.objects.get(pk=2)
-        usuario.estado = 'A'
+        Usuario.objects.get(pk=2).estado = 'A'
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/2/desactivar/")
         body = response.json()
+        usuario_db = Usuario.objects.get(pk=2)
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ['desactivar_usuarios'])
-        self.assertEquals(usuario.estado, "A")
+        self.assertEquals(usuario_db.estado, "A")
 
     def test_desactivar_el_mismo_usuario(self):
         """
@@ -162,7 +167,9 @@ class UsuarioTestCase(TestCase):
         print("\nProbando desactivar un usuario a si mismo.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/1/desactivar/")
+        body = response.json()
         self.assertEquals(response.status_code, 409)
+        self.assertEquals(body["message"], "No puedes desactivarte a ti mismo")
 
     def test_desactivar_usuario_no_existente(self):
         """
@@ -171,7 +178,9 @@ class UsuarioTestCase(TestCase):
         print("\nProbando desactivar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
         response = self._client.post("/api/usuarios/3/desactivar/")
+        body = response.json()
         self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el usuario")
 
     def test_asignar_rol(self):
         """
@@ -194,14 +203,17 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando asignar rol sin permisos.")
         self._client.login(username="testing", password="polijira2021")
-        rol = Rol.objects.get(pk=2)
-        permiso = Permiso.objects.get(pk=9)
+        rol = Usuario.objects.get(nombre="testing").rol
+        permiso = Permiso.objects.get(codigo="asignar_roles")
         rol.eliminar_permiso(permiso)
         body = {
-            "id": 1
+            "id": 2
         }
         response = self._client.post("/api/usuarios/2/asignar_rol/", body)
+        body = response.json()
         self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_usuarios", "ver_roles", "asignar_roles"])
 
     def test_asignar_rol_a_si_mismo(self):
         """
@@ -217,8 +229,6 @@ class UsuarioTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No puede asignarse roles a sí mismo")
-        # permiso = rol.permisos.get(codigo="desactivar_usuarios")
-        # rol.eliminar_permiso(permiso)
 
     def test_asignar_rol_no_existente(self):
         """
@@ -230,7 +240,9 @@ class UsuarioTestCase(TestCase):
             "id": 33
         }
         response = self._client.post("/api/usuarios/2/asignar_rol/", body)
+        body = response.json()
         self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el rol")
 
     def test_asignar_rol_a_usuario_inexistente(self):
         """
@@ -242,4 +254,6 @@ class UsuarioTestCase(TestCase):
             "id": 1
         }
         response = self._client.post("/api/usuarios/3/asignar_rol/", body)
+        body = response.json()
         self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el usuario")
