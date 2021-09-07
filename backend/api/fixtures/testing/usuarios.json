@@ -8,7 +8,7 @@
             "email": "test@polijira.com",
             "estado": "A",
             "firebase_uid": "A4rxPBjYBfQKrIUlElklVF2OTRI3",
-            "rol": 2
+            "rol": 1
         }
     },
     {
@@ -20,7 +20,7 @@
             "email": "usuariotest@polijira.com",
             "estado": "A",
             "firebase_uid": "jooBXYiOWoSxMIV3v7O0uy0Hq5B3",
-            "rol": 2
+            "rol": 1
         }
     }
 ]
