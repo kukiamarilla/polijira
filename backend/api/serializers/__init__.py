@@ -3,3 +3,4 @@ from .UsuarioSerializer import UsuarioSerializer
 from .PermisoSerializer import PermisoSerializer
 from .RolSerializer import RolSerializer
 from .ProyectoSerializer import ProyectoSerializer
+from .PlantillaRolProyectoSerializer import PlantillaRolProyectoSerializer
