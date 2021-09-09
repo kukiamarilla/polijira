@@ -8,6 +8,7 @@ import Home from "@/views/Home";
 import Unauthorized from "@/views/Unauthorized";
 import Usuarios from "@/views/Usuarios";
 import Autorizacion from "@/views/Autorizacion";
+import PlantillaRolProyecto from "@/views/PlantillaRolProyecto";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -39,16 +40,24 @@ const router = new Router({
       name: "Usuarios",
       component: Usuarios,
       meta: {
-        middleware: [auth, activated]
-      }
+        middleware: [auth, activated],
+      },
     },
     {
       path: "/autorizacion",
       name: "Autorizacion",
       component: Autorizacion,
       meta: {
-        middleware: [auth, activated]
-      }
+        middleware: [auth, activated],
+      },
+    },
+    {
+      path: "/plantilla-rol-proyecto",
+      name: "Plantilla de Roles de Proyecto",
+      component: PlantillaRolProyecto,
+      meta: {
+        middleware: [auth, activated],
+      },
     },
     {
       path: "/no-activado",
