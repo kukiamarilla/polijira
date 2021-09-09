@@ -1,5 +1,4 @@
 from django.db import models
-from .PermisoProyecto import PermisoProyecto
 
 
 class PlantillaRolProyecto(models.Model):
@@ -14,7 +13,7 @@ class PlantillaRolProyecto(models.Model):
         permisos (ManyToManyField): Permisos del rol
     """
     nombre = models.CharField(max_length=255, default="")
-    permisos = models.ManyToManyField(PermisoProyecto)
+    permisos = models.ManyToManyField('PermisoProyecto')
 
     def agregar_permiso(self, permiso):
         """
