@@ -24,6 +24,7 @@ const iconosValidos = [
   "edit",
   "success",
   "warning",
+  "protected",
 ];
 
 export default {
