@@ -102,5 +102,37 @@
             "nombre": "Eliminar Proyectos",
             "codigo": "eliminar_proyectos"
         }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 14,
+        "fields": {
+            "nombre": "Ver Plantillas de Rol de Proyecto",
+            "codigo": "ver_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 15,
+        "fields": {
+            "nombre": "Crear Plantillas de Rol de Proyecto",
+            "codigo": "crear_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 16,
+        "fields": {
+            "nombre": "Modificar Plantillas de Rol de Proyecto",
+            "codigo": "modificar_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 17,
+        "fields": {
+            "nombre": "Eliminar Plantillas de Rol de Proyecto",
+            "codigo": "eliminar_plantillas"
+        }
     }
 ]
