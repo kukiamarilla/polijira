@@ -2,12 +2,10 @@ from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import PlantillaRolProyecto, PermisoProyecto, Usuario
-from backend.api.serializers import PlantillaRolProyectoSerializer, PermisoProyectoSerializer
+from backend.api.models import PlantillaRolProyecto, Permiso, Usuario
+from backend.api.serializers import PlantillaRolProyectoSerializer, PermisoSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import \
-    CreateRolForm, \
-    UpdateRolForm, \
     AgregarPermisoRolForm, \
     CreatePlantillaRolProyectoForm, \
     UpdatePlantillaRolProyectoForm
@@ -96,7 +94,7 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
         permisos = request.data["permisos"]
         rol = PlantillaRolProyecto.objects.create(nombre=request.data["nombre"])
         for p in permisos:
-            perm = PermisoProyecto.objects.get(pk=p["id"])
+            perm = Permiso.objects.get(pk=p["id"])
             rol.agregar_permiso(perm)
         serializer = PlantillaRolProyectoSerializer(rol, many=False)
         return Response(serializer.data)
@@ -190,7 +188,7 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = PlantillaRolProyecto.objects.get(pk=pk)
             permisos = rol.permisos.all()
-            serializer = PermisoProyectoSerializer(permisos, many=True)
+            serializer = PermisoSerializer(permisos, many=True)
             return Response(serializer.data)
         except PlantillaRolProyecto.DoesNotExist:
             response = {"message": "No existe la plantilla de rol"}
@@ -231,7 +229,7 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = PlantillaRolProyecto.objects.get(pk=pk)
-            permiso = PermisoProyecto.objects.get(pk=request.data["id"])
+            permiso = Permiso.objects.get(pk=request.data["id"])
             rol.agregar_permiso(permiso)
             serializer = PlantillaRolProyectoSerializer(rol, many=False)
             return Response(serializer.data)
@@ -264,14 +262,14 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
             #     response = {"message": "No puedes modificar tu propio rol"}
             #     return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = PlantillaRolProyecto.objects.get(pk=pk)
-            permiso = PermisoProyecto.objects.get(pk=request.data["id"])
+            permiso = Permiso.objects.get(pk=request.data["id"])
             if rol.permisos.all().count() < 2:
                 response = {"message": "La plantilla de rol no se puede quedar sin permisos"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol.eliminar_permiso(permiso)
             serializer = PlantillaRolProyectoSerializer(rol, many=False)
             return Response(serializer.data)
-        except PermisoProyecto.DoesNotExist:
+        except Permiso.DoesNotExist:
             response = {"message": "No existe el permiso"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
         except PlantillaRolProyecto.DoesNotExist:
