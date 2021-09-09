@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from backend.api.models import PlantillaRolProyecto
-from .PermisoProyectoSerializer import PermisoProyectoSerializer
+from .PermisoSerializer import PermisoSerializer
 
 
 class PlantillaRolProyectoSerializer(serializers.ModelSerializer):
     """
     Serializer de PlantillaRolProyecto
     """
-    permisos = PermisoProyectoSerializer(many=True, read_only=True)
+    permisos = PermisoSerializer(many=True, read_only=True)
 
     class Meta:
         """
