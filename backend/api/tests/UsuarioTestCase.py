@@ -1,5 +1,4 @@
 from backend.api.models.Usuario import Usuario
-from backend.api.models import Rol
 from backend.api.models import Permiso
 from django.test import TestCase
 from django.test import Client
