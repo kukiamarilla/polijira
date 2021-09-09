@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from backend.api.models import PermisoProyecto
+from backend.api.models import Permiso
 import json
 
 
@@ -51,7 +51,7 @@ class CreatePlantillaRolProyectoForm(forms.Form):
             permisos = permisos.replace("\'", "\"").replace("True", "true").replace("False", "false")
             permisos = json.loads(permisos)
             for permiso in permisos:
-                PermisoProyecto.objects.get(pk=permiso["id"])
+                Permiso.objects.get(pk=permiso["id"])
             return permisos
-        except PermisoProyecto.DoesNotExist:
+        except Permiso.DoesNotExist:
             raise ValidationError("No se encontró algunos de los permisos especificados")
