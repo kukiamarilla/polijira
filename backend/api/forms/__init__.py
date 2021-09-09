@@ -3,3 +3,5 @@ from .UpdateProyectoForm import UpdateProyectoForm
 from .CreateRolForm import CreateRolForm
 from .UpdateRolForm import UpdateRolForm
 from .AgregarPermisoRolForm import AgregarPermisoRolForm
+from .CreatePlantillaRolProyectoForm import CreatePlantillaRolProyectoForm
+from .UpdatePlantillaRolProyectoForm import UpdatePlantillaRolProyectoForm
