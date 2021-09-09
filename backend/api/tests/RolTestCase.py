@@ -54,10 +54,10 @@ class RolTestCase(TestCase):
         """
         print("\nProbando obtener un rol de sistema.")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/roles/1/")
+        response = self.client.get("/api/roles/2/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        rol = Rol.objects.get(pk=1)
+        rol = Rol.objects.get(pk=2)
         self.assertEquals(rol.nombre, body["nombre"])
 
     def test_obtener_rol_sin_permiso(self):
@@ -69,7 +69,7 @@ class RolTestCase(TestCase):
         permiso = rol.permisos.get(codigo="ver_roles")
         rol.eliminar_permiso(permiso)
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/roles/1/")
+        response = self.client.get("/api/roles/2/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
@@ -189,11 +189,11 @@ class RolTestCase(TestCase):
         print("\nProbando eliminar un rol de sistema.")
         self.client.login(username="testing", password="polijira2021")
         roles_cant = Rol.objects.count()
-        response = self.client.delete("/api/roles/1/")
+        response = self.client.delete("/api/roles/2/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body["message"], "Rol Eliminado.")
-        rol_db = Rol.objects.filter(pk=1)
+        rol_db = Rol.objects.filter(pk=2)
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(Rol.objects.count(), roles_cant - 1)
 
@@ -206,7 +206,7 @@ class RolTestCase(TestCase):
         permiso = rol.permisos.get(codigo="eliminar_roles")
         rol.eliminar_permiso(permiso)
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/roles/1/")
+        response = self.client.delete("/api/roles/2/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
@@ -217,10 +217,9 @@ class RolTestCase(TestCase):
         test_eliminar_rol_asignado_a_usuario Prueba la eliminación de un rol de sistema asignado a un usuario usuario
         """
         print("\nProbando eliminar un rol de sistema asignado a un usuario.")
-        rol = Rol.objects.get(pk=2)
-        Usuario.objects.get(nombre="testing").asignar_rol(rol)
+        rol = Usuario.objects.get(nombre="testing").rol
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/roles/2/")
+        response = self.client.delete("/api/roles/"+str(rol.pk)+"/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Rol asignado a usuario, no se puede eliminar")
@@ -247,10 +246,10 @@ class RolTestCase(TestCase):
             "nombre": "Tirano"
         }
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.put("/api/roles/1/", rol, content_type="application/json")
+        response = self.client.put("/api/roles/2/", rol, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        rol_db = Rol.objects.filter(nombre=rol["nombre"], pk=1)
+        rol_db = Rol.objects.filter(nombre=rol["nombre"], pk=2)
         self.assertEquals(len(rol_db), 1)
         self.assertEquals(rol_db[0].nombre, body["nombre"])
 
@@ -280,10 +279,9 @@ class RolTestCase(TestCase):
         rol = {
             "nombre": "Tirano"
         }
-        r = Rol.objects.get(pk=2)
-        Usuario.objects.get(nombre="testing").asignar_rol(r)
+        r = Usuario.objects.get(nombre="testing").rol
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.put("/api/roles/2/", rol, content_type="application/json")
+        response = self.client.put("/api/roles/"+str(r.pk)+"/", rol, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No puedes modificar tu propio rol")
@@ -350,10 +348,10 @@ class RolTestCase(TestCase):
             "id": 2
         }
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/roles/1/permisos/", permiso, content_type="application/json")
+        response = self.client.post("/api/roles/2/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        rol_db = Rol.objects.filter(permisos__id=permiso["id"], pk=1)
+        rol_db = Rol.objects.filter(permisos__id=permiso["id"], pk=2)
         self.assertEquals(len(rol_db), 1)
         self.assertEquals(rol_db[0].permisos.count(), len(body["permisos"]))
 
@@ -363,13 +361,13 @@ class RolTestCase(TestCase):
         """
         print("\nProbando agregar un permiso a un rol de sistema sin permiso.")
         permiso = {
-            "permiso_id": 5
+            "id": 13
         }
         rol = Usuario.objects.get(nombre="testing").rol
         permiso = rol.permisos.get(codigo="modificar_roles")
         rol.eliminar_permiso(permiso)
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/roles/1/permisos/")
+        response = self.client.post("/api/roles/2/permisos/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
@@ -383,11 +381,10 @@ class RolTestCase(TestCase):
         permiso = {
             "id": 9
         }
-        r = Rol.objects.get(pk=2)
-        Usuario.objects.get(nombre="testing").asignar_rol(r)
+        r = Usuario.objects.get(nombre="testing").rol
         r.eliminar_permiso(9)
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/roles/2/permisos/", permiso, content_type="application/json")
+        response = self.client.post("/api/roles/"+str(r.pk)+"/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No puedes modificar tu propio rol")
@@ -415,12 +412,12 @@ class RolTestCase(TestCase):
             "id": 88
         }
         self.client.login(username="testing", password="polijira2021")
-        permisos_cant = Rol.objects.get(pk=1).permisos.count()
-        response = self.client.post("/api/roles/1/permisos/", permiso, content_type="application/json")
+        permisos_cant = Rol.objects.get(pk=2).permisos.count()
+        response = self.client.post("/api/roles/2/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 422)
         self.assertEquals(body["errors"]["id"], ["No existe el permiso en la base de datos"])
-        rol = Rol.objects.get(pk=1)
+        rol = Rol.objects.get(pk=2)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_eliminar_permiso_a_rol(self):
@@ -432,10 +429,10 @@ class RolTestCase(TestCase):
             "id": 1
         }
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/roles/1/permisos/", permiso, content_type="application/json")
+        response = self.client.delete("/api/roles/2/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        rol = Rol.objects.get(pk=1)
+        rol = Rol.objects.get(pk=2)
         self.assertEquals(rol.nombre, body["nombre"])
         self.assertEquals(rol.permisos.count(), len(body["permisos"]))
 
@@ -445,7 +442,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar un permiso a un rol de sistema sin permiso.")
         permiso = {
-            "permiso_id": 1
+            "id": 1
         }
         rol = Usuario.objects.get(nombre="testing").rol
         permiso = rol.permisos.get(codigo="modificar_roles")
@@ -463,12 +460,11 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar un permiso a un rol de sistema propio.")
         permiso = {
-            "permiso_id": 9
+            "id": 9
         }
-        r = Rol.objects.get(pk=2)
-        Usuario.objects.get(nombre="testing").asignar_rol(r)
+        r = Usuario.objects.get(nombre="testing").rol
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/roles/2/permisos/", permiso, content_type="application/json")
+        response = self.client.delete("/api/roles/"+str(r.pk)+"/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No puedes modificar tu propio rol")
@@ -481,12 +477,13 @@ class RolTestCase(TestCase):
         permiso = {
             "id": 1
         }
+        rol = Rol.objects.create(nombre="Rolcito")
+        rol.agregar_permiso(permiso["id"])
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/roles/3/permisos/", permiso, content_type="application/json")
+        response = self.client.delete("/api/roles/"+str(rol.pk)+"/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "El rol no se puede quedar sin permisos")
-        rol = Rol.objects.get(pk=3)
         self.assertEquals(rol.permisos.all().count(), 1)
 
     def test_eliminar_permiso_a_rol_inexistente(self):
@@ -495,7 +492,7 @@ class RolTestCase(TestCase):
         """
         print("\nProbando eliminar un permiso a un rol de sistema inexistente.")
         permiso = {
-            "permiso_id": 2
+            "id": 2
         }
         self.client.login(username="testing", password="polijira2021")
         response = self.client.delete("/api/roles/99/permisos/", permiso, content_type="application/json")
@@ -512,19 +509,19 @@ class RolTestCase(TestCase):
             "id": 88
         }
         self.client.login(username="testing", password="polijira2021")
-        permisos_cant = Rol.objects.get(pk=1).permisos.count()
-        response = self.client.delete("/api/roles/1/permisos/", permiso, content_type="application/json")
+        rol = Rol.objects.get(pk=2)
+        permisos_cant = rol.permisos.count()
+        response = self.client.delete("/api/roles/2/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el permiso")
-        rol = Rol.objects.get(pk=1)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_crear_rol_sin_nombre(self):
         """
         test_crear_rol_sin_nombre Prueba crear un rol sin especificar el nombre
         """
-        print("\nProbando crear un rol sin especificar el nombre")
+        print("\nProbando crear un rol sin especificar el nombre.")
         self.client.login(username="testing", password="polijira2021")
         rol = {
             "permisos": [
@@ -546,7 +543,7 @@ class RolTestCase(TestCase):
         test_crear_rol_con_nombre_superior_a_max_length
         Prueba crear un rol superando el límite máximo de caracteres
         """
-        print("\nProbando crear un rol superando el límite máximo de caracteres")
+        print("\nProbando crear un rol superando el límite máximo de caracteres.")
         self.client.login(username="testing", password="polijira2021")
         nombre = ""
         for i in range(0, 256):
@@ -571,7 +568,7 @@ class RolTestCase(TestCase):
         """
         test_modificar_rol_sin_especificar_nombre Prueba modificar un rol sin especificar el campo nombre
         """
-        print("\nProbando modificar un rol sin especificar el campo nombre")
+        print("\nProbando modificar un rol sin especificar el campo nombre.")
         self.client.login(username="testing", password="polijira2021")
         rol = {
             "permisos": [
