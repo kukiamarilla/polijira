@@ -47,7 +47,9 @@ class CreateRolForm(forms.Form):
         """
         try:
             cleaned_data = super().clean()
-            permisos = json.loads(cleaned_data.get("permisos").replace("\'", "\""))
+            permisos = cleaned_data.get("permisos")
+            permisos = permisos.replace("\'", "\"").replace("True", "true").replace("False", "false")
+            permisos = json.loads(permisos)
             for permiso in permisos:
                 Permiso.objects.get(pk=permiso["id"])
             return permisos
