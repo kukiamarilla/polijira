@@ -24,6 +24,14 @@
         v-if="hasPermissions(['ver_roles', 'ver_permisos'])"
         :activo="current == 'autorizacion'"
       />
+      <IconLink
+        class="icono"
+        icono="protected"
+        descripcion="Plantillas de Rol de Proyecto"
+        link="/plantilla-rol-proyecto"
+        v-if="hasPermissions(['ver_roles', 'ver_permisos'])"
+        :activo="current == 'plantilla-rol-proyecto'"
+      />
     </div>
 
     <IconLink
