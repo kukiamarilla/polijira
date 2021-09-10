@@ -108,7 +108,7 @@
       :rol="plantillaSelected"
     />
     <Modal v-model="modificarPlantillaModal" height="350px">
-      <h1>Modificar Rol</h1>
+      <h1>Modificar Plantilla</h1>
       <br /><br /><br />
       <InputText title="Nombre" v-model="plantillaSelected.nombre" />
       <br /><br />
@@ -116,7 +116,7 @@
         texto="Guardar"
         tema="primary"
         width="163px"
-        @click="modificarRol()"
+        @click="modificarPlantilla()"
       />
     </Modal>
     <Waves class="waves" />
@@ -208,7 +208,7 @@ export default {
       nuevaPlantilla.permisos = permisos;
       this.nuevaPlantilla = nuevaPlantilla;
       plantillaService.create(this.nuevaPlantilla).then((plantilla) => {
-        Alert.success("El Rol se ha creado correctamente.");
+        Alert.success("La plantilla se ha creado correctamente.");
         this.plantillas = [...this.plantillas, plantilla];
       });
       this.nuevaPlantillaModal = false;
