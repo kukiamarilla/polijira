@@ -1,0 +1,12 @@
+[
+    {
+        "model": "api.plantillarolproyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "PlantillaPrueba",
+            "permisos": [
+                1
+            ]
+        }
+    }
+]
