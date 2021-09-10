@@ -1,0 +1,250 @@
+[
+    {
+        "model": "api.permisoProyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Ver Permisos De Proyecto",
+            "codigo": "ver_permisos_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Ver Roles De Proyecto",
+            "codigo": "ver_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Crear Roles De Proyecto",
+            "codigo": "crear_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Modificar Roles De Proyecto",
+            "codigo": "modificar_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 5,
+        "fields": {
+            "nombre": "Eliminar Roles De Proyecto",
+            "codigo": "eliminar_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 6,
+        "fields": {
+            "nombre": "Agregar Miembros",
+            "codigo": "agregar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 7,
+        "fields": {
+            "nombre": "Ver Miembros",
+            "codigo": "ver_miembros"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 8,
+        "fields": {
+            "nombre": "Modificar Miembros",
+            "codigo": "modificar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 9,
+        "fields": {
+            "nombre": "Eliminar Miembros",
+            "codigo": "eliminar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 10,
+        "fields": {
+            "nombre": "Activar Proyecto",
+            "codigo": "activar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 11,
+        "fields": {
+            "nombre": "Finalizar Proyecto",
+            "codigo": "finalizar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 12,
+        "fields": {
+            "nombre": "Cancelar Proyecto",
+            "codigo": "cancelar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 13,
+        "fields": {
+            "nombre": "Ver User Stories",
+            "codigo": "ver_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 14,
+        "fields": {
+            "nombre": "Crear User Stories",
+            "codigo": "crear_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 15,
+        "fields": {
+            "nombre": "Modificar User Stories",
+            "codigo": "modificar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 16,
+        "fields": {
+            "nombre": "Cancelar User Stories",
+            "codigo": "cancelar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 17,
+        "fields": {
+            "nombre": "Lanzar User Stories",
+            "codigo": "lanzar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 18,
+        "fields": {
+            "nombre": "Ver Sprints",
+            "codigo": "ver_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 19,
+        "fields": {
+            "nombre": "Crear Sprints",
+            "codigo": "crear_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 20,
+        "fields": {
+            "nombre": "Modificar Sprints",
+            "codigo": "modificar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 21,
+        "fields": {
+            "nombre": "Eliminar Sprints",
+            "codigo": "eliminar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 22,
+        "fields": {
+            "nombre": "Activar Sprints",
+            "codigo": "activar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 23,
+        "fields": {
+            "nombre": "Finalizar Sprints",
+            "codigo": "finalizar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 24,
+        "fields": {
+            "nombre": "Planear Sprints",
+            "codigo": "planear_sprints"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 25,
+        "fields": {
+            "nombre": "Iniciar Sprint Planning",
+            "codigo": "iniciar_sprint_planning"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 26,
+        "fields": {
+            "nombre": "Ver Kanban",
+            "codigo": "ver_kanban"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 27,
+        "fields": {
+            "nombre": "Mover User Stories",
+            "codigo": "mover_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 28,
+        "fields": {
+            "nombre": "Crear Reviews",
+            "codigo": "crear_reviews"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 29,
+        "fields": {
+            "nombre": "Modificar Reviews",
+            "codigo": "modificar_reviews"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 30,
+        "fields": {
+            "nombre": "Eliminar Reviews",
+            "codigo": "eliminar_reviews"
+        }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 31,
+        "fields": {
+            "nombre": "Ver Burndown Chart",
+            "codigo": "ver_burndown_chart"
+        }
+    }
+]
