@@ -21,7 +21,7 @@ class PermisoProyectoViewSet(viewsets.ViewSet):
             JSON: List(PermisoProyecto)
         """
         usuario_request = Usuario.objects.get(user=request.user)
-        if not usuario_request.tiene_PermisoProyecto("ver_permisos"):
+        if not usuario_request.tiene_permiso("ver_permisos"):
             response = {
                 "message": "No tiene permiso para realizar esta acción",
                 "permission_required": ["ver_permisos"]
