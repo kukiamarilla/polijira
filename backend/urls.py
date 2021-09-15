@@ -14,9 +14,9 @@ from backend.api.views import \
     PermisoViewSet, \
     RolViewSet, \
     ProyectoViewSet, \
+    PermisoProyectoViewSet, \
     PlantillaRolProyectoViewSet, \
-    PermisoProyectoViewSet
-
+    RolProyectoViewSet
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -26,6 +26,7 @@ router.register("permisos", PermisoViewSet, basename="permisos")
 router.register("roles", RolViewSet, basename="roles")
 router.register("proyectos", ProyectoViewSet, basename="proyectos")
 router.register("plantillas", PlantillaRolProyectoViewSet, basename="plantillas")
+router.register("roles-proyecto", RolProyectoViewSet, basename="roles-proyecto")
 router.register("permisos-proyecto", PermisoProyectoViewSet, basename="permisos-proyecto")
 
 urlpatterns = [
