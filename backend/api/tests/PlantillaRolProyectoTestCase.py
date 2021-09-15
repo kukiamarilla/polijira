@@ -332,11 +332,40 @@ class PlantillaRolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["permission_required"], ["ver_permisos", "modificar_plantillas"])
 
+    def test_eliminar_permiso_sin_permiso_ver_plantillas(self):
         """
+        test_eliminar_permiso_sin_permiso_ver_plantillas [summary]
+        """
+        print("\nProbando eliminar un permiso sin tener permiso de ver plantillas")
+        self.client.login(username="testing", password="polijira2021")
+        _permiso = {"id": 2}
+        permiso = Permiso.objects.get(pk=14)
+        permiso.delete()
+        response = self.client.delete("/api/plantillas/1/permisos/", _permiso, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_plantillas", "modificar_plantillas"])
+
+    def test_eliminar_permiso_sin_permiso_modificar_plantillas(self):
+        """
+        test_eliminar_permiso_sin_permiso_modificar_plantillas
+        Prueba eliminar un permiso a una plantilla sin tener permiso de sistema Modificar Plantillas de Rol de Proyecto
+        """
+        print("\nProbando eliminar un permiso a una plantilla sin tener permiso de modificar plantillas")
+        self.client.login(username="testing", password="polijira2021")
+        _permiso = {"id": 2}
+        permiso = Permiso.objects.get(pk=16)
+        permiso.delete()
+        response = self.client.delete("/api/plantillas/1/permisos/", _permiso, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_plantillas", "modificar_plantillas"])
+
+    """
          Test de CRUD de Plantilla de Rol de Proyecto en un escenario donde:
             No se puede validar los datos
             No existen en la base de datos
-        """
+    """
 
     def test_obtener_plantilla_no_existente(self):
         """
@@ -483,6 +512,17 @@ class PlantillaRolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["error"], "not_found")
 
+    def test_listar_permiso_a_plantilla_no_existente(self):
+        """
+        test_listar_permiso_a_plantilla_no_existente Prueba listar los permisos de una plantilla que no existe
+        """
+        print("\nProbando listar los permisos de una plantilla que no existe")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/plantillas/1000/permisos/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
     def test_agregar_permiso_no_existente(self):
         """
         test_agregar_permiso_no_existente Prueba agregar un permiso que no existe en la base de datos
@@ -540,7 +580,7 @@ class PlantillaRolProyectoTestCase(TestCase):
         print("\nProbando eliminar un permiso a una plantilla que no existe")
         self.client.login(username="testing", password="polijira2021")
         permiso = {"id": 2}
-        response = self.client.post("/api/plantillas/1000/permisos/", permiso, content_type="application/json")
+        response = self.client.delete("/api/plantillas/1000/permisos/", permiso, content_type="application/json")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
