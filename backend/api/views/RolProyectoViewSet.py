@@ -2,7 +2,7 @@ from django.db import transaction
 from backend.api.decorators import FormValidator
 from rest_framework.decorators import action
 from backend.api.serializers import RolProyectoSerializer, PermisoProyectoSerializer
-from backend.api.models import Proyecto, RolProyecto, PermisoProyecto, Usuario
+from backend.api.models import Proyecto, RolProyecto, PermisoProyecto
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.forms import \
@@ -81,30 +81,30 @@ class RolProyectoViewSet(viewsets.ViewSet):
         Returns:
             JSON: Rol de proyecto
         """
-        try:
-            # ACA TRAER MIEMBRO
-            # usuario_request = Usuario.objects.get(user=request.user)
-            # if not usuario_request.tiene_permiso("crear_roles_proyecto") or \
-            #    not usuario_request.tiene_permiso("ver_permisos_proyecto"):
-            #     response = {
-            #         "message": "No tiene permiso para realizar esta acción",
-            #         "permission_required": [
-            #             "ver_permisos_proyecto",
-            #             "crear_roles_proyecto"
-            #         ]
-            #     }
-            #     return Response(response, status=status.HTTP_403_FORBIDDEN)
-            permisos = request.data["permisos"]
-            proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
-            rol = RolProyecto.objects.create(nombre=request.data["nombre"], proyecto=proyecto)
-            for p in permisos:
-                perm = PermisoProyecto.objects.get(pk=p["id"])
-                rol.agregar_permiso(perm)
-            serializer = RolProyectoSerializer(rol, many=False)
-            return Response(serializer.data)
-        except Proyecto.DoesNotExist:
-            response = {"message": "No existe el proyecto"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        # try:
+        # ACA TRAER MIEMBRO
+        # usuario_request = Usuario.objects.get(user=request.user)
+        # if not usuario_request.tiene_permiso("crear_roles_proyecto") or \
+        #    not usuario_request.tiene_permiso("ver_permisos_proyecto"):
+        #     response = {
+        #         "message": "No tiene permiso para realizar esta acción",
+        #         "permission_required": [
+        #             "ver_permisos_proyecto",
+        #             "crear_roles_proyecto"
+        #         ]
+        #     }
+        #     return Response(response, status=status.HTTP_403_FORBIDDEN)
+        permisos = request.data["permisos"]
+        proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
+        rol = RolProyecto.objects.create(nombre=request.data["nombre"], proyecto=proyecto)
+        for p in permisos:
+            perm = PermisoProyecto.objects.get(pk=p["id"])
+            rol.agregar_permiso(perm)
+        serializer = RolProyectoSerializer(rol, many=False)
+        return Response(serializer.data)
+        # except Proyecto.DoesNotExist:
+        #     response = {"message": "No existe el proyecto"}
+        #     return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, pk=None):
         """
@@ -117,7 +117,8 @@ class RolProyectoViewSet(viewsets.ViewSet):
         try:
             # ACA MIEMBRO
             # usuario_request = Usuario.objects.get(user=request.user)
-            # if not (usuario_request.tiene_permiso("ver_roles_proyecto") and usuario_request.tiene_permiso("eliminar_roles_proyecto")):
+            # if not (usuario_request.tiene_permiso("ver_roles_proyecto") \
+            # and usuario_request.tiene_permiso("eliminar_roles_proyecto")):
             #     response = {
             #         "message": "No tiene permiso para realizar esta acción",
             #         "permission_required": [
