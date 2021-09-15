@@ -6,3 +6,4 @@ from .ProyectoSerializer import ProyectoSerializer
 from .PermisoProyectoSerializer import PermisoProyectoSerializer
 from .PlantillaRolProyectoSerializer import PlantillaRolProyectoSerializer
 from .RolProyectoSerializer import RolProyectoSerializer
+from .MiembroSerializer import MiembroSerializer
