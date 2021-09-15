@@ -196,7 +196,10 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
             serializer = PermisoProyectoSerializer(permiso, many=True)
             return Response(serializer.data)
         except PlantillaRolProyecto.DoesNotExist:
-            response = {"message": "No existe la plantilla de rol"}
+            response = {
+                "message": "No existe la plantilla de rol",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     @permisos.mapping.post
@@ -253,7 +256,7 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
-                        "ver_permisos",
+                        "ver_plantillas",
                         "modificar_plantillas"
                     ]
                 }
@@ -264,5 +267,8 @@ class PlantillaRolProyectoViewSet(viewsets.ViewSet):
             serializer = PlantillaRolProyectoSerializer(plantilla, many=False)
             return Response(serializer.data)
         except PlantillaRolProyecto.DoesNotExist:
-            response = {"message": "No existe la plantilla"}
+            response = {
+                "message": "No existe la plantilla",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
