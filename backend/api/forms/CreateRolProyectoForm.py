@@ -63,11 +63,11 @@ class CreateRolProyectoForm(forms.Form):
         except PermisoProyecto.DoesNotExist:
             raise ValidationError("No se encontró algunos de los permisos especificados")
 
-    # def clean_proyecto(self):
-    #     try:
-    #         cleaned_data = super().clean()
-    #         proyecto = cleaned_data.get("proyecto")
-    #         proyecto = Proyecto.objects.get(pk=proyecto)
-    #         return proyecto
-    #     except Proyecto.DoesNotExist:
-    #         raise ValidationError("No se encontró el proyecto especificado")
+    def clean_proyecto(self):
+        try:
+            cleaned_data = super().clean()
+            proyecto = cleaned_data.get("proyecto")
+            proyecto = Proyecto.objects.get(pk=proyecto)
+            return proyecto
+        except Proyecto.DoesNotExist:
+            raise ValidationError("No se encontró el proyecto especificado")
