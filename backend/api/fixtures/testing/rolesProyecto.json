@@ -1,0 +1,28 @@
+[
+    {
+        "model": "api.rolproyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Scrum Master",
+            "proyecto": 1,
+            "permisos": [
+                1,
+                2,
+                3
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Developer",
+            "proyecto": 1,
+            "permisos": [
+                11,
+                22,
+                31
+            ]
+        }
+    }
+]
