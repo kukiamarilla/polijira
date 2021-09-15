@@ -6,3 +6,4 @@ from .AgregarPermisoRolForm import AgregarPermisoRolForm
 from .CreatePlantillaRolProyectoForm import CreatePlantillaRolProyectoForm
 from .UpdatePlantillaRolProyectoForm import UpdatePlantillaRolProyectoForm
 from .AgregarPermisoProyectoForm import AgregarPermisoProyectoForm
+from .ELiminarPermisoProyectoForm import EliminarPermisoProyectoForm
