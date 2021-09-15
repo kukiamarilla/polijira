@@ -5,3 +5,4 @@ from .Proyecto import Proyecto
 from .PermisoProyecto import PermisoProyecto
 from .PlantillaRolProyecto import PlantillaRolProyecto
 from .RolProyecto import RolProyecto
+from .Miembro import Miembro

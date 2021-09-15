@@ -14,9 +14,10 @@ class RolProyecto(models.Model):
         permisos (ManyToManyField): Permisos del rol
         proyecto (ForeignKey): Proyecto del rol
     """
+
     nombre = models.CharField(max_length=255, default="")
     permisos = models.ManyToManyField(PermisoProyecto)
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name="proyecto")
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name="roles")
 
     def agregar_permiso(self, permiso):
         """
