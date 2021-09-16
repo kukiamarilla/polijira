@@ -14,7 +14,7 @@ class ProyectoViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        list Lista todos los proyectos
+        list Lista todos los proyectos al que el usuario pertenece
 
         Args:
             request (Any): request
@@ -23,10 +23,7 @@ class ProyectoViewSet(viewsets.ViewSet):
             json: Proyecto[]
         """
         usuario_request = Usuario.objects.get(user=request.user)
-        proyectos = Proyecto.objects.filter(scrum_master=usuario_request)
-        if usuario_request.tiene_permiso("ver_proyectos"):
-            # Falta el modelo Miembro para traer los proyectos al que pertenece
-            proyectos = Proyecto.objects.all()
+        proyectos = Proyecto.objects.filter(miembros__usuario=usuario_request)
         serializer = ProyectoSerializer(proyectos, many=True)
         return Response(serializer.data)
 
