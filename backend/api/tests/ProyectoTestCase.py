@@ -23,14 +23,15 @@ class ProyectoTestCase(TestCase):
 
     def test_listar_todos_los_proyectos(self):
         """
-        test_listar_proyectos Prueba listar todos los proyectos si el usuario tiene el permiso para ver proyectos
+        test_listar_proyectos Prueba listar todos los proyectos al que es miembro el usuario
         """
         print("\nProbando listar todos los proyectos.")
         self.client.login(username="testing", password="polijira2021")
         response = self.client.get("/api/proyectos/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(Proyecto.objects.count(), len(body))
+        usuario = Usuario.objects.get(pk=1)
+        self.assertEquals(Proyecto.objects.filter(miembros__usuario=usuario).count(), len(body))
 
     def test_obtener_proyecto(self):
         """
