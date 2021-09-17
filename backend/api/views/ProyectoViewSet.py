@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, PlantillaRolProyecto
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
 from backend.api.serializers import ProyectoSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
