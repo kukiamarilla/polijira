@@ -39,6 +39,12 @@ class RolProyecto(models.Model):
 
     @staticmethod
     def from_plantilla(proyecto):
+        """
+        from_plantilla Crea los roles por defecto de un proyecto
+
+        Args:
+            proyecto (Proyecto): Proyecto a asignar los roles por defecto
+        """
         plantillas = PlantillaRolProyecto.objects.all()
         for plantilla in plantillas:
             rol_proyecto = RolProyecto.objects.create(

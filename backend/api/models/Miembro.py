@@ -37,6 +37,13 @@ class Miembro(models.Model):
 
     @staticmethod
     def asignar_scrum_master(proyecto, scrum_master):
+        """
+        asignar_scrum_master Asigna un Scrum Master a un Proyecto
+
+        Args:
+            proyecto (Proyecto): Proyecto a asignar el scrum master
+            scrum_master (Usuario): Scrum Master a ser asignado
+        """
         proyecto.scrum_master = scrum_master
         proyecto.save()
         Miembro.objects.create(
@@ -47,6 +54,13 @@ class Miembro(models.Model):
 
     @staticmethod
     def actualizar_scrum_master(proyecto, scrum_master):
+        """
+        actualizar_scrum_master Actualiza un Scrum Master de un Proyecto
+
+        Args:
+            proyecto (Proyecto): Proyecto a actualizar el scrum master
+            scrum_master (Usuario): Scrum Master a ser actualizado
+        """
         rol = RolProyecto.objects.get(nombre="Scrum Master")
         miembro = Miembro.objects.get(
             usuario=proyecto.scrum_master,
