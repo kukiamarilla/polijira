@@ -1,5 +1,5 @@
 import datetime
-from backend.api.models import Proyecto, Usuario, Permiso
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
 
@@ -12,7 +12,9 @@ class ProyectoTestCase(TestCase):
         "backend/api/fixtures/testing/usuarios.json",
         "backend/api/fixtures/testing/permisos.json",
         "backend/api/fixtures/testing/roles.json",
-        "backend/api/fixtures/testing/proyectos.json"
+        "backend/api/fixtures/testing/proyectos.json",
+        "backend/api/fixtures/testing/permisosProyecto.json",
+        "backend/api/fixtures/testing/plantillas.json"
     ]
 
     def setUp(self):
@@ -98,7 +100,7 @@ class ProyectoTestCase(TestCase):
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
             "scrum_master_id": 2
         }
-        response = self.client.post("/api/proyectos/", proyecto_body)
+        response = self.client.post("/api/proyectos/", proyecto_body, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         proyecto = Proyecto.objects.filter(
             nombre=proyecto_body["nombre"],
@@ -109,13 +111,18 @@ class ProyectoTestCase(TestCase):
         )
         self.assertEquals(len(proyecto), 1)
         proyecto = proyecto[0]
+        miembro = Miembro.objects.filter(
+            usuario=proyecto.scrum_master,
+            proyecto=proyecto,
+            rol=RolProyecto.objects.get(nombre="Scrum Master")
+        )
+        self.assertEquals(len(miembro), 1)
         body = response.json()
         self.assertEquals(body["nombre"], proyecto.nombre)
         self.assertEquals(body["fecha_inicio"], str(proyecto.fecha_inicio))
         self.assertEquals(body["fecha_fin"], str(proyecto.fecha_fin))
         self.assertEquals(body["scrum_master"]["id"], proyecto.scrum_master.id)
         self.assertEquals(proyecto.estado, "P")
-        # TODO self.asserEquals(body["scrum_master"]["rol"]["nombre"], "Scrum Master")
 
     def test_crear_proyecto_pasando_un_estado(self):
         """
@@ -297,13 +304,22 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando modificar un proyecto")
         self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.create(
+            nombre="ProyectoTest",
+            fecha_inicio=datetime.date.today(),
+            fecha_fin=datetime.date.today() + datetime.timedelta(5),
+            scrum_master=Usuario.objects.get(pk=1),
+            roles_handler=RolProyecto.from_plantilla,
+            scrum_master_handler=Miembro.asignar_scrum_master
+        )
         proyecto_body = {
             "nombre": "ProyectoTestModificar",
             "fecha_inicio": datetime.date.today(),
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
             "scrum_master_id": 1
         }
-        response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
+        response = self.client.put("/api/proyectos/"+str(proyecto.id) +
+                                   "/", proyecto_body, "application/json")
         self.assertEquals(response.status_code, 200)
         proyecto = Proyecto.objects.filter(
             nombre=proyecto_body["nombre"],
@@ -313,6 +329,12 @@ class ProyectoTestCase(TestCase):
         )
         self.assertEquals(len(proyecto), 1)
         proyecto = proyecto[0]
+        miembro = Miembro.objects.filter(
+            usuario=proyecto.scrum_master,
+            proyecto=proyecto,
+            rol=RolProyecto.objects.get(nombre="Scrum Master")
+        )
+        self.assertEquals(len(miembro), 1)
         body = response.json()
         self.assertEquals(proyecto.estado, "P")
         self.assertEquals(body["nombre"], proyecto.nombre)
