@@ -25,6 +25,26 @@ class Proyecto(models.Model):
     scrum_master = models.ForeignKey('Usuario', on_delete=models.CASCADE,
                                      related_name='proyecto_scrum_master', null=True)
 
+    @staticmethod
+    def create(nombre=None, fecha_inicio=None, fecha_fin=None, scrum_master=None, roles_handler=None, scrum_master_handler=None):
+        proyecto = Proyecto.objects.create(
+            nombre=nombre,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            estado="P"
+        )
+        roles_handler(proyecto)
+        scrum_master_handler(proyecto, scrum_master)
+        return proyecto
+
+    def update(self, nombre=None, fecha_inicio=None, fecha_fin=None, scrum_master=None, scrum_master_handler=None):
+        self.nombre = nombre if not nombre is None else self.nombre
+        self.fecha_inicio = fecha_inicio if not fecha_inicio is None else self.fecha_inicio
+        self.fecha_fin = fecha_fin if not fecha_inicio is None else self.fecha_fin
+        self.save()
+        if not scrum_master_handler is None:
+            scrum_master_handler(self, scrum_master)
+
     def iniciar(self):
         """
         iniciar Inicia este Proyecto
