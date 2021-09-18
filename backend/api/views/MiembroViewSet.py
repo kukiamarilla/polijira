@@ -12,20 +12,6 @@ class MiembroViewSet(viewsets.ViewSet):
         viewsets (ViewSet): Tipo de clase basado en View
     """
 
-    def list(self, request):
-        """
-        list Lista todos los miembros existentes
-
-        Args:
-            request (Any): request
-
-        Return:
-            JSON: Miembros
-        """
-        miembros = Miembro.objects.all()
-        serializer = MiembroSerializer(miembros, many=True)
-        return Response(serializer.data)
-
     def retrieve(self, request, pk=None):
         """
         retrieve Obtiene un miembro por su pk
@@ -102,9 +88,8 @@ class MiembroViewSet(viewsets.ViewSet):
         """
         try:
             miembro = Miembro.objects.get(pk=pk)
-
             rol = RolProyecto.objects.get(pk=request.data["rol"])
-            if rol.proyecto != miembro.proyecto:
+            if rol.proyecto != miembro.proyecto:  # form
                 response = {"message": "Rol no pertenece al proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro.rol = rol
@@ -114,13 +99,7 @@ class MiembroViewSet(viewsets.ViewSet):
         except Miembro.DoesNotExist:
             response = {"message": "No existe el miembro"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except Usuario.DoesNotExist:
-            response = {"message": "No existe el usuario"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except Proyecto.DoesNotExist:
-            response = {"message": "No existe el proyecto"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except RolProyecto.DoesNotExist:
+        except RolProyecto.DoesNotExist:  # form
             response = {"message": "No existe el rol"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
