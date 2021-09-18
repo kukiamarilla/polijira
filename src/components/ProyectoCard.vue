@@ -1,6 +1,6 @@
 <template>
   <div class="card shadow">
-    <h3>{{ nombre }}</h3>
+    <h3>{{ proyecto.nombre }}</h3>
 
     <div class="estado">
       <span class="highlight" :style="{ color: colorEstado }">
@@ -8,12 +8,17 @@
       </span>
     </div>
 
-    <Boton texto="Ir al Proyecto" tema="primary" width="100%" />
+    <Boton
+      texto="Ir al Proyecto"
+      tema="primary"
+      width="100%"
+      @click="$router.push(`/proyectos/${proyecto.id}`)"
+    />
 
     <IconosPlegables
       @clickDelete="$emit('clickDelete')"
       @clickWatch="$emit('clickWatch')"
-      :hideDelete="estado != 'P'"
+      :hideDelete="proyecto.estado != 'P'"
     />
   </div>
 </template>
@@ -23,7 +28,7 @@ import Boton from "@/components/Boton";
 import IconosPlegables from "@/components/IconosPlegables";
 
 export default {
-  props: { nombre: String, estado: String },
+  props: ["proyecto"],
   data() {
     return {};
   },
@@ -39,10 +44,10 @@ export default {
         P: "Pendiente",
         C: "Cancelado",
       };
-      return estados[this.estado];
+      return estados[this.proyecto.estado];
     },
     colorEstado() {
-      switch (this.estado) {
+      switch (this.proyecto.estado) {
         case "F":
           return "var(--success)";
         case "A":
