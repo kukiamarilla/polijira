@@ -9,6 +9,7 @@ import Unauthorized from "@/views/Unauthorized";
 import Usuarios from "@/views/Usuarios";
 import Autorizacion from "@/views/Autorizacion";
 import PlantillaRolProyecto from "@/views/PlantillaRolProyecto";
+import Proyecto from "@/views/Proyecto";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -47,6 +48,15 @@ const router = new Router({
       path: "/autorizacion",
       name: "Autorizacion",
       component: Autorizacion,
+      meta: {
+        middleware: [auth, activated],
+      },
+    },
+
+    {
+      path: "/proyectos/:id",
+      name: "Proyecto",
+      component: Proyecto,
       meta: {
         middleware: [auth, activated],
       },

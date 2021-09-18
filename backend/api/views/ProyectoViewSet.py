@@ -1,10 +1,11 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Proyecto, Usuario
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
 from backend.api.serializers import ProyectoSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
+from django.db import transaction
 
 
 class ProyectoViewSet(viewsets.ViewSet):
@@ -57,6 +58,7 @@ class ProyectoViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
     @FormValidator(form=CreateProyectoForm)
     def create(self, request):
         """
@@ -78,23 +80,24 @@ class ProyectoViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            proyecto = Proyecto.objects.create(
+            proyecto = Proyecto.create(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
                 fecha_fin=request.data['fecha_fin'],
-                scrum_master=Usuario.objects.get(pk=request.data['scrum_master_id'])
+                scrum_master=Usuario.objects.get(pk=request.data['scrum_master_id']),
+                roles_handler=RolProyecto.from_plantilla,
+                scrum_master_handler=Miembro.asignar_scrum_master
             )
-            # Falta agregar al scrum master como miembro del proyecto
-            # Falta agregar el rol de proyecto scrum master al usuario asignado como scrum master
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
             response = {
-                "message": "No existe el Scum Master",
+                "message": "No existe el usuario asignado como Scrum Master",
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
     @FormValidator(UpdateProyectoForm)
     def update(self, request, pk=None):
         """
@@ -129,16 +132,14 @@ class ProyectoViewSet(viewsets.ViewSet):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            Proyecto.objects.filter(pk=pk).update(
+            scrum_master = Usuario.objects.get(pk=request.data["scrum_master_id"])
+            proyecto.update(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
                 fecha_fin=request.data['fecha_fin'],
-                scrum_master=Usuario.objects.get(pk=request.data['scrum_master_id'])
+                scrum_master=scrum_master,
+                scrum_master_handler=Miembro.actualizar_scrum_master
             )
-            # Falta verificar si se agrega un nuevo scrum master, si es asi
-            # el scrum master anterior deja de ser miembro del proyecto; y
-            # el nuevo pasa a ser miembro del proyecto
-            proyecto = Proyecto.objects.get(pk=pk)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:

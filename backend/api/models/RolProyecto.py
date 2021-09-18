@@ -1,4 +1,4 @@
-from backend.api.models import PermisoProyecto, Proyecto
+from backend.api.models import PlantillaRolProyecto
 from django.db import models
 
 
@@ -16,8 +16,8 @@ class RolProyecto(models.Model):
     """
 
     nombre = models.CharField(max_length=255, default="")
-    permisos = models.ManyToManyField(PermisoProyecto)
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name="roles")
+    permisos = models.ManyToManyField("PermisoProyecto")
+    proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="roles")
 
     def agregar_permiso(self, permiso):
         """
@@ -36,3 +36,19 @@ class RolProyecto(models.Model):
             permiso (PermisoProyecto): Permiso de Proyecto
         """
         self.permisos.remove(permiso)
+
+    @staticmethod
+    def from_plantilla(proyecto):
+        """
+        from_plantilla Crea los roles por defecto de un proyecto
+
+        Args:
+            proyecto (Proyecto): Proyecto a asignar los roles por defecto
+        """
+        plantillas = PlantillaRolProyecto.objects.all()
+        for plantilla in plantillas:
+            rol_proyecto = RolProyecto.objects.create(
+                nombre=plantilla.nombre,
+                proyecto=proyecto
+            )
+            rol_proyecto.permisos.set(plantilla.permisos.all())

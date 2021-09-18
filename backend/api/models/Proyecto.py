@@ -25,6 +25,52 @@ class Proyecto(models.Model):
     scrum_master = models.ForeignKey('Usuario', on_delete=models.CASCADE,
                                      related_name='proyecto_scrum_master', null=True)
 
+    @staticmethod
+    def create(nombre=None, fecha_inicio=None, fecha_fin=None,
+               scrum_master=None, roles_handler=None, scrum_master_handler=None
+               ):
+        """
+        create Crea este Proyecto
+
+        Args:
+            nombre (String, optional): Nombre del Proyecto.
+            fecha_inicio (String, optional): Fecha estimada de inicio.
+            fecha_fin (String, optional): Fecha estimada de fin.
+            scrum_master (Usuario, optional): Scrum Master del proyecto.
+            roles_handler (method, optional): Asigna los roles por defecto a este proyecto.
+            scrum_master_handler (method, optional): Asigna como miembro del proyecto al scrum master
+
+        Returns:
+            Proyecto: El proyecto con sus roles y miembros definidos
+        """
+        proyecto = Proyecto.objects.create(
+            nombre=nombre,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            estado="P"
+        )
+        roles_handler(proyecto)
+        scrum_master_handler(proyecto, scrum_master)
+        return proyecto
+
+    def update(self, nombre=None, fecha_inicio=None, fecha_fin=None, scrum_master=None, scrum_master_handler=None):
+        """
+        update Modifica este proyecto
+
+        Args:
+            nombre (String, optional): Nombre del Proyecto.
+            fecha_inicio (String, optional): Fecha estimada de inicio.
+            fecha_fin (String, optional): Fecha estimada de fin.
+            scrum_master (Usuario, optional): Scrum Master del proyecto.
+            scrum_master_handler (method, optional): Actualiza el miembro del proyecto si hay nuevo scrum master
+        """
+        self.nombre = nombre if nombre is not None else self.nombre
+        self.fecha_inicio = fecha_inicio if fecha_inicio is not None else self.fecha_inicio
+        self.fecha_fin = fecha_fin if fecha_inicio is not None else self.fecha_fin
+        self.save()
+        if scrum_master_handler is not None:
+            scrum_master_handler(self, scrum_master)
+
     def iniciar(self):
         """
         iniciar Inicia este Proyecto

@@ -8,8 +8,7 @@
         <ProyectoCard
           v-for="proyecto in proyectos"
           class="card"
-          :nombre="proyecto.nombre"
-          :estado="proyecto.estado"
+          :proyecto="proyecto"
           :key="proyecto.id"
           @clickWatch="detalleProyecto(proyecto)"
           @clickDelete="deleteProyecto(proyecto)"

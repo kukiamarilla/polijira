@@ -373,7 +373,7 @@ class PlantillaRolProyectoTestCase(TestCase):
         """
         print("\nProbando obtener una plantilla que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/plantillas/2/")
+        response = self.client.get("/api/plantillas/1000/")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
