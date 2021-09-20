@@ -1,5 +1,5 @@
 import datetime
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso
+from backend.api.models import Miembro, PermisoProyecto, Proyecto, RolProyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
 
@@ -32,6 +32,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando listar todos los proyectos.")
         self.client.login(username="testing", password="polijira2021")
+        Permiso.objects.get(codigo="ver_proyectos").delete()
         response = self.client.get("/api/proyectos/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
