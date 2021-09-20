@@ -1,3 +1,4 @@
+from backend.api.serializers.MiembroSerializer import MiembroSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -289,6 +290,34 @@ class ProyectoViewSet(viewsets.ViewSet):
         roles = RolProyecto.objects.filter(proyecto=proyecto)
         serializer = RolProyectoSerializer(roles, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["GET"])
+    def miembros(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario_request)
+            if not miembro.tiene_permiso("ver_miembros"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_miembros"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembros = Miembro.objects.filter(proyecto=proyecto)
+            serializer = MiembroSerializer(miembros, many=True)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status.HTTP_403_FORBIDDEN)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
