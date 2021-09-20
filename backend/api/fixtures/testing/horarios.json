@@ -3,13 +3,14 @@
         "model": "api.horario",
         "pk": 1,
         "fields": {
-            "lunes": 2,
+            "lunes": 3,
             "martes": 0,
-            "miercoles": 0,
-            "jueves": 4,
+            "miercoles": 1,
+            "jueves": 1,
             "viernes": 0,
-            "sabado": 0,
-            "domingo": 5
+            "sabado": 6,
+            "domingo": 0,
+            "miembro": 1
         }
     }
 ]

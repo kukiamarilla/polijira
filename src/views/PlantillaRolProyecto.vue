@@ -32,7 +32,10 @@
                   <a
                     href="#"
                     @click.prevent="eliminarPlantilla(plantilla)"
-                    v-if="hasPermission('eliminar_plantillas')"
+                    v-if="
+                      hasPermission('eliminar_plantillas') &&
+                      plantilla.nombre != 'Scrum Master'
+                    "
                   >
                     <Icon
                       icono="delete"
@@ -44,7 +47,10 @@
                   <a
                     href="#"
                     @click.prevent="abrirModificarModal(plantilla)"
-                    v-if="hasPermission('modificar_plantillas')"
+                    v-if="
+                      hasPermission('modificar_plantillas') &&
+                      plantilla.nombre != 'Scrum Master'
+                    "
                   >
                     <Icon
                       icono="edit"
@@ -102,10 +108,11 @@
       v-model="nuevaPlantillaModal"
       @save="crearPlantilla($event)"
     />
-    <VerRolModal
+    <VerPlantillaRolModal
       :permisos="permisos"
       v-model="verPlantillaModal"
       :rol="plantillaSelected"
+      :disabled="plantillaSelected.nombre == 'Scrum Master'"
     />
     <Modal v-model="modificarPlantillaModal" height="350px">
       <h1>Modificar Plantilla</h1>
@@ -126,7 +133,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import NuevoRolModal from "@/components/NuevoRolModal";
-import VerRolModal from "@/components/VerRolModal";
+import VerPlantillaRolModal from "@/components/VerPlantillaRolModal";
 import Modal from "@/components/Modal";
 import Sidebar from "@/components/Sidebar";
 import Waves from "@/components/Waves";
@@ -135,7 +142,7 @@ import Icon from "@/components/Icon";
 import InputText from "@/components/InputText";
 import { mapGetters, mapState } from "vuex";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
-import permisoService from "@/services/permisoService";
+import permisoProyectoService from "@/services/permisoProyectoService";
 import plantillaService from "@/services/plantillaService";
 import Alert from "@/helpers/alert";
 
@@ -154,7 +161,7 @@ export default {
     Icon,
     InputText,
     NuevoRolModal,
-    VerRolModal,
+    VerPlantillaRolModal,
     Modal,
   },
   created() {
@@ -193,7 +200,7 @@ export default {
   },
   methods: {
     load() {
-      permisoService.list().then((permisos) => {
+      permisoProyectoService.list().then((permisos) => {
         this.permisos = permisos;
       });
       plantillaService.list().then((plantillas) => {

@@ -43,7 +43,6 @@ export default {
   background-color: var(--primary-dark);
   width: 300px;
   left: 0;
-  height: 100%;
   border-top-right-radius: 20px;
   .brand {
     padding: 32px 0;

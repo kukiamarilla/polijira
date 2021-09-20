@@ -53,3 +53,7 @@ class Horario(models.Model):
         lista.append(self.sabado)
         lista.append(self.domingo)
         return lista
+
+    def asignar_horario(self, miembro):
+        self.miembro = miembro
+        self.save()

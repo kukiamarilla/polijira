@@ -57,8 +57,8 @@ class MiembroTestCase(TestCase):
         proyecto = Proyecto.objects.get(pk=1)
         rol = RolProyecto.objects.get(pk=2)
         miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto, rol=rol)
-        self.assertIsNotNone(miembro.horario)
         horario = miembro.horario
+        self.assertIsNotNone(horario)
         self.assertEquals(horario.lunes, request_data["horario"]["lunes"])
         self.assertEquals(horario.martes, request_data["horario"]["martes"])
         self.assertEquals(horario.miercoles, request_data["horario"]["miercoles"])
