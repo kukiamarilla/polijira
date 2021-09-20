@@ -33,7 +33,9 @@ class UpdateMiembroForm(forms.Form):
         try:
             cleaned_data = super().clean()
             id = cleaned_data.get("rol")
-            RolProyecto.objects.get(pk=id)
+            rol = RolProyecto.objects.get(pk=id)
+            if rol.nombre == "Scrum Master":
+                raise ValidationError("No puedes asignar el rol Scrum Master")
             return id
         except RolProyecto.DoesNotExist:
             raise ValidationError("No se encontró un rol en la base de datos")
