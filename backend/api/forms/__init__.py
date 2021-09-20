@@ -11,3 +11,5 @@ from .CreateRolProyectoForm import CreateRolProyectoForm
 from .UpdateRolProyectoForm import UpdateRolProyectoForm
 from .AgregarPermisoRolProyectoForm import AgregarPermisoRolProyectoForm
 from .UpdateHorarioForm import UpdateHorarioForm
+from .CreateMiembroForm import CreateMiembroForm
+from .UpdateMiembroForm import UpdateMiembroForm
