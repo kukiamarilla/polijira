@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
-from backend.api.serializers import ProyectoSerializer, PermisoProyectoSerializer
+from backend.api.serializers import ProyectoSerializer, PermisoProyectoSerializer, RolProyectoSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
@@ -264,6 +264,31 @@ class ProyectoViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['GET'])
+    def roles(self, request, pk=None):
+        """
+        list Lista todos los roles de proyecto del proyecto especificado
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Return:
+            json: lista de roles de proyecto en formato json
+        """
+        usuario_request = Usuario.objects.get(user=request.user)
+        proyecto = Proyecto.objects.get(pk=pk)
+        miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+        if not miembro.tiene_permiso("ver_roles_proyecto"):
+            response = {
+                "message": "No tiene permiso para realizar esta acción",
+                "permission_required": ["ver_roles_proyecto"]
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        roles = RolProyecto.objects.filter(proyecto=proyecto)
+        serializer = RolProyectoSerializer(roles, many=True)
+        return Response(serializer.data)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
