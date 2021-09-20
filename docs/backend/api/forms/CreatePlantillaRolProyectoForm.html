@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <title>CreateRolForm.py</title>
+  <title>CreatePlantillaRolProyectoForm.py</title>
   <link rel="stylesheet" href="../../../pycco.css">
 </head>
 <body>
 <div id='container'>
   <div id="background"></div>
   <div class='section'>
-    <div class='docs'><h1>CreateRolForm.py</h1></div>
+    <div class='docs'><h1>CreatePlantillaRolProyectoForm.py</h1></div>
   </div>
   <div class='clearall'>
   <div class='section' id='section-0'>
@@ -32,18 +32,18 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>CreateRolForm Form para la creacion de Rol</p>
+      <p>CreateRolForm Form para validar la creacion de PlantillaRolProyecto</p>
 <p>Args:
     forms (Form): Form de django</p>
 <p>Atributes:
-    nombre (CharField): Campo para validar el nombre de Rol</p>
-<pre><code>permisos (CharField): Campo para validar los permisos de Rol
+    nombre (CharField): Campo para validar el nombre de PlantillaRolProyecto</p>
+<pre><code>permisos (CharField): Campo para validar los permisos de PlantillaRolProyecto
 </code></pre>
 <p>Raises:
     ValidationError: Error de Validacion</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateRolForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">CreatePlantillaRolProyectoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -77,11 +77,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>clean_permisos Valida los permisos agregados a Rol</p>
+      <p>clean_permisos Valida los permisos a ser agregados a PlantillaRolProyecto</p>
 <p>Raises:
     ValidationError: Error de validacion si no se encuentra el permiso</p>
 <p>Returns:
-    Permisos[]: Lista de Permiso validado correctamente</p>
+    JSON: Todos los permisos de proyecto correctamente validados</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_permisos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>

@@ -20,7 +20,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span></pre></div>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -29,14 +30,16 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>Proyecto Modela la clase Proyecto</p>
-<p>Atributos:
-    nombre {CharField} &ndash; Nombre del proyecto
-    fecha_inicio {DateField}  &ndash; Fecha en que inicia el proyecto
-    fecha_fin {DateField} &ndash; Fecha en que termina el proyecto
-    ESTADO  {choices} &ndash; Diferentes estados del proyecto
-    estado {CharField} &ndash; Estado del proyecto
-    scrum_master {ForeignKey} &ndash; Scrum Master del proyecto</p>
+      <p>Proyecto Modela el Proyecto</p>
+<p>Args:
+    models (Model): Modelo de Django</p>
+<p>Atributes:
+    nombre (CharField): Nombre del Proyecto
+    fecha_inicio (DateField): Fecha estimada de inicio
+    fecha_fin (DateField): Fecha estimada de fin
+    ESTADO (tuple): Definicion de diferentes estados que puede tener el Proyecto
+    estado (CharField): Estado del Proyecto
+    scrum_master (ForeignKey): Scrum Master del proyecto</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span> <span class="nc">Proyecto</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
@@ -66,10 +69,22 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>iniciar Inicia este Proyecto</p>
+      <p>create Crea este Proyecto</p>
+<p>Args:
+    nombre (String, optional): Nombre del Proyecto.
+    fecha_inicio (String, optional): Fecha estimada de inicio.
+    fecha_fin (String, optional): Fecha estimada de fin.
+    scrum_master (Usuario, optional): Scrum Master del proyecto.
+    roles_handler (method, optional): Asigna los roles por defecto a este proyecto.
+    scrum_master_handler (method, optional): Asigna como miembro del proyecto al scrum master</p>
+<p>Returns:
+    Proyecto: El proyecto con sus roles y miembros definidos</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">iniciar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">scrum_master</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">roles_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scrum_master_handler</span><span class="o">=</span><span class="kc">None</span>
+               <span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -81,8 +96,15 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">fecha_inicio</span><span class="p">,</span>
+            <span class="n">fecha_fin</span><span class="o">=</span><span class="n">fecha_fin</span><span class="p">,</span>
+            <span class="n">estado</span><span class="o">=</span><span class="s2">&quot;P&quot;</span>
+        <span class="p">)</span>
+        <span class="n">roles_handler</span><span class="p">(</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="n">scrum_master_handler</span><span class="p">(</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">scrum_master</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">proyecto</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -91,10 +113,16 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>finalizar Finaliza este Proyecto</p>
+      <p>update Modifica este proyecto</p>
+<p>Args:
+    nombre (String, optional): Nombre del Proyecto.
+    fecha_inicio (String, optional): Fecha estimada de inicio.
+    fecha_fin (String, optional): Fecha estimada de fin.
+    scrum_master (Usuario, optional): Scrum Master del proyecto.
+    scrum_master_handler (method, optional): Actualiza el miembro del proyecto si hay nuevo scrum master</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">finalizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scrum_master</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scrum_master_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -106,8 +134,12 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span> <span class="k">if</span> <span class="n">nombre</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">fecha_inicio</span> <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">fecha_inicio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">fecha_fin</span> <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">fecha_fin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">scrum_master_handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scrum_master_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scrum_master</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -116,10 +148,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
-      <p>cancelar Cancela este Proyecto</p>
+      <p>iniciar Inicia este Proyecto</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cancelar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">iniciar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -127,6 +159,57 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_inicio</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>finalizar Finaliza este Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">finalizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>cancelar Cancela este Proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cancelar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       
     </div>
