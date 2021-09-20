@@ -86,7 +86,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando obtener detalles de un proyecto que no existe")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/proyectos/2/")
+        response = self.client.get("/api/proyectos/1000/")
         body = response.json()
         self.assertEquals(body['error'], 'not_found')
         self.assertEquals(response.status_code, 404)
@@ -469,7 +469,7 @@ class ProyectoTestCase(TestCase):
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
             "scrum_master_id": 2
         }
-        response = self.client.put("/api/proyectos/2/", proyecto_body, "application/json")
+        response = self.client.put("/api/proyectos/1000/", proyecto_body, "application/json")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
@@ -631,7 +631,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando eliminar un proyecto que no existe")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/proyectos/2/")
+        response = self.client.delete("/api/proyectos/1000/")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
@@ -780,7 +780,7 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando activar un proyecto que no existe")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/proyectos/2/activar/")
+        response = self.client.post("/api/proyectos/1000/activar/")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
