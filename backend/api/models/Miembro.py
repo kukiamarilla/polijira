@@ -18,6 +18,7 @@ class Miembro(models.Model):
     usuario = models.ForeignKey("Usuario", on_delete=models.CASCADE, related_name='miembros')
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name='miembros')
     rol = models.ForeignKey("RolProyecto", on_delete=models.CASCADE, related_name='miembros')
+    horario = models.OneToOneField("Horario", on_delete=models.CASCADE, related_name="miembro", null=True)
 
     def tiene_permiso(self, permiso_codigo):
         """
@@ -74,3 +75,7 @@ class Miembro(models.Model):
             proyecto=proyecto,
             rol=rol
         )
+
+    def asignar_horario(self, horario):
+        self.horario = horario
+        self.save()

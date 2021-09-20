@@ -1,7 +1,10 @@
 <template>
   <div>
     <Navbar />
-    <SidebarProyecto :proyecto="proyecto" current="home" />
+    <div class="body">
+      <SidebarProyecto :proyecto="proyecto" current="home" />
+      <ProductBacklog />
+    </div>
   </div>
 </template>
 
@@ -9,11 +12,13 @@
 import proyectoService from "@/services/proyectoService";
 import Navbar from "@/components/Navbar";
 import SidebarProyecto from "@/components/SidebarProyecto";
+import ProductBacklog from "@/components/ProductBacklog";
 
 export default {
   components: {
     Navbar,
     SidebarProyecto,
+    ProductBacklog,
   },
   data() {
     return {
@@ -38,5 +43,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.body {
+  display: flex;
+}
 </style>
