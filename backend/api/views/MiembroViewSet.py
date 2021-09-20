@@ -1,7 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Usuario, Miembro, Proyecto, RolProyecto
-from backend.api.serializers import MiembroSerializer
+from backend.api.models import Horario, Usuario, Miembro, Proyecto, RolProyecto
+from backend.api.serializers import HorarioSerializer, MiembroSerializer
+from rest_framework.decorators import action
 
 
 class MiembroViewSet(viewsets.ViewSet):
@@ -49,6 +50,16 @@ class MiembroViewSet(viewsets.ViewSet):
                 response = {"message": "Rol no pertenece al proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
+            horario = Horario.objects.create(
+                lunes=request.data["horario"]["lunes"],
+                martes=request.data["horario"]["martes"],
+                miercoles=request.data["horario"]["miercoles"],
+                jueves=request.data["horario"]["jueves"],
+                viernes=request.data["horario"]["viernes"],
+                sabado=request.data["horario"]["sabado"],
+                domingo=request.data["horario"]["domingo"]
+            )
+            miembro.asignar_horario(horario)
             serializer = MiembroSerializer(miembro, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
@@ -103,5 +114,27 @@ class MiembroViewSet(viewsets.ViewSet):
             response = {"message": "No existe el rol"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-    # def horario(self, request, pk=None):
-    # def capacidad(self, request, pk=None):
+    @action(detail=True, methods=["GET"])
+    def horario(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario_request)
+            if not miembro.tiene_permiso("ver_miembros"):
+                response = {
+                    "message": "No tiene permiso para realizar esta accion",
+                    "permission_required": ["agregar_miembros"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            miembro = Miembro.objects.get(pk=pk)
+            serializer = HorarioSerializer(miembro.horario, many=False)
+            return Response(serializer.data)
+
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "No existe el miembro",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+        # def capacidad(self, request, pk=None):
