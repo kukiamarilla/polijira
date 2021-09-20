@@ -594,6 +594,19 @@ class MiembroTestCase(TestCase):
         miembro = Miembro.objects.get(pk=1)
         self.assertEquals(miembro.rol.id, body["rol"]["id"], 2)
 
+    def test_modificar_miembro_rol_scrum_master(self):
+        """
+        test_modificar_miembro_rol_scrum_master Prueba modificar un rol pasando el rol de Scrum Master
+        """
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 1
+        }
+        response = self.client.put("/api/miembros/1/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["rol"]), 1)
+
     def test_modificar_miembro_rol_no_existente(self):
         """
         test_modificar_miembro_rol_no_existente Prueba modificar un miembro pasando un rol que no existe
