@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from backend.api.models import Horario, Usuario, Miembro, Proyecto, RolProyecto
 from backend.api.serializers import HorarioSerializer, MiembroSerializer
 from rest_framework.decorators import action
+from django.db import transaction
 
 
 class MiembroViewSet(viewsets.ViewSet):
@@ -32,6 +33,7 @@ class MiembroViewSet(viewsets.ViewSet):
             response = {"message": "No existe el miembro"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
     def create(self, request):
         """
         create Crea un miembro nuevo
@@ -59,7 +61,7 @@ class MiembroViewSet(viewsets.ViewSet):
                 sabado=request.data["horario"]["sabado"],
                 domingo=request.data["horario"]["domingo"]
             )
-            miembro.asignar_horario(horario)
+            horario.asignar_horario(miembro)
             serializer = MiembroSerializer(miembro, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:

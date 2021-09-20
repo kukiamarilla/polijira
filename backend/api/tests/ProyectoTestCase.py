@@ -14,7 +14,10 @@ class ProyectoTestCase(TestCase):
         "backend/api/fixtures/testing/roles.json",
         "backend/api/fixtures/testing/proyectos.json",
         "backend/api/fixtures/testing/permisosProyecto.json",
-        "backend/api/fixtures/testing/plantillas.json"
+        "backend/api/fixtures/testing/plantillas.json",
+        "backend/api/fixtures/testing/rolesProyecto.json",
+        "backend/api/fixtures/testing/miembros.json",
+        "backend/api/fixtures/testing/horarios.json"
     ]
 
     def setUp(self):
@@ -114,7 +117,7 @@ class ProyectoTestCase(TestCase):
         miembro = Miembro.objects.filter(
             usuario=proyecto.scrum_master,
             proyecto=proyecto,
-            rol=RolProyecto.objects.get(nombre="Scrum Master")
+            rol=RolProyecto.objects.get(nombre="Scrum Master", proyecto=proyecto)
         )
         self.assertEquals(len(miembro), 1)
         body = response.json()
@@ -304,22 +307,13 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando modificar un proyecto")
         self.client.login(username="testing", password="polijira2021")
-        proyecto = Proyecto.create(
-            nombre="ProyectoTest",
-            fecha_inicio=datetime.date.today(),
-            fecha_fin=datetime.date.today() + datetime.timedelta(5),
-            scrum_master=Usuario.objects.get(pk=1),
-            roles_handler=RolProyecto.from_plantilla,
-            scrum_master_handler=Miembro.asignar_scrum_master
-        )
         proyecto_body = {
             "nombre": "ProyectoTestModificar",
             "fecha_inicio": datetime.date.today(),
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
             "scrum_master_id": 1
         }
-        response = self.client.put("/api/proyectos/"+str(proyecto.id) +
-                                   "/", proyecto_body, "application/json")
+        response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
         self.assertEquals(response.status_code, 200)
         proyecto = Proyecto.objects.filter(
             nombre=proyecto_body["nombre"],

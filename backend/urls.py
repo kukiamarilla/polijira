@@ -10,7 +10,6 @@ from django.views.decorators.cache import never_cache
 from django.urls import path, include
 from rest_framework import routers
 from backend.api.views import \
-    MiembroViewSet, \
     UsuarioViewSet, \
     PermisoViewSet, \
     RolViewSet, \

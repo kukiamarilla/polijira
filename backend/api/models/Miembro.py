@@ -49,7 +49,7 @@ class Miembro(models.Model):
         Miembro.objects.create(
             usuario=proyecto.scrum_master,
             proyecto=proyecto,
-            rol=RolProyecto.objects.get(nombre="Scrum Master")
+            rol=RolProyecto.objects.get(nombre="Scrum Master", proyecto=proyecto)
         )
 
     @staticmethod
@@ -74,7 +74,3 @@ class Miembro(models.Model):
             proyecto=proyecto,
             rol=rol
         )
-
-    def asignar_horario(self, horario):
-        self.horario = horario
-        self.save()
