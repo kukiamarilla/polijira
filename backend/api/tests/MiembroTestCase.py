@@ -69,6 +69,31 @@ class MiembroTestCase(TestCase):
         self.assertEquals(horario.sabado, request_data["horario"]["sabado"])
         self.assertEquals(horario.domingo, request_data["horario"]["domingo"])
 
+    def test_crear_miembro_existente(self):
+        """
+        test_crear_mismo_miembro Prueba crear un miembro que ya existe
+        """
+        print("\nProbando crear un miembro que ya existe")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 1,
+            "rol": 1,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 0,
+                "miercoles": 5,
+                "jueves": 0,
+                "viernes": 6,
+                "sabado": 2,
+                "domingo": 4
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["miembro"]), 1)
+
     def test_crear_miembro_rol_distinto(self):
         """
         test_crear_miembro_rol_distinto Prueba crear un miembro con un rol que no pertenece al proyecto

@@ -1,6 +1,6 @@
 import json
 from django.core.exceptions import ValidationError
-from backend.api.models import Proyecto, RolProyecto, Usuario
+from backend.api.models import Proyecto, RolProyecto, Usuario, Miembro
 from django import forms
 
 
@@ -40,6 +40,10 @@ class CreateMiembroForm(forms.Form):
         error_messages={
             "required": "No especificaste el horario"
         }
+    )
+
+    miembro = forms.IntegerField(
+        required=False
     )
 
     def clean_usuario(self):
@@ -114,3 +118,17 @@ class CreateMiembroForm(forms.Form):
             if not (hora >= 0 and hora <= 24):
                 raise ValidationError("No especificaste una hora válida")
         return horario
+
+    def clean_miembro(self):
+        """
+        clean_miembro_existente Valida que ya no exista el miembro
+        """
+        cleaned_data = super().clean()
+        usuario = cleaned_data.get("usuario")
+        proyecto = cleaned_data.get("proyecto")
+        rol = cleaned_data.get("rol")
+        miembro = Miembro.objects.filter(usuario=usuario, proyecto=proyecto, rol=rol)
+        if len(miembro) > 0:
+            raise ValidationError("Ya existe el miembro")
+        if miembro:
+            return miembro.id
