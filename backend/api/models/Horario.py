@@ -23,6 +23,7 @@ class Horario(models.Model):
     viernes = models.IntegerField(default=0)
     sabado = models.IntegerField(default=0)
     domingo = models.IntegerField(default=0)
+    miembro = models.OneToOneField("Miembro", on_delete=models.CASCADE, null=True, related_name="horario")
 
     def por_semana(self):
         """
