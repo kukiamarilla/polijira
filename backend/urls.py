@@ -10,13 +10,15 @@ from django.views.decorators.cache import never_cache
 from django.urls import path, include
 from rest_framework import routers
 from backend.api.views import \
+    MiembroViewSet, \
     UsuarioViewSet, \
     PermisoViewSet, \
     RolViewSet, \
     ProyectoViewSet, \
     PermisoProyectoViewSet, \
     PlantillaRolProyectoViewSet, \
-    RolProyectoViewSet
+    RolProyectoViewSet, \
+    HorarioViewSet
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -28,6 +30,8 @@ router.register("proyectos", ProyectoViewSet, basename="proyectos")
 router.register("plantillas", PlantillaRolProyectoViewSet, basename="plantillas")
 router.register("roles-proyecto", RolProyectoViewSet, basename="roles-proyecto")
 router.register("permisos-proyecto", PermisoProyectoViewSet, basename="permisos-proyecto")
+router.register("miembros", MiembroViewSet, basename="miembros")
+router.register("horarios", HorarioViewSet, basename="horarios")
 
 urlpatterns = [
 
