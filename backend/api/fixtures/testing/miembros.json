@@ -7,14 +7,5 @@
             "proyecto": 1,
             "rol": 1
         }
-    },
-    {
-        "model": "api.miembro",
-        "pk": 2,
-        "fields": {
-            "usuario": 2,
-            "proyecto": 1,
-            "rol": 2
-        }
     }
 ]
