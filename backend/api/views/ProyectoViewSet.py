@@ -330,6 +330,12 @@ class ProyectoViewSet(viewsets.ViewSet):
         except Miembro.DoesNotExist:
             response = {"message": "Usted no es miembro de este proyecto"}
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=True, methods=["GET"])
     def miembros(self, request, pk=None):
@@ -345,7 +351,7 @@ class ProyectoViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            miembro = Miembro.objects.get(usuario=usuario_request)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
             if not miembro.tiene_permiso("ver_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",

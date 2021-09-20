@@ -5,7 +5,10 @@
       <SidebarProyecto current="autorizacion" :proyecto="proyecto" />
 
       <div class="container">
-        <div class="box role-list shadow" v-if="hasPermission('ver_roles')">
+        <div
+          class="box role-list shadow"
+          v-if="hasPermission('ver_roles_proyecto')"
+        >
           <h2 class="title">Roles de {{ proyecto.nombre }}</h2>
           <Table height="160px">
             <TableHeader>
@@ -58,7 +61,10 @@
           </Table>
         </div>
 
-        <div class="box create-role shadow">
+        <div
+          class="box create-role shadow"
+          v-if="hasPermission('crear_roles_proyecto')"
+        >
           <h2 class="title">Nuevo Rol</h2>
           <InputText title="Nombre" v-model="nuevoRol.nombre" />
           <div class="align-self-end">
@@ -71,7 +77,10 @@
           </div>
         </div>
 
-        <div class="box permissions shadow">
+        <div
+          class="box permissions shadow"
+          v-if="hasPermission('ver_permisos_proyecto')"
+        >
           <h2 class="title">Permisos</h2>
           <Table height="540px">
             <TableHeader>
@@ -149,7 +158,31 @@ export default {
     VerRolProyectoModal,
     Modal,
   },
-  created() {},
+  created() {
+    if (this.me.proyecto.id == this.$route.params["id"]) {
+      if (
+        !this.hasAnyPermission([
+          "ver_permisos_proyecto",
+          "ver_roles_proyecto",
+          "crear_roles_proyecto",
+        ])
+      )
+        this.$router.push(`/proyectos/${this.$route.params["id"]}`);
+    } else {
+      this.$store
+        .dispatch("proyecto/getMe", this.$router.params["id"])
+        .then(() => {
+          if (
+            !this.hasAnyPermission([
+              "ver_permisos_proyecto",
+              "ver_roles_proyecto",
+              "crear_roles_proyecto",
+            ])
+          )
+            this.$router.push(`/proyectos/${this.$route.params["id"]}`);
+        });
+    }
+  },
   mounted() {
     this.load();
   },
@@ -158,8 +191,8 @@ export default {
       me: (state) => state.auth.me,
     }),
     ...mapGetters({
-      hasAnyPermission: "auth/hasAnyPermission",
-      hasPermission: "auth/hasPermission",
+      hasAnyPermission: "proyecto/hasAnyPermission",
+      hasPermission: "proyecto/hasPermission",
     }),
   },
   data() {

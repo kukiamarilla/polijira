@@ -11,11 +11,13 @@ import Autorizacion from "@/views/Autorizacion";
 import PlantillaRolProyecto from "@/views/PlantillaRolProyecto";
 import Proyecto from "@/views/Proyecto";
 import AutorizacionProyecto from "@/views/AutorizacionProyecto";
+import Miembros from "@/views/Miembros";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
 import activated from "@/middleware/activated";
 import unactivated from "@/middleware/unactivated";
+import proyecto from "@/middleware/proyecto";
 
 Vue.use(Router);
 
@@ -54,11 +56,19 @@ const router = new Router({
       },
     },
     {
+      path: "/plantilla-rol-proyecto",
+      name: "Plantilla de Roles de Proyecto",
+      component: PlantillaRolProyecto,
+      meta: {
+        middleware: [auth, activated],
+      },
+    },
+    {
       path: "/proyectos/:id",
       name: "Proyecto",
       component: Proyecto,
       meta: {
-        middleware: [auth, activated],
+        middleware: [auth, activated, proyecto],
       },
     },
     {
@@ -66,15 +76,15 @@ const router = new Router({
       name: "Autorizacion Proyecto",
       component: AutorizacionProyecto,
       meta: {
-        middleware: [auth, activated],
+        middleware: [auth, activated, proyecto],
       },
     },
     {
-      path: "/plantilla-rol-proyecto",
-      name: "Plantilla de Roles de Proyecto",
-      component: PlantillaRolProyecto,
+      path: "/proyectos/:id/miembros",
+      name: "Miembros Proyecto",
+      component: Miembros,
       meta: {
-        middleware: [auth, activated],
+        middleware: [auth, activated, proyecto],
       },
     },
     {
