@@ -10,3 +10,4 @@ from .ELiminarPermisoProyectoForm import EliminarPermisoProyectoForm
 from .CreateRolProyectoForm import CreateRolProyectoForm
 from .UpdateRolProyectoForm import UpdateRolProyectoForm
 from .AgregarPermisoRolProyectoForm import AgregarPermisoRolProyectoForm
+from .UpdateHorarioForm import UpdateHorarioForm
