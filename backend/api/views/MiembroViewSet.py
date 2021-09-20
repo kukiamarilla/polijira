@@ -1,9 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Horario, Usuario, Miembro, Proyecto, RolProyecto
-from backend.api.serializers import HorarioSerializer, MiembroSerializer
+from backend.api.models import Usuario, Miembro, Proyecto, RolProyecto, Horario
+from backend.api.serializers import MiembroSerializer, HorarioSerializer
 from rest_framework.decorators import action
 from django.db import transaction
+from backend.api.decorators import FormValidator
+from backend.api.forms import CreateMiembroForm, UpdateMiembroForm
 
 
 class MiembroViewSet(viewsets.ViewSet):
@@ -30,10 +32,14 @@ class MiembroViewSet(viewsets.ViewSet):
             serializer = MiembroSerializer(rol, many=False)
             return Response(serializer.data)
         except Miembro.DoesNotExist:
-            response = {"message": "No existe el miembro"}
+            response = {
+                "message": "No existe el miembro",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     @transaction.atomic
+    @FormValidator(form=CreateMiembroForm)
     def create(self, request):
         """
         create Crea un miembro nuevo
@@ -44,35 +50,28 @@ class MiembroViewSet(viewsets.ViewSet):
         Return:
             JSON: Miembro creado
         """
-        try:
-            usuario = Usuario.objects.get(pk=request.data["usuario"])
-            proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
-            rol = RolProyecto.objects.get(pk=request.data["rol"])
-            if rol.proyecto != proyecto:
-                response = {"message": "Rol no pertenece al proyecto"}
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
-            miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
-            horario = Horario.objects.create(
-                lunes=request.data["horario"]["lunes"],
-                martes=request.data["horario"]["martes"],
-                miercoles=request.data["horario"]["miercoles"],
-                jueves=request.data["horario"]["jueves"],
-                viernes=request.data["horario"]["viernes"],
-                sabado=request.data["horario"]["sabado"],
-                domingo=request.data["horario"]["domingo"]
-            )
-            horario.asignar_horario(miembro)
-            serializer = MiembroSerializer(miembro, many=False)
-            return Response(serializer.data)
-        except Usuario.DoesNotExist:
-            response = {"message": "No existe el usuario"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except Proyecto.DoesNotExist:
-            response = {"message": "No existe el proyecto"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except RolProyecto.DoesNotExist:
-            response = {"message": "No existe el rol"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        usuario = Usuario.objects.get(pk=request.data["usuario"])
+        proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
+        rol = RolProyecto.objects.get(pk=request.data["rol"])
+        if rol.proyecto != proyecto:
+            response = {
+                "message": "El rol no pertenece a este proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
+        horario = Horario.objects.create(
+            lunes=request.data["horario"]["lunes"],
+            martes=request.data["horario"]["martes"],
+            miercoles=request.data["horario"]["miercoles"],
+            jueves=request.data["horario"]["jueves"],
+            viernes=request.data["horario"]["viernes"],
+            sabado=request.data["horario"]["sabado"],
+            domingo=request.data["horario"]["domingo"]
+        )
+        horario.asignar_horario(miembro)
+        serializer = MiembroSerializer(miembro, many=False)
+        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
         """
@@ -85,12 +84,16 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             miembro = Miembro.objects.get(pk=pk)
             miembro.delete()
-            response = {"message": "Miembro Eliminado."}
+            response = {"message": "Miembro Eliminado"}
             return Response(response)
         except Miembro.DoesNotExist:
-            response = {"message": "No existe el miembro"}
+            response = {
+                "message": "No existe el miembro",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @FormValidator(form=UpdateMiembroForm)
     def update(self, request, pk=None):
         """
         update Modifica un miembro con la pk especificada
@@ -102,18 +105,15 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             miembro = Miembro.objects.get(pk=pk)
             rol = RolProyecto.objects.get(pk=request.data["rol"])
-            if rol.proyecto != miembro.proyecto:  # form
-                response = {"message": "Rol no pertenece al proyecto"}
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro.rol = rol
             miembro.save()
             serializer = MiembroSerializer(miembro, many=False)
             return Response(serializer.data)
         except Miembro.DoesNotExist:
-            response = {"message": "No existe el miembro"}
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except RolProyecto.DoesNotExist:  # form
-            response = {"message": "No existe el rol"}
+            response = {
+                "message": "No existe el miembro",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=True, methods=["GET"])
