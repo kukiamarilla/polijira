@@ -1,5 +1,5 @@
 <template>
-  <div :class="`modal ${modalState}`">
+  <div class="modal" v-show="value">
     <div class="modal-bg" v-on:click.self="$emit('input', false)">
       <div
         class="modal-box shadow"
@@ -30,12 +30,6 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  display: none;
-
-  &.show {
-    display: block;
-  }
-
   .modal-bg {
     display: flex;
     background-color: rgba(0, 0, 0, 0.25);
