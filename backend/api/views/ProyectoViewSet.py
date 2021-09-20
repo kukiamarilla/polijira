@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
-from backend.api.serializers import ProyectoSerializer
+from backend.api.serializers import ProyectoSerializer, PermisoProyectoSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
@@ -240,6 +240,30 @@ class ProyectoViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["GET"])
+    def mis_permisos(self, request, pk=None):
+
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            rol = miembro.rol
+            serializer = PermisoProyectoSerializer(rol.permisos.all())
+            return Response(serializer.data)
+
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status.HTTP_403_FORBIDDEN)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
