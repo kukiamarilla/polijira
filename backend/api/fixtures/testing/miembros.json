@@ -7,7 +7,6 @@
             "proyecto": 1,
             "rol": 1
         }
-<<<<<<< HEAD
     },
     {
         "model": "api.miembro",
@@ -17,7 +16,5 @@
             "proyecto": 1,
             "rol": 2
         }
-=======
->>>>>>> 427f571772daf1cf024e4fd9027bd4c4c27e3363
     }
 ]
