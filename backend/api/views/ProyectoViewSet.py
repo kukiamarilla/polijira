@@ -30,7 +30,10 @@ class ProyectoViewSet(viewsets.ViewSet):
             json: Proyecto[]
         """
         usuario_request = Usuario.objects.get(user=request.user)
-        proyectos = Proyecto.objects.filter(miembros__usuario=usuario_request)
+        if usuario_request.tiene_permiso("ver_proyectos"):
+            proyectos = Proyecto.objects.all()
+        else:
+            proyectos = Proyecto.objects.filter(miembros__usuario=usuario_request)
         serializer = ProyectoSerializer(proyectos, many=True)
         return Response(serializer.data)
 
