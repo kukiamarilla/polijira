@@ -1,4 +1,3 @@
-from backend.api.models.PermisoProyecto import PermisoProyecto
 from backend.api.models.Proyecto import Proyecto
 from backend.api.models import RolProyecto, Miembro, Usuario
 from django.test import TestCase, Client
@@ -478,7 +477,7 @@ class RolProyectoTestCase(TestCase):
         """
         test_eliminar_permiso_a_rol_proyecto_sin_permiso Prueba eliminar un permiso a un rol de proyecto sin permiso
         """
-        print("\Probando eliminar un permiso a un rol de proyecto sin permiso.")
+        print("\nProbando eliminar un permiso a un rol de proyecto sin permiso.")
         permiso = {
             "id": 1
         }

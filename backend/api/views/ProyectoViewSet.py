@@ -1,10 +1,13 @@
-from backend.api.serializers.ImportarRolSerializer import ImportarRolSerializer
-from backend.api.serializers.MiembroSerializer import MiembroSerializer
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
-from backend.api.serializers import ProyectoSerializer, PermisoProyectoSerializer, RolProyectoSerializer, MiembroSerializer
+from backend.api.serializers import \
+    ProyectoSerializer, \
+    PermisoProyectoSerializer, \
+    RolProyectoSerializer, \
+    MiembroSerializer, \
+    ImportarRolSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
