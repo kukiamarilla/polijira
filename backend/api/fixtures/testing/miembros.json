@@ -1,0 +1,12 @@
+[
+    {
+        "model": "api.miembro",
+        "pk": 1,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 1,
+            "rol": 1,
+            "horario": 1
+        }
+    }
+]
