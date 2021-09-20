@@ -34,7 +34,7 @@ class Horario(models.Model):
         sum = 0
         for semana in self.to_array():
             sum += semana
-        return semana
+        return sum
 
     def to_array(self):
         """
