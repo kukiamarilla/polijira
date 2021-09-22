@@ -25,7 +25,8 @@ class HorarioViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            miembro = Miembro.objects.get(usuario=usuario_request)
+            horario = Horario.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=horario.miembro.proyecto)
             if not miembro.tiene_permiso("modificar_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta accion",

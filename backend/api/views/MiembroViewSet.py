@@ -120,15 +120,15 @@ class MiembroViewSet(viewsets.ViewSet):
     def horario(self, request, pk=None):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            miembro = Miembro.objects.get(usuario=usuario_request)
-            if not miembro.tiene_permiso("ver_miembros"):
+            miembro = Miembro.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            if not miembro_request.tiene_permiso("ver_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta accion",
-                    "permission_required": ["agregar_miembros"],
+                    "permission_required": ["ver_miembros"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            miembro = Miembro.objects.get(pk=pk)
             serializer = HorarioSerializer(miembro.horario, many=False)
             return Response(serializer.data)
 
