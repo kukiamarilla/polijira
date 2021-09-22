@@ -55,26 +55,6 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(body['scrum_master']['id'], proyecto.scrum_master.id)
         self.assertEquals(body['estado'], proyecto.estado)
 
-    def test_obtener_proyecto_sin_permiso(self):
-        """
-        test_obtener_proyecto Prueba obtener detalles de un proyecto sin tener permiso para ver proyectos
-        """
-        print("\nProbando obtener detalles de un proyecto sin tener permiso para ver proyectos.")
-        self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(pk=10).delete()
-        scrum_master = Usuario.objects.get(pk=2)
-        proyecto = Proyecto.objects.create(
-            nombre="ProyectoTest",
-            fecha_inicio=datetime.date.today(),
-            fecha_fin=datetime.date.today() + datetime.timedelta(5),
-            scrum_master=scrum_master
-        )
-        response = self.client.get("/api/proyectos/"+str(proyecto.id)+"/")
-        body = response.json()
-        self.assertEquals(body['permission_required'], ['ver_proyectos'])
-        self.assertEquals(body['error'], 'forbidden')
-        self.assertEquals(response.status_code, 403)
-
     def test_obtener_proyecto_no_existente(self):
         """
         test_obtener_proyecto_no_existente Prueba obtener detalles de un proyecto que no existe
@@ -810,12 +790,50 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(body["estado"], "Finalizado")
         self.assertEquals(body["error"], "bad_request")
 
-    def test_obtener_proyecto_sin_ser_miembro(self):
+    def test_obtener_proyecto_sin_ser_miembro_con_permiso_ver_proyectos(self):
         """
-        test_obtener_proyecto_sin_ser_miembro Prueba obtener un proyecto sin ser miembro de ese proyecto
+        test_obtener_proyecto_sin_ser_miembro_con_permiso_ver_proyectos
+        Prueba obtener un proyecto sin ser miembro, pero teniendo permiso para ver proyectos
         """
-        print("\nProbando obtener un proyecto sin ser miembro de ese proyecto")
+        print("\nProbando obtener un proyecto sin ser miembro de ese proyecto y teniendo permiso para ver proyectos")
         self.client.login(username="testing", password="polijira2021")
         Miembro.objects.get(pk=1).delete()
+        response = self.client.get("/api/proyectos/1/")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        proyecto = Proyecto.objects.get(pk=1)
+        self.assertEquals(body['nombre'], proyecto.nombre)
+        self.assertEquals(body['fecha_inicio'], str(proyecto.fecha_inicio))
+        self.assertEquals(body['fecha_fin'], str(proyecto.fecha_fin))
+        self.assertEquals(body['scrum_master']['id'], proyecto.scrum_master.id)
+        self.assertEquals(body['estado'], proyecto.estado)
+
+    def test_obtener_proyecto_sin_permiso_ver_proyectos_siendo_miembro(self):
+        """
+        test_obtener_proyecto_sin_permiso_ver_proyectos_siendo_miembro
+        Prueba obtener un proyecto sin permiso ver proyectos y siendo miembro de ese proyecto
+        """
+        print("\nProbando obtener un proyecto sin permiso ver proyectos y siendo miembro")
+        self.client.login(username="testing", password="polijira2021")
+        Permiso.objects.get(codigo="ver_proyectos").delete()
+        response = self.client.get("/api/proyectos/1/")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        proyecto = Proyecto.objects.get(pk=1)
+        self.assertEquals(body['nombre'], proyecto.nombre)
+        self.assertEquals(body['fecha_inicio'], str(proyecto.fecha_inicio))
+        self.assertEquals(body['fecha_fin'], str(proyecto.fecha_fin))
+        self.assertEquals(body['scrum_master']['id'], proyecto.scrum_master.id)
+        self.assertEquals(body['estado'], proyecto.estado)
+
+    def test_obtener_proyecto_sin_permiso_ver_proyectos_no_siendo_miembro(self):
+        """
+        test_obtener_proyecto_sin_permiso_ver_proyectos_no_siendo_miembro
+        Prueba obtener un proyecto sin tener permiso ver proyectos y sin ser miembro del proyecto
+        """
+        print("\nProbando obtener un proyecto sin ser miembro y tener permiso de ver proyectos")
+        self.client.login(username="testing", password="polijira2021")
+        Miembro.objects.get(pk=1).delete()
+        Permiso.objects.get(codigo="ver_proyectos").delete()
         response = self.client.get("/api/proyectos/1/")
         self.assertEquals(response.status_code, 403)

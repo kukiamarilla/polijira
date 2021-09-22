@@ -51,7 +51,7 @@ class ProyectoViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             proyecto = Proyecto.objects.get(pk=pk)
-            if not usuario_request.tiene_permiso("ver_proyectos") or \
+            if not usuario_request.tiene_permiso("ver_proyectos") and \
                not Miembro.es_miembro(usuario_request, proyecto):
                 response = {
                     "message": "Debe ser miembro y tener permiso para realizar esta acción",
