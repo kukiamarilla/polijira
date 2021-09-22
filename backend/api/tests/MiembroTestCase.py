@@ -2,7 +2,7 @@ from backend.api.models.Proyecto import Proyecto
 from backend.api.models.Usuario import Usuario
 from django.test import TestCase
 from django.test import Client
-from backend.api.models import Miembro, RolProyecto, PermisoProyecto
+from backend.api.models import Miembro, RolProyecto, PermisoProyecto, Permiso
 
 
 class MiembroTestCase(TestCase):
@@ -641,7 +641,12 @@ class MiembroTestCase(TestCase):
         """
         print("\nProbando eliminar un miembro")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.delete("/api/miembros/1/")
+        miembro = Miembro.objects.create(
+            usuario=Usuario.objects.get(pk=2),
+            proyecto=Proyecto.objects.get(pk=1),
+            rol=RolProyecto.objects.get(pk=2)
+        )
+        response = self.client.delete("/api/miembros/" + str(miembro.id) + "/")
         self.assertEquals(response.status_code, 200)
         body = response.json()
         self.assertEquals(body["message"], "Miembro Eliminado")
@@ -682,3 +687,68 @@ class MiembroTestCase(TestCase):
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
+
+    def test_eliminar_miembro_sin_permiso_eliminar_miembros(self):
+        """
+        test_eliminar_miembro_sin_permiso_eliminar_miembros
+        Prueba eliminar un miembro sin permiso eliminar miembros
+        """
+        print("\nProbando eliminar un miembro sin tener permiso eliminar miembros")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="eliminar_miembros").delete()
+        miembro = Miembro.objects.create(
+            usuario=Usuario.objects.get(pk=2),
+            proyecto=Proyecto.objects.get(pk=1),
+            rol=RolProyecto.objects.get(pk=2)
+        )
+        response = self.client.delete("/api/miembros/" + str(miembro.id) + "/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_miembro_sin_permiso_ver_roles_proyecto(self):
+        """
+        test_eliminar_miembro_sin_permiso_ver_roles_proyecto
+        Prueba eliminar un miembro sin permiso ver roles de proyecto
+        """
+        print("\nProbando eliminar un miembro sin tener permiso de ver roles de proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_roles_proyecto").delete()
+        miembro = Miembro.objects.create(
+            usuario=Usuario.objects.get(pk=2),
+            proyecto=Proyecto.objects.get(pk=1),
+            rol=RolProyecto.objects.get(pk=2)
+        )
+        response = self.client.delete("/api/miembros/" + str(miembro.id) + "/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_miembro_sin_permiso_ver_usuarios(self):
+        """
+        test_eliminar_miembro_sin_permiso_ver_usuarios
+        Prueba eliminar un miembro sin permiso ver usuarios
+        """
+        print("\nProbando eliminar un miembro sin tener permiso ver usuarios")
+        self.client.login(username="testing", password="polijira2021")
+        Permiso.objects.get(codigo="ver_usuarios").delete()
+        miembro = Miembro.objects.create(
+            usuario=Usuario.objects.get(pk=2),
+            proyecto=Proyecto.objects.get(pk=1),
+            rol=RolProyecto.objects.get(pk=2)
+        )
+        response = self.client.delete("/api/miembros/" + str(miembro.id) + "/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_mi_mismo_miembro(self):
+        """
+        test_eliminar_mi_mismo_miembro Prueba eliminar su mismo miembro
+        """
+        print("\nProbando eliminar el miembro al que pertenezco")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/miembros/1/")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body["error"], "bad_request")
