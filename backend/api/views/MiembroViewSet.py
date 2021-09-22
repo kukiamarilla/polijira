@@ -87,7 +87,24 @@ class MiembroViewSet(viewsets.ViewSet):
             pk (integer, opcional): Primary Key del miembro a eliminar
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            if not miembro_request.tiene_permiso("eliminar_miembros") or \
+               not miembro_request.tiene_permiso("ver_roles_proyecto") or \
+               not usuario_request.tiene_permiso("ver_usuarios"):
+                response = {
+                    "message": "No tienes los permisos para realizar esta acción",
+                    "permission_required": ["eliminar_miembros", "ver_roles_proyecto", "ver_usuarios"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if miembro_request.id == miembro.id:
+                response = {
+                    "message": "No puedes eliminarte a ti mismo",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             miembro.delete()
             response = {"message": "Miembro Eliminado"}
             return Response(response)
