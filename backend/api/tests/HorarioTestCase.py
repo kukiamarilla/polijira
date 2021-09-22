@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import Client
-from backend.api.models import PermisoProyecto, Horario
+from backend.api.models import Miembro, PermisoProyecto, Horario
 
 
 class HorarioTestCase(TestCase):
