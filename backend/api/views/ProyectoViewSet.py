@@ -50,14 +50,15 @@ class ProyectoViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not usuario_request.tiene_permiso("ver_proyectos"):
+            proyecto = Proyecto.objects.get(pk=pk)
+            if not usuario_request.tiene_permiso("ver_proyectos") or \
+               not Miembro.es_miembro(usuario_request, proyecto):
                 response = {
-                    "message": "No tiene permiso para realizar esta accion",
+                    "message": "Debe ser miembro y tener permiso para realizar esta acción",
                     "permission_required": ["ver_proyectos"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            proyecto = Proyecto.objects.get(pk=pk)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:
