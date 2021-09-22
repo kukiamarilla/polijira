@@ -115,7 +115,7 @@
     <p id="t61" class="pln"><span class="n"><a href="#t61">61</a></span><span class="t"><span class="str">            proyecto (Proyecto): Proyecto a actualizar el scrum master</span>&nbsp;</span><span class="r"></span></p>
     <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t"><span class="str">            scrum_master (Usuario): Scrum Master a ser actualizado</span>&nbsp;</span><span class="r"></span></p>
     <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t">        <span class="nam">rol</span> <span class="op">=</span> <span class="nam">RolProyecto</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">nombre</span><span class="op">=</span><span class="str">"Scrum Master"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t">        <span class="nam">rol</span> <span class="op">=</span> <span class="nam">RolProyecto</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">nombre</span><span class="op">=</span><span class="str">"Scrum Master"</span><span class="op">,</span> <span class="nam">proyecto</span><span class="op">=</span><span class="nam">proyecto</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t">        <span class="nam">miembro</span> <span class="op">=</span> <span class="nam">Miembro</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t66" class="pln"><span class="n"><a href="#t66">66</a></span><span class="t">            <span class="nam">usuario</span><span class="op">=</span><span class="nam">proyecto</span><span class="op">.</span><span class="nam">scrum_master</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">            <span class="nam">proyecto</span><span class="op">=</span><span class="nam">proyecto</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -133,7 +133,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-20 12:52 -0400
+            created at 2021-09-21 22:23 -0400
         </p>
     </div>
 </div>
