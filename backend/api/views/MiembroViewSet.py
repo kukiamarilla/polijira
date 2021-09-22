@@ -28,15 +28,20 @@ class MiembroViewSet(viewsets.ViewSet):
             JSON: Miembro con la pk especificada
         """
         try:
-            rol = Miembro.objects.get(pk=pk)
-            serializer = MiembroSerializer(rol, many=False)
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(pk=pk)
+            miembro_propio = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            if not miembro_propio.tiene_permiso("ver_miembros"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_miembros"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            serializer = MiembroSerializer(miembro, many=False)
             return Response(serializer.data)
         except Miembro.DoesNotExist:
-            response = {
-                "message": "No existe el miembro",
-                "error": "not_found"
-            }
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
+            response = {"message": "Usted no es miembro de este proyecto"}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
 
     @transaction.atomic
     @FormValidator(form=CreateMiembroForm)
