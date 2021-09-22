@@ -80,5 +80,5 @@ class Miembro(models.Model):
         try:
             Miembro.objects.get(usuario=usuario, proyecto=proyecto)
             return True
-        except:
+        except Miembro.DoesNotExist:
             return False

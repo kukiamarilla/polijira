@@ -1,5 +1,5 @@
 import datetime
-from backend.api.models import Miembro, PermisoProyecto, Proyecto, RolProyecto, Usuario, Permiso
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
 
