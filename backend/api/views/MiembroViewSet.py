@@ -30,8 +30,8 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
-            miembro_propio = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
-            if not miembro_propio.tiene_permiso("ver_miembros"):
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            if not miembro_request.tiene_permiso("ver_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": ["ver_miembros"]
@@ -55,28 +55,45 @@ class MiembroViewSet(viewsets.ViewSet):
         Return:
             JSON: Miembro creado
         """
-        usuario = Usuario.objects.get(pk=request.data["usuario"])
-        proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
-        rol = RolProyecto.objects.get(pk=request.data["rol"])
-        if rol.proyecto != proyecto:
-            response = {
-                "message": "El rol no pertenece a este proyecto",
-                "error": "forbidden"
-            }
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not (miembro_request.tiene_permiso("agregar_miembros") and
+                    miembro_request.tiene_permiso("ver_roles_proyecto") and usuario_request.tiene_permiso("ver_usuarios")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "agregar_miembros",
+                        "ver_roles_proyecto",
+                        "ver_usuarios"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            usuario = Usuario.objects.get(pk=request.data["usuario"])
+            rol = RolProyecto.objects.get(pk=request.data["rol"])
+            if rol.proyecto != proyecto:
+                response = {
+                    "message": "El rol no pertenece a este proyecto",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
+            horario = Horario.objects.create(
+                lunes=request.data["horario"]["lunes"],
+                martes=request.data["horario"]["martes"],
+                miercoles=request.data["horario"]["miercoles"],
+                jueves=request.data["horario"]["jueves"],
+                viernes=request.data["horario"]["viernes"],
+                sabado=request.data["horario"]["sabado"],
+                domingo=request.data["horario"]["domingo"]
+            )
+            horario.asignar_horario(miembro)
+            serializer = MiembroSerializer(miembro, many=False)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {"message": "Usted no es miembro de este proyecto"}
             return Response(response, status=status.HTTP_403_FORBIDDEN)
-        miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
-        horario = Horario.objects.create(
-            lunes=request.data["horario"]["lunes"],
-            martes=request.data["horario"]["martes"],
-            miercoles=request.data["horario"]["miercoles"],
-            jueves=request.data["horario"]["jueves"],
-            viernes=request.data["horario"]["viernes"],
-            sabado=request.data["horario"]["sabado"],
-            domingo=request.data["horario"]["domingo"]
-        )
-        horario.asignar_horario(miembro)
-        serializer = MiembroSerializer(miembro, many=False)
-        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
         """
@@ -95,7 +112,11 @@ class MiembroViewSet(viewsets.ViewSet):
                not usuario_request.tiene_permiso("ver_usuarios"):
                 response = {
                     "message": "No tienes los permisos para realizar esta acción",
-                    "permission_required": ["eliminar_miembros", "ver_roles_proyecto", "ver_usuarios"],
+                    "permission_required": [
+                        "eliminar_miembros",
+                        "ver_roles_proyecto",
+                        "ver_usuarios"
+                    ],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
@@ -125,7 +146,20 @@ class MiembroViewSet(viewsets.ViewSet):
             pk (integer, opcional): Primary key del miembro a modificar
         """
         try:
+            usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            if not (miembro_request.tiene_permiso("modificar_miembros") and
+                    miembro_request.tiene_permiso("ver_roles_proyecto") and usuario_request.tiene_permiso("ver_usuarios")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "modificar_miembros",
+                        "ver_roles_proyecto",
+                        "ver_usuarios"
+                    ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=request.data["rol"])
             miembro.rol = rol
             miembro.save()
