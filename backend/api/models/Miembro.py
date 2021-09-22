@@ -74,3 +74,11 @@ class Miembro(models.Model):
             proyecto=proyecto,
             rol=rol
         )
+
+    @staticmethod
+    def es_miembro(usuario, proyecto):
+        try:
+            Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+            return True
+        except Miembro.DoesNotExist:
+            return False

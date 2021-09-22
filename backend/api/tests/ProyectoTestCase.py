@@ -1,5 +1,5 @@
 import datetime
-from backend.api.models import Miembro, PermisoProyecto, Proyecto, RolProyecto, Usuario, Permiso
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso
 from django.test import TestCase, Client
 
 
@@ -45,16 +45,10 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando obtener detalles de un proyecto.")
         self.client.login(username="testing", password="polijira2021")
-        scrum_master = Usuario.objects.get(pk=2)
-        proyecto = Proyecto.objects.create(
-            nombre="ProyectoTest",
-            fecha_inicio=datetime.date.today(),
-            fecha_fin=datetime.date.today() + datetime.timedelta(5),
-            scrum_master=scrum_master
-        )
-        response = self.client.get("/api/proyectos/"+str(proyecto.id)+"/")
-        body = response.json()
+        response = self.client.get("/api/proyectos/1/")
         self.assertEquals(response.status_code, 200)
+        body = response.json()
+        proyecto = Proyecto.objects.get(pk=1)
         self.assertEquals(body['nombre'], proyecto.nombre)
         self.assertEquals(body['fecha_inicio'], str(proyecto.fecha_inicio))
         self.assertEquals(body['fecha_fin'], str(proyecto.fecha_fin))
@@ -815,3 +809,13 @@ class ProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["estado"], "Finalizado")
         self.assertEquals(body["error"], "bad_request")
+
+    def test_obtener_proyecto_sin_ser_miembro(self):
+        """
+        test_obtener_proyecto_sin_ser_miembro Prueba obtener un proyecto sin ser miembro de ese proyecto
+        """
+        print("\nProbando obtener un proyecto sin ser miembro de ese proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        Miembro.objects.get(pk=1).delete()
+        response = self.client.get("/api/proyectos/1/")
+        self.assertEquals(response.status_code, 403)
