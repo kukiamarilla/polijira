@@ -48,7 +48,10 @@
                   <a
                     href="#"
                     @click.prevent="eliminarMiembro(miembro)"
-                    v-if="me.rol.id != miembro.rol.id"
+                    v-if="
+                      me.id != miembro.usuario.id &&
+                      miembro.rol.nombre != 'Scrum Master'
+                    "
                   >
                     <Icon
                       icono="delete"
