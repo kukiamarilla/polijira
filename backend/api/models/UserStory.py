@@ -22,8 +22,9 @@ class UserStory(models.Model):
         estado (CharField): Estado actual de User Story
         fecha_release (DateField): Fecha en que se libera el User Story
         fecha_creacion (DateField): Fecha en que se crea el User Story
-        desarrollador (ForeignKey): El miembro que desarrolla el User Story
-        estado_estimacion (CharField): 
+        desarrollador (ForeignKey): Miembro desarrollador del User Story
+        estado_estimacion (CharField): Estado que se estima que tenga el User Story
+        product_backlog (BooleanField): Atributo para saber si el User Story se encuentra en el Product Backlog
     """
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
@@ -37,9 +38,15 @@ class UserStory(models.Model):
     product_backlog = models.BooleanField()
 
     def lanzar(self):
+        """
+        lanzar Libera este User Story
+        """
         self.estado = "R"
         self.save()
 
     def cancelar(self):
+        """
+        cancelar Cancela este User Story
+        """
         self.estado = "C"
         self.save()
