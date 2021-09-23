@@ -659,7 +659,8 @@ class PlantillaRolProyectoTestCase(TestCase):
 
     def test_modificar_plantilla_con_nombre_existente_sm(self):
         """
-        test_modificar_plantilla_con_nombre_existente_sm Prueba modificar una plantilla y asignar el nombre Scrum Master
+        test_modificar_plantilla_con_nombre_existente_sm
+        Prueba modificar una plantilla y asignar el nombre Scrum Master
         """
         print("\nProbando modificar una plantilla y asignar el nombre de Scrum Master")
         self.client.login(username="testing", password="polijira2021")
@@ -687,7 +688,8 @@ class PlantillaRolProyectoTestCase(TestCase):
 
     def test_modificar_plantilla_con_nombre_existente_po(self):
         """
-        test_modificar_plantilla_con_nombre_existente_po Prueba modificar una plantilla y asignar el nombre Product Owner
+        test_modificar_plantilla_con_nombre_existente_po
+        Prueba modificar una plantilla y asignar el nombre Product Owner
         """
         print("\nProbando modificar una plantilla y asignar el nombre de Product Owner")
         self.client.login(username="testing", password="polijira2021")
@@ -701,7 +703,8 @@ class PlantillaRolProyectoTestCase(TestCase):
 
     def test_modificar_plantilla_con_nombre_existente_sh(self):
         """
-        test_modificar_plantilla_con_nombre_existente_sh Prueba modificar una plantilla y asignar el nombre Stake Holder
+        test_modificar_plantilla_con_nombre_existente_sh
+        Prueba modificar una plantilla y asignar el nombre Stake Holder
         """
         print("\nProbando modificar una plantilla y asignar el nombre de Stake Holder")
         self.client.login(username="testing", password="polijira2021")
