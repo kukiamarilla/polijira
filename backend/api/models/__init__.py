@@ -7,3 +7,4 @@ from .Proyecto import Proyecto
 from .RolProyecto import RolProyecto
 from .Miembro import Miembro
 from .Horario import Horario
+from .UserStory import UserStory
