@@ -584,3 +584,131 @@ class PlantillaRolProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
+
+    def test_crear_plantilla_existente_sm(self):
+        """
+        test_crear_plantilla_existente_sm Prueba crear una plantilla con el nombre Scrum Master
+        """
+        print("\nProbando crear una plantilla con el nombre de Scrum Master")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Scrum Master",
+            "permisos": [
+                {"id": 1},
+                {"id": 2}
+            ]
+        }
+        response = self.client.post("/api/plantillas/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_crear_plantilla_existente_tm(self):
+        """
+        test_crear_plantilla_existente_tm Prueba crear una plantilla con el nombre Team Member
+        """
+        print("\nProbando crear una plantilla con el nombre de Team Member")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Team Member",
+            "permisos": [
+                {"id": 1},
+                {"id": 2}
+            ]
+        }
+        response = self.client.post("/api/plantillas/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_crear_plantilla_existente_po(self):
+        """
+        test_crear_plantilla_existente_po Prueba crear una plantilla con el nombre Product Owner
+        """
+        print("\nProbando crear una plantilla con el nombre de Product Owner")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Product Owner",
+            "permisos": [
+                {"id": 1},
+                {"id": 2}
+            ]
+        }
+        response = self.client.post("/api/plantillas/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_crear_plantilla_existente_sh(self):
+        """
+        test_crear_plantilla_existente_sh Prueba crear una plantilla con el nombre Stake Holder
+        """
+        print("\nProbando crear una plantilla con el nombre de Stake Holder")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Stake Holder",
+            "permisos": [
+                {"id": 1},
+                {"id": 2}
+            ]
+        }
+        response = self.client.post("/api/plantillas/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_plantilla_con_nombre_existente_sm(self):
+        """
+        test_modificar_plantilla_con_nombre_existente_sm Prueba modificar una plantilla y asignar el nombre Scrum Master
+        """
+        print("\nProbando modificar una plantilla y asignar el nombre de Scrum Master")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Scrum Master"
+        }
+        response = self.client.put("/api/plantillas/2/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_plantilla_con_nombre_existente_tm(self):
+        """
+        test_modificar_plantilla_con_nombre_existente_tm Prueba modificar una plantilla y asignar el nombre Team Member
+        """
+        print("\nProbando modificar una plantilla y asignar el nombre de Team Member")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Team Member"
+        }
+        response = self.client.put("/api/plantillas/1/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_plantilla_con_nombre_existente_po(self):
+        """
+        test_modificar_plantilla_con_nombre_existente_po Prueba modificar una plantilla y asignar el nombre Product Owner
+        """
+        print("\nProbando modificar una plantilla y asignar el nombre de Product Owner")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Product Owner"
+        }
+        response = self.client.put("/api/plantillas/2/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_plantilla_con_nombre_existente_sh(self):
+        """
+        test_modificar_plantilla_con_nombre_existente_sh Prueba modificar una plantilla y asignar el nombre Stake Holder
+        """
+        print("\nProbando modificar una plantilla y asignar el nombre de Stake Holder")
+        self.client.login(username="testing", password="polijira2021")
+        plantilla = {
+            "nombre": "Stake Holder"
+        }
+        response = self.client.put("/api/plantillas/1/", plantilla, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
