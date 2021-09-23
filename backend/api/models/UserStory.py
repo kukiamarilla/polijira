@@ -6,6 +6,12 @@ ESTADOS = (
     ("C", "Cancelado")
 )
 
+ESTADOS_ESTIMADOS = (
+    ("N", "No estimado"),
+    ("P", "Parcial"),
+    ("C", "Completo")
+)
+
 
 class UserStory(models.Model):
     """
@@ -34,7 +40,7 @@ class UserStory(models.Model):
     fecha_release = models.DateField()
     fecha_creacion = models.DateField()
     desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories")
-    estado_estimacion = models.CharField(max_length=1)
+    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS)
     product_backlog = models.BooleanField()
 
     def lanzar(self):
