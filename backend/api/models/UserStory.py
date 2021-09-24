@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 ESTADOS = (
     ("P", "Pendiente"),
@@ -37,17 +38,18 @@ class UserStory(models.Model):
     horas_estimadas = models.IntegerField()
     prioridad = models.IntegerField()
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
-    fecha_release = models.DateField()
+    fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
-    desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories")
+    desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories", null=True)
     estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS)
-    product_backlog = models.BooleanField()
+    product_backlog = models.BooleanField(default=False)
 
     def lanzar(self):
         """
         lanzar Libera este User Story
         """
         self.estado = "R"
+        self.fecha_release = datetime.date.today()
         self.save()
 
     def cancelar(self):
@@ -55,4 +57,25 @@ class UserStory(models.Model):
         cancelar Cancela este User Story
         """
         self.estado = "C"
+        self.save()
+
+    @staticmethod
+    def create(
+        nombre=None, descripcion=None, horas_estimadas=None, prioridad=None, estado_estimacion=None, autor=None,
+        product_backlog_handler=None, registro_handler=None
+    ):
+        user_story = UserStory.objects.create(
+            nombre=nombre,
+            descripcion=descripcion,
+            horas_estimadas=horas_estimadas,
+            prioridad=prioridad,
+            estado_estimacion=estado_estimacion,
+            fecha_creacion=datetime.date.today()
+        )
+        product_backlog_handler(user_story, autor.proyecto)
+        registro_handler(user_story, autor)
+        return user_story
+
+    def asignar_desarrollador(self, desarrollador):
+        self.desarrollador = desarrollador
         self.save()
