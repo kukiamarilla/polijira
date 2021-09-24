@@ -8,3 +8,5 @@ from .RolProyecto import RolProyecto
 from .Miembro import Miembro
 from .Horario import Horario
 from .UserStory import UserStory
+from .ProductBacklog import ProductBacklog
+from .RegistroUserStory import RegistroUserStory
