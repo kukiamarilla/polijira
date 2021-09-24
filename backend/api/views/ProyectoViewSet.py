@@ -475,7 +475,7 @@ class ProyectoViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            user_stories = UserStory.objects.filter(desarrollador__proyecto_id=pk)
+            user_stories = UserStory.objects.filter(registro__autor__proyecto_id=pk)
             serializer = UserStorySerializer(user_stories, many=True)
             return Response(serializer.data)
         except Miembro.DoesNotExist:
