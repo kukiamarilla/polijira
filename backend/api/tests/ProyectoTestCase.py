@@ -1,5 +1,5 @@
 import datetime
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso, PermisoProyecto
 from django.test import TestCase, Client
 
 
@@ -735,15 +735,14 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(proyecto.estado, "A")
         self.assertEquals(proyecto.fecha_inicio, datetime.date.today())
 
-    def test_activar_proyecto_sin_rol_sm(self):
+    def test_activar_proyecto_sin_permiso(self):
         """
-        test_activar_proyecto_sin_rol_sm Prueba activar un proyecto no siendo Scrum Master
+        test_activar_proyecto_permiso activar un proyecto no teniendo el permiso activar_proyecto
         """
         print("\nProbando activar un proyecto sin ser Scrum Master")
         self.client.login(username="testing", password="polijira2021")
-        proyecto = Proyecto.objects.get(pk=1)
-        proyecto.scrum_master = Usuario.objects.get(pk=2)
-        proyecto.save()
+        rol = Miembro.objects.get(usuario_id=1, proyecto_id=1).rol
+        rol.eliminar_permiso(PermisoProyecto.objects.get(codigo="activar_proyecto"))
         response = self.client.post("/api/proyectos/1/activar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
