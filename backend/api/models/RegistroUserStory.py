@@ -16,24 +16,25 @@ ESTADOS_ESTIMADOS = (
 
 class RegistroUserStory(models.Model):
     """
-    RegistroUserStory Modela la clase Registro de User Stories
+    RegistroUserStory Modela el Registro de User Stories.
+    Guarda todos los user stories creados, modificados o eliminados
 
     Args:
         models (Model): Modelo de django
 
     Atributes:
-        nombre_antes (CharField): Nombre que toma el registro si se realiza una modificación o eliminación
-        descripcion_antes (TextField): Descripcion que toma el registro si se realiza una modificación o eliminación
-        hora_estimada_antes (IntegerField): Hora estimada que toma el registro si se realiza una modificación o eliminación
-        prioridad_antes (IntegerField): Prioridad que toma el registro si se realiza una modificación o eliminación
-        estado_antes (CharField): Estado que toma el registro si se realiza una modificación o eliminación
-        desarrollador_antes (ForeignKey): Desarrollador que toma el registro si se realiza una modificación o eliminación
-        nombre_despues (CharField): Nombre que toma el registro si se realiza una creación o modificación
-        descripcion_despues (TextField): Descripcion que toma el registro si se realiza una creación o modificación
-        hora_estimada_despues (IntegerField): Hora estimada que toma el registro si se realiza una creación o modificación
-        prioridad_despues (IntegerField): Prioridad que toma el registro si se realiza una creación o modificación
-        estado_despues (CharField): Estado que toma el registro si se realiza una creación o modificación
-        desarrollador_despues (ForeignKey): Desarrollador que toma el registro si se realiza una creación o modificación
+        nombre_antes (CharField): Nombre del User Story al modificar o eliminar
+        descripcion_antes (TextField): Descripcion del User Story al modificar o eliminar
+        hora_estimada_antes (IntegerField): Hora estimada del User Story al modificar o eliminar
+        prioridad_antes (IntegerField): Prioridad del User Story al modificar o eliminar
+        estado_antes (CharField): Estado del User Story al modificar o eliminar
+        desarrollador_antes (ForeignKey): Desarrollador del User Story al modificar o eliminar
+        nombre_despues (CharField): Nombre del User Story al crear o modificar
+        descripcion_despues (TextField): Descripcion del User Story al crear o modificar
+        hora_estimada_despues (IntegerField): Hora estimada del User Story al crear o modificar
+        prioridad_despues (IntegerField): Prioridad del User Story al crear o modificar
+        estado_despues (CharField): Estado del User Story al crear o modificar
+        desarrollador_despues (ForeignKey): Desarrollador del User Story al crear o modificar
         user_story (OneToOneField): User Story que se registra
         accion (CharField): Indica si se realizo una creación, modificación o eliminación
         autor (ForeignKey): Miembro que realiza el registro
@@ -44,18 +45,18 @@ class RegistroUserStory(models.Model):
     prioridad_antes = models.IntegerField(null=True)
     estado_antes = models.CharField(max_length=1, choices=ESTADOS, null=True)
     desarrollador_antes = models.ForeignKey("Miembro", on_delete=models.CASCADE,
-                                            related_name="registro_user_stories_antes", null=True)
+                                            related_name="registros_antes", null=True)
     nombre_despues = models.CharField(max_length=255)
     descripcion_despues = models.TextField()
     horas_estimadas_despues = models.IntegerField()
     prioridad_despues = models.IntegerField()
     estado_despues = models.CharField(max_length=1, choices=ESTADOS)
     desarrollador_despues = models.ForeignKey(
-        "Miembro", on_delete=models.CASCADE, related_name="registro_user_stories_despues", null=True)
-    user_story = models.OneToOneField("UserStory", on_delete=models.CASCADE, related_name="registro_user_stories")
+        "Miembro", on_delete=models.CASCADE, related_name="registros_despues", null=True)
+    user_story = models.OneToOneField("UserStory", on_delete=models.CASCADE, related_name="registro")
     accion = models.CharField(max_length=50)
     fecha = models.DateField()
-    autor = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="registro_user_stories")
+    autor = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="registros")
 
     @staticmethod
     def crear_registro(user_story, autor):
@@ -74,7 +75,6 @@ class RegistroUserStory(models.Model):
 
     @staticmethod
     def modificar_registro(user_story, autor):
-        registro_user_story = RegistroUserStory.objects.get(user_story=user_story)
         RegistroUserStory.objects.filter(user_story=user_story, autor=autor).update(
             nombre_antes=user_story.nombre,
             descripcion_antes=user_story.descripcion,
