@@ -71,5 +71,19 @@
                 31
             ]
         }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 2,
+            "permisos": [
+                13,
+                18,
+                26,
+                31
+            ]
+        }
     }
 ]
