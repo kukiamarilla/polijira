@@ -1,5 +1,6 @@
+from backend.api.models.Proyecto import Proyecto
 from django.db import transaction
-from backend.api.forms import CreateUserStoryForm
+from backend.api.forms import CreateUserStoryForm, UpdateUserStoryForm
 from backend.api.serializers import UserStorySerializer
 from rest_framework.response import Response
 from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserStory, Usuario
@@ -30,7 +31,7 @@ class UserStoryViewSet(viewsets.ViewSet):
             usuario_request = Usuario.objects.get(user=request.user)
             user_story = UserStory.objects.get(pk=pk)
             miembro_request = Miembro.objects.get(
-                usuario=usuario_request, proyecto=user_story.registro.autor.proyecto)
+                usuario=usuario_request, proyecto=user_story.registros.get(accion="Creacion").autor.proyecto)
             if not miembro_request.tiene_permiso("ver_user_stories"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
@@ -52,7 +53,7 @@ class UserStoryViewSet(viewsets.ViewSet):
     def create(self, request):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            miembro_request = Miembro.objects.filter(usuario=usuario_request, proyecto_id=request.data["proyecto"])[0]
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto_id=request.data["proyecto"])
             if not miembro_request.tiene_permiso("crear_user_stories"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
@@ -75,7 +76,54 @@ class UserStoryViewSet(viewsets.ViewSet):
             #     user_story.asignar_desarrollador(desarrollador)
             serializer = UserStorySerializer(user_story, many=False)
             return Response(serializer.data)
-        except IndexError:
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @transaction.atomic
+    @FormValidator(form=UpdateUserStoryForm)
+    def update(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            user_story = UserStory.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(
+                usuario=usuario_request, proyecto=user_story.registros.get(accion="Creacion").autor.proyecto
+            )
+            if not miembro_request.tiene_permiso("ver_user_stories") or \
+               not miembro_request.tiene_permiso("modificar_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories", "modificar_user_stories"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not user_story.estado == "P":
+                response = {
+                    "message": "Este User Story no tiene el estado Pendiente para ser modificado",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
+            user_story.update(
+                nombre=request.data["nombre"],
+                descripcion=request.data["descripcion"],
+                horas_estimadas=request.data["horas_estimadas"],
+                prioridad=request.data["prioridad"],
+                estado_estimacion=request.data["estado_estimacion"],
+                autor=miembro_request,
+                registro_handler=RegistroUserStory.modificar_registro
+            )
+            serializer = UserStorySerializer(user_story, many=False)
+            return Response(serializer.data)
+        except UserStory.DoesNotExist:
+            response = {
+                "message": "No existe el User Story",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
             response = {
                 "message": "Usted no es miembro de este Proyecto",
                 "error": "forbidden"
