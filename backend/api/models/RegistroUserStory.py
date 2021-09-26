@@ -53,7 +53,7 @@ class RegistroUserStory(models.Model):
     estado_despues = models.CharField(max_length=1, choices=ESTADOS)
     desarrollador_despues = models.ForeignKey(
         "Miembro", on_delete=models.CASCADE, related_name="registros_despues", null=True)
-    user_story = models.OneToOneField("UserStory", on_delete=models.CASCADE, related_name="registro")
+    user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="registros")
     accion = models.CharField(max_length=50)
     fecha = models.DateField()
     autor = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="registros")
@@ -75,16 +75,17 @@ class RegistroUserStory(models.Model):
 
     @staticmethod
     def modificar_registro(user_story, autor):
-        RegistroUserStory.objects.filter(user_story=user_story, autor=autor).update(
-            nombre_antes=user_story.nombre,
-            descripcion_antes=user_story.descripcion,
-            hora_estimada_antes=user_story.hora_estimada,
-            prioridad_antes=user_story.prioridad,
-            estado_antes=user_story.estado,
-            desarrollador_antes=user_story.desarrollador,
+        registro = RegistroUserStory.objects.filter(user_story=user_story).order_by("-id")[0]
+        RegistroUserStory.objects.create(
+            nombre_antes=registro.nombre_despues,
+            descripcion_antes=registro.descripcion_despues,
+            horas_estimadas_antes=registro.horas_estimadas_despues,
+            prioridad_antes=registro.prioridad_despues,
+            estado_antes=registro.estado_despues,
+            desarrollador_antes=registro.desarrollador_despues,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            hora_estimada_despues=user_story.hora_estimada,
+            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
             desarrollador_despues=user_story.desarrollador,
