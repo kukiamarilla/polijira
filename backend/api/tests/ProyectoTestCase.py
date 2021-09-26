@@ -176,7 +176,7 @@ class ProyectoTestCase(TestCase):
             "nombre": "ProyectoTestCrear",
             "fecha_inicio": datetime.date.today(),
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
-            "scrum_master_id": 3
+            "scrum_master_id": 55
         }
         response = self.client.post("/api/proyectos/", proyecto_body)
         self.assertEquals(response.status_code, 404)
@@ -460,7 +460,7 @@ class ProyectoTestCase(TestCase):
             "nombre": "ProyectoTestCrear",
             "fecha_inicio": datetime.date.today(),
             "fecha_fin": datetime.date.today() + datetime.timedelta(5),
-            "scrum_master_id": 3
+            "scrum_master_id": 55
         }
         response = self.client.put("/api/proyectos/1/", proyecto_body, "application/json")
         self.assertEquals(response.status_code, 404)
