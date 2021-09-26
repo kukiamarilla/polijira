@@ -30,11 +30,11 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
-            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            miembro_request = Miembro.objects.filter(usuario=usuario_request, proyecto=miembro.proyecto)
             if miembro_request.count() != 1:
                 response = {"message": "Usted no es miembro de este proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if not miembro_request.tiene_permiso("ver_miembros"):
+            if not miembro_request[0].tiene_permiso("ver_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": ["ver_miembros"]
@@ -66,7 +66,8 @@ class MiembroViewSet(viewsets.ViewSet):
             proyecto = Proyecto.objects.get(pk=request.data["proyecto"])
             miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
             if not (miembro_request.tiene_permiso("agregar_miembros") and
-                    miembro_request.tiene_permiso("ver_roles_proyecto") and usuario_request.tiene_permiso("ver_usuarios")):
+                    miembro_request.tiene_permiso("ver_roles_proyecto") and
+                    usuario_request.tiene_permiso("ver_usuarios")):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
@@ -112,15 +113,15 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
-            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            miembro_request = Miembro.objects.filter(usuario=usuario_request, proyecto=miembro.proyecto)
             if miembro_request.count() != 1:
                 response = {"message": "Usted no es miembro de este proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if not miembro_request.tiene_permiso("eliminar_miembros") or \
-               not miembro_request.tiene_permiso("ver_roles_proyecto") or \
-               not usuario_request.tiene_permiso("ver_usuarios"):
+            if not (miembro_request[0].tiene_permiso("eliminar_miembros") and
+                    miembro_request[0].tiene_permiso("ver_roles_proyecto") and
+                    usuario_request.tiene_permiso("ver_usuarios")):
                 response = {
-                    "message": "No tienes los permisos para realizar esta acción",
+                    "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
                         "eliminar_miembros",
                         "ver_roles_proyecto",
@@ -129,7 +130,7 @@ class MiembroViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if miembro_request.id == miembro.id:
+            if miembro_request[0].id == miembro.id:
                 response = {
                     "message": "No puedes eliminarte a ti mismo",
                     "error": "bad_request"
@@ -162,7 +163,8 @@ class MiembroViewSet(viewsets.ViewSet):
                 response = {"message": "Usted no es miembro de este proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             if not (miembro_request[0].tiene_permiso("modificar_miembros") and
-                    miembro_request[0].tiene_permiso("ver_roles_proyecto") and usuario_request.tiene_permiso("ver_usuarios")):
+                    miembro_request[0].tiene_permiso("ver_roles_proyecto") and
+                    usuario_request.tiene_permiso("ver_usuarios")):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
@@ -189,11 +191,11 @@ class MiembroViewSet(viewsets.ViewSet):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(pk=pk)
-            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=miembro.proyecto)
+            miembro_request = Miembro.objects.filter(usuario=usuario_request, proyecto=miembro.proyecto)
             if miembro_request.count() != 1:
                 response = {"message": "Usted no es miembro de este proyecto"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if not miembro_request.tiene_permiso("ver_miembros"):
+            if not miembro_request[0].tiene_permiso("ver_miembros"):
                 response = {
                     "message": "No tiene permiso para realizar esta accion",
                     "permission_required": ["ver_miembros"],
