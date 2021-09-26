@@ -529,7 +529,7 @@
     <p id="t475" class="pln"><span class="n"><a href="#t475">475</a></span><span class="t">                    <span class="str">"error"</span><span class="op">:</span> <span class="str">"forbidden"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t476" class="pln"><span class="n"><a href="#t476">476</a></span><span class="t">                <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
     <p id="t477" class="run"><span class="n"><a href="#t477">477</a></span><span class="t">                <span class="key">return</span> <span class="nam">Response</span><span class="op">(</span><span class="nam">response</span><span class="op">,</span> <span class="nam">status</span><span class="op">=</span><span class="nam">status</span><span class="op">.</span><span class="nam">HTTP_403_FORBIDDEN</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t478" class="run"><span class="n"><a href="#t478">478</a></span><span class="t">            <span class="nam">user_stories</span> <span class="op">=</span> <span class="nam">UserStory</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">desarrollador__proyecto_id</span><span class="op">=</span><span class="nam">pk</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t478" class="run"><span class="n"><a href="#t478">478</a></span><span class="t">            <span class="nam">user_stories</span> <span class="op">=</span> <span class="nam">UserStory</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">product_backlogs__proyecto_id</span><span class="op">=</span><span class="nam">pk</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t479" class="run"><span class="n"><a href="#t479">479</a></span><span class="t">            <span class="nam">serializer</span> <span class="op">=</span> <span class="nam">UserStorySerializer</span><span class="op">(</span><span class="nam">user_stories</span><span class="op">,</span> <span class="nam">many</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t480" class="run"><span class="n"><a href="#t480">480</a></span><span class="t">            <span class="key">return</span> <span class="nam">Response</span><span class="op">(</span><span class="nam">serializer</span><span class="op">.</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t481" class="run"><span class="n"><a href="#t481">481</a></span><span class="t">        <span class="key">except</span> <span class="nam">Miembro</span><span class="op">.</span><span class="nam">DoesNotExist</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -595,7 +595,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-24 01:59 -0400
+            created at 2021-09-25 22:24 -0400
         </p>
     </div>
 </div>

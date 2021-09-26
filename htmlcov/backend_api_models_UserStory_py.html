@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for backend/api/models/UserStory.py: 77%</title>
+    <title>Coverage for backend/api/models/UserStory.py: 95%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>backend/api/models/UserStory.py</b> :
-            <span class="pc_cov">77%</span>
+            <span class="pc_cov">95%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            31 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">24 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">7 missing</button>
+            39 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">37 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">2 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -102,16 +102,16 @@
     <p id="t48" class="pln"><span class="n"><a href="#t48">48</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t49" class="pln"><span class="n"><a href="#t49">49</a></span><span class="t"><span class="str">        lanzar Libera este User Story</span>&nbsp;</span><span class="r"></span></p>
     <p id="t50" class="pln"><span class="n"><a href="#t50">50</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t51" class="mis show_mis"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">estado</span> <span class="op">=</span> <span class="str">"R"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t52" class="mis show_mis"><span class="n"><a href="#t52">52</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">fecha_release</span> <span class="op">=</span> <span class="nam">datetime</span><span class="op">.</span><span class="nam">date</span><span class="op">.</span><span class="nam">today</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t53" class="mis show_mis"><span class="n"><a href="#t53">53</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t51" class="run"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">estado</span> <span class="op">=</span> <span class="str">"R"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">fecha_release</span> <span class="op">=</span> <span class="nam">datetime</span><span class="op">.</span><span class="nam">date</span><span class="op">.</span><span class="nam">today</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="run"><span class="n"><a href="#t53">53</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t54" class="pln"><span class="n"><a href="#t54">54</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t55" class="run"><span class="n"><a href="#t55">55</a></span><span class="t">    <span class="key">def</span> <span class="nam">cancelar</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t56" class="pln"><span class="n"><a href="#t56">56</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t"><span class="str">        cancelar Cancela este User Story</span>&nbsp;</span><span class="r"></span></p>
     <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t59" class="mis show_mis"><span class="n"><a href="#t59">59</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">estado</span> <span class="op">=</span> <span class="str">"C"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t60" class="mis show_mis"><span class="n"><a href="#t60">60</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="run"><span class="n"><a href="#t59">59</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">estado</span> <span class="op">=</span> <span class="str">"C"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="run"><span class="n"><a href="#t60">60</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t61" class="pln"><span class="n"><a href="#t61">61</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t62" class="run"><span class="n"><a href="#t62">62</a></span><span class="t">    <span class="op">@</span><span class="nam">staticmethod</span>&nbsp;</span><span class="r"></span></p>
     <p id="t63" class="run"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="key">def</span> <span class="nam">create</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -130,15 +130,27 @@
     <p id="t76" class="run"><span class="n"><a href="#t76">76</a></span><span class="t">        <span class="nam">registro_handler</span><span class="op">(</span><span class="nam">user_story</span><span class="op">,</span> <span class="nam">autor</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t77" class="run"><span class="n"><a href="#t77">77</a></span><span class="t">        <span class="key">return</span> <span class="nam">user_story</span>&nbsp;</span><span class="r"></span></p>
     <p id="t78" class="pln"><span class="n"><a href="#t78">78</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t79" class="run"><span class="n"><a href="#t79">79</a></span><span class="t">    <span class="key">def</span> <span class="nam">asignar_desarrollador</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">desarrollador</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t80" class="mis show_mis"><span class="n"><a href="#t80">80</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">desarrollador</span> <span class="op">=</span> <span class="nam">desarrollador</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t81" class="mis show_mis"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t79" class="run"><span class="n"><a href="#t79">79</a></span><span class="t">    <span class="key">def</span> <span class="nam">update</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="pln"><span class="n"><a href="#t80">80</a></span><span class="t">        <span class="nam">self</span><span class="op">,</span> <span class="nam">nombre</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">descripcion</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">horas_estimadas</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">prioridad</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">estado_estimacion</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">autor</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t81" class="pln"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="nam">registro_handler</span><span class="op">=</span><span class="key">None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t82" class="pln"><span class="n"><a href="#t82">82</a></span><span class="t">    <span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t83" class="run"><span class="n"><a href="#t83">83</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">nombre</span> <span class="op">=</span> <span class="nam">nombre</span> <span class="key">if</span> <span class="nam">nombre</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">else</span> <span class="nam">self</span><span class="op">.</span><span class="nam">nombre</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t84" class="run"><span class="n"><a href="#t84">84</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">descripcion</span> <span class="op">=</span> <span class="nam">descripcion</span> <span class="key">if</span> <span class="nam">descripcion</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">else</span> <span class="nam">self</span><span class="op">.</span><span class="nam">descripcion</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t85" class="run"><span class="n"><a href="#t85">85</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">horas_estimadas</span> <span class="op">=</span> <span class="nam">horas_estimadas</span> <span class="key">if</span> <span class="nam">horas_estimadas</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">else</span> <span class="nam">self</span><span class="op">.</span><span class="nam">horas_estimadas</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t86" class="run"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">prioridad</span> <span class="op">=</span> <span class="nam">prioridad</span> <span class="key">if</span> <span class="nam">prioridad</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">else</span> <span class="nam">self</span><span class="op">.</span><span class="nam">prioridad</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t87" class="run"><span class="n"><a href="#t87">87</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">estado_estimacion</span> <span class="op">=</span> <span class="nam">estado_estimacion</span> <span class="key">if</span> <span class="nam">estado_estimacion</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">else</span> <span class="nam">self</span><span class="op">.</span><span class="nam">estado_estimacion</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t88" class="run"><span class="n"><a href="#t88">88</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="run"><span class="n"><a href="#t89">89</a></span><span class="t">        <span class="nam">registro_handler</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">autor</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t90" class="pln"><span class="n"><a href="#t90">90</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t91" class="run"><span class="n"><a href="#t91">91</a></span><span class="t">    <span class="key">def</span> <span class="nam">asignar_desarrollador</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">desarrollador</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t92" class="mis show_mis"><span class="n"><a href="#t92">92</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">desarrollador</span> <span class="op">=</span> <span class="nam">desarrollador</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t93" class="mis show_mis"><span class="n"><a href="#t93">93</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-09-24 01:59 -0400
+            created at 2021-09-25 22:24 -0400
         </p>
     </div>
 </div>
