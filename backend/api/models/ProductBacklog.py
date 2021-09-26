@@ -2,7 +2,7 @@ from django.db import models
 
 
 class ProductBacklog(models.Model):
-    proyecto = models.OneToOneField("Proyecto", on_delete=models.CASCADE, related_name="product_backlog")
+    proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="product_backlogs")
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="product_backlogs")
 
     @staticmethod
