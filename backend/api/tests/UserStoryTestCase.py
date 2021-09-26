@@ -85,7 +85,7 @@ class UserStoryTestCase(TestCase):
         response = self.client.get("/api/proyectos/1/user_stories/")
         self.assertEquals(response.status_code, 200)
         body = response.json()
-        self.assertEquals(len(body), UserStory.objects.filter(registro__autor__proyecto_id=1).count())
+        self.assertEquals(len(body), UserStory.objects.filter(product_backlogs__proyecto_id=1).count())
 
     def test_listar_user_stories_proyecto_no_existente(self):
         """
@@ -348,11 +348,8 @@ class UserStoryTestCase(TestCase):
         """
         print("\nProbando crear un User Story asignando una hora negativa")
         self.client.login(username="testing", password="polijira2021")
-        nombre = ""
-        for i in range(0, 256):
-            nombre += "a"
         user_story_request = {
-            "nombre": nombre,
+            "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
             "horas_estimadas": -20,
             "prioridad": 4,
@@ -433,7 +430,7 @@ class UserStoryTestCase(TestCase):
             "descripcion": "Esto es una descripcion",
             "horas_estimadas": 20,
             "prioridad": 8,
-            "proyecto": 1000,
+            "proyecto": 1,
             "estado_estimacion": "d"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
@@ -457,6 +454,426 @@ class UserStoryTestCase(TestCase):
             "estado_estimacion": "holiiii"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
+
+    def test_modificar_user_story_caso_1(self):
+        """
+        test_modificar_user_story Prueba modificar un User Story cuando solo tiene el registro de su creacion
+        """
+        print("\nProbando modificar un User Story que tiene solo un registro")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USModificar_caso_1",
+            "descripcion": "Modificar caso 1: El US tiene solo un registro",
+            "horas_estimadas": 20,
+            "prioridad": 8,
+            "estado_estimacion": "N"
+        }
+        user_story_antes = UserStory.objects.get(pk=1)
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        user_story = UserStory.objects.get(pk=1)
+        self.assertEquals(body["id"], user_story.id)
+        self.assertEquals(user_story_request["nombre"], user_story.nombre)
+        self.assertEquals(user_story_request["descripcion"], user_story.descripcion)
+        self.assertEquals(user_story_request["horas_estimadas"], user_story.horas_estimadas)
+        self.assertEquals(user_story_request["prioridad"], user_story.prioridad)
+        self.assertEquals(user_story_request["estado_estimacion"], user_story.estado_estimacion)
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=user_story_antes.nombre,
+            descripcion_antes=user_story_antes.descripcion,
+            horas_estimadas_antes=user_story_antes.horas_estimadas,
+            prioridad_antes=user_story_antes.prioridad,
+            estado_antes=user_story_antes.estado,
+            desarrollador_antes=user_story_antes.desarrollador,
+            nombre_despues=user_story.nombre,
+            descripcion_despues=user_story.descripcion,
+            horas_estimadas_despues=user_story.horas_estimadas,
+            prioridad_despues=user_story.prioridad,
+            estado_despues=user_story.estado,
+            desarrollador_despues=user_story.desarrollador,
+            user_story=user_story,
+            fecha=datetime.date.today(),
+            accion="Modificacion",
+            autor_id=1
+        )
+        self.assertEquals(len(registro), 1)
+
+    def test_modificar_user_story_caso_2(self):
+        """
+        test_modificar_user_story_caso_2
+        Prueba modificar un User Story que tiene varios registros (sin eliminacion)
+        """
+        print("\nProbando modificar un User Story que tiene varios registros")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=1)
+        user_story.update(
+            nombre="USTestModificar_caso_2",
+            descripcion="Modificar caso 2",
+            horas_estimadas=5,
+            prioridad=10,
+            estado_estimacion="C",
+            autor=Miembro.objects.get(pk=1),
+            registro_handler=RegistroUserStory.modificar_registro
+        )
+        user_story_request = {
+            "nombre": "USModificar_caso_2",
+            "descripcion": "Caso 2: Modificacion con varios registros",
+            "horas_estimadas": 20,
+            "prioridad": 8,
+            "estado_estimacion": "N"
+        }
+        user_story_antes = user_story
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        user_story = UserStory.objects.get(pk=1)
+        self.assertEquals(body["id"], user_story.id)
+        self.assertEquals(user_story_request["nombre"], user_story.nombre)
+        self.assertEquals(user_story_request["descripcion"], user_story.descripcion)
+        self.assertEquals(user_story_request["horas_estimadas"], user_story.horas_estimadas)
+        self.assertEquals(user_story_request["prioridad"], user_story.prioridad)
+        self.assertEquals(user_story_request["estado_estimacion"], user_story.estado_estimacion)
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=user_story_antes.nombre,
+            descripcion_antes=user_story_antes.descripcion,
+            horas_estimadas_antes=user_story_antes.horas_estimadas,
+            prioridad_antes=user_story_antes.prioridad,
+            estado_antes=user_story_antes.estado,
+            desarrollador_antes=user_story_antes.desarrollador,
+            nombre_despues=user_story.nombre,
+            descripcion_despues=user_story.descripcion,
+            horas_estimadas_despues=user_story.horas_estimadas,
+            prioridad_despues=user_story.prioridad,
+            estado_despues=user_story.estado,
+            desarrollador_despues=user_story.desarrollador,
+            user_story=user_story,
+            fecha=datetime.date.today(),
+            accion="Modificacion",
+            autor_id=1
+        )
+        self.assertEquals(len(registro), 1)
+
+    def test_modificar_user_story_no_existente(self):
+        """
+        test_modificar_user_story_no_existente Prueba modificar un User Story que no existe en la BD
+        """
+        print("\nProbando modificar un User Story que no existe en la BD")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 8,
+            "estado_estimacion": "N"
+        }
+        response = self.client.put("/api/user-stories/1000/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_modificar_user_story_no_siendo_miembro(self):
+        """
+        test_modificar_user_story_no_siendo_miembro Prueba modificar un User Story no siendo miembro del Proyecto
+        """
+        print("\nProbando modificar un User Story no siendo miembro del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=1)
+        miembro.usuario_id = 2
+        miembro.save()
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_modificar_user_story_con_estado_release(self):
+        """
+        test_modificar_user_story_con_estado_release Prueba modificar un User Story que tiene estado liberado
+        """
+        print("\nProbando modificar un User Story que tiene estado liberado")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=1)
+        user_story.lanzar()
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_modificar_user_story_con_estado_cancelado(self):
+        """
+        test_modificar_user_story_con_estado_cancelado Prueba modificar un User Story que tiene el estado Cancelado
+        """
+        print("\nProbando modificar un User Story que tiene estado Cancelado")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=1)
+        user_story.cancelar()
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_modificar_user_story_sin_permiso_ver_user_stories(self):
+        """
+        test_modificar_user_story_sin_permiso_ver_user_stories
+        Prueba modificar un User Story sin tener el permiso de proyecto: Ver User Stories
+        """
+        print("\nProbando modificar un User Story sin tener permiso de proyecto Ver User Stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "modificar_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_modificar_user_story_sin_permiso_modificar_user_stories(self):
+        """
+        test_modificar_user_story_sin_permiso_modificar_user_stories
+        Prueba modificar un User Story sin tener el permiso de proyecto: Modificar User Stories
+        """
+        print("\nProbando modificar un User Story sin tener permiso de proyecto Modificar User Stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="modificar_user_stories").delete()
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "modificar_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_modificar_user_story_sin_nombre(self):
+        """
+        test_modificar_user_story_sin_nombre Prueba modificar un User Story sin especificar nombre
+        """
+        print("\nProbando modificar un User Story sin especificar nombre")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_user_story_sin_descripcion(self):
+        """
+        test_modificar_user_story_sin_descripcion Prueba modificar un User Story sin especificar descripcion
+        """
+        print("\nProbando modificar un User Story sin especificar descripcion")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "C"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["descripcion"]), 1)
+
+    def test_modificar_user_story_sin_horas_estimadas(self):
+        """
+        test_modificar_user_story_sin_horas_estimadas Prueba modificar un User Story sin especificar horas estimadas
+        """
+        print("\nProbando modificar un User Story sin especificar horas_estimadas")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
+
+    def test_modificar_user_story_sin_prioridad(self):
+        """
+        test_modificar_user_story_sin_prioridad Prueba modificar un User Story sin especificar prioridad
+        """
+        print("\nProbando modificar un User Story sin especificar prioridad")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["prioridad"]), 1)
+
+    def test_modificar_user_story_sin_estado_estimacion(self):
+        """
+        test_modificar_user_story_sin_estado_estimacion Prueba modificar un User Story sin especificar estado estimacion
+        """
+        print("\nProbando modificar un User Story sin especificar estado_estimacion")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
+
+    def test_modificar_user_story_max_length_nombre(self):
+        """
+        test_modificar_user_story_max_length_nombre
+        Prueba modificar un User Story asignando un nombre superando la longitud máxima permitida
+        """
+        print("\nProbando modificar un User Story asignando un nombre que supere la longitud máxima")
+        self.client.login(username="testing", password="polijira2021")
+        nombre = ""
+        for i in range(0, 256):
+            nombre += "a"
+        user_story_request = {
+            "nombre": nombre,
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["nombre"]), 1)
+
+    def test_modificar_user_story_hora_negativa(self):
+        """
+        test_modificar_user_story_hora_negativa
+        Prueba modificar un User Story asignando una hora negativa
+        """
+        print("\nProbando modificar un User Story asignando una hora negativa")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": -20,
+            "prioridad": 4,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
+
+    def test_modificar_user_story_prioridad_mayor_10(self):
+        """
+        test_modificar_user_story_prioridad_mayor_10 Prueba modificar un User Story asignando una prioridad mayor a 10
+        """
+        print("\nProbando modificar un User Story con una prioridad mayor a 10")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 14,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["prioridad"]), 1)
+
+    def test_modificar_user_story_prioridad_negativa(self):
+        """
+        test_modificar_user_story_prioridad_negativa Prueba modificar un User Story asignando una prioridad negativa
+        """
+        print("\nProbando modificar un User Story con una prioridad negativa")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": -14,
+            "estado_estimacion": "P"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["prioridad"]), 1)
+
+    def test_modificar_user_story_estado_estimacion_incorrecto(self):
+        """
+        test_modificar_user_story_estado_estimacion_incorrecto
+        Prueba modificar un User Story con un estado estimacion que no sea N, P o C
+        """
+        print("\nProbando modificar un User Story con un estado estimacion que no sea N, P o C")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 8,
+            "estado_estimacion": "d"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
+
+    def test_modificar_user_story_estado_estimacion_max_length_mayor_a_1(self):
+        """
+        test_modificar_user_story_estado_estimacion_max_length_mayor_a_1
+        Prueba modificar un User Story con un estado estimacion que no tenga solo un caracter
+        """
+        print("\nProbando modificar un User Story con un estado estimacion que tenga mas de un caracter")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest",
+            "descripcion": "Esto es una descripcion",
+            "horas_estimadas": 20,
+            "prioridad": 8,
+            "estado_estimacion": "holiiii"
+        }
+        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
