@@ -57,6 +57,7 @@ class UserStory(models.Model):
         cancelar Cancela este User Story
         """
         self.estado = "C"
+        self.product_backlog = False
         self.save()
 
     @staticmethod
@@ -87,6 +88,11 @@ class UserStory(models.Model):
         self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
         self.save()
         registro_handler(self, autor)
+
+    def delete(self, autor=None, registro_handler=None, product_backlog_handler=None):
+        self.cancelar()
+        registro_handler(self, autor)
+        product_backlog_handler(self)
 
     def asignar_desarrollador(self, desarrollador):
         self.desarrollador = desarrollador
