@@ -129,3 +129,46 @@ class UserStoryViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @transaction.atomic
+    def destroy(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            user_story = UserStory.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(
+                usuario=usuario_request, proyecto=user_story.registros.get(accion="Creacion").autor.proyecto)
+            if not miembro_request.tiene_permiso("ver_user_stories") or \
+               not miembro_request.tiene_permiso("cancelar_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories", "cancelar_user_stories"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not user_story.product_backlog:
+                response = {
+                    "message": "Este User Story no se encuentra en el Product Backlog",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
+            user_story.delete(
+                autor=miembro_request,
+                registro_handler=RegistroUserStory.eliminar_registro,
+                product_backlog_handler=ProductBacklog.eliminar_user_story
+            )
+            response = {
+                "message": "User Story Eliminado"
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except UserStory.DoesNotExist:
+            response = {
+                "message": "No existe el User Story",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
