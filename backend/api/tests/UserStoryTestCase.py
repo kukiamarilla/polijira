@@ -877,3 +877,75 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
+
+    def test_eliminar_user_story(self):
+        """
+        test_eliminar_user_story Prueba eliminar un User Story
+        """
+        print("\nProbando eliminar un User Story")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 200)
+        user_story = UserStory.objects.get(pk=1)
+        self.assertEquals(user_story.product_backlog, False)
+        product_backlog = ProductBacklog.objects.filter(user_story=user_story)
+        self.assertEquals(len(product_backlog), 0)
+        registro = RegistroUserStory.objects.filter(
+            user_story=user_story,
+            accion="Eliminacion",
+            autor_id=1,
+            fecha=datetime.date.today()
+        )
+        self.assertEquals(len(registro), 1)
+        registro = registro[0]
+        self.assertEquals(registro.nombre_antes, user_story.nombre)
+        self.assertEquals(registro.descripcion_antes, user_story.descripcion)
+        self.assertEquals(registro.horas_estimadas_antes, user_story.horas_estimadas)
+        self.assertEquals(registro.prioridad_antes, user_story.prioridad)
+        self.assertEquals(registro.estado_antes, user_story.estado)
+        self.assertEquals(registro.desarrollador_antes, user_story.desarrollador)
+        self.assertEquals(registro.nombre_despues, None)
+        self.assertEquals(registro.descripcion_despues, None)
+        self.assertEquals(registro.horas_estimadas_despues, None)
+        self.assertEquals(registro.prioridad_despues, None)
+        self.assertEquals(registro.estado_despues, None)
+        self.assertEquals(registro.desarrollador_despues, None)
+
+    def test_eliminar_user_story_no_existente(self):
+        """
+        test_eliminar_user_story_no_existente Prueba eliminar un User Story que no existe en la BD
+        """
+        print("\nProbando eliminar un User Story que no existe en la BD")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/user-stories/1000/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_eliminar_user_story_no_siendo_miembro(self):
+        """
+        test_eliminar_user_story_no_siendo_miembro Prueba eliminar un User Story no siendo miembro del Proyecto
+        """
+        print("\nProbando eliminar un User Story no siendo miembro del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=1)
+        miembro.usuario_id = 2
+        miembro.save()
+        response = self.client.delete("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_user_story_que_no_esta_en_pb(self):
+        """
+        test_eliminar_user_story_que_no_esta_en_pb Prueba eliminar un User Story que no se encuentra en el Product Backlog
+        """
+        print("\nProbando eliminar un User Story que no se encuentra en el Product Backlog")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=1)
+        user_story.product_backlog = False
+        user_story.save()
+        response = self.client.delete("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
