@@ -46,11 +46,11 @@ class RegistroUserStory(models.Model):
     estado_antes = models.CharField(max_length=1, choices=ESTADOS, null=True)
     desarrollador_antes = models.ForeignKey("Miembro", on_delete=models.CASCADE,
                                             related_name="registros_antes", null=True)
-    nombre_despues = models.CharField(max_length=255)
-    descripcion_despues = models.TextField()
-    horas_estimadas_despues = models.IntegerField()
-    prioridad_despues = models.IntegerField()
-    estado_despues = models.CharField(max_length=1, choices=ESTADOS)
+    nombre_despues = models.CharField(max_length=255, null=True)
+    descripcion_despues = models.TextField(null=True)
+    horas_estimadas_despues = models.IntegerField(null=True)
+    prioridad_despues = models.IntegerField(null=True)
+    estado_despues = models.CharField(max_length=1, choices=ESTADOS, null=True)
     desarrollador_despues = models.ForeignKey(
         "Miembro", on_delete=models.CASCADE, related_name="registros_despues", null=True)
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="registros")
@@ -100,7 +100,7 @@ class RegistroUserStory(models.Model):
         RegistroUserStory.objects.create(
             nombre_antes=user_story.nombre,
             descripcion_antes=user_story.descripcion,
-            hora_estimada_antes=user_story.hora_estimada,
+            horas_estimadas_antes=user_story.horas_estimadas,
             prioridad_antes=user_story.prioridad,
             estado_antes=user_story.estado,
             desarrollador_antes=user_story.desarrollador,
