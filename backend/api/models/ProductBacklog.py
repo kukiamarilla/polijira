@@ -13,3 +13,7 @@ class ProductBacklog(models.Model):
         )
         user_story.product_backlog = True
         user_story.save()
+
+    @staticmethod
+    def eliminar_user_story(user_story):
+        ProductBacklog.objects.get(user_story=user_story).delete()
