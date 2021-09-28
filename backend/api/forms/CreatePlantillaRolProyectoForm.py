@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from backend.api.models import Permiso
+from backend.api.models import Permiso, PlantillaRolProyecto
 import json
 
 
@@ -55,3 +55,21 @@ class CreatePlantillaRolProyectoForm(forms.Form):
             return permisos
         except Permiso.DoesNotExist:
             raise ValidationError("No se encontró algunos de los permisos especificados")
+
+    def clean_nombre(self):
+        """
+        clean_nombre Valida que no se cree dos plantillas con el mismo nombre
+
+        Raises:
+            ValidationError: Error de validación
+
+        Returns:
+            str: Nombre de la plantilla
+        """
+        try:
+            cleaned_data = super().clean()
+            nombre = cleaned_data.get("nombre")
+            PlantillaRolProyecto.objects.get(nombre=nombre)
+            raise ValidationError("No puede existir dos plantillas con el mismo nombre")
+        except PlantillaRolProyecto.DoesNotExist:
+            return nombre

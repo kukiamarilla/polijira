@@ -16,12 +16,14 @@
           texto="Autorizacion"
           :to="`/proyectos/${proyecto.id}/autorizacion`"
           :active="current == 'autorizacion'"
+          v-if="hasProyectoPermission('ver_roles_proyecto')"
         />
         <SidebarProyectoItem
           icono="team"
           texto="Miembros"
           :to="`/proyectos/${proyecto.id}/miembros`"
           :active="current == 'miembros'"
+          v-if="hasProyectoPermission('ver_miembros')"
         />
       </div>
     </div>
@@ -30,10 +32,15 @@
 
 <script>
 import SidebarProyectoItem from "@/components/SidebarProyectoItem";
-
+import { mapGetters } from "vuex";
 export default {
   props: ["proyecto", "current"],
   components: { SidebarProyectoItem },
+  computed: {
+    ...mapGetters({
+      hasProyectoPermission: "proyecto/hasPermission",
+    }),
+  },
 };
 </script>
 

@@ -10,6 +10,7 @@
             tema="primary"
             texto="Agregar Miembro"
             @click="agregarMiembroModal = true"
+            v-if="hasProyectoPermission('agregar_miembros')"
           />
         </div>
         <Table height="400px">
@@ -30,7 +31,8 @@
                   class="select-container"
                   v-if="
                     miembro.usuario.id != me.id &&
-                    miembro.rol.nombre != 'Scrum Master'
+                    miembro.rol.nombre != 'Scrum Master' &&
+                    hasProyectoPermission('modificar_miembros')
                   "
                 >
                   <Select
@@ -48,7 +50,11 @@
                   <a
                     href="#"
                     @click.prevent="eliminarMiembro(miembro)"
-                    v-if="me.rol.id != miembro.rol.id"
+                    v-if="
+                      me.id != miembro.usuario.id &&
+                      miembro.rol.nombre != 'Scrum Master' &&
+                      hasProyectoPermissions(['eliminar_miembros'])
+                    "
                   >
                     <Icon
                       icono="delete"
@@ -60,7 +66,7 @@
                   <a
                     href="#"
                     @click.prevent="modificarHorario(miembro)"
-                    v-if="me.rol.id != miembro.rol.id"
+                    v-if="hasProyectoPermissions(['modificar_miembros'])"
                   >
                     <Icon
                       icono="edit"
@@ -76,11 +82,18 @@
         </Table>
       </div>
     </div>
-    <AgregarMiembroModal v-model="agregarMiembroModal" @input="load" />
+    <AgregarMiembroModal
+      v-model="agregarMiembroModal"
+      @input="load"
+      v-if="hasProyectoPermissions(['agregar_miembros', 'ver_roles_proyecto'])"
+    />
     <ModificarMiembroModal
       v-model="modificarMiembroModal"
       @input="load"
       :miembro="miembro"
+      v-if="
+        hasProyectoPermissions(['modificar_miembros', 'ver_roles_proyecto'])
+      "
     />
   </div>
 </template>
@@ -125,6 +138,9 @@ export default {
       hasPermission: "auth/hasPermission",
       hasPermissions: "auth/hasPermissions",
       hasAnyPermission: "auth/hasAnyPermission",
+      hasProyectoPermission: "proyecto/hasPermission",
+      hasProyectoPermissions: "proyecto/hasPermissions",
+      hasProyectoAnyPermission: "proyecto/hasAnyPermission",
     }),
     ...mapState({
       me: (state) => state.auth.me,
@@ -171,18 +187,24 @@ export default {
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
       });
-      rolProyectoService.list(this.$route.params["id"]).then((roles) => {
-        this.roles = roles;
-        miembroService.list(this.$route.params["id"]).then((miembros) => {
-          this.miembros = miembros.map((m) => ({
-            ...m,
-            rolSelect: this.roles.find((rol) => m.rol.id == rol.id).id,
-          }));
-          this.miembros = this.miembros.sort(
-            (a, b) => a.usuario.id > b.usuario.id
-          );
+      if (this.hasProyectoPermission("ver_roles_proyecto")) {
+        rolProyectoService.list(this.$route.params["id"]).then((roles) => {
+          this.roles = roles;
+          miembroService.list(this.$route.params["id"]).then((miembros) => {
+            this.miembros = miembros.map((m) => ({
+              ...m,
+              rolSelect: this.roles.find((rol) => m.rol.id == rol.id).id,
+            }));
+            this.miembros = this.miembros.sort(
+              (a, b) => a.usuario.id > b.usuario.id
+            );
+          });
         });
-      });
+      } else {
+        miembroService.list(this.$route.params["id"]).then((miembros) => {
+          this.miembros = miembros;
+        });
+      }
     },
     asignarRol(miembro) {
       let actualizado = {
