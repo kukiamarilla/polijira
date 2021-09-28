@@ -22,5 +22,17 @@
             "firebase_uid": "jooBXYiOWoSxMIV3v7O0uy0Hq5B3",
             "rol": 1
         }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "nombre": "User Test",
+            "email": "usertest@polijira.com",
+            "estado": "A",
+            "firebase_uid": "w9gVxnvmPFTQG1c1upvhUC0llmF2",
+            "rol": 1
+        }
     }
 ]
