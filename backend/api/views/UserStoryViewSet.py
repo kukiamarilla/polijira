@@ -138,10 +138,10 @@ class UserStoryViewSet(viewsets.ViewSet):
             miembro_request = Miembro.objects.get(
                 usuario=usuario_request, proyecto=user_story.registros.get(accion="Creacion").autor.proyecto)
             if not miembro_request.tiene_permiso("ver_user_stories") or \
-               not miembro_request.tiene_permiso("cancelar_user_stories"):
+               not miembro_request.tiene_permiso("eliminar_user_stories"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
-                    "permission_required": ["ver_user_stories", "cancelar_user_stories"],
+                    "permission_required": ["ver_user_stories", "eliminar_user_stories"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
