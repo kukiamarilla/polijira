@@ -1,10 +1,11 @@
 from django.db import models
 import datetime
 
-ESTADOS = (
+ESTADOS_US = (
     ("P", "Pendiente"),
     ("R", "Release"),
-    ("C", "Cancelado")
+    ("C", "Cancelado"),
+    ("E", "Eliminado")
 )
 
 ESTADOS_ESTIMADOS = (
@@ -43,14 +44,14 @@ class RegistroUserStory(models.Model):
     descripcion_antes = models.TextField(null=True)
     horas_estimadas_antes = models.IntegerField(null=True)
     prioridad_antes = models.IntegerField(null=True)
-    estado_antes = models.CharField(max_length=1, choices=ESTADOS, null=True)
+    estado_antes = models.CharField(max_length=1, choices=ESTADOS_US, null=True)
     desarrollador_antes = models.ForeignKey("Miembro", on_delete=models.CASCADE,
                                             related_name="registros_antes", null=True)
     nombre_despues = models.CharField(max_length=255, null=True)
     descripcion_despues = models.TextField(null=True)
     horas_estimadas_despues = models.IntegerField(null=True)
     prioridad_despues = models.IntegerField(null=True)
-    estado_despues = models.CharField(max_length=1, choices=ESTADOS, null=True)
+    estado_despues = models.CharField(max_length=1, choices=ESTADOS_US, null=True)
     desarrollador_despues = models.ForeignKey(
         "Miembro", on_delete=models.CASCADE, related_name="registros_despues", null=True)
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="registros")
