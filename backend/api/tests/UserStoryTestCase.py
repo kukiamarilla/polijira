@@ -949,3 +949,39 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(response.status_code, 409)
         body = response.json()
         self.assertEquals(body["error"], "conflict")
+
+    def test_listar_registros(self):
+        """
+        test_listar_registros Prueba listar todos los registros de un User Story
+        """
+        print("\nProbando listar todos los registros de un User Story")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/user-stories/1/registros/")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        self.assertEquals(len(body), RegistroUserStory.objects.filter(user_story_id=1).count())
+
+    def test_listar_registros_de_us_no_existente(self):
+        """
+        test_listar_registros_de_us_no_existente Prueba listar los registros de un User Story que no existe en la BD
+        """
+        print("\nProbando listar los registros de un User Story que no existe en la BD")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/user-stories/1000/registros/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_listar_registros_de_us_sin_permiso_ver_user_stories(self):
+        """
+        test_listar_registros_de_us_sin_permiso_ver_user_stories
+        Prueba listar los registros de un User Story sin tener el permiso de proyecto: Ver User Stories
+        """
+        print("\nProbando listar los registros de un User Story sin tener permiso de proyecto Ver User Stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        response = self.client.get("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
