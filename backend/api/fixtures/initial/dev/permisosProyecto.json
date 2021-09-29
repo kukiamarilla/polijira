@@ -254,5 +254,13 @@
             "nombre": "Importar Roles Proyecto",
             "codigo": "importar_roles_proyecto"
         }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 33,
+        "fields": {
+            "nombre": "Eliminar User Stories",
+            "codigo": "eliminar_user_stories"
+        }
     }
 ]
