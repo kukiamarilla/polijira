@@ -4,7 +4,8 @@ import datetime
 ESTADOS = (
     ("P", "Pendiente"),
     ("R", "Release"),
-    ("C", "Cancelado")
+    ("C", "Cancelado"),
+    ("E", "Eliminado")
 )
 
 ESTADOS_ESTIMADOS = (
@@ -57,6 +58,13 @@ class UserStory(models.Model):
         cancelar Cancela este User Story
         """
         self.estado = "C"
+        self.save()
+
+    def eliminar(self):
+        """
+        eliminar Realiza un borrado lógico de este User Story
+        """
+        self.estado = "E"
         self.product_backlog = False
         self.save()
 
@@ -90,7 +98,7 @@ class UserStory(models.Model):
         registro_handler(self, autor)
 
     def delete(self, autor=None, registro_handler=None, product_backlog_handler=None):
-        self.cancelar()
+        self.eliminar()
         registro_handler(self, autor)
         product_backlog_handler(self)
 
