@@ -90,16 +90,6 @@
             proyectoSelected.estado == 'P'
           "
         />
-        &nbsp; &nbsp;
-        <Boton
-          texto="Iniciar Proyecto"
-          tema="success"
-          @click="activarProyecto"
-          v-if="
-            proyectoSelected.scrum_master.id == me.id &&
-            proyectoSelected.estado == 'P'
-          "
-        />
       </div>
     </Modal>
 
