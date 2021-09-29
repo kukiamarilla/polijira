@@ -85,6 +85,15 @@ class MiembroViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            miembros_proyecto = proyecto.miembros.all()
+            for m in miembros_proyecto:
+                u = Usuario.objects.get(pk=m.usuario.pk)
+                if u == usuario:
+                    response = {
+                        "message": "Usuario ya es miembro del proyecto",
+                        "error": "bad_request"
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
             miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
             horario = Horario.objects.create(
                 lunes=request.data["horario"]["lunes"],
