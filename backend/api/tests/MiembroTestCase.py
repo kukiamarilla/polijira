@@ -268,7 +268,8 @@ class MiembroTestCase(TestCase):
 
     def test_crear_miembro_con_usuario_ya_agregado(self):
         """
-        test_crear_miembro_con_usuario_ya_agregado Prueba crear un miembro con un usuario ya agregado al proyecto especificado
+        test_crear_miembro_con_usuario_ya_agregado Prueba crear un miembro
+        con un usuario ya agregado al proyecto especificado
         """
         print("\nProbando crear un miembro con un usuario ya agregado al proyecto especificado.")
         self.client.login(username="testing", password="polijira2021")
