@@ -152,7 +152,7 @@ export default {
       return this.hasPermission("desactivar_usuarios");
     },
     rolesSelect() {
-      let rolesSelect = [];
+      let rolesSelect = {};
       this.roles
         .filter((rol) => rol.nombre != "Scrum Master")
         .forEach((rol) => (rolesSelect[rol.id] = rol.nombre));
