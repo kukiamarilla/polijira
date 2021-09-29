@@ -126,7 +126,6 @@ class CreateMiembroForm(forms.Form):
         cleaned_data = super().clean()
         usuario = cleaned_data.get("usuario")
         proyecto = cleaned_data.get("proyecto")
-        rol = cleaned_data.get("rol")
         miembro = Miembro.objects.filter(usuario=usuario, proyecto=proyecto)
         if len(miembro) > 0:
             raise ValidationError("Ya existe el miembro")
