@@ -748,7 +748,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_sin_estado_estimacion(self):
         """
-        test_modificar_user_story_sin_estado_estimacion Prueba modificar un User Story sin especificar estado estimacion
+        test_modificar_user_story_sin_estado_estimacion
+        Prueba modificar un User Story sin especificar estado estimacion
         """
         print("\nProbando modificar un User Story sin especificar estado_estimacion")
         self.client.login(username="testing", password="polijira2021")
@@ -887,6 +888,7 @@ class UserStoryTestCase(TestCase):
         response = self.client.delete("/api/user-stories/1/")
         self.assertEquals(response.status_code, 200)
         user_story = UserStory.objects.get(pk=1)
+        self.assertEquals(user_story.estado, "E")
         self.assertEquals(user_story.product_backlog, False)
         product_backlog = ProductBacklog.objects.filter(user_story=user_story)
         self.assertEquals(len(product_backlog), 0)
@@ -938,7 +940,8 @@ class UserStoryTestCase(TestCase):
 
     def test_eliminar_user_story_que_no_esta_en_pb(self):
         """
-        test_eliminar_user_story_que_no_esta_en_pb Prueba eliminar un User Story que no se encuentra en el Product Backlog
+        test_eliminar_user_story_que_no_esta_en_pb
+        Prueba eliminar un User Story que no se encuentra en el Product Backlog
         """
         print("\nProbando eliminar un User Story que no se encuentra en el Product Backlog")
         self.client.login(username="testing", password="polijira2021")
@@ -949,6 +952,34 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(response.status_code, 409)
         body = response.json()
         self.assertEquals(body["error"], "conflict")
+
+    def test_eliminar_user_story_sin_permiso_ver_user_stories(self):
+        """
+        test_ver_user_story_sin_permiso_ver_user_stories
+        Prueba eliminar un User Story sin tener permiso de proyecto: Ver User Stories
+        """
+        print("\nProbando eliminar un User Story sin tener permiso de ver user stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        response = self.client.delete("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "eliminar_user_stories"])
+
+    def test_eliminar_user_story_sin_permiso_eliminar_user_stories(self):
+        """
+        test_eliminar_user_story_sin_permiso_eliminar_user_stories
+        Prueba eliminar un User Story sin tener permiso de proyecto: Eliminar User Stories
+        """
+        print("\nProbando eliminar un User Story sin tener permiso de eliminar user stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="eliminar_user_stories").delete()
+        response = self.client.delete("/api/user-stories/1/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "eliminar_user_stories"])
 
     def test_listar_registros(self):
         """
@@ -980,7 +1011,7 @@ class UserStoryTestCase(TestCase):
         print("\nProbando listar los registros de un User Story sin tener permiso de proyecto Ver User Stories")
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
-        response = self.client.get("/api/user-stories/1/")
+        response = self.client.get("/api/user-stories/1/registros/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["permission_required"], ["ver_user_stories"])
