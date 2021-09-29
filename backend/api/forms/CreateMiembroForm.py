@@ -130,5 +130,3 @@ class CreateMiembroForm(forms.Form):
         miembro = Miembro.objects.filter(usuario=usuario, proyecto=proyecto, rol=rol)
         if len(miembro) > 0:
             raise ValidationError("Ya existe el miembro")
-        if miembro:
-            return miembro.id
