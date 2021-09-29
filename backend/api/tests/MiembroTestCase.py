@@ -247,7 +247,7 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear un miembro con un rol que no pertenece al proyecto.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
+            "usuario": 3,
             "rol": 4,
             "proyecto": 1,
             "horario": {
@@ -265,6 +265,33 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["message"], "El rol no pertenece a este proyecto")
         self.assertEquals(body["error"], "forbidden")
+
+    def test_crear_miembro_con_usuario_ya_agregado(self):
+        """
+        test_crear_miembro_con_usuario_ya_agregado Prueba crear un miembro
+        con un usuario ya agregado al proyecto especificado
+        """
+        print("\nProbando crear un miembro con un usuario ya agregado al proyecto especificado.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 1,
+            "rol": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 0,
+                "miercoles": 5,
+                "jueves": 0,
+                "viernes": 6,
+                "sabado": 2,
+                "domingo": 4
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["miembro"], ["Ya existe el miembro"])
 
     def test_crear_miembro_usuario_no_existente(self):
         """
@@ -323,7 +350,7 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un rol que no existe.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 1,
+            "usuario": 2,
             "rol": 1000,
             "proyecto": 1,
             "horario": {
@@ -339,7 +366,7 @@ class MiembroTestCase(TestCase):
         response = self.client.post("/api/miembros/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
-        self.assertEquals(len(body["errors"]), 1)
+        self.assertEquals(body["errors"]["rol"], ["No se encontro un rol en la base de datos"])
 
     def test_crear_miembro_existente(self):
         """

@@ -98,7 +98,7 @@ class CreateMiembroForm(forms.Form):
             RolProyecto.objects.get(pk=id)
             return id
         except RolProyecto.DoesNotExist:
-            raise ValidationError("No se encontro un usuario en la base de datos")
+            raise ValidationError("No se encontro un rol en la base de datos")
 
     def clean_horario(self):
         """
@@ -126,9 +126,6 @@ class CreateMiembroForm(forms.Form):
         cleaned_data = super().clean()
         usuario = cleaned_data.get("usuario")
         proyecto = cleaned_data.get("proyecto")
-        rol = cleaned_data.get("rol")
-        miembro = Miembro.objects.filter(usuario=usuario, proyecto=proyecto, rol=rol)
+        miembro = Miembro.objects.filter(usuario=usuario, proyecto=proyecto)
         if len(miembro) > 0:
             raise ValidationError("Ya existe el miembro")
-        if miembro:
-            return miembro.id
