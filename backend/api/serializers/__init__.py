@@ -7,3 +7,5 @@ from .PermisoProyectoSerializer import PermisoProyectoSerializer
 from .PlantillaRolProyectoSerializer import PlantillaRolProyectoSerializer
 from .RolProyectoSerializer import RolProyectoSerializer
 from .MiembroSerializer import MiembroSerializer
+from .HorarioSerializer import HorarioSerializer
+from .ImportarRolSerializer import ImportarRolSerializer

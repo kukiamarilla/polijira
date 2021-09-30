@@ -1,0 +1,16 @@
+[
+    {
+        "model": "api.horario",
+        "pk": 1,
+        "fields": {
+            "lunes": 3,
+            "martes": 0,
+            "miercoles": 1,
+            "jueves": 1,
+            "viernes": 0,
+            "sabado": 6,
+            "domingo": 0,
+            "miembro": 1
+        }
+    }
+]

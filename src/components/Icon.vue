@@ -17,6 +17,7 @@ const iconosValidos = [
   "logout",
   "team",
   "add",
+  "minus",
   "options",
   "watch",
   "delete",

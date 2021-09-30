@@ -5,3 +5,5 @@ from .ProyectoViewSet import ProyectoViewSet
 from .PermisoProyectoViewSet import PermisoProyectoViewSet
 from .PlantillaRolProyectoViewSet import PlantillaRolProyectoViewSet
 from .RolProyectoViewSet import RolProyectoViewSet
+from .MiembroViewSet import MiembroViewSet
+from .HorarioViewSet import HorarioViewSet

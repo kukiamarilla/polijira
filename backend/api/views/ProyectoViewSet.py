@@ -2,10 +2,16 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
-from backend.api.serializers import ProyectoSerializer
+from backend.api.serializers import \
+    ProyectoSerializer, \
+    PermisoProyectoSerializer, \
+    RolProyectoSerializer, \
+    MiembroSerializer, \
+    ImportarRolSerializer
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
+from django.db.models import Q
 
 
 class ProyectoViewSet(viewsets.ViewSet):
@@ -24,7 +30,10 @@ class ProyectoViewSet(viewsets.ViewSet):
             json: Proyecto[]
         """
         usuario_request = Usuario.objects.get(user=request.user)
-        proyectos = Proyecto.objects.filter(miembros__usuario=usuario_request)
+        if usuario_request.tiene_permiso("ver_proyectos"):
+            proyectos = Proyecto.objects.all()
+        else:
+            proyectos = Proyecto.objects.filter(miembros__usuario=usuario_request)
         serializer = ProyectoSerializer(proyectos, many=True)
         return Response(serializer.data)
 
@@ -240,6 +249,206 @@ class ProyectoViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["GET"])
+    def mis_permisos(self, request, pk=None):
+
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            rol = miembro.rol
+            serializer = PermisoProyectoSerializer(rol.permisos.all())
+            return Response(serializer.data)
+
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['GET'])
+    def roles(self, request, pk=None):
+        """
+        list Lista todos los roles de proyecto del proyecto especificado
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Return:
+            json: lista de roles de proyecto en formato json
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not miembro.tiene_permiso("ver_roles_proyecto"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_roles_proyecto"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            roles = RolProyecto.objects.filter(proyecto=proyecto)
+            serializer = RolProyectoSerializer(roles, many=True)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {"message": "Usted no es miembro de este proyecto"}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['GET'])
+    def me(self, request, pk=None):
+        """
+        me Obtiene el modelo miembro del usuario logueado en el proyecto especificado
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Return:
+            JSON: Miembro solicitado en formato json
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            serializer = MiembroSerializer(miembro, many=False)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {"message": "Usted no es miembro de este proyecto"}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["GET"])
+    def miembros(self, request, pk=None):
+        """
+        miembros Lista todos los miembros del proyecto especificado
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Returns:
+            JSON: Miembros del proyecto especificado en formato json
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
+            if not miembro.tiene_permiso("ver_miembros"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_miembros"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembros = Miembro.objects.filter(proyecto=proyecto)
+            serializer = MiembroSerializer(miembros, many=True)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["GET"])
+    def importar_rol(self, request, pk=None):
+        """
+        importar_rol Importa un rol de proyecto de otro proyecto
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Return:
+            JSON: Roles de proyecto en formato json
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not miembro.tiene_permiso("importar_rol_proyecto"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["importar_rol_proyecto"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.filter(~Q(pk=proyecto.pk))
+            serializer = ImportarRolSerializer(proyecto, many=True)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {"message": "Usted no es miembro de este proyecto"}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @transaction.atomic
+    @importar_rol.mapping.post
+    def crear_importado_rol(self, request, pk=None):
+        """
+        crear_importado_rol Clona un rol especificado de otro proyecto al proyecto
+
+        Args:
+            request (Any): request
+            pk (integer, opcional): Primary Key
+
+        Return:
+            JSON: Rol nuevo importado en formato json
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not miembro.tiene_permiso("importar_rol_proyecto"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["importar_rol_proyecto"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            rol_importado = RolProyecto.objects.get(pk=request.data["id"])
+            rol = RolProyecto.objects.create(nombre=rol_importado.nombre, proyecto=proyecto)
+            permisos = rol_importado.permisos.all()
+            for p in permisos:
+                rol.agregar_permiso(p)
+            serializer = RolProyectoSerializer(rol, many=False)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {"message": "Usted no es miembro de este proyecto"}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):

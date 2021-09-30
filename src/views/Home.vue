@@ -277,7 +277,10 @@ export default {
           .substr(0, 10);
         proyecto.fecha_fin = proyecto.fecha_fin.toISOString().substr(0, 10);
         proyecto.scrum_master_id = proyecto.scrum_master.id;
-        this.proyectoSelected = proyecto;
+        this.proyectoSelected = {
+          ...proyecto,
+          scrum_master: proyecto.scrum_master.id,
+        };
         proyectoService
           .update(this.proyectoSelected.id, this.proyectoSelected)
           .then(() => {

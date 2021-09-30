@@ -49,7 +49,7 @@ class Miembro(models.Model):
         Miembro.objects.create(
             usuario=proyecto.scrum_master,
             proyecto=proyecto,
-            rol=RolProyecto.objects.get(nombre="Scrum Master")
+            rol=RolProyecto.objects.get(nombre="Scrum Master", proyecto=proyecto)
         )
 
     @staticmethod
@@ -61,7 +61,7 @@ class Miembro(models.Model):
             proyecto (Proyecto): Proyecto a actualizar el scrum master
             scrum_master (Usuario): Scrum Master a ser actualizado
         """
-        rol = RolProyecto.objects.get(nombre="Scrum Master")
+        rol = RolProyecto.objects.get(nombre="Scrum Master", proyecto=proyecto)
         miembro = Miembro.objects.get(
             usuario=proyecto.scrum_master,
             proyecto=proyecto,

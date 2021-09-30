@@ -5,3 +5,5 @@ from .RolTestCase import RolTestCase
 from .ProyectoTestCase import ProyectoTestCase
 from .PlantillaRolProyectoTestCase import PlantillaRolProyectoTestCase
 from .RolProyectoTestCase import RolProyectoTestCase
+from .MiembroTestCase import MiembroTestCase
+from .HorarioTestCase import HorarioTestCase

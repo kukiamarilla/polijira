@@ -9,5 +9,16 @@
             "estado": "P",
             "scrum_master": 1
         }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "ProyectoTest2",
+            "fecha_inicio": "2021-09-20",
+            "fecha_fin": "2021-10-20",
+            "estado": "P",
+            "scrum_master": 2
+        }
     }
 ]

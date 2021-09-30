@@ -21,4 +21,7 @@ export default {
   activar(id) {
     return api.post(`/proyectos/${id}/activar/`).then((response) => response.data);
   },
+  me(id) {
+    return api.get(`/proyectos/${id}/me/`).then((response) => response.data);
+  }
 };
