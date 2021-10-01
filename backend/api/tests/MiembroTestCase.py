@@ -860,6 +860,21 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["error"], "bad_request")
 
+    def test_eliminar_miembro_scrum_master(self):
+        """
+        test_eliminar_miembro_scrum_master Prueba eliminar el miembro con rol Scrum Master
+        """
+        print("\nProbando eliminar el miembro con rol Scrum Master.")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=2)
+        miembro.rol = RolProyecto.objects.get(nombre="Scrum Master")
+        miembro.save()
+        response = self.client.delete("/api/miembros/2/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede eliminar el miembro Scrum Master")
+        self.assertEquals(body["error"], "forbidden")
+
     def test_eliminar_miembro_no_existente(self):
         """
         test_eliminar_miembro Prueba eliminar un miembro que no existe
@@ -972,6 +987,24 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
+    def test_modificar_miembro_scrum_master(self):
+        """
+        test_modificar_miembro_scrum_master Prueba modificar el miembro con rol Scrum Master
+        """
+        print("\nProbando modificar el miembro con rol Scrum Master.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 3
+        }
+        miembro = Miembro.objects.get(pk=2)
+        miembro.rol = RolProyecto.objects.get(nombre="Scrum Master")
+        miembro.save()
+        response = self.client.put("/api/miembros/2/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede modificar el miembro Scrum Master")
+        self.assertEquals(body["error"], "forbidden")
 
     def test_modificar_miembro_rol_no_existente(self):
         """
