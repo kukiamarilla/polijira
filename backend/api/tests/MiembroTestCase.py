@@ -1,3 +1,4 @@
+from backend.api.models.PermisoProyecto import PermisoProyecto
 from backend.api.models.Proyecto import Proyecto
 from backend.api.models.Usuario import Usuario
 from django.test import TestCase
@@ -972,6 +973,31 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
+    def test_modificar_mi_propio_miembro(self):
+        """
+        test_modificar_mi_propio_miembro Prueba modificar su mismo miembro
+        """
+        print("\nProbando modificar el miembro al que pertenezco.")
+        request_data = {
+            "rol": 3
+        }
+        usuario = Usuario.objects.get(nombre="testing")
+        proyecto = Proyecto.objects.get(pk=1)
+        miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+        miembro.rol = RolProyecto.objects.get(pk=2)
+        permiso = PermisoProyecto.objects.get(codigo="ver_roles_proyecto")
+        miembro.rol.agregar_permiso(permiso)
+        permiso = PermisoProyecto.objects.get(codigo="modificar_miembros")
+        miembro.rol.agregar_permiso(permiso)
+        miembro.save()
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.put("/api/miembros/" + str(miembro.id) + "/",
+                                   request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body["message"], "No puedes modificar tu rol")
+        self.assertEquals(body["error"], "bad_request")
 
     def test_modificar_miembro_rol_no_existente(self):
         """
