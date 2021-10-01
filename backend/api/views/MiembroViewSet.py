@@ -174,6 +174,12 @@ class MiembroViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if miembro_request[0].id == miembro.id:
+                response = {
+                    "message": "No puedes modificar tu rol",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             rol = RolProyecto.objects.get(pk=request.data["rol"])
             miembro.rol = rol
             miembro.save()
