@@ -79,12 +79,6 @@ class MiembroViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             usuario = Usuario.objects.get(pk=request.data["usuario"])
             rol = RolProyecto.objects.get(pk=request.data["rol"])
-            if rol.proyecto != proyecto:
-                response = {
-                    "message": "El rol no pertenece a este proyecto",
-                    "error": "forbidden"
-                }
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro = Miembro.objects.create(usuario=usuario, proyecto=proyecto, rol=rol)
             horario = Horario.objects.create(
                 lunes=request.data["horario"]["lunes"],
@@ -175,6 +169,12 @@ class MiembroViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=request.data["rol"])
+            if rol.proyecto != miembro.proyecto:
+                response = {
+                    "message": "El rol no pertenece a este proyecto",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro.rol = rol
             miembro.save()
             serializer = MiembroSerializer(miembro, many=False)

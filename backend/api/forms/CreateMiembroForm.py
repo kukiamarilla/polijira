@@ -94,11 +94,19 @@ class CreateMiembroForm(forms.Form):
         """
         try:
             cleaned_data = super().clean()
-            id = cleaned_data.get("rol")
-            RolProyecto.objects.get(pk=id)
+            rol_id = cleaned_data.get("rol")
+            proyecto_id = cleaned_data.get("proyecto")
+            rol = RolProyecto.objects.get(pk=rol_id)
+            proyecto = Proyecto.objects.get(pk=proyecto_id)
+            if rol.proyecto != proyecto:
+                raise ValidationError("El rol no pertenece a este proyecto")
+            if rol.nombre == "Scrum Master":
+                raise ValidationError("El rol de Scrum Master no es asignable")
             return id
         except RolProyecto.DoesNotExist:
             raise ValidationError("No se encontro un rol en la base de datos")
+        except Proyecto.DoesNotExist:
+            raise ValidationError("El rol no pertenece a este proyecto")
 
     def clean_horario(self):
         """
