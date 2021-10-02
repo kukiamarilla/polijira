@@ -133,7 +133,7 @@ class MiembroTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         request_data = {
             "usuario": 3,
-            "rol": 3,
+            "rol": 4,
             "proyecto": 2,
             "horario": {
                 "lunes": 1,
@@ -241,6 +241,32 @@ class MiembroTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["agregar_miembros", "ver_roles_proyecto", "ver_usuarios"])
 
+    def test_crear_miembro_con_rol_scrum_master(self):
+        """
+        test_crear_miembro_con_rol_scrum_master Prueba crear un miembro con rol Scrum Master
+        """
+        print("\nProbando crear un miembro con rol Scrum Master.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "rol": 1,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["El rol de Scrum Master no es asignable"])
+
     def test_crear_miembro_rol_distinto(self):
         """
         test_crear_miembro_rol_distinto Prueba crear un miembro con un rol que no pertenece al proyecto
@@ -262,10 +288,10 @@ class MiembroTestCase(TestCase):
             }
         }
         response = self.client.post("/api/miembros/", request_data, content_type="application/json")
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 422)
         body = response.json()
-        self.assertEquals(body["message"], "El rol no pertenece a este proyecto")
-        self.assertEquals(body["error"], "forbidden")
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["El rol no pertenece a este proyecto"])
 
     def test_crear_miembro_con_usuario_ya_agregado(self):
         """
@@ -326,8 +352,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un proyecto que no existe.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1000,
             "horario": {
                 "lunes": 1,
@@ -342,7 +368,8 @@ class MiembroTestCase(TestCase):
         response = self.client.post("/api/miembros/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
-        self.assertEquals(len(body["errors"]), 1)
+        self.assertEquals(body["errors"]["proyecto"], ["No se encontro un proyecto en la base de datos"])
+        self.assertEquals(body["errors"]["rol"], ["El rol no pertenece a este proyecto"])
 
     def test_crear_miembro_rol_no_existente(self):
         """
@@ -351,7 +378,7 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un rol que no existe.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
+            "usuario": 3,
             "rol": 1000,
             "proyecto": 1,
             "horario": {
@@ -376,8 +403,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear un miembro que ya existe.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 1,
-            "rol": 1,
+            "usuario": 2,
+            "rol": 2,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -392,7 +419,8 @@ class MiembroTestCase(TestCase):
         response = self.client.post("/api/miembros/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
-        self.assertEquals(len(body["errors"]["miembro"]), 1)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["miembro"], ["Ya existe el miembro"])
 
     def test_hora_mayor_a_24_lunes(self):
         """
@@ -401,8 +429,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - lunes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 200,
@@ -426,8 +454,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - martes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -451,8 +479,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - miercoles.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -476,8 +504,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - jueves.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -501,8 +529,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - viernes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -526,8 +554,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - sabado.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -551,8 +579,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora superior a 24 - domingo.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -576,8 +604,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - lunes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": -1,
@@ -601,8 +629,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - martes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -626,8 +654,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - miercoles.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -651,8 +679,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - jueves.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -676,8 +704,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - viernes.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -701,8 +729,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - sabado.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -726,8 +754,8 @@ class MiembroTestCase(TestCase):
         print("\nProbando crear miembro con un horario con una hora negativa - domingo.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "usuario": 2,
-            "rol": 2,
+            "usuario": 3,
+            "rol": 3,
             "proyecto": 1,
             "horario": {
                 "lunes": 1,
@@ -861,6 +889,21 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["error"], "bad_request")
 
+    def test_eliminar_miembro_scrum_master(self):
+        """
+        test_eliminar_miembro_scrum_master Prueba eliminar el miembro con rol Scrum Master
+        """
+        print("\nProbando eliminar el miembro con rol Scrum Master.")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=2)
+        miembro.rol = RolProyecto.objects.get(nombre="Scrum Master")
+        miembro.save()
+        response = self.client.delete("/api/miembros/2/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede eliminar el miembro Scrum Master")
+        self.assertEquals(body["error"], "forbidden")
+
     def test_eliminar_miembro_no_existente(self):
         """
         test_eliminar_miembro Prueba eliminar un miembro que no existe
@@ -959,6 +1002,21 @@ class MiembroTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["modificar_miembros", "ver_roles_proyecto", "ver_usuarios"])
 
+    def test_modificar_miembro_rol_distinto(self):
+        """
+        test_modificar_miembro_rol_distinto Prueba modificar un miembro con un rol que no pertenece al proyecto
+        """
+        print("\nProbando modificar un miembro con un rol que no pertenece al proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 4
+        }
+        response = self.client.put("/api/miembros/2/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["message"], "El rol no pertenece a este proyecto")
+        self.assertEquals(body["error"], "forbidden")
+
     def test_modificar_miembro_sin_ser_miembro_proyecto(self):
         """
         test_modificar_miembro_sin_ser_miembro_proyecto
@@ -998,6 +1056,24 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["message"], "No puedes modificar tu rol")
         self.assertEquals(body["error"], "bad_request")
+
+    def test_modificar_miembro_scrum_master(self):
+        """
+        test_modificar_miembro_scrum_master Prueba modificar el miembro con rol Scrum Master
+        """
+        print("\nProbando modificar el miembro con rol Scrum Master.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 3
+        }
+        miembro = Miembro.objects.get(pk=2)
+        miembro.rol = RolProyecto.objects.get(nombre="Scrum Master")
+        miembro.save()
+        response = self.client.put("/api/miembros/2/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede modificar el miembro Scrum Master")
+        self.assertEquals(body["error"], "forbidden")
 
     def test_modificar_miembro_rol_no_existente(self):
         """
@@ -1041,6 +1117,8 @@ class MiembroTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["rol"]), 1)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["No puedes asignar el rol Scrum Master"])
 
     def test_obtener_horario(self):
         """
