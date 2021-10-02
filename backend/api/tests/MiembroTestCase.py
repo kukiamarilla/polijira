@@ -265,6 +265,31 @@ class MiembroTestCase(TestCase):
         self.assertEquals(body["message"], "Error de validación")
         self.assertEquals(body["errors"]["usuario"], ["No especificaste el usuario"])
 
+    def test_crear_miembro_con_rol_nulo(self):
+        """
+        test_crear_miembro_con_rol_nulo Prueba la creación de miembro con rol nulo 
+        """
+        print("\nProbando la creación de miembro con rol nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["No especificaste el rol"])
+
     def test_crear_miembro_rol_distinto(self):
         """
         test_crear_miembro_rol_distinto Prueba crear un miembro con un rol que no pertenece al proyecto
