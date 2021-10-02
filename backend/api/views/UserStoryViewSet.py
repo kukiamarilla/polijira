@@ -62,11 +62,9 @@ class UserStoryViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = UserStory.create(
-                nombre=request.data["nombre"],
-                descripcion=request.data["descripcion"],
-                horas_estimadas=request.data["horas_estimadas"],
-                prioridad=request.data["prioridad"],
-                estado_estimacion=request.data["estado_estimacion"],
+                nombre=request.data.get("nombre"),
+                descripcion=request.data.get("descripcion") if request.data.get("descripcion") is not None else "",
+                prioridad=request.data.get("prioridad") if request.data.get("prioridad") is not None else 0,
                 autor=miembro_request,
                 product_backlog_handler=ProductBacklog.almacenar_user_story,
                 registro_handler=RegistroUserStory.crear_registro
@@ -109,9 +107,7 @@ class UserStoryViewSet(viewsets.ViewSet):
             user_story.update(
                 nombre=request.data["nombre"],
                 descripcion=request.data["descripcion"],
-                horas_estimadas=request.data["horas_estimadas"],
                 prioridad=request.data["prioridad"],
-                estado_estimacion=request.data["estado_estimacion"],
                 autor=miembro_request,
                 registro_handler=RegistroUserStory.modificar_registro
             )

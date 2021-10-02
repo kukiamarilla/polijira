@@ -1,6 +1,6 @@
 from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserStory, PermisoProyecto
 from django.test import TestCase, Client
-import datetime
+from datetime import date
 
 
 class UserStoryTestCase(TestCase):
@@ -113,36 +113,36 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["permission_required"], ["ver_user_stories"])
         self.assertEquals(body["error"], "forbidden")
 
-    def test_crear_user_story(self):
+    def test_crear_user_story_es1_c1(self):
         """
-        test_crear_user_story Prueba crear un User Story
+        test_crear_user_story_es1_c1
+        Prueba crear un User Story especificando: nombre, descripcion, prioridad y proyecto.
+        Escenario donde los atributos enviados son correctos.
         """
-        print("\nProbando crear un User Story")
+        print("\nProbando crear un User Story - caso 1")
         self.client.login(username="testing", password="polijira2021")
         user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
+            "nombre": "USTest Caso 1",
+            "descripcion": "Crear US en caso 1",
             "prioridad": 4,
-            "proyecto": 2,
-            "estado_estimacion": "P"
+            "proyecto": 2
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         body = response.json()
-        user_story = UserStory.objects.filter(
-            nombre=body["nombre"],
-            descripcion=body["descripcion"],
-            horas_estimadas=body["horas_estimadas"],
-            prioridad=body["prioridad"],
-            estado_estimacion=body["estado_estimacion"],
-            fecha_creacion=body["fecha_creacion"],
-            product_backlog=body["product_backlog"]
-        )
+        self.assertEquals(user_story_request["nombre"], body["nombre"])
+        self.assertEquals(user_story_request["descripcion"], body["descripcion"])
+        self.assertEquals(user_story_request["prioridad"], body["prioridad"])
+        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["estado"], "P")
+        self.assertEquals(body["fecha_release"], None)
+        self.assertEquals(body["fecha_creacion"], str(date.today()))
+        self.assertEquals(body["desarrollador"], None)
+        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["product_backlog"], True)
+        user_story = UserStory.objects.filter(**body)
         self.assertEquals(len(user_story), 1)
         user_story = user_story[0]
-        self.assertEquals(user_story.fecha_creacion, datetime.date.today())
-        self.assertEquals(user_story.product_backlog, True)
         product_backlog = ProductBacklog.objects.filter(
             proyecto_id=user_story_request["proyecto"],
             user_story=user_story
@@ -157,12 +157,119 @@ class UserStoryTestCase(TestCase):
             desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
             desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
-            fecha=datetime.date.today(),
+            fecha=date.today(),
+            accion="Creacion",
+            autor_id=2
+        )
+        self.assertEquals(len(registro), 1)
+
+    def test_crear_user_story_es1_c2(self):
+        """
+        test_crear_user_story_es1_c2
+        Prueba crear un User Story especificando solo: nombre, prioridad y proyecto.
+        No se especifica el atributo descripcion.
+        Escenario donde los atributos enviados son correctos.
+        """
+        print("\nProbando crear un User Story - caso 2")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest Caso 2",
+            "prioridad": 4,
+            "proyecto": 2
+        }
+        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        self.assertEquals(user_story_request["nombre"], body["nombre"])
+        self.assertEquals(user_story_request["prioridad"], body["prioridad"])
+        self.assertEquals(body["descripcion"], "")
+        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["estado"], "P")
+        self.assertEquals(body["fecha_release"], None)
+        self.assertEquals(body["fecha_creacion"], str(date.today()))
+        self.assertEquals(body["desarrollador"], None)
+        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["product_backlog"], True)
+        user_story = UserStory.objects.filter(**body)
+        self.assertEquals(len(user_story), 1)
+        user_story = user_story[0]
+        product_backlog = ProductBacklog.objects.filter(
+            proyecto_id=user_story_request["proyecto"],
+            user_story=user_story
+        )
+        self.assertEquals(len(product_backlog), 1)
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=None,
+            descripcion_antes=None,
+            horas_estimadas_antes=None,
+            prioridad_antes=None,
+            estado_antes=None,
+            desarrollador_antes=None,
+            nombre_despues=user_story.nombre,
+            descripcion_despues=user_story.descripcion,
+            prioridad_despues=user_story.prioridad,
+            estado_despues=user_story.estado,
+            desarrollador_despues=user_story.desarrollador,
+            user_story=user_story,
+            fecha=date.today(),
+            accion="Creacion",
+            autor_id=2
+        )
+        self.assertEquals(len(registro), 1)
+
+    def test_crear_user_story_es1_c3(self):
+        """
+        test_crear_user_story_es1_c3
+        Prueba crear un User Story especificando solo: nombre, descripcion, proyecto.
+        No se especifica el atributo prioridad.
+        Escenario donde los atributos enviados son correctos.
+        """
+        print("\nProbando crear un User Story - caso 3")
+        self.client.login(username="testing", password="polijira2021")
+        user_story_request = {
+            "nombre": "USTest Caso 3",
+            "descripcion": "Crear US en caso 3",
+            "proyecto": 2
+        }
+        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        self.assertEquals(user_story_request["nombre"], body["nombre"])
+        self.assertEquals(user_story_request["descripcion"], body["descripcion"])
+        self.assertEquals(body["prioridad"], 0)
+        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["estado"], "P")
+        self.assertEquals(body["fecha_release"], None)
+        self.assertEquals(body["fecha_creacion"], str(date.today()))
+        self.assertEquals(body["desarrollador"], None)
+        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["product_backlog"], True)
+        user_story = UserStory.objects.filter(**body)
+        self.assertEquals(len(user_story), 1)
+        user_story = user_story[0]
+        product_backlog = ProductBacklog.objects.filter(
+            proyecto_id=user_story_request["proyecto"],
+            user_story=user_story
+        )
+        self.assertEquals(len(product_backlog), 1)
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=None,
+            descripcion_antes=None,
+            horas_estimadas_antes=None,
+            prioridad_antes=None,
+            estado_antes=None,
+            desarrollador_antes=None,
+            nombre_despues=user_story.nombre,
+            descripcion_despues=user_story.descripcion,
+            prioridad_despues=user_story.prioridad,
+            estado_despues=user_story.estado,
+            desarrollador_despues=user_story.desarrollador,
+            user_story=user_story,
+            fecha=date.today(),
             accion="Creacion",
             autor_id=2
         )
@@ -179,10 +286,10 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
+            "": 20,
             "prioridad": 4,
             "proyecto": 1,
-            "estado_estimacion": "P"
+            "": "P"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -200,10 +307,10 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
+            "": 20,
             "prioridad": 4,
             "proyecto": 1,
-            "estado_estimacion": "P"
+            "": "P"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -218,69 +325,13 @@ class UserStoryTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         user_story_request = {
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
             "prioridad": 4,
-            "proyecto": 1,
-            "estado_estimacion": "P"
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["nombre"]), 1)
-
-    def test_crear_user_story_sin_descripcion(self):
-        """
-        test_crear_user_story_sin_descripcion Prueba crear un User Story sin especificar descripcion
-        """
-        print("\nProbando crear un User Story sin especificar descripcion")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "proyecto": 1,
-            "estado_estimacion": "P"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["descripcion"]), 1)
-
-    def test_crear_user_story_sin_horas_estimadas(self):
-        """
-        test_crear_user_story_sin_horas_estimadas Prueba crear un User Story sin especificar horas estimadas
-        """
-        print("\nProbando crear un User Story sin especificar horas_estimadas")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "prioridad": 4,
-            "proyecto": 1,
-            "estado_estimacion": "P"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
-
-    def test_crear_user_story_sin_prioridad(self):
-        """
-        test_crear_user_story_sin_prioridad Prueba crear un User Story sin especificar prioridad
-        """
-        print("\nProbando crear un User Story sin especificar prioridad")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "proyecto": 1,
-            "estado_estimacion": "P"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["prioridad"]), 1)
 
     def test_crear_user_story_sin_proyecto(self):
         """
@@ -291,32 +342,12 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["proyecto"]), 1)
-
-    def test_crear_user_story_sin_estado_estimacion(self):
-        """
-        test_crear_user_story_sin_estado_estimacion Prueba crear un User Story sin especificar estado estimacion
-        """
-        print("\nProbando crear un User Story sin especificar estado_estimacion")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "proyecto": 1
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
 
     def test_crear_user_story_max_length_nombre(self):
         """
@@ -331,35 +362,13 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": nombre,
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
             "prioridad": 4,
-            "proyecto": 1,
-            "estado_estimacion": "P"
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["nombre"]), 1)
-
-    def test_crear_user_story_hora_negativa(self):
-        """
-        test_crear_user_story_hora_negativa
-        Prueba crear un User Story asignando una hora negativa
-        """
-        print("\nProbando crear un User Story asignando una hora negativa")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": -20,
-            "prioridad": 4,
-            "proyecto": 1,
-            "estado_estimacion": "P"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
 
     def test_crear_user_story_prioridad_mayor_10(self):
         """
@@ -370,10 +379,8 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
             "prioridad": 14,
-            "proyecto": 1,
-            "estado_estimacion": "P"
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
@@ -389,10 +396,8 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
             "prioridad": -14,
-            "proyecto": 1,
-            "estado_estimacion": "P"
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
@@ -408,55 +413,13 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
             "prioridad": 8,
-            "proyecto": 1000,
-            "estado_estimacion": "P"
+            "proyecto": 1000
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["proyecto"]), 1)
-
-    def test_crear_user_story_estado_estimacion_incorrecto(self):
-        """
-        test_crear_user_story_estado_estimacion_incorrecto
-        Prueba crear un User Story con un estado estimacion que no sea N, P o C
-        """
-        print("\nProbando crear un User Story con un estado estimacion que no sea N, P o C")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "proyecto": 1,
-            "estado_estimacion": "d"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
-
-    def test_crear_user_story_estado_estimacion_max_length_mayor_a_1(self):
-        """
-        test_crear_user_story_estado_estimacion_max_length_mayor_a_1
-        Prueba crear un User Story con un estado estimacion que no tenga solo un caracter
-        """
-        print("\nProbando crear un User Story con un estado estimacion que tenga mas de un caracter")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "proyecto": 1,
-            "estado_estimacion": "holiiii"
-        }
-        response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
 
     def test_modificar_user_story_caso_1(self):
         """
@@ -467,9 +430,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USModificar_caso_1",
             "descripcion": "Modificar caso 1: El US tiene solo un registro",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "estado_estimacion": "N"
+            "prioridad": 8
         }
         user_story_antes = UserStory.objects.get(pk=1)
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
@@ -479,24 +440,20 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["id"], user_story.id)
         self.assertEquals(user_story_request["nombre"], user_story.nombre)
         self.assertEquals(user_story_request["descripcion"], user_story.descripcion)
-        self.assertEquals(user_story_request["horas_estimadas"], user_story.horas_estimadas)
         self.assertEquals(user_story_request["prioridad"], user_story.prioridad)
-        self.assertEquals(user_story_request["estado_estimacion"], user_story.estado_estimacion)
         registro = RegistroUserStory.objects.filter(
             nombre_antes=user_story_antes.nombre,
             descripcion_antes=user_story_antes.descripcion,
-            horas_estimadas_antes=user_story_antes.horas_estimadas,
             prioridad_antes=user_story_antes.prioridad,
             estado_antes=user_story_antes.estado,
             desarrollador_antes=user_story_antes.desarrollador,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
             desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
-            fecha=datetime.date.today(),
+            fecha=date.today(),
             accion="Modificacion",
             autor_id=1
         )
@@ -513,18 +470,14 @@ class UserStoryTestCase(TestCase):
         user_story.update(
             nombre="USTestModificar_caso_2",
             descripcion="Modificar caso 2",
-            horas_estimadas=5,
             prioridad=10,
-            estado_estimacion="C",
             autor=Miembro.objects.get(pk=1),
             registro_handler=RegistroUserStory.modificar_registro
         )
         user_story_request = {
             "nombre": "USModificar_caso_2",
             "descripcion": "Caso 2: Modificacion con varios registros",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "estado_estimacion": "N"
+            "prioridad": 8
         }
         user_story_antes = user_story
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
@@ -534,9 +487,7 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["id"], user_story.id)
         self.assertEquals(user_story_request["nombre"], user_story.nombre)
         self.assertEquals(user_story_request["descripcion"], user_story.descripcion)
-        self.assertEquals(user_story_request["horas_estimadas"], user_story.horas_estimadas)
         self.assertEquals(user_story_request["prioridad"], user_story.prioridad)
-        self.assertEquals(user_story_request["estado_estimacion"], user_story.estado_estimacion)
         registro = RegistroUserStory.objects.filter(
             nombre_antes=user_story_antes.nombre,
             descripcion_antes=user_story_antes.descripcion,
@@ -551,7 +502,7 @@ class UserStoryTestCase(TestCase):
             estado_despues=user_story.estado,
             desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
-            fecha=datetime.date.today(),
+            fecha=date.today(),
             accion="Modificacion",
             autor_id=1
         )
@@ -566,9 +517,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "estado_estimacion": "N"
+            "prioridad": 8
         }
         response = self.client.put("/api/user-stories/1000/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 404)
@@ -587,9 +536,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -607,9 +554,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 409)
@@ -627,9 +572,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 409)
@@ -647,9 +590,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -668,9 +609,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -686,9 +625,7 @@ class UserStoryTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         user_story_request = {
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
@@ -703,31 +640,12 @@ class UserStoryTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         user_story_request = {
             "nombre": "USTest",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "C"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["descripcion"]), 1)
-
-    def test_modificar_user_story_sin_horas_estimadas(self):
-        """
-        test_modificar_user_story_sin_horas_estimadas Prueba modificar un User Story sin especificar horas estimadas
-        """
-        print("\nProbando modificar un User Story sin especificar horas_estimadas")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "prioridad": 4,
-            "estado_estimacion": "P"
-        }
-        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
 
     def test_modificar_user_story_sin_prioridad(self):
         """
@@ -737,32 +655,12 @@ class UserStoryTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         user_story_request = {
             "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "estado_estimacion": "P"
+            "descripcion": "Esto es una descripcion"
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["prioridad"]), 1)
-
-    def test_modificar_user_story_sin_estado_estimacion(self):
-        """
-        test_modificar_user_story_sin_estado_estimacion
-        Prueba modificar un User Story sin especificar estado estimacion
-        """
-        print("\nProbando modificar un User Story sin especificar estado_estimacion")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4
-        }
-        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
 
     def test_modificar_user_story_max_length_nombre(self):
         """
@@ -777,33 +675,12 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": nombre,
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
+            "prioridad": 4
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["nombre"]), 1)
-
-    def test_modificar_user_story_hora_negativa(self):
-        """
-        test_modificar_user_story_hora_negativa
-        Prueba modificar un User Story asignando una hora negativa
-        """
-        print("\nProbando modificar un User Story asignando una hora negativa")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": -20,
-            "prioridad": 4,
-            "estado_estimacion": "P"
-        }
-        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["horas_estimadas"]), 1)
 
     def test_modificar_user_story_prioridad_mayor_10(self):
         """
@@ -814,9 +691,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 14,
-            "estado_estimacion": "P"
+            "prioridad": 14
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
@@ -832,52 +707,12 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": -14,
-            "estado_estimacion": "P"
+            "prioridad": -14
         }
         response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(len(body["errors"]["prioridad"]), 1)
-
-    def test_modificar_user_story_estado_estimacion_incorrecto(self):
-        """
-        test_modificar_user_story_estado_estimacion_incorrecto
-        Prueba modificar un User Story con un estado estimacion que no sea N, P o C
-        """
-        print("\nProbando modificar un User Story con un estado estimacion que no sea N, P o C")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "estado_estimacion": "d"
-        }
-        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
-
-    def test_modificar_user_story_estado_estimacion_max_length_mayor_a_1(self):
-        """
-        test_modificar_user_story_estado_estimacion_max_length_mayor_a_1
-        Prueba modificar un User Story con un estado estimacion que no tenga solo un caracter
-        """
-        print("\nProbando modificar un User Story con un estado estimacion que tenga mas de un caracter")
-        self.client.login(username="testing", password="polijira2021")
-        user_story_request = {
-            "nombre": "USTest",
-            "descripcion": "Esto es una descripcion",
-            "horas_estimadas": 20,
-            "prioridad": 8,
-            "estado_estimacion": "holiiii"
-        }
-        response = self.client.put("/api/user-stories/1/", user_story_request, content_type="application/json")
-        self.assertEquals(response.status_code, 422)
-        body = response.json()
-        self.assertEquals(len(body["errors"]["estado_estimacion"]), 1)
 
     def test_eliminar_user_story(self):
         """
@@ -896,7 +731,7 @@ class UserStoryTestCase(TestCase):
             user_story=user_story,
             accion="Eliminacion",
             autor_id=1,
-            fecha=datetime.date.today()
+            fecha=date.today()
         )
         self.assertEquals(len(registro), 1)
         registro = registro[0]

@@ -35,14 +35,14 @@ class UserStory(models.Model):
         product_backlog (BooleanField): Atributo para saber si el User Story se encuentra en el Product Backlog
     """
     nombre = models.CharField(max_length=255)
-    descripcion = models.TextField()
-    horas_estimadas = models.IntegerField()
-    prioridad = models.IntegerField()
+    descripcion = models.TextField(default="")
+    horas_estimadas = models.IntegerField(null=True)
+    prioridad = models.IntegerField(default=0)
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
     fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
     desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories", null=True)
-    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS)
+    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, null=True)
     product_backlog = models.BooleanField(default=False)
 
     def lanzar(self):
@@ -70,15 +70,13 @@ class UserStory(models.Model):
 
     @staticmethod
     def create(
-        nombre=None, descripcion=None, horas_estimadas=None, prioridad=None, estado_estimacion=None, autor=None,
+        nombre=None, descripcion=None, prioridad=None, autor=None,
         product_backlog_handler=None, registro_handler=None
     ):
         user_story = UserStory.objects.create(
             nombre=nombre,
             descripcion=descripcion,
-            horas_estimadas=horas_estimadas,
             prioridad=prioridad,
-            estado_estimacion=estado_estimacion,
             fecha_creacion=datetime.date.today()
         )
         product_backlog_handler(user_story, autor.proyecto)

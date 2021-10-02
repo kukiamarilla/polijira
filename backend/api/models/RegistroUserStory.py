@@ -64,10 +64,8 @@ class RegistroUserStory(models.Model):
         RegistroUserStory.objects.create(
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             accion="Creacion",
             fecha=datetime.date.today(),
