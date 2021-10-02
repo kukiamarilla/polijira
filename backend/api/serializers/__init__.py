@@ -11,3 +11,4 @@ from .HorarioSerializer import HorarioSerializer
 from .ImportarRolSerializer import ImportarRolSerializer
 from .UserStorySerializer import UserStorySerializer
 from .RegistroUserStorySerializer import RegistroUserStorySerializer
+from .SprintSerializer import SprintSerializer
