@@ -130,6 +130,12 @@ class MiembroViewSet(viewsets.ViewSet):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if miembro.rol.nombre == "Scrum Master":
+                response = {
+                    "message": "No se puede eliminar el miembro Scrum Master",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             miembro.delete()
             response = {"message": "Miembro Eliminado"}
             return Response(response)
@@ -166,6 +172,12 @@ class MiembroViewSet(viewsets.ViewSet):
                         "ver_roles_proyecto",
                         "ver_usuarios"
                     ]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if miembro.rol.nombre == "Scrum Master":
+                response = {
+                    "message": "No se puede modificar el miembro Scrum Master",
+                    "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=request.data["rol"])
