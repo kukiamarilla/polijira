@@ -1,15 +1,14 @@
 from django.db import models
 
-ESTADO = (
+ESTADOS_SPRINT = (
     ("P", "Pendiente"),
     ("A", "Activo"),
     ("F", "Finalizado")
 )
 
-ESTADOS_ESTIMADOS = (
-    ("N", "No estimado"),
-    ("P", "Parcial"),
-    ("C", "Completo")
+ESTADOS_SPRINT_PLANNING = (
+    ("I", "Iniciado"),
+    ("F", "Finalizado")
 )
 
 
@@ -32,14 +31,14 @@ class Sprint(models.Model):
     numero = models.IntegerField()
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    estado = models.CharField(max_length=1, choices=ESTADO, default="P")
+    estado = models.CharField(max_length=1, choices=ESTADOS_SPRINT, default="P")
     capacidad = models.IntegerField(default=0)
-    estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, null=True)
+    estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, null=True)
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints")
 
-    def iniciar(self):
+    def activar(self):
         """
-        iniciar Inicia este Sprint
+        iniciar Activa este Sprint
         """
         self.estado = "A"
         self.save()
@@ -56,3 +55,10 @@ class Sprint(models.Model):
         capacidad Retorna la capacidad de este Sprint
         """
         return self.capacidad
+
+    def iniciar_sprint_planning(self):
+        """
+        iniciar_sprint_planning Inicia el Sprint Planning
+        """
+        self.estado_sprint_planning = "I"
+        self.save()
