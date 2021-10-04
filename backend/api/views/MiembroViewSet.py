@@ -174,6 +174,12 @@ class MiembroViewSet(viewsets.ViewSet):
                     ]
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if miembro_request[0].id == miembro.id:
+                response = {
+                    "message": "No puedes modificar tu rol",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             if miembro.rol.nombre == "Scrum Master":
                 response = {
                     "message": "No se puede modificar el miembro Scrum Master",
