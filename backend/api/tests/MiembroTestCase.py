@@ -241,6 +241,102 @@ class MiembroTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["agregar_miembros", "ver_roles_proyecto", "ver_usuarios"])
 
+    def test_crear_miembro_con_usuario_nulo(self):
+        """
+        test_crear_miembro_con_usuario_nulo Prueba la creación de miembro
+        con usuario nulo
+        """
+        print("\nProbando la creación de miembro con usuario nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["usuario"], ["No especificaste el usuario"])
+
+    def test_crear_miembro_con_rol_nulo(self):
+        """
+        test_crear_miembro_con_rol_nulo Prueba la creación de miembro
+        con rol nulo
+        """
+        print("\nProbando la creación de miembro con rol nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["No especificaste el rol"])
+
+    def test_crear_miembro_con_proyecto_nulo(self):
+        """
+        test_crear_miembro_con_proyecto_nulo Prueba la creación de miembro
+        con proyecto nulo
+        """
+        print("\nProbando la creación de miembro con proyecto nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "rol": 3,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["proyecto"], ["No especificaste el proyecto"])
+
+    def test_crear_miembro_con_horario_nulo(self):
+        """
+        test_crear_miembro_con_horario_nulo Prueba la creación de miembro
+        con horario nulo
+        """
+        print("\nProbando la creación de miembro con horario nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "rol": 3,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["horario"], ["No especificaste el horario"])
+
     def test_crear_miembro_con_rol_scrum_master(self):
         """
         test_crear_miembro_con_rol_scrum_master Prueba crear un miembro con rol Scrum Master
