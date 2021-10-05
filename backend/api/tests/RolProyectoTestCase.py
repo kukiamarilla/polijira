@@ -134,7 +134,6 @@ class RolProyectoTestCase(TestCase):
         print("\nProbando crear un rol de proyecto sin permisos agregados.")
         rol = {
             "nombre": "Rol Proyecto X",
-            "permisos": [],
             "proyecto": 1
         }
         self.client.login(username="testing", password="polijira2021")
@@ -146,6 +145,31 @@ class RolProyectoTestCase(TestCase):
         rol_db = RolProyecto.objects.filter(Q(proyecto=1) and Q(nombre=rol["nombre"]))
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(RolProyecto.objects.count(), roles_cant)
+
+    def test_crear_rol_con_nombre_ya_existente(self):
+        """
+        test_crear_rol_con_nombre_ya_existente Prueba crear un rol con un nombre ya existente
+        """
+        print("\nProbando crear un rol con un nombre ya existente.")
+        rol = {
+            "nombre": "Rol Nuevo",
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 9
+                }
+            ],
+            "proyecto": 1
+        }
+        RolProyecto.objects.create(nombre=rol["nombre"], proyecto=Proyecto.objects.get(pk=rol["proyecto"]))
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/roles-proyecto/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["nombre"], ["Ya existe un rol con ese nombre"])
 
     def test_crear_rol_proyecto_con_permisos_inexistentes(self):
         """
@@ -189,8 +213,7 @@ class RolProyectoTestCase(TestCase):
                 {
                     "id": 1
                 }
-            ],
-            "proyecto": None
+            ]
         }
         self.client.login(username="testing", password="polijira2021")
         roles_cant = RolProyecto.objects.count()
@@ -300,7 +323,6 @@ class RolProyectoTestCase(TestCase):
         rol_body = {
             "nombre": "Tirano"
         }
-
         usuario = Usuario.objects.get(nombre="testing")
         rol = RolProyecto.objects.get(pk=1)
         rol = Miembro.objects.get(usuario=usuario, proyecto=rol.proyecto).rol
@@ -313,6 +335,23 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ['ver_permisos_proyecto',
                           'ver_roles_proyecto', 'modificar_roles_proyecto'])
+
+    def test_modificar_rol_proyecto_con_nombre_ya_existente(self):
+        """
+        test_modificar_rol_proyecto_con_nombre_ya_existente Prueba la modificación de un rol de proyecto con un nombre
+        ya existente
+        """
+        print("\nProbando modificar un rol de proyecto con un nombre ya existente.")
+        rol = {
+            "nombre": "Dictador"
+        }
+        RolProyecto.objects.create(nombre=rol["nombre"], proyecto=Proyecto.objects.get(pk=1))
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.put("/api/roles-proyecto/2/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Ya existe un rol con ese nombre")
+        self.assertEquals(body["error"], "forbidden")
 
     def test_modificar_rol_proyecto_inexistente(self):
         """
