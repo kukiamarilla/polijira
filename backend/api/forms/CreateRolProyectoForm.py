@@ -1,7 +1,7 @@
 from backend.api.models.Proyecto import Proyecto
 from django import forms
 from django.core.exceptions import ValidationError
-from backend.api.models import PermisoProyecto
+from backend.api.models import PermisoProyecto, RolProyecto
 import json
 
 
@@ -21,24 +21,24 @@ class CreateRolProyectoForm(forms.Form):
         ValidationError: Error de Validacion
 
     """
-    nombre = forms.CharField(
-        max_length=255,
-        required=True,
-        error_messages={
-            "required": "No se especificó ningun nombre",
-            "max_length": "El nombre superó el máximo número de caracteres"
-        }
-    )
     permisos = forms.CharField(
         required=True,
         error_messages={
             "required": "Se debe especificar al menos un permiso"
         }
     )
-    proyecto = forms.CharField(
+    proyecto = forms.IntegerField(
         required=True,
         error_messages={
             "required": "Se debe especificar un proyecto"
+        }
+    )
+    nombre = forms.CharField(
+        max_length=255,
+        required=True,
+        error_messages={
+            "required": "No se especificó ningun nombre",
+            "max_length": "El nombre superó el máximo número de caracteres"
         }
     )
 
@@ -71,3 +71,18 @@ class CreateRolProyectoForm(forms.Form):
             return proyecto
         except Proyecto.DoesNotExist:
             raise ValidationError("No se encontró el proyecto especificado")
+
+    def clean_nombre(self):
+        """
+        clean_nombre Valida que el nombre del rol sea unico en el proyecto
+
+        Raises:
+            ValidationError: Error de validacion si no se encuentra el permiso
+        """
+        cleaned_data = super().clean()
+        proyecto = cleaned_data.get("proyecto")
+        nombre = cleaned_data.get("nombre")
+        rol = RolProyecto.objects.filter(nombre=nombre, proyecto_id=proyecto)
+        if len(rol) > 0:
+            raise ValidationError("Ya existe un rol con ese nombre")
+        return nombre
