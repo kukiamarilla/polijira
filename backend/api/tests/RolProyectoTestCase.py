@@ -434,10 +434,13 @@ class RolProyectoTestCase(TestCase):
             "id": 31
         }
         self.client.login(username="testing", password="polijira2021")
+        permisos_cant = RolProyecto.objects.get(pk=1).permisos.count()
         response = self.client.post("/api/roles-proyecto/1/permisos/", permiso, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No puedes modificar tu propio rol")
+        rol = RolProyecto.objects.get(pk=1)
+        self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_agregar_permiso_a_rol_proyecto_inexistente(self):
         """
@@ -525,6 +528,23 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ['ver_permisos_proyecto', 'modificar_roles_proyecto'])
+
+    def test_eliminar_permiso_a_rol_proyecto_propio(self):
+        """
+        test_eliminar_permiso_a_rol_proyecto_propio Prueba eliminar un permiso a un rol de proyecto propio
+        """
+        print("\nProbando eliminar un permiso a un rol de proyecto propio.")
+        permiso = {
+            "id": 22
+        }
+        self.client.login(username="testing", password="polijira2021")
+        permisos_cant = RolProyecto.objects.get(pk=1).permisos.count()
+        response = self.client.delete("/api/roles-proyecto/1/permisos/", permiso, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No puedes modificar tu propio rol")
+        rol = RolProyecto.objects.get(pk=1)
+        self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_eliminar_permiso_a_rol_proyecto_inexistente(self):
         """
