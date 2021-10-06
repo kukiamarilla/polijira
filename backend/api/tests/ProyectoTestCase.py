@@ -26,9 +26,9 @@ class ProyectoTestCase(TestCase):
         """
         self.client = Client()
 
-    def test_listar_todos_los_proyectos(self):
+    def test_listar_todos_los_proyectos_sin_permiso_ver_proyecto(self):
         """
-        test_listar_proyectos Prueba listar todos los proyectos al que es miembro el usuario
+        test_listar_proyectos_sin_permiso_ver_proyecto Prueba listar todos los proyectos al que es miembro el usuario
         """
         print("\nProbando listar todos los proyectos.")
         self.client.login(username="testing", password="polijira2021")
@@ -38,6 +38,17 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         usuario = Usuario.objects.get(pk=1)
         self.assertEquals(Proyecto.objects.filter(miembros__usuario=usuario).count(), len(body))
+
+    def test_listar_todos_los_proyectos(self):
+        """
+        test_listar_todos_los_proyectos Prueba listar todos los proyectos del sistema 
+        """
+        print("\nProbando listar todos los proyectos del sistema.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/proyectos/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(Proyecto.objects.count(), len(body))
 
     def test_obtener_proyecto(self):
         """
@@ -182,6 +193,26 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body["error"], "not_found")
+
+    def test_crear_proyecto_con_nombre_existente(self):
+        """
+        test_crear_proyecto_con_nombre_existente Prueba crear un proyecto con nombre ya existente
+        """
+        print("\nProbando crear un proyecto con nombre existente.")
+        self.client.login(username="testing", password="polijira2021")
+        Proyecto.objects.create(nombre="Proyecto A", fecha_inicio=datetime.date.today(),
+                                fecha_fin=datetime.date.today() + datetime.timedelta(100), scrum_master_id=1)
+        proyecto_body = {
+            "nombre": "Proyecto A",
+            "fecha_inicio": datetime.date.today(),
+            "fecha_fin": datetime.date.today() + datetime.timedelta(5),
+            "scrum_master_id": 1
+        }
+        response = self.client.post("/api/proyectos/", proyecto_body, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["nombre"], ["Ya existe un proyecto con ese nombre"])
 
     def test_crear_proyecto_con_campo_nombre_superando_max_length(self):
         """
@@ -430,6 +461,26 @@ class ProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["permission_required"], ["modificar_proyectos", "ver_proyectos", "ver_usuarios"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_modificar_proyecto_con_nombre_existente(self):
+        """
+        test_modificar_proyecto_con_nombre_existente Prueba modificar un proyecto con nombre ya existente
+        """
+        print("\nProbando modificar un proyecto con nombre existente.")
+        self.client.login(username="testing", password="polijira2021")
+        Proyecto.objects.create(nombre="Proyecto A", fecha_inicio=datetime.date.today(),
+                                fecha_fin=datetime.date.today() + datetime.timedelta(100), scrum_master_id=1)
+        proyecto_body = {
+            "nombre": "Proyecto A",
+            "fecha_inicio": datetime.date.today(),
+            "fecha_fin": datetime.date.today() + datetime.timedelta(5),
+            "scrum_master_id": 1
+        }
+        response = self.client.put("/api/proyectos/1/", proyecto_body, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["message"], "Ya existe un proyecto con ese nombre")
         self.assertEquals(body["error"], "forbidden")
 
     def test_modificar_proyecto_no_existente(self):
