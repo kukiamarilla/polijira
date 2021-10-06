@@ -68,6 +68,18 @@ class RolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["message"], "No existe el rol de proyecto")
 
+    def test_obtener_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_obtener_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba la obtención de un rol de proyecto
+        con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando obtener un rol de proyecto con un miembro que no pertence al proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/roles-proyecto/4/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
     def test_crear_rol_proyecto(self):
         """
         test_crear_rol_proyecto Prueba la creación de un rol de proyecto
@@ -230,6 +242,29 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(RolProyecto.objects.count(), roles_cant)
 
+    def test_crear_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_crear_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba la creación de un rol de proyecto
+        con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando crear un rol de proyecto con un miembro que no pertenece al proyecto.")
+        rol = {
+            "nombre": "Rol Proyecto X",
+            "permisos": [
+                {
+                    "id": 7
+                }
+            ],
+            "proyecto": 2
+        }
+        self.client.login(username="testing", password="polijira2021")
+        roles_cant = RolProyecto.objects.count()
+        response = self.client.post("/api/roles-proyecto/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(RolProyecto.objects.count(), roles_cant)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
     def test_eliminar_rol_proyecto(self):
         """
         test_eliminar_rol_proyecto Prueba la eliminación de un rol de proyecto
@@ -276,6 +311,20 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(body["message"], "No existe el rol de proyecto")
         self.assertEquals(RolProyecto.objects.count(), roles_cant)
 
+    def test_eliminar_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_eliminar_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba la eliminación de un rol de proyecto
+        con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando eliminar un rol de proyecto con un miembro que no pertenece al proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        roles_cant = RolProyecto.objects.count()
+        response = self.client.delete("/api/roles-proyecto/4/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+        self.assertEquals(RolProyecto.objects.count(), roles_cant)
+
     def test_modificar_rol_proyecto(self):
         """
         test_modificar_rol_proyecto Prueba la modificación de un rol de proyecto
@@ -300,7 +349,6 @@ class RolProyectoTestCase(TestCase):
         rol_body = {
             "nombre": "Tirano"
         }
-
         usuario = Usuario.objects.get(nombre="testing")
         rol = RolProyecto.objects.get(pk=1)
         rol = Miembro.objects.get(usuario=usuario, proyecto=rol.proyecto).rol
@@ -327,6 +375,21 @@ class RolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el rol de proyecto")
+
+    def test_modificar_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_modificar_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba la modificación de un rol de
+        proyecto con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando modificar un rol de proyecto con un miembro que no pertenece al proyecto.")
+        rol = {
+            "nombre": "Rolcito"
+        }
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.put("/api/roles-proyecto/4/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
 
     def test_listar_permisos_de_rol_proyecto(self):
         """
@@ -370,6 +433,18 @@ class RolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el rol de proyecto")
+
+    def test_listar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_listar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba el listado de permisos
+        de un rol de proyecto con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando listar permisos de un rol de proyecto con un miembro que no pertenece al proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/roles-proyecto/4/permisos/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
 
     def test_agregar_permiso_a_rol_proyecto(self):
         """
@@ -436,6 +511,24 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         self.assertEquals(body["errors"]["id"], ["No existe el permiso de proyecto en la base de datos"])
         rol = RolProyecto.objects.get(pk=2)
+        self.assertEquals(rol.permisos.count(), permisos_cant)
+
+    def test_agregar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_agregar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba agregar permisos
+        de un rol de proyecto con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando agregar permisos de un rol de proyecto con un miembro que no pertenece al proyecto.")
+        permiso = {
+            "id": 22
+        }
+        self.client.login(username="testing", password="polijira2021")
+        permisos_cant = RolProyecto.objects.get(pk=4).permisos.count()
+        response = self.client.post("/api/roles-proyecto/4/permisos/", permiso, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+        rol = RolProyecto.objects.get(pk=4)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_eliminar_permiso_a_rol_proyecto(self):
@@ -523,6 +616,24 @@ class RolProyectoTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el permiso de proyecto")
+        self.assertEquals(rol.permisos.count(), permisos_cant)
+
+    def test_eliminar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto(self):
+        """
+        test_eliminar_permisos_rol_proyecto_con_miembro_no_perteneciente_al_proyecto Prueba eliminar permisos
+        de un rol de proyecto con un miembro que no pertenece al proyecto
+        """
+        print("\nProbando eliminar permisos de un rol de proyecto con un miembro que no pertenece al proyecto.")
+        permiso = {
+            "id": 31
+        }
+        self.client.login(username="testing", password="polijira2021")
+        permisos_cant = RolProyecto.objects.get(pk=4).permisos.count()
+        response = self.client.delete("/api/roles-proyecto/4/permisos/", permiso, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+        rol = RolProyecto.objects.get(pk=4)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
     def test_crear_rol_proyecto_sin_nombre(self):
