@@ -264,6 +264,19 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ['ver_roles_proyecto', 'eliminar_roles_proyecto'])
 
+    def test_eliminar_rol_proyecto_asignado_a_un_miembro(self):
+        """
+        test_eliminar_rol_proyecto_asignado_a_un_miembro Prueba eliminar un rol de proyecto asignado a un miembro
+        """
+        print("\nProbando eliminar un rol de proyecto asignado a un miembro.")
+        self.client.login(username="testing", password="polijira2021")
+        roles_cant = RolProyecto.objects.count()
+        response = self.client.delete("/api/roles-proyecto/2/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Rol asignado a un miembro de proyecto, no se puede eliminar")
+        self.assertEquals(RolProyecto.objects.count(), roles_cant)
+
     def test_eliminar_rol_proyecto_inexistente(self):
         """
         test_eliminar_rol_proyecto_inexistente Prueba la eliminación de un rol de proyecto inexistente
