@@ -1,3 +1,4 @@
+from backend.api.models.PermisoProyecto import PermisoProyecto
 from backend.api.models.Proyecto import Proyecto
 from backend.api.models import RolProyecto, Miembro, Usuario
 from django.test import TestCase, Client
@@ -420,6 +421,23 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ['ver_permisos_proyecto', 'modificar_roles_proyecto'])
+
+    def test_agregar_permiso_a_rol_proyecto_propio(self):
+        """
+        test_agregar_permiso_a_rol_proyecto_propio Prueba agregar un permiso a un rol de proyecto propio
+        """
+        print("\nProbando agregar un permiso a un rol de proyecto propio.")
+        rol = RolProyecto.objects.get(pk=1)
+        p = PermisoProyecto.objects.get(pk=31)
+        rol.eliminar_permiso(p)
+        permiso = {
+            "id": 31
+        }
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/roles-proyecto/1/permisos/", permiso, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No puedes modificar tu propio rol")
 
     def test_agregar_permiso_a_rol_proyecto_inexistente(self):
         """
