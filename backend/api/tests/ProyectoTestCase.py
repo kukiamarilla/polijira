@@ -41,7 +41,7 @@ class ProyectoTestCase(TestCase):
 
     def test_listar_todos_los_proyectos(self):
         """
-        test_listar_todos_los_proyectos Prueba listar todos los proyectos del sistema 
+        test_listar_todos_los_proyectos Prueba listar todos los proyectos del sistema
         """
         print("\nProbando listar todos los proyectos del sistema.")
         self.client.login(username="testing", password="polijira2021")
