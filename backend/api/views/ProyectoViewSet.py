@@ -143,6 +143,13 @@ class ProyectoViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             scrum_master = Usuario.objects.get(pk=request.data["scrum_master_id"])
+            p = Proyecto.objects.filter(nombre=request.data['nombre'])
+            if len(p) > 0:
+                response = {
+                    "message": "Ya existe un proyecto con ese nombre",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             proyecto.update(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
