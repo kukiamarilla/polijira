@@ -314,6 +314,20 @@ class RolProyectoTestCase(TestCase):
         self.assertEquals(body["permission_required"], ['ver_permisos_proyecto',
                           'ver_roles_proyecto', 'modificar_roles_proyecto'])
 
+    def test_modificar_mi_propio_rol(self):
+        """
+        test_modificar_mi_propio_rol Prueba la modificación de mi propio rol
+        """
+        print("\nProbando la modificación de mi propio rol.")
+        rol = {
+            "nombre": "Dictador"
+        }
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.put("/api/roles-proyecto/1/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No puedes modificar tu propio rol")
+
     def test_modificar_rol_proyecto_inexistente(self):
         """
         test_modificar_rol_proyecto_inexistente Prueba la modificación de un rol de proyecto inexistente
