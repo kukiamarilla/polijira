@@ -5,7 +5,7 @@ from backend.api.models import Miembro, Sprint, Usuario
 from backend.api.serializers import SprintSerializer
 
 
-class SprintPlanningViewSet(viewsets.ViewSet):
+class SprintViewSet(viewsets.ViewSet):
     """
     SprintPlanningViewSet View para el Sprint Planning
 
