@@ -182,6 +182,32 @@ class RolTestCase(TestCase):
         self.assertEquals(len(rol_db), 0)
         self.assertEquals(Rol.objects.count(), roles_cant)
 
+    def test_crear_rol_con_nombre_existente(self):
+        """
+        test_crear_rol_con_nombre_existente Prueba la creación de un rol con nombre ya existente
+        """
+        print("\nProbando crear un rol con nombre ya existente.")
+        rol = {
+            "nombre": "Rol X",
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                }
+            ]
+        }
+        self.client.login(username="testing", password="polijira2021")
+        r = Rol.objects.create(nombre="Rol X")
+        r.agregar_permiso(4)
+        roles_cant = Rol.objects.count()
+        response = self.client.post("/api/roles/", rol, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["errors"]["nombre"], ["Ya existe un rol con ese nombre"])
+        self.assertEquals(Rol.objects.count(), roles_cant)
+
     def test_eliminar_rol(self):
         """
         test_eliminar_rol Prueba la eliminación de un rol de sistema
@@ -584,3 +610,28 @@ class RolTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body["errors"]["nombre"], ["No se especificó ningun nombre"])
+
+    def test_modificar_rol_con_nombre_existente(self):
+        """
+        test_modificar_rol_con_nombre_existente Prueba la modificación de un rol con un nombre ya existente
+        """
+        print("\nProbando modificar un rol con un nombre ya existente.")
+        self.client.login(username="testing", password="polijira2021")
+        rol = {
+            "nombre": "Rol X",
+            "permisos": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                }
+            ]
+        }
+        rol_db = Rol.objects.create(nombre="Rol X")
+        rol_db.agregar_permiso(8)
+        response = self.client.put("/api/roles/" + str(rol_db.id) + "/", rol, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["message"], "Ya existe un rol con ese nombre")
+        self.assertEquals(body["error"], "forbidden")
