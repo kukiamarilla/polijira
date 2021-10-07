@@ -6,5 +6,13 @@
             "proyecto": 1,
             "user_story": 1
         }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 2,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 2
+        }
     }
 ]

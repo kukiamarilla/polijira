@@ -1,0 +1,15 @@
+[
+    {
+        "model": "api.sprint",
+        "pk": 1,
+        "fields": {
+            "numero": 1,
+            "fecha_inicio": "2021-10-04",
+            "fecha_fin": "2021-10-24",
+            "estado": "A",
+            "capacidad": 22,
+            "estado_sprint_planning": "F",
+            "planificador": 1
+        }
+    }
+]

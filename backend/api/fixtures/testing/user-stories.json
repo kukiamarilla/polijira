@@ -14,5 +14,21 @@
             "estado_estimacion": "C",
             "product_backlog": true
         }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 2,
+        "fields": {
+            "nombre": "USTesting2",
+            "descripcion": "Testing2",
+            "horas_estimadas": null,
+            "prioridad": 0,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-09-24",
+            "desarrollador": 2,
+            "estado_estimacion": "C",
+            "product_backlog": true
+        }
     }
 ]
