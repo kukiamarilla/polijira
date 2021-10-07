@@ -20,10 +20,8 @@ class MiembroSprint(models.Model):
         Args:
             usuario (Usuario): Usuario a verificar
         """
-        miembros = MiembroSprint.objects.filter(miembro_proyecto__usuario=usuario)
-        for miembro in miembros:
-            if miembro.proyecto.estado == "A":
-                for sprint in miembro.sprints.all():
-                    if sprint.estado == "A":
-                        return True
+        miembro_sprints = MiembroSprint.objects.filter(miembro_proyecto__usuario=usuario)
+        for miembro_sprint in miembro_sprints:
+            if miembro_sprint.sprint.estado == "A":
+                return True
         return False
