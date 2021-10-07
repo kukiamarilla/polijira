@@ -151,6 +151,12 @@ class RolProyectoViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=pk)
+            if rol.nombre == "Scrum Master":
+                response = {
+                    "message": "No se puede modificar el rol Scrum Master",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol_db = RolProyecto.objects.filter(nombre=request.data["nombre"], proyecto=rol.proyecto)
             if len(rol_db) > 0:
                 response = {
@@ -237,6 +243,12 @@ class RolProyectoViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=pk)
+            if rol.nombre == "Scrum Master":
+                response = {
+                    "message": "No se puede modificar el rol Scrum Master",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             permiso = PermisoProyecto.objects.get(pk=request.data["id"])
             rol.agregar_permiso(permiso)
             serializer = RolProyectoSerializer(rol, many=False)
@@ -275,6 +287,12 @@ class RolProyectoViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = RolProyecto.objects.get(pk=pk)
+            if rol.nombre == "Scrum Master":
+                response = {
+                    "message": "No se puede modificar el rol Scrum Master",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             permiso = PermisoProyecto.objects.get(pk=request.data["id"])
             if rol.permisos.all().count() < 2:
                 response = {"message": "El rol de proyecto no se puede quedar sin permisos"}
