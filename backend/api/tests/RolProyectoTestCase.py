@@ -570,6 +570,29 @@ class RolProyectoTestCase(TestCase):
         rol = RolProyecto.objects.get(pk=1)
         self.assertEquals(rol.permisos.count(), permisos_cant)
 
+    def test_agregar_permiso_a_rol_scrum_master(self):
+        """
+        test_agregar_permiso_a_rol_scrum_master Prueba agregar un permiso a rol Scrum Master
+        """
+        print("\nProbando agregar un permiso a rol Scrum Master.")
+        rol = RolProyecto.objects.get(pk=2)
+        rol.agregar_permiso(PermisoProyecto.objects.get(codigo="ver_permisos_proyecto"))
+        rol.agregar_permiso(PermisoProyecto.objects.get(codigo="modificar_roles_proyecto"))
+        rol = RolProyecto.objects.get(pk=1)
+        rol.eliminar_permiso(31)
+        permiso = {
+            "id": 31
+        }
+        self.client.login(username="user_testing", password="polijira2021")
+        permisos_cant = RolProyecto.objects.get(pk=1).permisos.count()
+        response = self.client.post("/api/roles-proyecto/1/permisos/",
+                                    permiso, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede modificar el rol Scrum Master")
+        self.assertEquals(body["error"], "forbidden")
+        self.assertEquals(RolProyecto.objects.get(pk=1).permisos.count(), permisos_cant)
+
     def test_agregar_permiso_a_rol_proyecto_inexistente(self):
         """
         test_agregar_permiso_a_rol_proyecto_inexistente Prueba agregar un permiso a un rol de proyecto inexistente
