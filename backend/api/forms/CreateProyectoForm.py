@@ -1,6 +1,7 @@
 import datetime
 from django import forms
 from django.core.exceptions import ValidationError
+from backend.api.models import Proyecto
 
 
 class CreateProyectoForm(forms.Form):
@@ -63,3 +64,16 @@ class CreateProyectoForm(forms.Form):
             if fecha_fin < fecha_inicio:
                 raise ValidationError("La fecha de fin no puede ser menor a la de inicio")
         return fecha_fin
+
+    def clean_nombre(self):
+        """
+        clean_nombre Valida que el nombre del proyecto sea unico
+        Raises:
+            ValidationError: Error de validacion si no se encuentra el proyecto
+        """
+        cleaned_data = super().clean()
+        nombre = cleaned_data.get("nombre")
+        proyecto = Proyecto.objects.filter(nombre=nombre)
+        if len(proyecto) > 0:
+            raise ValidationError("Ya existe un proyecto con ese nombre")
+        return nombre

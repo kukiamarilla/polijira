@@ -1,3 +1,4 @@
+from backend.api.models.PermisoProyecto import PermisoProyecto
 from backend.api.models.Proyecto import Proyecto
 from backend.api.models.Usuario import Usuario
 from django.test import TestCase
@@ -239,6 +240,102 @@ class MiembroTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["agregar_miembros", "ver_roles_proyecto", "ver_usuarios"])
+
+    def test_crear_miembro_con_usuario_nulo(self):
+        """
+        test_crear_miembro_con_usuario_nulo Prueba la creación de miembro
+        con usuario nulo
+        """
+        print("\nProbando la creación de miembro con usuario nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "rol": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["usuario"], ["No especificaste el usuario"])
+
+    def test_crear_miembro_con_rol_nulo(self):
+        """
+        test_crear_miembro_con_rol_nulo Prueba la creación de miembro
+        con rol nulo
+        """
+        print("\nProbando la creación de miembro con rol nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "proyecto": 1,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["rol"], ["No especificaste el rol"])
+
+    def test_crear_miembro_con_proyecto_nulo(self):
+        """
+        test_crear_miembro_con_proyecto_nulo Prueba la creación de miembro
+        con proyecto nulo
+        """
+        print("\nProbando la creación de miembro con proyecto nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "rol": 3,
+            "horario": {
+                "lunes": 1,
+                "martes": 2,
+                "miercoles": 3,
+                "jueves": 4,
+                "viernes": 5,
+                "sabado": 2,
+                "domingo": 2
+            }
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["proyecto"], ["No especificaste el proyecto"])
+
+    def test_crear_miembro_con_horario_nulo(self):
+        """
+        test_crear_miembro_con_horario_nulo Prueba la creación de miembro
+        con horario nulo
+        """
+        print("\nProbando la creación de miembro con horario nulo.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "usuario": 3,
+            "rol": 3,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/miembros/", request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["horario"], ["No especificaste el horario"])
 
     def test_crear_miembro_con_rol_scrum_master(self):
         """
@@ -1030,6 +1127,31 @@ class MiembroTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
+    def test_modificar_mi_propio_miembro(self):
+        """
+        test_modificar_mi_propio_miembro Prueba modificar su mismo miembro
+        """
+        print("\nProbando modificar el miembro al que pertenezco.")
+        request_data = {
+            "rol": 3
+        }
+        usuario = Usuario.objects.get(nombre="testing")
+        proyecto = Proyecto.objects.get(pk=1)
+        miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+        miembro.rol = RolProyecto.objects.get(pk=2)
+        permiso = PermisoProyecto.objects.get(codigo="ver_roles_proyecto")
+        miembro.rol.agregar_permiso(permiso)
+        permiso = PermisoProyecto.objects.get(codigo="modificar_miembros")
+        miembro.rol.agregar_permiso(permiso)
+        miembro.save()
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.put("/api/miembros/" + str(miembro.id) + "/",
+                                   request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body["message"], "No puedes modificar tu rol")
+        self.assertEquals(body["error"], "bad_request")
 
     def test_modificar_miembro_scrum_master(self):
         """
