@@ -57,16 +57,16 @@
         "model": "auth.user",
         "pk": 4,
         "fields": {
-            "password": "pbkdf2_sha256$120000$tbdj18HEMbYz$6WXFsKjPrJbk8/sD123sWhuii2KFrEcBcPEQ2gLhZJg=",
+            "password": "pbkdf2_sha256$120000$X6ZGxovtKg9J$JP3IL2FFggIEB2cr4yMmEEhpJdD/f59mWxOJe7nWSM8=",
             "last_login": null,
             "is_superuser": false,
-            "username": "1630623605sebastiancane",
-            "first_name": "Sebastian Cane",
+            "username": "1633597474sebascane",
+            "first_name": "Sebas Cane",
             "last_name": "",
             "email": "canesi12@gmail.com",
             "is_staff": false,
             "is_active": true,
-            "date_joined": "2021-09-02T23:00:05.600",
+            "date_joined": "2021-10-07T09:04:34.290",
             "groups": [],
             "user_permissions": []
         }

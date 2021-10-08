@@ -40,10 +40,10 @@
         "pk": 4,
         "fields": {
             "user": 4,
-            "nombre": "Sebastian Cane",
-            "email": "canesi12@gmail.com ",
+            "nombre": "Sebas Cane",
+            "email": "canesi12@gmail.com",
             "estado": "A",
-            "firebase_uid": "B9aWSbk0MdcmLT4gLzSEsEaKzFm1",
+            "firebase_uid": "euZfUKH8zra8DLcSXnJO8qeR0aC2",
             "rol": 1
         }
     }
