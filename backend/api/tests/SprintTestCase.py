@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from django.test import TestCase, Client
 from backend.api.models import MiembroSprint, SprintBacklog, ProductBacklog, Sprint, Usuario, Miembro, Proyecto, RegistroUserStory, UserStory, PermisoProyecto
 from backend.api.serializers import SprintSerializer
@@ -99,3 +99,33 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["error"], "forbidden")
+
+    def test_crear_sprint(self):
+        """
+        test_crear_sprint Prueba crear un Sprint
+        """
+        print("\nProbando crear un Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": str(date.today()),
+            "fecha_fin": str(date.today() + timedelta(5)),
+            "capacidad": 30,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        body.pop("id")
+        sprint = {
+            "numero": Sprint.objects.filter(proyecto_id=1).count(),
+            "fecha_inicio": request_data.get("fecha_inicio"),
+            "fecha_fin": request_data.get("fecha_fin"),
+            "estado": "P",
+            "capacidad": request_data.get("capacidad"),
+            "estado_sprint_planning": "P",
+            "planificador": None,
+            "proyecto": 1
+        }
+        self.assertDictEqual(body, sprint)
+        sprintBD = Sprint.objects.filter(**body)
+        self.assertEquals(len(sprintBD), 1)
