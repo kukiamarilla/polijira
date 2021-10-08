@@ -9,7 +9,8 @@
             "estado": "A",
             "capacidad": 22,
             "estado_sprint_planning": "F",
-            "planificador": 1
+            "planificador": 1,
+            "proyecto": 1
         }
     }
 ]

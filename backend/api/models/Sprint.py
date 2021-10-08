@@ -8,7 +8,8 @@ ESTADOS_SPRINT = (
 
 ESTADOS_SPRINT_PLANNING = (
     ("I", "Iniciado"),
-    ("F", "Finalizado")
+    ("F", "Finalizado"),
+    ("P", "Pendiente")
 )
 
 
@@ -27,15 +28,40 @@ class Sprint(models.Model):
         capacidad (IntegerField): Capacidad total en horas
         estado_sprint_planning (CharField): Estado actual del Sprint Planning
         planificador (ForeignKey): Miembro que planifica el Sprint
+        proyecto (ForeignKey): Proyecto al que pertenece el Sprint
     """
     numero = models.IntegerField()
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     estado = models.CharField(max_length=1, choices=ESTADOS_SPRINT, default="P")
     capacidad = models.IntegerField(default=0)
-    estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, null=True)
-    planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints")
+    estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, default="P")
+    planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints", null=True)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
+
+    @staticmethod
+    def create(fecha_inicio=None, fecha_fin=None, capacidad=None, proyecto=None):
+        """
+        create Crea un Sprint
+
+        Args:
+            fecha_inicio (str): Fecha estimada de inicio del Sprint
+            fecha_fin (str): Fecha estimada de fin del Sprint
+            capacidad (int): Capacidad total en horas del Sprint
+            proyecto (Proyecto): Proyecto al que pertenece el Sprint
+
+        Returns:
+            Sprint: El Sprint con los parametros enviados
+        """
+        numeracion = Sprint.objects.filter(proyecto=proyecto).count() + 1
+        sprint = Sprint.objects.create(
+            numero=numeracion,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            capacidad=capacidad,
+            proyecto_id=proyecto
+        )
+        return sprint
 
     def activar(self):
         """
@@ -57,9 +83,10 @@ class Sprint(models.Model):
         """
         return self.capacidad
 
-    def iniciar_sprint_planning(self):
+    def iniciar_sprint_planning(self, planificador=None):
         """
         iniciar_sprint_planning Inicia el Sprint Planning
         """
         self.estado_sprint_planning = "I"
+        self.planificador = planificador
         self.save()
