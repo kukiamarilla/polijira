@@ -35,6 +35,7 @@ class Sprint(models.Model):
     capacidad = models.IntegerField(default=0)
     estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, null=True)
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints")
+    proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
 
     def activar(self):
         """
