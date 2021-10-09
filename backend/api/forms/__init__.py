@@ -16,3 +16,4 @@ from .UpdateMiembroForm import UpdateMiembroForm
 from .CreateUserStoryForm import CreateUserStoryForm
 from .UpdateUserStoryForm import UpdateUserStoryForm
 from .CreateSprintForm import CreateSprintForm
+from .UpdateSprintForm import UpdateSprintForm
