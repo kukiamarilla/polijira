@@ -63,6 +63,11 @@ class Sprint(models.Model):
         )
         return sprint
 
+    def update(self, fecha_inicio=None, fecha_fin=None):
+        self.fecha_inicio = fecha_inicio
+        self.fecha_fin = fecha_fin
+        self.save()
+
     def activar(self):
         """
         iniciar Activa este Sprint
@@ -90,3 +95,13 @@ class Sprint(models.Model):
         self.estado_sprint_planning = "I"
         self.planificador = planificador
         self.save()
+
+    @staticmethod
+    def se_solapa(proyecto=None, fecha_inicio=None, fecha_fin=None):
+        sprints = Sprint.objects.filter(proyecto=proyecto).exclude(estado="F")
+        for sprint in sprints:
+            if (fecha_inicio >= str(sprint.fecha_inicio) and fecha_fin <= str(sprint.fecha_fin)) or \
+               (fecha_inicio < str(sprint.fecha_inicio) and fecha_fin >= str(sprint.fecha_inicio)) or \
+               (fecha_inicio <= str(sprint.fecha_fin) and fecha_fin > str(sprint.fecha_fin)):
+                return True
+        return False
