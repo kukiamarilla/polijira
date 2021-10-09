@@ -28,7 +28,7 @@
     },
     {
         "model": "api.miembro",
-        "pk": 3,
+        "pk": 4,
         "fields": {
             "usuario": 1,
             "proyecto": 3,
@@ -37,7 +37,7 @@
     },
     {
         "model": "api.miembro",
-        "pk": 4,
+        "pk": 5,
         "fields": {
             "usuario": 2,
             "proyecto": 3,

@@ -92,7 +92,7 @@ class SprintTestCase(TestCase):
         """
         print("\nProbando obtener los detalles de un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
-        miembro = Miembro.objects.get(pk=1)
+        miembro = Miembro.objects.get(pk=4)
         miembro.usuario_id = 2
         miembro.save()
         response = self.client.get("/api/sprints/1/")
@@ -110,21 +110,21 @@ class SprintTestCase(TestCase):
             "fecha_inicio": str(date.today()),
             "fecha_fin": str(date.today() + timedelta(5)),
             "capacidad": 30,
-            "proyecto": 1
+            "proyecto": 3
         }
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         body = response.json()
         body.pop("id")
         sprint = {
-            "numero": Sprint.objects.filter(proyecto_id=1).count(),
+            "numero": Sprint.objects.filter(proyecto_id=3).count(),
             "fecha_inicio": request_data.get("fecha_inicio"),
             "fecha_fin": request_data.get("fecha_fin"),
             "estado": "P",
             "capacidad": request_data.get("capacidad"),
             "estado_sprint_planning": "P",
             "planificador": None,
-            "proyecto": 1
+            "proyecto": 3
         }
         self.assertDictEqual(body, sprint)
         sprintBD = Sprint.objects.filter(**body)
@@ -136,14 +136,14 @@ class SprintTestCase(TestCase):
         """
         print("\nProbando crear un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
-        miembro = Miembro.objects.get(pk=1)
+        miembro = Miembro.objects.get(pk=4)
         miembro.usuario_id = 2
         miembro.save()
         request_data = {
             "fecha_inicio": str(date.today()),
             "fecha_fin": str(date.today() + timedelta(5)),
             "capacidad": 30,
-            "proyecto": 1
+            "proyecto": 3
         }
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -162,13 +162,85 @@ class SprintTestCase(TestCase):
             "fecha_inicio": str(date.today()),
             "fecha_fin": str(date.today() + timedelta(5)),
             "capacidad": 30,
-            "proyecto": 1
+            "proyecto": 3
         }
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["error"], "forbidden")
         self.assertEquals(body["permission_required"], ["crear_sprints"])
+
+    def test_crear_sprint_fecha_solapada_1(self):
+        """
+        test_crear_sprint_fecha_solapada_1
+        Prueba crear un Sprint pasando una fecha que se encuentra dentro del intervalo de otro Sprint
+        """
+        print("\nProbando crear un Sprint con una fecha que se encuentra dentro del intervalo de otro Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": "2022-11-05",
+            "fecha_fin": "2022-11-23",
+            "capacidad": 30,
+            "proyecto": 3
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_crear_sprint_fecha_solapada_2(self):
+        """
+        test_crear_sprint_fecha_solapada_2
+        Prueba crear un Sprint pasando una fecha que se encuentra en el intervalo de otro Sprint 1
+        """
+        print("\nProbando crear un Sprint con una fecha que se encuentra en el intervalo de otro Sprint 1")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": "2022-11-03",
+            "fecha_fin": "2022-11-24",
+            "capacidad": 30,
+            "proyecto": 3
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_crear_sprint_fecha_solapada_3(self):
+        """
+        test_crear_sprint_fecha_solapada_3
+        Prueba crear un Sprint pasando una fecha que se encuentra en el intervalo de otro Sprint 2
+        """
+        print("\nProbando crear un Sprint con una fecha que se encuentra en el intervalo de otro Sprint 2")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": "2022-11-08",
+            "fecha_fin": "2022-11-24",
+            "capacidad": 30,
+            "proyecto": 3
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_crear_sprint_fecha_solapada_4(self):
+        """
+        test_crear_sprint_fecha_solapada_4
+        Prueba crear un Sprint pasando una fecha que se encuentra en el mismo intervalo de otro Sprint
+        """
+        print("\nProbando crear un Sprint con una fecha que se encuentra en el mismo intervalo de otro Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": "2022-11-04",
+            "fecha_fin": "2022-11-24",
+            "capacidad": 30,
+            "proyecto": 3
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
 
     def test_validar_crear_sprint_all(self):
         """
@@ -205,6 +277,23 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         errors = response.json().get("errors")
         self.assertEquals(len(errors["fecha_fin"]), 1)
+
+    def test_validar_crear_sprint_proyecto(self):
+        """
+        test_validar_crear_sprint_proyecto Prueba validar que el proyecto esté activado al Crear un Sprint
+        """
+        print("\nProbando validar: El estado del Proyecto al Crear Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": date.today(),
+            "fecha_fin": date.today() + timedelta(5),
+            "capacidad": 30,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        errors = response.json().get("errors")
+        self.assertEquals(len(errors["proyecto"]), 1)
 
     def test_modificar_sprint(self):
         """
@@ -246,14 +335,12 @@ class SprintTestCase(TestCase):
         """
         print("\nProbando modificar un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
-        miembro = Miembro.objects.get(pk=1)
+        miembro = Miembro.objects.get(pk=4)
         miembro.usuario_id = 2
         miembro.save()
         request_data = {
             "fecha_inicio": date.today(),
-            "fecha_fin": date.today() + timedelta(5),
-            "capacidad": 30,
-            "proyecto": 1
+            "fecha_fin": date.today() + timedelta(5)
         }
         response = self.client.put("/api/sprints/2/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 403)

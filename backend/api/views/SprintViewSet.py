@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario
+from backend.api.models import Miembro, Sprint, Usuario, Proyecto
 from backend.api.serializers import SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
@@ -65,7 +65,8 @@ class SprintViewSet(viewsets.ViewSet):
         """
         try:
             usuario = Usuario.objects.get(user=request.user)
-            miembro = Miembro.objects.get(usuario=usuario, proyecto=request.data.get("proyecto"))
+            proyecto = Proyecto.objects.get(pk=request.data.get("proyecto"))
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
             if not miembro.tiene_permiso("crear_sprints"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
@@ -73,7 +74,14 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            # TODO Verificarr que el proyecto este en estado Activo
+            if Sprint.se_solapa(
+                proyecto=proyecto, fecha_inicio=request.data.get("fecha_inicio"), fecha_fin=request.data.get("fecha_fin")
+            ):
+                response = {
+                    "message": "La fecha indicada coincide con otro Sprint del Proyecto.",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
             sprint = Sprint.create(
                 fecha_inicio=request.data.get("fecha_inicio"),
                 fecha_fin=request.data.get("fecha_fin"),

@@ -10,7 +10,7 @@
             "capacidad": 22,
             "estado_sprint_planning": "F",
             "planificador": 1,
-            "proyecto": 1
+            "proyecto": 3
         }
     },
     {
@@ -24,7 +24,7 @@
             "capacidad": 12,
             "estado_sprint_planning": "P",
             "planificador": null,
-            "proyecto": 1
+            "proyecto": 3
         }
     }
 ]

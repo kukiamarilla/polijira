@@ -30,12 +30,14 @@ class CreateSprintForm(forms.Form):
 
     def clean_proyecto(self):
         """
-        clean_proyecto Valida si existe el proyecto en la BD
+        clean_proyecto Valida si existe el proyecto en la BD y si está activado
         """
         try:
             cleaned_data = super().clean()
             proyecto = cleaned_data.get("proyecto")
-            Proyecto.objects.get(pk=proyecto)
+            proyecto = Proyecto.objects.get(pk=proyecto)
+            if not proyecto.estado == "A":
+                raise ValidationError("El Proyecto no está activado para realizar esta acción")
             return proyecto
         except Proyecto.DoesNotExist:
             raise ValidationError("No se encontró un Proyecto en la base de datos")
