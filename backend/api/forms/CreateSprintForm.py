@@ -57,6 +57,7 @@ class CreateSprintForm(forms.Form):
         cleaned_data = super().clean()
         fecha_inicio = cleaned_data.get("fecha_inicio")
         fecha_fin = cleaned_data.get("fecha_fin")
-        if fecha_fin < fecha_inicio:
-            raise ValidationError("La fecha de fin no puede ser menor a la de inicio")
+        if fecha_fin and fecha_inicio:
+            if fecha_fin < fecha_inicio:
+                raise ValidationError("La fecha de fin no puede ser menor a la de inicio")
         return fecha_fin

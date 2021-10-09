@@ -129,3 +129,79 @@ class SprintTestCase(TestCase):
         self.assertDictEqual(body, sprint)
         sprintBD = Sprint.objects.filter(**body)
         self.assertEquals(len(sprintBD), 1)
+
+    def test_crear_sprint_sin_ser_miembro(self):
+        """
+        test_crear_sprint_sin_ser_miembro Prueba crear un Sprint sin ser miembro del Proyecto
+        """
+        print("\nProbando crear un Sprint sin ser miembro del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=1)
+        miembro.usuario_id = 2
+        miembro.save()
+        request_data = {
+            "fecha_inicio": str(date.today()),
+            "fecha_fin": str(date.today() + timedelta(5)),
+            "capacidad": 30,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_crear_sprint_sin_permiso_crear_sprints(self):
+        """
+        test_crear_sprint_sin_permiso_crear_sprints
+        Prueba crear un Sprint sin tener permiso de proyecto: Crear Sprints
+        """
+        print("\nProbando crear un Sprint sin tener permiso: Crear Sprints")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="crear_sprints").delete()
+        request_data = {
+            "fecha_inicio": str(date.today()),
+            "fecha_fin": str(date.today() + timedelta(5)),
+            "capacidad": 30,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+        self.assertEquals(body["permission_required"], ["crear_sprints"])
+
+    def test_validar_crear_sprint_all(self):
+        """
+        test_validar_crear_sprint_all Prueba validar los datos enviados al crear un Sprint
+        """
+        print("\nProbando validar: Creacion de Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": "2021-09-01",
+            "fecha_fin": "2021-09-10",
+            "capacidad": -30,
+            "proyecto": 1000
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        errors = response.json().get("errors")
+        self.assertEquals(len(errors["fecha_inicio"]), 1)
+        self.assertEquals(len(errors["capacidad"]), 1)
+        self.assertEquals(len(errors["proyecto"]), 1)
+
+    def test_validar_crear_sprint_fecha_fin(self):
+        """
+        test_validar_crear_sprint_fecha_fin Valida si la fecha de fin es mayor a la fecha de inicio al Crear un Sprint
+        """
+        print("\nProbando validar: La fecha de fin al Crear un Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "fecha_inicio": date.today(),
+            "fecha_fin": date.today() - timedelta(5),
+            "capacidad": 30,
+            "proyecto": 1
+        }
+        response = self.client.post("/api/sprints/", request_data, content_type="application/json")
+        self.assertEquals(response.status_code, 422)
+        errors = response.json().get("errors")
+        self.assertEquals(len(errors["fecha_fin"]), 1)
