@@ -164,6 +164,13 @@ class RolViewSet(viewsets.ViewSet):
                 response = {"message": "No puedes modificar tu propio rol"}
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol = Rol.objects.get(pk=pk)
+            rol_db = Rol.objects.filter(nombre=request.data["nombre"])
+            if len(rol_db) > 0:
+                response = {
+                    "message": "Ya existe un rol con ese nombre",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             rol.nombre = request.data["nombre"]
             rol.save()
             serializer = RolSerializer(rol, many=False)

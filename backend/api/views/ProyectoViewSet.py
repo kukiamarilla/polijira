@@ -146,6 +146,13 @@ class ProyectoViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             scrum_master = Usuario.objects.get(pk=request.data["scrum_master_id"])
+            p = Proyecto.objects.filter(nombre=request.data['nombre'])
+            if len(p) > 0:
+                response = {
+                    "message": "Ya existe un proyecto con ese nombre",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             proyecto.update(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
@@ -223,20 +230,16 @@ class ProyectoViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            # if not usuario_request.tiene_permiso("activar_proyectos"):
-            #     response = {
-            #         "message": "No tiene permiso para realizar esta accion",
-            #         "permission_required": ["activar_proyectos"],
-            #         "error": "forbidden"
-            #     }
-            #     return Response(response, status=status.HTTP_403_FORBIDDEN)
             proyecto = Proyecto.objects.get(pk=pk)
-            if proyecto.scrum_master.id != usuario_request.id:
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not miembro.tiene_permiso("activar_proyecto"):
                 response = {
-                    "message": "Debe ser Scrum Master para realizar esta accion",
+                    "message": "No tiene permiso para realizar esta accion",
+                    "permission_required": ["activar_proyecto"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+
             if proyecto.estado != 'P' and proyecto.estado != "A":
                 response = {
                     "message": "No puedes activar el Proyecto en su estado actual",
