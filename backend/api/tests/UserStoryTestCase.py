@@ -125,7 +125,7 @@ class UserStoryTestCase(TestCase):
             "nombre": "USTest Caso 1",
             "descripcion": "Crear US en caso 1",
             "prioridad": 4,
-            "proyecto": 2
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 200)
@@ -163,7 +163,7 @@ class UserStoryTestCase(TestCase):
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
-            autor_id=2
+            autor_id=1
         )
         self.assertEquals(len(registro), 1)
 
@@ -179,7 +179,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest Caso 2",
             "prioridad": 4,
-            "proyecto": 2
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 200)
@@ -217,7 +217,7 @@ class UserStoryTestCase(TestCase):
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
-            autor_id=2
+            autor_id=1
         )
         self.assertEquals(len(registro), 1)
 
@@ -233,7 +233,7 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest Caso 3",
             "descripcion": "Crear US en caso 3",
-            "proyecto": 2
+            "proyecto": 1
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 200)
@@ -271,7 +271,7 @@ class UserStoryTestCase(TestCase):
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
-            autor_id=2
+            autor_id=1
         )
         self.assertEquals(len(registro), 1)
 

@@ -80,7 +80,7 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando obtener un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.get("/api/usuarios/3/")
+        response = self._client.get("/api/usuarios/33/")
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el usuario")
@@ -121,7 +121,7 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando activar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.post("/api/usuarios/3/activar/")
+        response = self._client.post("/api/usuarios/33/activar/")
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el usuario")
@@ -176,7 +176,7 @@ class UsuarioTestCase(TestCase):
         """
         print("\nProbando desactivar un usuario que no existe.")
         self._client.login(username="testing", password="polijira2021")
-        response = self._client.post("/api/usuarios/3/desactivar/")
+        response = self._client.post("/api/usuarios/33/desactivar/")
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el usuario")
@@ -252,7 +252,7 @@ class UsuarioTestCase(TestCase):
         body = {
             "id": 1
         }
-        response = self._client.post("/api/usuarios/3/asignar_rol/", body)
+        response = self._client.post("/api/usuarios/33/asignar_rol/", body)
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "No existe el usuario")

@@ -1,5 +1,5 @@
 <template>
-  <div style="width: calc(100% - 380px)">
+  <div style="d-flex">
     <div class="box shadow">
       <h2 class="title">Product Backlog</h2>
       <div class="backlog">
@@ -21,7 +21,6 @@ export default {};
   background-color: white;
   border-radius: 20px;
   min-height: 300px;
-  margin: 0 40px;
   padding: 40px;
 }
 .backlog {

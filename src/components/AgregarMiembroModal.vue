@@ -130,7 +130,7 @@ export default {
       me: (state) => state.auth.me,
     }),
     usuariosSelect() {
-      let usuariosSelect = [];
+      let usuariosSelect = {};
       this.usuarios
         .filter((usuario) => {
           return !this.miembros
@@ -143,7 +143,7 @@ export default {
       return usuariosSelect;
     },
     rolesSelect() {
-      let rolesSelect = [];
+      let rolesSelect = {};
       this.roles
         .filter((rol) => rol.nombre != "Scrum Master")
         .forEach((rol) => {
