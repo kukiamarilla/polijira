@@ -54,6 +54,15 @@ class SprintViewSet(viewsets.ViewSet):
 
     @FormValidator(form=CreateSprintForm)
     def create(self, request):
+        """
+        create Servicio para Crear un Sprint
+
+        Args:
+            request (Any): Request que se solicita
+
+        Returns:
+            JSON: Metadatos del Sprint creado
+        """
         try:
             usuario = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(usuario=usuario, proyecto=request.data.get("proyecto"))
