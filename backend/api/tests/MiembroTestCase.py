@@ -54,6 +54,9 @@ class MiembroTestCase(TestCase):
         """
         print("\nProbando obtener un miembro sin ser miembro del proyecto del miembro especificado.")
         self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=3)
+        miembro.usuario_id = 2
+        miembro.save()
         response = self.client.get("/api/miembros/3/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -966,6 +969,9 @@ class MiembroTestCase(TestCase):
         """
         print("\nProbando eliminar un miembro sin ser miembro del proyecto del miembro especificado.")
         self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=3)
+        miembro.usuario_id = 2
+        miembro.save()
         response = self.client.delete("/api/miembros/3/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -1120,6 +1126,9 @@ class MiembroTestCase(TestCase):
         """
         print("\nProbando modificar un miembro sin ser miembro del proyecto del miembro especificado.")
         self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=3)
+        miembro.usuario_id = 2
+        miembro.save()
         request_data = {
             "rol": 3
         }
@@ -1235,6 +1244,9 @@ class MiembroTestCase(TestCase):
         """
         print("\nProbando obtener horario sin ser miembro del proyecto del miembro especificado.")
         self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=3)
+        miembro.usuario_id = 2
+        miembro.save()
         response = self.client.get("/api/miembros/3/horario/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
