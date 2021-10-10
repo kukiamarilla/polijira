@@ -208,6 +208,15 @@ class SprintViewSet(viewsets.ViewSet):
 
     @action(detail=True, methods=["GET"])
     def sprint_backlogs(self, request, pk=None):
+        """
+        sprint_backlogs Servicio para listar los Sprint Backlogs de un Sprint
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key
+        Returns:
+            JSON -> list: Todos los Sprint Backlogs del Sprint
+        """
         try:
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
