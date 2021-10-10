@@ -99,6 +99,16 @@ class SprintViewSet(viewsets.ViewSet):
 
     @FormValidator(form=UpdateSprintForm)
     def update(self, request, pk=None):
+        """
+        update Servicio para modificar un Sprint
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key
+
+        Returns:
+            JSON: Metadatos del Sprint
+        """
         try:
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
