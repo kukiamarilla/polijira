@@ -88,12 +88,11 @@ class Sprint(models.Model):
         """
         return self.capacidad
 
-    def iniciar_sprint_planning(self, planificador=None):
+    def iniciar_sprint_planning(self):
         """
         iniciar_sprint_planning Inicia el Sprint Planning
         """
         self.estado_sprint_planning = "I"
-        self.planificador = planificador
         self.save()
 
     @staticmethod
