@@ -10,7 +10,6 @@ class UserStorySerializer(serializers.ModelSerializer):
     Args:
         serializers (ModelSerializer): Serializer del módulo rest_framework
     """
-    desarrollador = MiembroSerializer(many=False, read_only=True)
 
     class Meta:
         """

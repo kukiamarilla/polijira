@@ -616,3 +616,66 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 409)
         body = response.json()
         self.assertEquals(body["error"], "conflict")
+
+    def test_listar_sprint_backlogs(self):
+        """
+        test_listar_sprint_backlogs Prueba listar los sprint backlogs de un Sprint
+        """
+        print("\nProbando listar los sprint backlogs de un Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/sprints/1/sprint_backlogs/")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        sprint = Sprint.objects.get(pk=1)
+        self.assertEquals(len(body), sprint.sprint_backlogs.count())
+
+    def test_listar_sprint_backlogs_no_existente(self):
+        """
+        test_listar_sprint_backlogs_no_existente Prueba listar los sprint backlogs de un Sprint que no existe en la BD
+        """
+        print("\nProbando listar los sprint backlogs de un Sprint que no existe en la BD")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/sprints/1000/sprint_backlogs/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_listar_sprint_backlogs_sin_ser_miembro(self):
+        """
+        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint backlogs de un Sprint  sin ser miembro del Proyecto
+        """
+        print("\nProbando listar los sprint backlogs de un Sprint sin ser miembro del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=4)
+        miembro.usuario_id = 2
+        miembro.save()
+        response = self.client.get("/api/sprints/1/sprint_backlogs/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_listar_sprint_backlogs_sin_permiso_ver_sprints(self):
+        """
+        test_listar_sprint_backlogs_sin_permiso_ver_sprints
+        Prueba listar los sprint backlogs de un Sprint sin tener permiso de Proyecto: Ver Sprints
+        """
+        print("\nProbando listar los sprint backlogs de un Sprint sin tener permiso de Proyecto: Ver Sprints")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_sprints").delete()
+        response = self.client.get("/api/sprints/1/sprint_backlogs/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_listar_sprint_backlogs_sin_permiso_ver_user_stories(self):
+        """
+        test_listar_sprint_backlogs_sin_permiso_ver_user_stories
+        Prueba listar los sprint backlogs de un Sprint sin tener permiso de Proyecto: Ver User Stories
+        """
+        print("\nProbando listar los sprint backlogs de un Sprint sin tener permiso de Proyecto: Ver User Stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        response = self.client.get("/api/sprints/1/sprint_backlogs/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")

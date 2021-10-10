@@ -1,8 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario, Proyecto
-from backend.api.serializers import SprintSerializer
+from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto
+from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
 
@@ -193,6 +193,34 @@ class SprintViewSet(viewsets.ViewSet):
                 "message": "Sprint Eliminado"
             }
             return Response(response, status=status.HTTP_200_OK)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["GET"])
+    def sprint_backlogs(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not miembro.tiene_permiso("ver_sprints") or \
+               not miembro.tiene_permiso("ver_user_stories"):
+                response = {
+                    "message": "No tienes permiso para realizar esta acción",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            serializer = SprintBacklogSerializer(sprint.sprint_backlogs.all(), many=True)
+            return Response(serializer.data)
         except Sprint.DoesNotExist:
             response = {
                 "message": "No existe el Sprint",
