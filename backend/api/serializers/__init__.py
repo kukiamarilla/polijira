@@ -13,3 +13,4 @@ from .UserStorySerializer import UserStorySerializer
 from .RegistroUserStorySerializer import RegistroUserStorySerializer
 from .SprintSerializer import SprintSerializer
 from .SprintBacklogSerializer import SprintBacklogSerializer
+from .MiembroSprintSerializer import MiembroSprintSerializer
