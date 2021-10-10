@@ -156,3 +156,43 @@ class SprintViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not miembro.tiene_permiso("ver_sprints") or \
+               not miembro.tiene_permiso("eliminar_sprints"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_sprints",
+                        "eliminar_sprints"
+                    ],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not sprint.estado == "P":
+                response = {
+                    "message": "El Sprint no se encuentra en estado Pendiente",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
+            sprint.delete()
+            response = {
+                "message": "Sprint Eliminado"
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)

@@ -526,3 +526,93 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         errors = response.json().get("errors")
         self.assertEquals(len(errors["fecha_inicio"]), 1)
+
+    def test_eliminar_sprint(self):
+        """
+        test_eliminar_sprint Prueba eliminar un Sprint
+        """
+        print("\nProbando eliminar un Sprint")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/sprints/2/")
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        self.assertEquals(body["message"], "Sprint Eliminado")
+        sprint = Sprint.objects.filter(pk=2)
+        self.assertEquals(len(sprint), 0)
+
+    def test_eliminar_sprint_no_existente(self):
+        """
+        test_eliminar_sprint_no_existente Prueba eliminar un Sprint que no existe en la BD
+        """
+        print("\nProbando eliminar un Sprint que no existe")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/sprints/1000/")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body["error"], "not_found")
+
+    def test_eliminar_sprint_sin_ser_miembro(self):
+        """
+        test_eliminar_sprint_sin_ser_miembro Prueba eliminar un Sprint sin ser miembro del Proyecto
+        """
+        print("\nProbando eliminar un Sprint sin ser miembro del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        miembro = Miembro.objects.get(pk=4)
+        miembro.usuario_id = 2
+        miembro.save()
+        response = self.client.delete("/api/sprints/2/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_sprint_sin_permiso_ver_sprints(self):
+        """
+        test_eliminar_sprint_sin_permiso_ver_sprints
+        Prueba elimina un Sprint sin tener el permiso de proyecto: Ver Sprints
+        """
+        print("\nProbando eliminar un Sprint sin tener el permiso de proyecto: Ver Sprints")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_sprints").delete()
+        response = self.client.delete("/api/sprints/2/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_sprints", "eliminar_sprints"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_sprint_sin_permiso_eliminar_sprints(self):
+        """
+        test_eliminar_sprint_sin_permiso_eliminar_sprints
+        Prueba elimina un Sprint sin tener el permiso de proyecto: Eliminar Sprints
+        """
+        print("\nProbando eliminar un Sprint sin tener el permiso de proyecto: Eliminar Sprints")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="eliminar_sprints").delete()
+        response = self.client.delete("/api/sprints/2/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body["permission_required"], ["ver_sprints", "eliminar_sprints"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_eliminar_sprint_activo(self):
+        """
+        test_eliminar_sprint_activo Prueba eliminar un Sprint Activo
+        """
+        print("\nProbando eliminar un Sprint Activo")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.delete("/api/sprints/1/")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
+
+    def test_eliminar_sprint_finalizado(self):
+        """
+        test_eliminar_sprint_finalizado Prueba eliminar un Sprint Finalizado
+        """
+        print("\nProbando eliminar un Sprint Finalizado")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        sprint.finalizar()
+        response = self.client.delete("/api/sprints/1/")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body["error"], "conflict")
