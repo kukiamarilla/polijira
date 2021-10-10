@@ -95,8 +95,8 @@ class MiembroSprintViewSet(viewsets.ViewSet):
         """
         try:
             usuario = Usuario.objects.get(user=request.user)
-            miembro = MiembroSprint.objects.get(pk=pk)
-            miembro_request = Miembro.objects.get(usuario=usuario, proyecto=miembro.sprint.proyecto)
+            miembro_sprint = MiembroSprint.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario, proyecto=miembro_sprint.sprint.proyecto)
             if not (miembro_request.tiene_permiso("ver_sprints") and
                     miembro_request.tiene_permiso("ver_miembros")):
                 response = {
@@ -108,7 +108,13 @@ class MiembroSprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            miembro.delete()
+            if miembro_request.id == miembro_sprint.miembro_proyecto.id:
+                response = {
+                    "message": "No puedes tu propio miembro sprint",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            miembro_sprint.delete()
             response = {"message": "Miembro Sprint eliminado."}
             return Response(response)
         except Miembro.DoesNotExist:

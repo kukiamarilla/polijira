@@ -12,8 +12,5 @@ from .ImportarRolSerializer import ImportarRolSerializer
 from .UserStorySerializer import UserStorySerializer
 from .RegistroUserStorySerializer import RegistroUserStorySerializer
 from .SprintSerializer import SprintSerializer
-<<<<<<< Updated upstream
 from .SprintBacklogSerializer import SprintBacklogSerializer
-=======
 from .MiembroSprintSerializer import MiembroSprintSerializer
->>>>>>> Stashed changes
