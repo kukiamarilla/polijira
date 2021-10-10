@@ -158,6 +158,15 @@ class SprintViewSet(viewsets.ViewSet):
             return Response(response, status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, pk=None):
+        """
+        destroy Servicio para eliminar un Sprint
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key
+        Returns:
+            JSON: Mensaje de Eliminación Exitosa
+        """
         try:
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
