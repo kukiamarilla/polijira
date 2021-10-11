@@ -6,7 +6,7 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
-          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"/> 
+          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"  v-if="hasProyectoPermissions(['crear_user_stories'])"/> 
         </div>
         <Table height="400px" v-if="userStories.length > 0">
           <TableHeader>
