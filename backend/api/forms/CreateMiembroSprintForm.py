@@ -69,13 +69,12 @@ class CreateMiembroSprintForm(forms.Form):
             miembro = Miembro.objects.get(pk=miembro_id)
             sprint = Sprint.objects.get(pk=sprint_id)
             if miembro.proyecto != sprint.proyecto:
-                # el miembro y el sprint no son del mismo proyecto
                 raise ValidationError("El miembro no pertenece a este proyecto")
             return miembro_id
         except Miembro.DoesNotExist:
             raise ValidationError("No se encontro un miembro en la base de datos")
         except Sprint.DoesNotExist:
-            raise ValidationError("El miembro no pertenece a este proyecto:)")
+            raise ValidationError("El miembro no pertenece a este proyecto")
 
     def clean_miembro_sprint(self):
         """

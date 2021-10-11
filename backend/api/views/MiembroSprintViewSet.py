@@ -110,7 +110,7 @@ class MiembroSprintViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             if miembro_request.id == miembro_sprint.miembro_proyecto.id:
                 response = {
-                    "message": "No puedes tu propio miembro sprint",
+                    "message": "No puedes eliminar tu propio miembro sprint",
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
