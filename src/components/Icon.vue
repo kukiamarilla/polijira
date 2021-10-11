@@ -16,6 +16,7 @@ const iconosValidos = [
   "box",
   "card",
   "check",
+  "clock",
   "delete",
   "edit",
   "flag",
