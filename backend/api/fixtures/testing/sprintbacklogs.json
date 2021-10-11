@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "sprint": 1,
-            "user_story": 2
+            "user_story": 1
         }
     }
 ]

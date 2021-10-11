@@ -1,6 +1,8 @@
+from datetime import date
 from django.db.models import manager
 from django.test import TestCase, Client
 from backend.api.models import Permiso, PermisoProyecto, ProductBacklog, Sprint, Miembro, SprintBacklog, UserStory, MiembroSprint
+from backend.api.models.RegistroUserStory import RegistroUserStory
 
 
 class SprintPlanningTestCase(TestCase):
@@ -230,6 +232,7 @@ class SprintPlanningTestCase(TestCase):
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        user_story_antes = UserStory.objects.get(pk=2)
         response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
         self.assertEquals(response.status_code, 200)
         body = response.json()
@@ -243,6 +246,25 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(len(sprint_backlog), 1)
         product_backlog = ProductBacklog.objects.filter(proyecto=sprint.proyecto, user_story=user_story)
         self.assertEquals(len(product_backlog), 0)
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=user_story_antes.nombre,
+            descripcion_antes=user_story_antes.descripcion,
+            horas_estimadas_antes=user_story_antes.horas_estimadas,
+            prioridad_antes=user_story_antes.prioridad,
+            estado_antes=user_story_antes.estado,
+            desarrollador_antes=user_story_antes.desarrollador,
+            nombre_despues=user_story.nombre,
+            descripcion_despues=user_story.descripcion,
+            prioridad_despues=user_story.prioridad,
+            horas_estimadas_despues=user_story.horas_estimadas,
+            estado_despues=user_story.estado,
+            desarrollador_despues=user_story.desarrollador.miembro_proyecto,
+            user_story=user_story,
+            fecha=date.today(),
+            accion="Modificacion",
+            autor_id=4
+        )
+        self.assertEquals(len(registro), 1)
 
     def test_planificar_us_sprint_no_existente(self):
         """
@@ -320,3 +342,26 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
+
+    def test_responder_estimacion(self):
+        """
+        test_responder_estimacion Prueba responder una estimacion de un Sprint Planning
+        """
+        print("\nProbando responder una estimacion de un Sprint Planning")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        sprint.planificar(
+            user_story=UserStory.objects.get(pk=2),
+            horas_estimadas=2,
+            desarrollador=MiembroSprint.objects.get(pk=1),
+            planificador=Miembro.objects.get(pk=4),
+            product_backlog_handler=ProductBacklog.eliminar_user_story,
+            sprint_backlog_handler=SprintBacklog.agregar_user_story,
+            registro_handler=RegistroUserStory.modificar_registro
+        )
+        request_data = {
+            "horas_estimadas": 5
+        }
+        response = self.client.post("/api/sprint-planning/2/responder_estimacion/", request_data)
+        print(response.json())

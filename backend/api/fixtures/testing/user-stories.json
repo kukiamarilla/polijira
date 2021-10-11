@@ -29,7 +29,8 @@
             "fecha_creacion": "2021-09-24",
             "desarrollador": null,
             "estado_estimacion": "C",
-            "product_backlog": true
+            "product_backlog": true,
+            "proyecto": 3
         }
     },
     {
@@ -45,7 +46,8 @@
             "fecha_creacion": "2021-10-10",
             "desarrollador": 2,
             "estado_estimacion": "C",
-            "product_backlog": true
+            "product_backlog": true,
+            "proyecto": 4
         }
     }
 ]

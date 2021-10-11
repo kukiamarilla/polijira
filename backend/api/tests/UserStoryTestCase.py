@@ -244,7 +244,7 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(body["prioridad"], 2)
-        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
