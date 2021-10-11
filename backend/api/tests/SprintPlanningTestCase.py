@@ -1,6 +1,7 @@
 from django.db.models import manager
 from django.test import TestCase, Client
 from backend.api.models import Permiso, PermisoProyecto, ProductBacklog, Sprint, Miembro, SprintBacklog, UserStory, MiembroSprint
+from backend.api.models.Proyecto import Proyecto
 
 
 class SprintPlanningTestCase(TestCase):
@@ -175,7 +176,6 @@ class SprintPlanningTestCase(TestCase):
         test_agregar_miembro_sprint Prueba agregar miembro a un sprint
         """
         print("\nProbando agregar miembro a un sprint.")
-        self.client.login(username="testing", password="polijira2021")
         request_data = {
             "miembro": 4
         }
@@ -194,6 +194,82 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(body["miembro_proyecto"], miembro_sprint[0].miembro_proyecto.id)
         self.assertEquals(body["sprint"], miembro_sprint[0].sprint.id)
 
+    def test_agregar_miembro_sprint_sin_iniciar(self):
+        """
+        test_agregar_miembro_sprint_sin_iniciar Prueba agregar miembro al sprint sin iniciar planificación
+        """
+        print("\nProbando agregar miembro al sprint sin iniciar planificación.")
+        request_data = {
+            "miembro": 4
+        }
+        sprint = Sprint.objects.get(pk=2)
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
+                                    request_data)
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Planificación del sprint no fue iniciada")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_agregar_miembro_sprint_sin_ser_planificador(self):
+        """
+        test_agregar_miembro_sprint_sin_ser_planificador Prueba agregar miembro al sprint sin ser planificador 
+        """
+        print("\nProbando agregar miembro al sprint sin ser planificador.")
+        request_data = {
+            "miembro": 4
+        }
+        sprint = Sprint.objects.get(pk=2)
+        miembro = Miembro.objects.get(pk=5)
+        sprint.iniciar_sprint_planning(miembro)
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
+                                    request_data)
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es el planificador de sprint")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_agregar_miembro_sprint_miembro_no_pertenece_al_proyecto(self):
+        """
+        test_agregar_miembro_sprint_miembro_no_pertenece_al_proyecto Prueba agregar miembro al sprint con miembro no perteneciente al proyecto
+        """
+        print("\nProbando agregar miembro al sprint con miembro no perteneciente al proyecto.")
+        request_data = {
+            "miembro": 1
+        }
+        sprint = Sprint.objects.get(pk=2)
+        miembro = Miembro.objects.get(pk=4)
+        sprint.iniciar_sprint_planning(miembro)
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
+                                    request_data)
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(body["message"], "El miembro no pertenece a este proyecto")
+        self.assertEquals(body["error"], "bad_request")
+
+    def test_agregar_miembro_sprint_con_sprintbacklog(self):
+        """
+        test_agregar_miembro_sprint_con_sprintbacklog Prueba agregar miembro al sprint con sprintbacklog
+        """
+        print("\nProbando agregar miembro al sprint con sprintbacklog.")
+        request_data = {
+            "miembro": 2
+        }
+        sprint = Sprint.objects.get(pk=1)
+        sprint.proyecto = Proyecto.objects.get(pk=1)
+        sprint.save()
+        miembro = Miembro.objects.get(pk=1)
+        sprint.iniciar_sprint_planning(miembro)
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
+                                    request_data)
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(body["message"], "Este paso ya se completó")
+        self.assertEquals(body["error"], "bad_request")
+
     def test_eliminar_miembro_sprint(self):
         """
         test_eliminar_miembro_sprint Prueba eliminar un miembro de un sprint
@@ -211,7 +287,6 @@ class SprintPlanningTestCase(TestCase):
         response = self.client.delete("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
                                       request_data, content_type="application/json")
         body = response.json()
-        print(body)
         self.assertEquals(response.status_code, 200)
         miembro_sprint = MiembroSprint.objects.filter(pk=request_data["miembro_sprint"])
         self.assertEquals(len(miembro_sprint), 0)
