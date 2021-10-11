@@ -18,3 +18,4 @@ from .UpdateUserStoryForm import UpdateUserStoryForm
 from .CreateSprintForm import CreateSprintForm
 from .UpdateSprintForm import UpdateSprintForm
 from .CreateMiembroSprintForm import CreateMiembroSprintForm
+from .PlanificarUserStoryForm import PlanificarUserStoryForm

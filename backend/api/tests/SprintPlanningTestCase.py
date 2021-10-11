@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from backend.api.models import PermisoProyecto, Sprint, Miembro
+from backend.api.models import Permiso, PermisoProyecto, ProductBacklog, Sprint, Miembro, SprintBacklog, UserStory
 
 
 class SprintPlanningTestCase(TestCase):
@@ -47,6 +47,8 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(len(sprint), 1)
         sprint = sprint[0]
         self.assertEquals(sprint.estado_sprint_planning, "I")
+        self.assertNotEqual(sprint.planificador, None)
+        self.assertEquals(sprint.planificador.id, 4)
 
     def test_iniciar_sprint_planning_no_existente(self):
         """
@@ -75,6 +77,45 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
 
+    def test_iniciar_sprint_planning_sin_permiso_ver_user_stories(self):
+        """
+        test_iniciar_sprint_planning_sin_permiso_ver_user_stories
+        Prueba Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver User Stories
+        """
+        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver User Stories")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_iniciar_sprint_planning_sin_permiso_ver_proyectos(self):
+        """
+        test_iniciar_sprint_planning_sin_permiso_ver_proyectos
+        Prueba Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos
+        """
+        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos")
+        self.client.login(username="testing", password="polijira2021")
+        Permiso.objects.get(codigo="ver_proyectos").delete()
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_iniciar_sprint_planning_sin_permiso_ver_miembros(self):
+        """
+        test_iniciar_sprint_planning_sin_permiso_ver_miembros
+        Prueba Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver Miembros
+        """
+        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver Miembros")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_miembros").delete()
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("error"), "forbidden")
+
     def test_iniciar_sprint_planning_sin_permiso_ver_sprints(self):
         """
         test_iniciar_sprint_planning_sin_permiso_ver_sprints
@@ -88,15 +129,69 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
 
-    def test_iniciar_sprint_planning_sin_permiso_iniciar_sprint_planning(self):
+    def test_iniciar_sprint_planning_sin_permiso_planear_sprint(self):
         """
-        test_iniciar_sprint_planning_sin_permiso_iniciar_sprint_planning
-        Prueba Iniciar un Sprint Planning sin tener el permiso de Proyecto: Iniciar Sprint Planning
+        test_iniciar_sprint_planning_sin_permiso_planear_sprint_planning
+        Prueba Iniciar un Sprint Planning sin tener el permiso de Proyecto: Planear Sprint
         """
-        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Iniciar Sprint Planning")
+        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Planear Sprint")
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="planear_sprints").delete()
         response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
+
+    def test_iniciar_sprint_planning_a_sprint_activo(self):
+        """
+        test_iniciar_sprint_planning_a_sprint_activo
+        Prueba Iniciar un Sprint Planning a un Sprint Activo
+        """
+        print("\nProbando Iniciar un Sprint Planning a un Sprint Activo")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/1/iniciar/")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body.get("error"), "conflict")
+
+    def test_iniciar_sprint_planning_a_sprint_planning_no_pendiente(self):
+        """
+        test_iniciar_sprint_planning_a_sprint_planning_no_pendiente
+        Prueba Iniciar un Sprint Planning que no tiene estado Pendiente
+        """
+        print("\nProbando Iniciar un Sprint Planning que no tiene estado Pendiente")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = "I"
+        sprint.save()
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body.get("error"), "conflict")
+
+    def test_planificar_us(self):
+        """
+        test_planificar_us Prueba Planificar un User Story
+        """
+        print("\nProbando Planificar un User Story")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 5
+        }
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        sprint = Sprint.objects.filter(**body)
+        self.assertEquals(len(sprint), 1)
+        sprint = sprint[0]
+        user_story = UserStory.objects.get(pk=2)
+        self.assertEquals(user_story.horas_estimadas, request_data.get("horas_estimadas"))
+        self.assertEquals(user_story.desarrollador.miembro_proyecto_id, request_data.get("desarrollador"))
+        sprint_backlog = SprintBacklog.objects.filter(sprint=sprint, user_story=user_story)
+        self.assertEquals(len(sprint_backlog), 1)
+        product_backlog = ProductBacklog.objects.filter(proyecto=sprint.proyecto, user_story=user_story)
+        self.assertEquals(len(product_backlog), 0)

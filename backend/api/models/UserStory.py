@@ -42,7 +42,8 @@ class UserStory(models.Model):
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
     fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
-    desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories", null=True)
+    desarrollador = models.ForeignKey("MiembroSprint", on_delete=models.CASCADE,
+                                      related_name="user_stories", null=True)
     estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
 
