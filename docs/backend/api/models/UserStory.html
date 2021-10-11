@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>UserStory.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>UserStory.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="n">ESTADOS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Pendiente&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;Release&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;Cancelado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;Eliminado&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">ESTADOS_ESTIMADOS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;No estimado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Parcial&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;Completo&quot;</span><span class="p">)</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>UserStory Modela la clase User Story</p>
+<p>Args:
+    models (Model): Modelo de Django</p>
+<p>Atributes:
+    nombre (CharField): Nombre del User Story
+    descripcion (TextField): Descripcion del User Story
+    horas_estimadas (IntegerField): Hora estimada del User Story
+    prioridad (IntegerField): Prioridad del User Story
+    estado (CharField): Estado actual de User Story
+    fecha_release (DateField): Fecha en que se libera el User Story
+    fecha_creacion (DateField): Fecha en que se crea el User Story
+    desarrollador (ForeignKey): Miembro desarrollador del User Story
+    estado_estimacion (CharField): Estado que se estima que tenga el User Story
+    product_backlog (BooleanField): Atributo para saber si el User Story se encuentra en el Product Backlog</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">UserStory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">nombre</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">horas_estimadas</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">prioridad</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">estado</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+    <span class="n">fecha_release</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fecha_creacion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">desarrollador</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Miembro&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;user_stories&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">estado_estimacion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_ESTIMADOS</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">product_backlog</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Proyecto&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;user_stories&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>lanzar Libera este User Story</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">lanzar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;R&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_release</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>cancelar Cancela este User Story</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cancelar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>eliminar Realiza un borrado lógico de este User Story</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">eliminar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;E&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">product_backlog</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="n">proyecto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prioridad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">product_backlog_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">registro_handler</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="n">user_story</span> <span class="o">=</span> <span class="n">UserStory</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="n">proyecto_id</span><span class="o">=</span><span class="n">proyecto</span><span class="p">,</span>
+            <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span>
+            <span class="n">prioridad</span><span class="o">=</span><span class="n">prioridad</span><span class="p">,</span>
+            <span class="n">fecha_creacion</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">product_backlog_handler</span><span class="p">(</span><span class="n">user_story</span><span class="p">,</span> <span class="n">autor</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="n">registro_handler</span><span class="p">(</span><span class="n">user_story</span><span class="p">,</span> <span class="n">autor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user_story</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">horas_estimadas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prioridad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estado_estimacion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">registro_handler</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span> <span class="k">if</span> <span class="n">nombre</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descripcion</span> <span class="o">=</span> <span class="n">descripcion</span> <span class="k">if</span> <span class="n">descripcion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">descripcion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horas_estimadas</span> <span class="o">=</span> <span class="n">horas_estimadas</span> <span class="k">if</span> <span class="n">horas_estimadas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">horas_estimadas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prioridad</span> <span class="o">=</span> <span class="n">prioridad</span> <span class="k">if</span> <span class="n">prioridad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">prioridad</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_estimacion</span> <span class="o">=</span> <span class="n">estado_estimacion</span> <span class="k">if</span> <span class="n">estado_estimacion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_estimacion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">registro_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">registro_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">product_backlog_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eliminar</span><span class="p">()</span>
+        <span class="n">registro_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autor</span><span class="p">)</span>
+        <span class="n">product_backlog_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">asignar_desarrollador</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desarrollador</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desarrollador</span> <span class="o">=</span> <span class="n">desarrollador</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

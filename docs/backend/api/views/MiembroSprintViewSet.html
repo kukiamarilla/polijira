@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>MiembroSprintViewSet.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>MiembroSprintViewSet.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="p">,</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Miembro</span><span class="p">,</span> <span class="n">Sprint</span><span class="p">,</span> <span class="n">MiembroSprint</span>
+<span class="kn">from</span> <span class="nn">backend.api.serializers</span> <span class="kn">import</span> <span class="n">MiembroSprintSerializer</span>
+<span class="kn">from</span> <span class="nn">backend.api.forms</span> <span class="kn">import</span> <span class="n">CreateMiembroSprintForm</span>
+<span class="kn">from</span> <span class="nn">backend.api.decorators</span> <span class="kn">import</span> <span class="n">FormValidator</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>MiembroSprintViewSet View para el modelo MiembroSprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">MiembroSprintViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ViewSet</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>retrieve Obtiene un miembro del sprint especificado</p>
+<p>Args:
+    request (Any): request
+    pk (integer, optional): primary key. Defaults to None.</p>
+<p>Returns:
+    JSON: Miembro del Sprint especificado</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">miembro_sprint</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">miembro_sprint</span><span class="o">.</span><span class="n">sprint</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">sprint</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">miembro</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta acción&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">MiembroSprintSerializer</span><span class="p">(</span><span class="n">miembro_sprint</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No existe el Miembro en el Sprint especificado&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Usted no es miembro de este proyecto&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>create Crea un miembro sprint</p>
+<p>Args:
+    request (Any): request</p>
+<p>Returns:
+    JSON: Miembro de sprint creado</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
+    <span class="nd">@FormValidator</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">CreateMiembroSprintForm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;sprint&quot;</span><span class="p">])</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">sprint</span><span class="o">.</span><span class="n">proyecto</span>
+            <span class="n">miembro_request</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">proyecto</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">miembro_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">miembro_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_miembros&quot;</span><span class="p">)):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta acción&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;ver_sprints&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ver_miembros&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;miembro&quot;</span><span class="p">])</span>
+            <span class="n">miembro_sprint</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">miembro_proyecto</span><span class="o">=</span><span class="n">miembro</span><span class="p">,</span> <span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">)</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="n">MiembroSprintSerializer</span><span class="p">(</span><span class="n">miembro_sprint</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Usted no es miembro de este proyecto&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>destroy Elimina un miembro sprint</p>
+<p>Args:
+    request (Any): request
+    pk (integer, opcional): Primary Key del miembro del sprint a eliminar</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">miembro_sprint</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">miembro_request</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">miembro_sprint</span><span class="o">.</span><span class="n">sprint</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">miembro_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">miembro_request</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_miembros&quot;</span><span class="p">)):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta acción&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;permission_required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;ver_sprints&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ver_miembros&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">miembro_request</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">miembro_sprint</span><span class="o">.</span><span class="n">miembro_proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No puedes eliminar tu propio miembro sprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;bad_request&quot;</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+            <span class="n">miembro_sprint</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Miembro Sprint eliminado.&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Usted no es miembro de este proyecto&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Miembro Sprint no existe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

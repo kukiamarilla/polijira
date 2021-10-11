@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Sprint.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>Sprint.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="n">ESTADOS_SPRINT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Pendiente&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;Activo&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;Finalizado&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">ESTADOS_SPRINT_PLANNING</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;Iniciado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;Finalizado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Pendiente&quot;</span><span class="p">)</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Sprint Modela un Sprint</p>
+<p>Args:
+    models (Model): Modelo del módulo django</p>
+<p>Atributes:
+    numero (IntegerField): Numeración automática
+    fecha_inicio (DateField): Fecha estimada de inicio
+    fecha_fin (DateField): Fecha estimada de fin
+    estado (CharField): Estado actual que tiene el Sprint
+    capacidad (IntegerField): Capacidad total en horas
+    estado_sprint_planning (CharField): Estado actual del Sprint Planning
+    planificador (ForeignKey): Miembro que planifica el Sprint
+    proyecto (ForeignKey): Proyecto al que pertenece el Sprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Sprint</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">numero</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">estado</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_SPRINT</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+    <span class="n">estado_sprint_planning</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_SPRINT_PLANNING</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+    <span class="n">planificador</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Miembro&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sprints&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Proyecto&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sprints&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>create Crea un Sprint</p>
+<p>Args:
+    fecha_inicio (str): Fecha estimada de inicio del Sprint
+    fecha_fin (str): Fecha estimada de fin del Sprint
+    capacidad (int): Capacidad total en horas del Sprint
+    proyecto (Proyecto): Proyecto al que pertenece el Sprint</p>
+<p>Returns:
+    Sprint: El Sprint con los parametros enviados</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">fecha_inicio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">numeracion</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">proyecto</span><span class="o">=</span><span class="n">proyecto</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">numero</span><span class="o">=</span><span class="n">numeracion</span><span class="p">,</span>
+            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">fecha_inicio</span><span class="p">,</span>
+            <span class="n">fecha_fin</span><span class="o">=</span><span class="n">fecha_fin</span><span class="p">,</span>
+            <span class="n">proyecto_id</span><span class="o">=</span><span class="n">proyecto</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">sprint</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">fecha_inicio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">fecha_fin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>iniciar Activa este Sprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">activar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>finalizar Finaliza este Srpint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">finalizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="s2">&quot;F&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>iniciar_sprint_planning Inicia el Sprint Planning</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">iniciar_sprint_planning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">estado_sprint_planning</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">se_solapa</span><span class="p">(</span><span class="n">proyecto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">sprints</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">proyecto</span><span class="o">=</span><span class="n">proyecto</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">estado</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sprint</span> <span class="ow">in</span> <span class="n">sprints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">fecha_inicio</span> <span class="o">&gt;=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fecha_fin</span> <span class="o">&lt;=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">))</span> <span class="ow">or</span> \
+               <span class="p">(</span><span class="n">fecha_inicio</span> <span class="o">&lt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fecha_fin</span> <span class="o">&gt;=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">))</span> <span class="ow">or</span> \
+               <span class="p">(</span><span class="n">fecha_inicio</span> <span class="o">&lt;=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fecha_fin</span> <span class="o">&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">sprint</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
