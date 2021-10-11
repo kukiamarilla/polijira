@@ -6,6 +6,7 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
+          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"/> 
         </div>
         <Table height="400px" v-if="userStories.length > 0">
           <TableHeader>
@@ -37,6 +38,34 @@
                       hover="#F25656"
                     />
                   </a>
+                  <a
+                    href="#"
+                    @click.prevent="modificarUserStory(userStory)"
+                    v-if="
+                      hasProyectoPermissions(['modificar_user_stories'])
+                    "
+                  >
+                    <Icon
+                      icono="edit"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+                  <a
+                    href="#"
+                    @click.prevent="eliminarUserStory(userStory)"
+                    v-if="
+                      hasProyectoPermissions(['eliminar_user_stories'])
+                    "
+                  >
+                    <Icon
+                      icono="delete"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
                 </div>
               </Td>
             </Tr>
@@ -56,6 +85,12 @@
       v-if="hasProyectoPermissions(['crear_user_stories'])"
       @input="load"
     />
+    <ModificarUserStory
+      v-model="modificarUserStoryModal"
+      :userStory="userStoryUpdating" 
+      v-if="hasProyectoPermissions(['modificar_user_stories'])"
+      @input="load"
+    />
   </div>
 </template>
 
@@ -70,6 +105,8 @@ import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
 import UserStory from "@/components/UserStory";
 import CrearUserStory from "@/components/CrearUserStory";
+import ModificarUserStory from "@/components/ModificarUserStory";
+import Boton from "@/components/Boton";
 
 export default {
   components: {
@@ -82,8 +119,10 @@ export default {
     Th,
     Tr,
     Td,
+    Boton,
     UserStory,
     CrearUserStory,
+    ModificarUserStory,
   },
   created() {},
   mounted() {
@@ -123,7 +162,9 @@ export default {
       roles: [],
       userStories: [],
       userStory: null,
+      userStoryUpdating: null,
       crearUserStoryModal: false,
+      modificarUserStoryModal: false,
     };
   },
   methods: {
@@ -152,6 +193,18 @@ export default {
     },
     verUserStory(userStory) {
       this.userStory = userStory;
+    },
+    modificarUserStory(userStory) {
+      this.userStoryUpdating = userStory;
+      this.modificarUserStoryModal = true;
+    },
+    eliminarUserStory(userStory) {
+      const conf = confirm("¿Está seguro que desea eliminar este User Story?")
+      if(!conf) return
+      userStoryService.delete(userStory.id).then(() => {
+        Alert.success("User Story eliminado exitosamente");
+        this.load();
+      })
     },
   },
 };

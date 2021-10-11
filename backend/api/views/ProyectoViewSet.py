@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario
+from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario, Horario
 from backend.api.serializers import \
     ProyectoSerializer, \
     PermisoProyectoSerializer, \
@@ -101,6 +101,17 @@ class ProyectoViewSet(viewsets.ViewSet):
                 roles_handler=RolProyecto.from_plantilla,
                 scrum_master_handler=Miembro.asignar_scrum_master
             )
+            miembro = Miembro.objects.get(rol__nombre="Scrum Master", proyecto=proyecto)
+            horario = Horario.objects.create(
+                lunes=0,
+                martes=0,
+                miercoles=0,
+                jueves=0,
+                viernes=0,
+                sabado=0,
+                domingo=0,
+            )
+            horario.asignar_horario(miembro)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
@@ -146,13 +157,15 @@ class ProyectoViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             scrum_master = Usuario.objects.get(pk=request.data["scrum_master_id"])
-            p = Proyecto.objects.filter(nombre=request.data['nombre'])
+            p = Proyecto.objects.filter(~Q(id=pk), nombre=request.data['nombre'])
             if len(p) > 0:
                 response = {
                     "message": "Ya existe un proyecto con ese nombre",
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            miembro = Miembro.objects.get(rol__nombre="Scrum Master", proyecto=proyecto)
+            miembro.horario.delete()
             proyecto.update(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
@@ -160,6 +173,17 @@ class ProyectoViewSet(viewsets.ViewSet):
                 scrum_master=scrum_master,
                 scrum_master_handler=Miembro.actualizar_scrum_master
             )
+            miembro = Miembro.objects.get(usuario=scrum_master, proyecto=proyecto)
+            horario = Horario.objects.create(
+                lunes=0,
+                martes=0,
+                miercoles=0,
+                jueves=0,
+                viernes=0,
+                sabado=0,
+                domingo=0,
+            )
+            horario.asignar_horario(miembro)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:

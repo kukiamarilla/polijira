@@ -19,16 +19,18 @@
             <Tr v-for="(userStory, idx) in userStories" :key="idx">
               <Td width="10%">{{ userStory.id }}</Td>
               <Td width="15%">{{ userStory.nombre }}</Td>
-              <Td width="45%"><span class="cutted-text">{{ userStory.descripcion }}</span></Td>
-              <Td width="10%">{{ userStory.prioridad}}</Td>
+              <Td width="45%"
+                ><span class="cutted-text">{{
+                  userStory.descripcion
+                }}</span></Td
+              >
+              <Td width="10%">{{ userStory.prioridad }}</Td>
               <Td width="20%">
                 <div class="acciones" style="display: flex">
                   <a
                     href="#"
                     @click.prevent="verUserStory(userStory)"
-                    v-if="
-                      hasProyectoPermissions(['ver_user_stories'])
-                    "
+                    v-if="hasProyectoPermissions(['ver_user_stories'])"
                   >
                     <Icon
                       icono="watch"
@@ -43,12 +45,13 @@
           </TableBody>
         </Table>
         <div class="empty" v-else>
-            <h2>Aun no hay User Stories en el Proyecto</h2>
+          <h2>Aun no hay User Stories en el Proyecto</h2>
         </div>
       </div>
     </div>
     <UserStory
-      v-model="verUserStoryModal"
+      v-model="verModalUserStory"
+      :userStory="userStory"
       @input="load"
       v-if="hasProyectoPermissions(['ver_user_stories'])"
     />
@@ -115,32 +118,12 @@ export default {
         nombre: "",
       },
       roles: [],
-      userStories: [
-        {
-          id: 1,
-          nombre: "Lorem Ipsum",
-          descripcion: "Esta descripción es tan pero tan pero tan larga que no hay manera en el universo de que quepa en la celda de una tabla, por lo tanto es estrictamente necesario cortar el texto.",
-          prioridad: 4
-        },
-        {
-          id: 2,
-          nombre: "Lorem Ipsum",
-          descripcion: "Esta descripción es tan pero tan pero tan larga que no hay manera en el universo de que quepa en la celda de una tabla, por lo tanto es estrictamente necesario cortar el texto.",
-          prioridad: 4
-        },
-        {
-          id: 3,
-          nombre: "Lorem Ipsum",
-          descripcion: "Esta descripción es tan pero tan pero tan larga que no hay manera en el universo de que quepa en la celda de una tabla, por lo tanto es estrictamente necesario cortar el texto.",
-          prioridad: 4
-        }
-      ],
+      userStories: [],
       userStory: {
         id: 0,
         nombre: "",
-
       },
-      verUserStoryModal: false,
+      verModalUserStory: false,
     };
   },
   methods: {
@@ -148,10 +131,10 @@ export default {
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
       });
-      // userStoryService.list(this.$route.params["id"]).then((userStories) => {
-      //     this.userStories = userStories;
-      // });
-    } ,
+      userStoryService.list(this.$route.params["id"]).then((userStories) => {
+        this.userStories = userStories;
+      });
+    },
     asignarRol(userStory) {
       let actualizado = {
         usuario: userStory.usuario.id,
@@ -168,18 +151,8 @@ export default {
         });
     },
     verUserStory(userStory) {
-      let confimation = confirm(
-        "Estás seguro que desea ver este userStory?"
-      );
-      if (confimation)
-        userStoryService.delete(userStory.id).then(() => {
-          this.load();
-          Alert.success("Se ha eliminado el userStory");
-        });
-    },
-    modificarHorario(userStory) {
+      this.verModalUserStory = true;
       this.userStory = userStory;
-      this.modificarUserStoryModal = true;
     },
   },
 };
@@ -205,15 +178,15 @@ export default {
   margin-left: 16px;
 }
 .empty {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    h2 {
-        color: var(--gray-4);
-    }
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h2 {
+    color: var(--gray-4);
+  }
 }
-span.cutted-text{
+span.cutted-text {
   width: 80%;
   display: block;
   text-overflow: ellipsis;
