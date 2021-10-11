@@ -7,3 +7,4 @@ from .PlantillaRolProyectoViewSet import PlantillaRolProyectoViewSet
 from .RolProyectoViewSet import RolProyectoViewSet
 from .MiembroViewSet import MiembroViewSet
 from .HorarioViewSet import HorarioViewSet
+from .UserStoryViewSet import UserStoryViewSet

@@ -1,13 +1,15 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
+from backend.api.models import Miembro, Proyecto, RolProyecto, UserStory, Usuario
 from backend.api.serializers import \
     ProyectoSerializer, \
     PermisoProyectoSerializer, \
     RolProyectoSerializer, \
     MiembroSerializer, \
-    ImportarRolSerializer
+    ImportarRolSerializer, \
+    UserStorySerializer
+
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
@@ -453,6 +455,38 @@ class ProyectoViewSet(viewsets.ViewSet):
         except Miembro.DoesNotExist:
             response = {"message": "Usted no es miembro de este proyecto"}
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["GET"])
+    def user_stories(self, request, pk=None):
+        """
+        user_stories Lista todos los User Stories de este Proyecto
+
+        Args:
+            request (Any): Request del Usuario
+            pk (int, optional): Primary Key del Proyecto. Defaults to None.
+
+        Returns:
+            list(JSON): Lista de todos los User Story de este Proyecto en formato JSON
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
+            if not miembro_request.tiene_permiso("ver_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            user_stories = UserStory.objects.filter(product_backlogs__proyecto_id=pk)
+            serializer = UserStorySerializer(user_stories, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "No existe el Proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
 
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
