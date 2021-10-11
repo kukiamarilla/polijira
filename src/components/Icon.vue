@@ -12,20 +12,23 @@
 
 <script>
 const iconosValidos = [
+  "add",
+  "box",
+  "card",
+  "check",
+  "delete",
+  "edit",
+  "flag",
   "home",
   "key",
   "logout",
-  "team",
-  "add",
   "minus",
   "options",
-  "watch",
-  "delete",
-  "check",
-  "edit",
-  "success",
-  "warning",
   "protected",
+  "success",
+  "team",
+  "warning",
+  "watch",
 ];
 
 export default {
