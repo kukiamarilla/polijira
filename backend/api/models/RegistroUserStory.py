@@ -87,7 +87,8 @@ class RegistroUserStory(models.Model):
             horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador.miembro_proyecto if user_story.desarrollador is not None else None,
+            desarrollador_despues=user_story.desarrollador.miembro_proyecto
+            if user_story.desarrollador is not None else None,
             user_story=user_story,
             accion="Modificacion",
             fecha=datetime.date.today(),
@@ -102,7 +103,8 @@ class RegistroUserStory(models.Model):
             horas_estimadas_antes=user_story.horas_estimadas,
             prioridad_antes=user_story.prioridad,
             estado_antes=user_story.estado,
-            desarrollador_antes=user_story.desarrollador.miembro_proyecto if user_story.desarrollador is not None else None,
+            desarrollador_antes=user_story.desarrollador.miembro_proyecto
+            if user_story.desarrollador is not None else None,
             user_story=user_story,
             accion="Eliminacion",
             fecha=datetime.date.today(),

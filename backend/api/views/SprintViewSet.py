@@ -5,7 +5,6 @@ from backend.api.models import Miembro, Sprint, Usuario, Proyecto
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
-from django.db import transaction
 
 
 class SprintViewSet(viewsets.ViewSet):

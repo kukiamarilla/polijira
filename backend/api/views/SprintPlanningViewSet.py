@@ -6,7 +6,10 @@ from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, S
 from backend.api.models.RegistroUserStory import RegistroUserStory
 from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import PlanificarUserStoryForm, CreateMiembroSprintForm, EliminarMiembroSprintForm, ResponderEstimacionForm
+from backend.api.forms import PlanificarUserStoryForm, \
+    CreateMiembroSprintForm, \
+    EliminarMiembroSprintForm, \
+    ResponderEstimacionForm
 
 
 class SprintPlanningViewSet(viewsets.ViewSet):

@@ -1,7 +1,14 @@
 from datetime import date
-from django.db.models import manager
 from django.test import TestCase, Client
-from backend.api.models import Permiso, PermisoProyecto, ProductBacklog, Sprint, Miembro, SprintBacklog, UserStory, MiembroSprint, Proyecto
+from backend.api.models import Permiso, \
+    PermisoProyecto, \
+    ProductBacklog,\
+    Sprint,\
+    Miembro,\
+    SprintBacklog,\
+    UserStory,\
+    MiembroSprint,\
+    Proyecto
 from backend.api.models.RegistroUserStory import RegistroUserStory
 
 
@@ -14,6 +21,7 @@ class SprintPlanningTestCase(TestCase):
     """
     fixtures = [
         "backend/api/fixtures/testing/auth.json",
+
         "backend/api/fixtures/testing/usuarios.json",
         "backend/api/fixtures/testing/permisos.json",
         "backend/api/fixtures/testing/roles.json",
@@ -214,7 +222,7 @@ class SprintPlanningTestCase(TestCase):
 
     def test_agregar_miembro_sprint_sin_ser_planificador(self):
         """
-        test_agregar_miembro_sprint_sin_ser_planificador Prueba agregar miembro al sprint sin ser planificador 
+        test_agregar_miembro_sprint_sin_ser_planificador Prueba agregar miembro al sprint sin ser planificador
         """
         print("\nProbando agregar miembro al sprint sin ser planificador.")
         request_data = {
@@ -233,7 +241,8 @@ class SprintPlanningTestCase(TestCase):
 
     def test_agregar_miembro_sprint_miembro_no_pertenece_al_proyecto(self):
         """
-        test_agregar_miembro_sprint_miembro_no_pertenece_al_proyecto Prueba agregar miembro al sprint con miembro no perteneciente al proyecto
+        test_agregar_miembro_sprint_miembro_no_pertenece_al_proyecto
+        Prueba agregar miembro al sprint con miembro no perteneciente al proyecto
         """
         print("\nProbando agregar miembro al sprint con miembro no perteneciente al proyecto.")
         request_data = {
