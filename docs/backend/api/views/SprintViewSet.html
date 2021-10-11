@@ -372,61 +372,6 @@ Returns:
                 <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Usted no es miembro de este Proyecto&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
             <span class="p">}</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-13'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
-      </div>
-      <p>iniciar_sprint_planning Servicio para Iniciar un Sprint Planning</p>
-<p>Args:
-    request (Any): Request que se solicita
-    pk (int, optional): Primary Key</p>
-<p>Returns:
-    JSON: Metadatos del Sprint a Iniciar la Planificación</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="nd">@action</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">iniciar_sprint_planning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-14'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
-            <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">sprint</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">miembro</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">)</span> <span class="ow">or</span> \
-               <span class="ow">not</span> <span class="n">miembro</span><span class="o">.</span><span class="n">tiene_permiso</span><span class="p">(</span><span class="s2">&quot;iniciar_sprint_planning&quot;</span><span class="p">):</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No tiene permiso para realizar esta acción&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
-                <span class="p">}</span>
-                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
-            <span class="n">sprint</span><span class="o">.</span><span class="n">iniciar_sprint_planning</span><span class="p">()</span>
-            <span class="n">serializer</span> <span class="o">=</span> <span class="n">SprintSerializer</span><span class="p">(</span><span class="n">sprint</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No existe el Sprint&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;not_found&quot;</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Usted no es miembro de este Proyecto&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forbidden&quot;</span>
-            <span class="p">}</span>
             <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_403_FORBIDDEN</span><span class="p">)</span>
 
 </pre></div>

@@ -50,7 +50,21 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">sprint</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Sprint&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sprint_backlogs&quot;</span><span class="p">)</span>
-    <span class="n">user_story</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;UserStory&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sprint_backlogs&quot;</span><span class="p">)</span>
+    <span class="n">user_story</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;UserStory&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sprint_backlogs&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">agregar_user_story</span><span class="p">(</span><span class="n">sprint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user_story</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">SprintBacklog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">,</span> <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">)</span>
 
 </pre></div>
     </div>
