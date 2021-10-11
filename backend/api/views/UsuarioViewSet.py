@@ -1,8 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from backend.api.models import Usuario
-from backend.api.models import Rol
+from backend.api.models import MiembroSprint, Usuario, Rol
 from backend.api.serializers import UsuarioSerializer
 
 
@@ -123,6 +122,12 @@ class UsuarioViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(pk=pk)
             if usuario_request == usuario:
                 response = {"message": "No puedes desactivarte a ti mismo"}
+                return Response(response, status=status.HTTP_409_CONFLICT)
+            if MiembroSprint.pertenece_a_sprint_activo(usuario):
+                response = {
+                    "message": "Este usuario pertenece a un Sprint Activo",
+                    "error": "conflict"
+                }
                 return Response(response, status=status.HTTP_409_CONFLICT)
             usuario.desactivar()
             serializer = UsuarioSerializer(usuario, many=False)

@@ -25,5 +25,32 @@
             "proyecto": 2,
             "rol": 4
         }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 4,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 3,
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 5,
+        "fields": {
+            "usuario": 2,
+            "proyecto": 3,
+            "rol": 2
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 6,
+        "fields": {
+            "usuario": 2,
+            "proyecto": 4,
+            "rol": 2
+        }
     }
 ]

@@ -7,7 +7,7 @@
             "nombre": "Isaac Amarilla",
             "email": "sc.amarilla@gmail.com",
             "estado": "A",
-            "firebase_uid": "ytuo1pkhFiOG5BN5XhnDd0gplW42",
+            "firebase_uid": "6fo8VzAGp5fc9xGVPgywRIEhfpB3",
             "rol": 1
         }
     },
@@ -31,7 +31,7 @@
             "nombre": "Ramon Perdomo",
             "email": "rperdomorivas@gmail.com ",
             "estado": "A",
-            "firebase_uid": "YIWQchfL8OXbKLcEw5ih5hwI1Cj2",
+            "firebase_uid": "AYLyISv25dPPfFLWJqSFZKwjyc73",
             "rol": 1
         }
     },
@@ -40,8 +40,8 @@
         "pk": 4,
         "fields": {
             "user": 4,
-            "nombre": "Sebastian Cane",
-            "email": "canesi12@gmail.com ",
+            "nombre": "Sebas Cane",
+            "email": "canesi12@gmail.com",
             "estado": "A",
             "firebase_uid": "euZfUKH8zra8DLcSXnJO8qeR0aC2",
             "rol": 1

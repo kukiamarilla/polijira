@@ -1,15 +1,15 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, UserStory, Usuario
-from backend.api.models.Horario import Horario
+from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario, Horario
 from backend.api.serializers import \
     ProyectoSerializer, \
     PermisoProyectoSerializer, \
     RolProyectoSerializer, \
     MiembroSerializer, \
     ImportarRolSerializer, \
-    UserStorySerializer
+    UserStorySerializer, \
+    SprintSerializer
 
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
@@ -513,6 +513,24 @@ class ProyectoViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
+    @action(detail=True, methods=["GET"])
+    def sprints(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto_id=pk)
+            if not miembro.tiene_permiso("ver_sprints"):
+                sprints = Sprint.objects.filter(miembro_sprints__miembro_proyecto=miembro)
+                serializer = SprintSerializer(sprints, many=True)
+                return Response(serializer.data)
+            sprints = Sprint.objects.filter(proyecto_id=pk)
+            serializer = SprintSerializer(sprints, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
     #     try:

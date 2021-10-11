@@ -10,3 +10,6 @@ from .Horario import Horario
 from .UserStory import UserStory
 from .ProductBacklog import ProductBacklog
 from .RegistroUserStory import RegistroUserStory
+from .Sprint import Sprint
+from .SprintBacklog import SprintBacklog
+from .MiembroSprint import MiembroSprint
