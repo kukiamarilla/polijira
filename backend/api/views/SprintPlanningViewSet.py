@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
+from backend.api.models.RegistroUserStory import RegistroUserStory
 from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import PlanificarUserStoryForm, CreateMiembroSprintForm, EliminarMiembroSprintForm
@@ -268,15 +269,16 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            product_backlog = ProductBacklog.objects.get(
-                proyecto=sprint.proyecto, user_story_id=request.data.get("user_story"))
+            user_story = ProductBacklog.objects.get(
+                proyecto=sprint.proyecto, user_story_id=request.data.get("user_story")).user_story
             sprint.planificar(
-                user_story=product_backlog.user_story,
+                user_story=user_story,
                 horas_estimadas=request.data.get("horas_estimadas"),
                 desarrollador=MiembroSprint.objects.get(
                     miembro_proyecto_id=request.data.get("desarrollador"), sprint=sprint),
                 sprint_backlog_handler=SprintBacklog.agregar_user_story,
-                product_backlog_handler=ProductBacklog.eliminar_user_story
+                product_backlog_handler=ProductBacklog.eliminar_user_story,
+                registro_handler=RegistroUserStory.modificar_registro
             )
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
@@ -304,3 +306,16 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "bad_request"
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=["POST"])
+    def responder_estimacion(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)

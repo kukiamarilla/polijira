@@ -2,6 +2,8 @@ from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserS
 from django.test import TestCase, Client
 from datetime import date
 
+from backend.api.models.MiembroSprint import MiembroSprint
+
 
 class UserStoryTestCase(TestCase):
     """

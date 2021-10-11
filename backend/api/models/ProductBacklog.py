@@ -17,3 +17,4 @@ class ProductBacklog(models.Model):
     @staticmethod
     def eliminar_user_story(user_story):
         ProductBacklog.objects.get(user_story=user_story).delete()
+        user_story.eliminar_del_product_backlog()

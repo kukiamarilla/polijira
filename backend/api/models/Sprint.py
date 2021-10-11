@@ -106,9 +106,12 @@ class Sprint(models.Model):
                 return True
         return False
 
-    def planificar(self, user_story=None, horas_estimadas=None, desarrollador=None, sprint_backlog_handler=None, product_backlog_handler=None):
-        self.save()
-        user_story.asignar_desarrollador(desarrollador)
-        user_story.asignar_horas_estimadas(horas_estimadas)
-        sprint_backlog_handler(self, user_story)
+    def planificar(self, user_story=None, horas_estimadas=None, desarrollador=None, sprint_backlog_handler=None, product_backlog_handler=None, registro_handler=None):
         product_backlog_handler(user_story)
+        user_story.update(
+            horas_estimadas=horas_estimadas,
+            desarrollador=desarrollador,
+            estado_estimacion="p",
+            registro_handler=registro_handler
+        )
+        sprint_backlog_handler(self, user_story)

@@ -195,3 +195,80 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(len(sprint_backlog), 1)
         product_backlog = ProductBacklog.objects.filter(proyecto=sprint.proyecto, user_story=user_story)
         self.assertEquals(len(product_backlog), 0)
+
+    def test_planificar_us_sprint_no_existente(self):
+        """
+        test_planificar_us_sprint_no_existente
+        Prueba Planificar User Story con un Sprint que no existe
+        """
+        print("\nProbando Planificar User Story con un Sprint que no existe")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 5
+        }
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        response = self.client.post("/api/sprint-planning/2000/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body.get("error"), "not_found")
+
+    def test_planificar_us_no_siendo_miembro(self):
+        """
+        test_planificar_us_no_siendo_miembro
+        Prueba Planificar User Story no siendo del Proyecto
+        """
+        print("\nProbando Planificar User Story no siendo del Proyecto")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 5
+        }
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        miembro = Miembro.objects.get(pk=4)
+        miembro.usuario_id = 2
+        miembro.save()
+        response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_planificar_us_sprint_planning_no_iniciado(self):
+        """
+        test_planificar_us_sprint_planning_no_iniciado
+        Prueba Planificar un User Story de un Sprint Planning no Iniciado
+        """
+        print("\nProbando Planificar un User Story de un Sprint Planning no Iniciado")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 5
+        }
+        response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 409)
+        body = response.json()
+        self.assertEquals(body.get("error"), "conflict")
+
+    def test_planificar_us_no_siendo_planificador(self):
+        """
+        test_planificar_us_no_siendo_planificador
+        Prueba Planificar un User Story sin ser Planificador del Sprint Planning
+        """
+        print("\nProbando Planificar un User Story sin ser Planificador del Sprint Planning")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 5
+        }
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=2))
+        response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("error"), "forbidden")
