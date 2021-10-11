@@ -22,5 +22,13 @@
             "miembro_proyecto": 6,
             "sprint": 3
         }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 4,
+        "fields": {
+            "miembro_proyecto": 5,
+            "sprint": 2
+        }
     }
 ]

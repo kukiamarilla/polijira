@@ -5,6 +5,7 @@ from backend.api.models import Miembro, Sprint, Usuario, Proyecto
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
+from django.db import transaction
 
 
 class SprintViewSet(viewsets.ViewSet):
@@ -239,45 +240,6 @@ class SprintViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             serializer = SprintBacklogSerializer(sprint.sprint_backlogs.all(), many=True)
-            return Response(serializer.data)
-        except Sprint.DoesNotExist:
-            response = {
-                "message": "No existe el Sprint",
-                "error": "not_found"
-            }
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
-        except Miembro.DoesNotExist:
-            response = {
-                "message": "Usted no es miembro de este Proyecto",
-                "error": "forbidden"
-            }
-            return Response(response, status=status.HTTP_403_FORBIDDEN)
-
-    @action(detail=True, methods=["POST"])
-    def iniciar_sprint_planning(self, request, pk=None):
-        """
-        iniciar_sprint_planning Servicio para Iniciar un Sprint Planning
-
-        Args:
-            request (Any): Request que se solicita
-            pk (int, optional): Primary Key
-
-        Returns:
-            JSON: Metadatos del Sprint a Iniciar la Planificación
-        """
-        try:
-            usuario = Usuario.objects.get(user=request.user)
-            sprint = Sprint.objects.get(pk=pk)
-            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
-            if not miembro.tiene_permiso("ver_sprints") or \
-               not miembro.tiene_permiso("iniciar_sprint_planning"):
-                response = {
-                    "message": "No tiene permiso para realizar esta acción",
-                    "error": "forbidden"
-                }
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
-            sprint.iniciar_sprint_planning()
-            serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:
             response = {

@@ -2,6 +2,8 @@ from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserS
 from django.test import TestCase, Client
 from datetime import date
 
+from backend.api.models.MiembroSprint import MiembroSprint
+
 
 class UserStoryTestCase(TestCase):
     """
@@ -133,12 +135,12 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
-        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
         self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -187,12 +189,12 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
         self.assertEquals(body["descripcion"], "")
-        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
         self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -242,12 +244,12 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(body["prioridad"], 2)
-        self.assertEquals(body["horas_estimadas"], None)
+        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
         self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], None)
+        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
