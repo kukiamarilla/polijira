@@ -77,7 +77,8 @@
       </div>
     </div>
     <UserStory
-      v-model="userStory"
+      v-model="verUserStoryModal"
+      :userStory="userStory"
       v-if="hasProyectoPermissions(['ver_user_stories'])"
     />
     <CrearUserStory
@@ -165,6 +166,7 @@ export default {
       userStoryUpdating: null,
       crearUserStoryModal: false,
       modificarUserStoryModal: false,
+      verUserStoryModal: false,
     };
   },
   methods: {
@@ -193,6 +195,7 @@ export default {
     },
     verUserStory(userStory) {
       this.userStory = userStory;
+      this.verUserStoryModal = true
     },
     modificarUserStory(userStory) {
       this.userStoryUpdating = userStory;
