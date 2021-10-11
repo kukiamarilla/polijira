@@ -17,7 +17,9 @@ api.interceptors.response.use((response) => response, (error) => {
     if (error.response.status == 500)
       Alert.error("Error interno del servidor")
     else
-      Alert.error(error.response.data.message)
+      Alert.error(error.response.data.message + "<br><br>" + 
+        (error.response.data.errors ? 
+        Object.keys(error.response.data.errors).map(err => "- " + err + ": " +error.response.data.errors[err][0]).join(" <br> ") : ""))
   } else {
     store.commit("alert/showAlert", {type: "error", message: "No se pudo conectar con el servidor"})
   }
