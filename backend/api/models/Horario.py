@@ -45,13 +45,13 @@ class Horario(models.Model):
             list: Lista de todos los atributos de horario
         """
         lista = []
+        lista.append(self.domingo)
         lista.append(self.lunes)
         lista.append(self.martes)
         lista.append(self.miercoles)
         lista.append(self.jueves)
         lista.append(self.viernes)
         lista.append(self.sabado)
-        lista.append(self.domingo)
         return lista
 
     def asignar_horario(self, miembro):

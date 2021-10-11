@@ -86,9 +86,7 @@ class SprintPlanningViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
             miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
-            if not (miembro.tiene_permiso("ver_sprints") and
-                    miembro.tiene_permiso("ver_miembros") and
-                    miembro.tiene_permiso("ver_miembros_sprint")):
+            if sprint.planificador != miembro:
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [

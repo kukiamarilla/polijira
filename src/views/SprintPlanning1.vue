@@ -6,12 +6,6 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Miembros de {{ proyecto.nombre }}</h2>
-          <Boton
-            tema="primary"
-            texto="Agregar Miembro"
-            @click="agregarMiembroModal = true"
-            v-if="hasProyectoPermission('agregar_miembros')"
-          />
         </div>
         <Table height="400px">
           <TableHeader>
@@ -19,7 +13,7 @@
             <Th width="20%">Nombre</Th>
             <Th width="20%">Email</Th>
             <Th width="20%">Rol</Th>
-            <Th width="20%">Acciones</Th>
+            <Th width="20%">Incluir</Th>
           </TableHeader>
           <TableBody>
             <Tr v-for="(miembro, idx) in miembros" :key="idx">
@@ -27,107 +21,42 @@
               <Td width="20%">{{ miembro.usuario.nombre }}</Td>
               <Td width="20%">{{ miembro.usuario.email }}</Td>
               <Td width="20%">
-                <div
-                  class="select-container"
-                  v-if="
-                    miembro.usuario.id != me.id &&
-                    miembro.rol.nombre != 'Scrum Master' &&
-                    hasProyectoPermission('modificar_miembros')
-                  "
-                >
-                  <Select
-                    :options="rolesSelect"
-                    v-model="miembro.rolSelect"
-                    @input="asignarRol(miembro)"
-                  />
-                </div>
-                <template v-else>
-                  {{ miembro.rol.nombre }}
-                </template>
+                {{ miembro.rol.nombre }}
               </Td>
               <Td width="20%">
-                <div class="acciones" style="display: flex">
-                  <a
-                    href="#"
-                    @click.prevent="eliminarMiembro(miembro)"
-                    v-if="
-                      me.id != miembro.usuario.id &&
-                      miembro.rol.nombre != 'Scrum Master' &&
-                      hasProyectoPermissions(['eliminar_miembros'])
-                    "
-                  >
-                    <Icon
-                      icono="delete"
-                      size="16px"
-                      color="#bdbdbd"
-                      hover="#F25656"
-                    />
-                  </a>
-                  <a
-                    href="#"
-                    @click.prevent="modificarHorario(miembro)"
-                    v-if="hasProyectoPermissions(['modificar_miembros'])"
-                  >
-                    <Icon
-                      icono="edit"
-                      size="16px"
-                      color="#bdbdbd"
-                      hover="#FFB800"
-                    />
-                  </a>
-                </div>
+                <Checkbox v-model="miembro.included" @input="miembro.included ? agregarMiembro(miembro) : eliminarMiembro(miembro)"/> 
               </Td>
             </Tr>
           </TableBody>
         </Table>
+        <div><span class="highlight">Capacidad del sprint:</span> {{capacidad}} hs.</div>
       </div>
     </div>
-    <AgregarMiembroModal
-      v-model="agregarMiembroModal"
-      @input="load"
-      v-if="hasProyectoPermissions(['agregar_miembros', 'ver_roles_proyecto'])"
-    />
-    <ModificarMiembroModal
-      v-model="modificarMiembroModal"
-      @input="load"
-      :miembro="miembro"
-      v-if="
-        hasProyectoPermissions(['modificar_miembros', 'ver_roles_proyecto'])
-      "
-    />
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar";
 import SidebarProyecto from "@/components/SidebarProyecto";
-import Icon from "@/components/Icon";
-import Boton from "@/components/Boton";
-import Select from "@/components/Select";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import miembroService from "@/services/miembroService";
-import rolProyectoService from "@/services/rolProyectoService";
+import sprintService from "@/services/sprintService";
 import proyectoService from "@/services/proyectoService";
 import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
-import AgregarMiembroModal from "@/components/AgregarMiembroModal";
-import ModificarMiembroModal from "@/components/ModificarMiembroModal";
+import Checkbox from "@/components/Checkbox";
 
 export default {
   components: {
     Navbar,
     SidebarProyecto,
-    Icon,
-    Boton,
-    Select,
     Table,
     TableHeader,
     TableBody,
     Th,
     Tr,
     Td,
-    AgregarMiembroModal,
-    ModificarMiembroModal,
+    Checkbox
   },
   created() {},
   mounted() {
@@ -144,28 +73,26 @@ export default {
     }),
     ...mapState({
       me: (state) => state.auth.me,
+      meProyecto: (state) => state.proyecto.me,
+      capacidad() {
+        let capacidad = 0;
+        this.miembrosSprint.forEach(ms => {
+          capacidad += this.capacidadPorMiembro(this.miembros.find(miembro => miembro.id == ms.miembro_proyecto))
+        });
+        return capacidad
+      }
     }),
-    canActivate() {
-      return this.hasPermission("activar_usuarios");
-    },
-    canDeactivate() {
-      return this.hasPermission("desactivar_usuarios");
-    },
-    rolesSelect() {
-      let rolesSelect = {};
-      this.roles
-        .filter((rol) => rol.nombre != "Scrum Master")
-        .forEach((rol) => (rolesSelect[rol.id] = rol.nombre));
-      return rolesSelect;
-    },
   },
   data() {
     return {
       proyecto: {
         nombre: "",
       },
-      roles: [],
+      sprint: {
+        planificador: 0
+      },
       miembros: [],
+      miembrosSprint: [],
       miembro: {
         horario: {
           id: 0,
@@ -187,54 +114,57 @@ export default {
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
       });
-      if (this.hasProyectoPermission("ver_roles_proyecto")) {
-        rolProyectoService.list(this.$route.params["id"]).then((roles) => {
-          this.roles = roles;
-          miembroService.list(this.$route.params["id"]).then((miembros) => {
-            this.miembros = miembros.map((m) => ({
-              ...m,
-              rolSelect: this.roles.find((rol) => m.rol.id == rol.id).id,
-            }));
-            this.miembros = this.miembros.sort(
-              (a, b) => a.usuario.id > b.usuario.id
-            );
-          });
-        });
-      } else {
+      sprintService.retrieve(this.$route.params["idSprint"]).then((sprint) => {
+        this.sprint = sprint;
+        if(!sprint.planificador) {
+          this.$router.back()
+          return
+        }
+        if(sprint.planificador != this.meProyecto.id)
+          this.$router.back()
+      });
+      sprintService.miembros(this.$route.params["idSprint"]).then((miembrosSprint) => {
+        this.miembrosSprint = miembrosSprint;
         miembroService.list(this.$route.params["id"]).then((miembros) => {
+          miembros = miembros.map(miembro => ({...miembro, included: miembrosSprint.map(x=>x.miembro_proyecto).includes(miembro.id)}));
           this.miembros = miembros;
         });
-      }
+      });
     },
-    asignarRol(miembro) {
-      let actualizado = {
-        usuario: miembro.usuario.id,
-        rol: miembro.rolSelect,
-        proyecto: miembro.proyecto.id,
-      };
-      miembroService
-        .update(miembro.id, actualizado)
-        .then(() => {
-          Alert.success("Se ha asignado correctamente el nuevo rol");
-        })
-        .catch(() => {
-          this.load();
-        });
+    agregarMiembro(miembro) {
+      sprintService.agregarMiembro(this.sprint.id, {miembro: miembro.id}).then(() => {
+        this.load();
+        Alert.success("Se ha agregado el miembro al sprint");
+      });
     },
     eliminarMiembro(miembro) {
-      let confimation = confirm(
-        "Estás seguro que desea eliminar este miembro?"
-      );
-      if (confimation)
-        miembroService.delete(miembro.id).then(() => {
-          this.load();
-          Alert.success("Se ha eliminado el miembro");
-        });
+      miembro = this.miembrosSprint.find(ms => ms.miembro_proyecto == miembro.id)
+      sprintService.eliminarMiembro(this.sprint.id, {miembro_sprint: miembro.id}).then(() => {
+        this.load();
+        Alert.success("Se ha eliminado el miembro");
+      });
     },
-    modificarHorario(miembro) {
-      this.miembro = miembro;
-      this.modificarMiembroModal = true;
+    horarioToArray(horario) {
+      return [
+        horario.domingo,
+        horario.lunes,
+        horario.martes,
+        horario.miercoles,
+        horario.jueves,
+        horario.viernes,
+        horario.sabado,
+      ]
     },
+    capacidadPorMiembro(miembro) {
+      const ini = new Date(this.sprint.fecha_inicio).getTime()
+      const fin = new Date(this.sprint.fecha_fin).getTime()
+      let capacidad = 0;
+      let horario = this.horarioToArray(miembro.horario)
+      for (let curr = ini; curr <= fin; curr += 1000*60*60*24) {
+        capacidad += horario[(new Date(curr)).getDay()]
+      }
+      return capacidad;
+    }
   },
 };
 </script>
