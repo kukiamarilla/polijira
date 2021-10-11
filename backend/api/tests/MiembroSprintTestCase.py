@@ -112,7 +112,7 @@ class MiembroSprintTestCase(TestCase):
 
     def test_eliminar_miembro_sprint(self):
         """
-        test_eliminar_miembro_sprint Prueba la eliminación de miembro sprint 
+        test_eliminar_miembro_sprint Prueba la eliminación de miembro sprint
         """
         print("\nProbando eliminar un miembro sprint.")
         self.client.login(username="testing", password="polijira2021")

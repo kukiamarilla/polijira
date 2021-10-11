@@ -1,4 +1,3 @@
-import json
 from django.core.exceptions import ValidationError
 from backend.api.models import Miembro, Sprint
 from django import forms

@@ -42,9 +42,8 @@
         <SidebarProyectoItem
           icono="flag"
           texto="Sprint"
-          :to="`/proyectos/${proyecto.id}/sprint`"
-          :active="current == 'sprint'"
-          v-if="hasProyectoPermission('ver_sprints')"
+          :to="`/proyectos/${proyecto.id}/sprints`"
+          :active="current == 'sprints'"
         />
         <SidebarProyectoItem
           icono="clock"

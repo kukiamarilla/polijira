@@ -111,6 +111,9 @@ class SprintTestCase(TestCase):
             "fecha_fin": str(date.today() + timedelta(5)),
             "proyecto": 3
         }
+        sprints = Sprint.objects.all()
+        for sprint in sprints:
+            sprint.delete()
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         body = response.json()
@@ -495,7 +498,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_fin(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha de fin es mayor a la fecha de inicio al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin Valida si la fecha
+        de fin es mayor a la fecha de inicio al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de fin al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -510,7 +514,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_inicio(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha de inicio no esté en el pasado al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin Valida si la fecha de inicio
+        no esté en el pasado al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de inicio al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -638,7 +643,8 @@ class SprintTestCase(TestCase):
 
     def test_listar_sprint_backlogs_sin_ser_miembro(self):
         """
-        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint backlogs de un Sprint  sin ser miembro del Proyecto
+        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint
+        backlogs de un Sprint  sin ser miembro del Proyecto
         """
         print("\nProbando listar los sprint backlogs de un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")

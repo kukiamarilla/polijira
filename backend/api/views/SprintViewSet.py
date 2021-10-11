@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, Usuario, Proyecto
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
@@ -67,6 +67,7 @@ class SprintViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(user=request.user)
             proyecto = Proyecto.objects.get(pk=request.data.get("proyecto"))
             miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+            pendiente = Sprint.objects.filter(proyecto=proyecto, estado="P")
             if not miembro.tiene_permiso("crear_sprints"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
@@ -74,8 +75,16 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if(len(pendiente) > 0):
+                response = {
+                    "message": "No puede haber más de un sprint pendiente.",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
             if Sprint.se_solapa(
-                proyecto=proyecto, fecha_inicio=request.data.get("fecha_inicio"), fecha_fin=request.data.get("fecha_fin")
+                proyecto=proyecto,
+                fecha_inicio=request.data.get("fecha_inicio"),
+                fecha_fin=request.data.get("fecha_fin")
             ):
                 response = {
                     "message": "La fecha indicada coincide con otro Sprint del Proyecto.",
@@ -130,7 +139,9 @@ class SprintViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_409_CONFLICT)
             if Sprint.se_solapa(
-                proyecto=sprint.proyecto, fecha_inicio=request.data.get("fecha_inicio"), fecha_fin=request.data.get("fecha_fin")
+                proyecto=sprint.proyecto,
+                fecha_inicio=request.data.get("fecha_inicio"),
+                fecha_fin=request.data.get("fecha_fin")
             ):
                 response = {
                     "message": "La fecha indicada coincide con otro Sprint del Proyecto.",

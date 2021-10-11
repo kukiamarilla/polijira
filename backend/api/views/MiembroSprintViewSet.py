@@ -1,4 +1,3 @@
-from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Usuario, Miembro, Sprint, MiembroSprint
@@ -6,7 +5,6 @@ from backend.api.serializers import MiembroSprintSerializer
 from backend.api.forms import CreateMiembroSprintForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
-from django.db.models import Q
 
 
 class MiembroSprintViewSet(viewsets.ViewSet):

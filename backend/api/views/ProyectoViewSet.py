@@ -519,10 +519,10 @@ class ProyectoViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(user=request.user)
             miembro = Miembro.objects.get(usuario=usuario, proyecto_id=pk)
             if not miembro.tiene_permiso("ver_sprints"):
-                sprints = Sprint.objects.filter(miembro_sprints__miembro_proyecto=miembro).exclude(estado="P")
+                sprints = Sprint.objects.filter(miembro_sprints__miembro_proyecto=miembro)
                 serializer = SprintSerializer(sprints, many=True)
                 return Response(serializer.data)
-            sprints = Sprint.objects.filter(proyecto_id=pk).exclude(estado="P")
+            sprints = Sprint.objects.filter(proyecto_id=pk)
             serializer = SprintSerializer(sprints, many=True)
             return Response(serializer.data)
         except Miembro.DoesNotExist:
