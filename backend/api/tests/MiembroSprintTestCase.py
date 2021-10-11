@@ -35,69 +35,14 @@ class MiembroSprintTestCase(TestCase):
         """
         self.client = Client()
 
-    def test_obtener_miembro_sprint(self):
+    def test_agregar_miembro_sprint(self):
         """
-        test_obtener_miembro_sprint Prueba obtener miembro sprint
+        test_agregar_miembro_sprint Prueba la agregación de miembro sprint
         """
-        print("\nProbando obtener miembro sprint.")
-        self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/miembros-sprint/2/")
-        body = response.json()
-        self.assertEquals(response.status_code, 200)
-        miembro = MiembroSprint.objects.get(pk=2)
-        self.assertEquals(body["id"], miembro.id)
-        self.assertEquals(body["miembro_proyecto"], miembro.miembro_proyecto.id)
-        self.assertEquals(body["sprint"], miembro.sprint.id)
-
-    def test_obtener_miembro_sprint_inexistente(self):
-        """
-        test_obtener_miembro_sprint_inexistente Prueba obtener miembro sprint inexistente
-        """
-        print("\nProbando obtener miembro sprint inexistente.")
-        self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/miembros-sprint/99/")
-        body = response.json()
-        self.assertEquals(response.status_code, 404)
-        self.assertEquals(body["message"], "No existe el Miembro en el Sprint especificado")
-        self.assertEquals(body["error"], "not_found")
-
-    def test_obtener_miembro_sprint_sin_ser_miembro_proyecto(self):
-        """
-        test_obtener_miembro_sprint_sin_ser_miembro_proyecto
-        Prueba obtener un miembro sprint sin ser miembro del proyecto del miembro especificado
-        """
-        print("\nProbando obtener un miembro sprint sin ser miembro del proyecto del miembro especificado.")
-        self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/miembros-sprint/3/")
-        body = response.json()
-        self.assertEquals(response.status_code, 403)
-        self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
-
-    def test_obtener_miembro_sprint_sin_permiso(self):
-        """
-        test_obtener_miembro_sprint_sin_permiso Prueba obtener miembro sprint sin permiso
-        """
-        print("\nProbando obtener miembro sprint sin permiso.")
-        self.client.login(username="testing", password="polijira2021")
-        rol = Miembro.objects.get(pk=1).rol
-        permiso = rol.permisos.get(codigo="ver_sprints")
-        rol.eliminar_permiso(permiso)
-        response = self.client.get("/api/miembros-sprint/2/")
-        body = response.json()
-        self.assertEquals(response.status_code, 403)
-        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
-        self.assertEquals(body["permission_required"], ["ver_sprints"])
-        self.assertEquals(body["error"], "forbidden")
-
-    def test_crear_miembro_sprint(self):
-        """
-        test_crear_miembro_sprint Prueba la creación de miembro sprint
-        """
-        print("\nProbando crear miembro sprint.")
+        print("\nProbando agregar miembro sprint.")
         self.client.login(username="testing", password="polijira2021")
         request_data = {
-            "miembro": 5,
-            "sprint": 1
+            "miembro": 5
         }
         response = self.client.post("/api/miembros-sprint/", request_data, content_type="application/json")
         body = response.json()
@@ -124,3 +69,58 @@ class MiembroSprintTestCase(TestCase):
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body["message"], "Miembro Sprint eliminado.")
+
+    ##################################################
+    # def test_obtener_miembro_sprint(self):
+    #     """
+    #     test_obtener_miembro_sprint Prueba obtener miembro sprint
+    #     """
+    #     print("\nProbando obtener miembro sprint.")
+    #     self.client.login(username="testing", password="polijira2021")
+    #     response = self.client.get("/api/miembros-sprint/2/")
+    #     body = response.json()
+    #     self.assertEquals(response.status_code, 200)
+    #     miembro = MiembroSprint.objects.get(pk=2)
+    #     self.assertEquals(body["id"], miembro.id)
+    #     self.assertEquals(body["miembro_proyecto"], miembro.miembro_proyecto.id)
+    #     self.assertEquals(body["sprint"], miembro.sprint.id)
+
+    # def test_obtener_miembro_sprint_inexistente(self):
+    #     """
+    #     test_obtener_miembro_sprint_inexistente Prueba obtener miembro sprint inexistente
+    #     """
+    #     print("\nProbando obtener miembro sprint inexistente.")
+    #     self.client.login(username="testing", password="polijira2021")
+    #     response = self.client.get("/api/miembros-sprint/99/")
+    #     body = response.json()
+    #     self.assertEquals(response.status_code, 404)
+    #     self.assertEquals(body["message"], "No existe el Miembro en el Sprint especificado")
+    #     self.assertEquals(body["error"], "not_found")
+
+    # def test_obtener_miembro_sprint_sin_ser_miembro_proyecto(self):
+    #     """
+    #     test_obtener_miembro_sprint_sin_ser_miembro_proyecto
+    #     Prueba obtener un miembro sprint sin ser miembro del proyecto del miembro especificado
+    #     """
+    #     print("\nProbando obtener un miembro sprint sin ser miembro del proyecto del miembro especificado.")
+    #     self.client.login(username="testing", password="polijira2021")
+    #     response = self.client.get("/api/miembros-sprint/3/")
+    #     body = response.json()
+    #     self.assertEquals(response.status_code, 403)
+    #     self.assertEquals(body["message"], "Usted no es miembro de este proyecto")
+
+    # def test_obtener_miembro_sprint_sin_permiso(self):
+    #     """
+    #     test_obtener_miembro_sprint_sin_permiso Prueba obtener miembro sprint sin permiso
+    #     """
+    #     print("\nProbando obtener miembro sprint sin permiso.")
+    #     self.client.login(username="testing", password="polijira2021")
+    #     rol = Miembro.objects.get(pk=1).rol
+    #     permiso = rol.permisos.get(codigo="ver_sprints")
+    #     rol.eliminar_permiso(permiso)
+    #     response = self.client.get("/api/miembros-sprint/2/")
+    #     body = response.json()
+    #     self.assertEquals(response.status_code, 403)
+    #     self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+    #     self.assertEquals(body["permission_required"], ["ver_sprints"])
+    #     self.assertEquals(body["error"], "forbidden")
