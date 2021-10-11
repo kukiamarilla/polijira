@@ -23,15 +23,18 @@ export default {
   },
   data() {
     return {
-      colorIcono: "black",
+      colorIcono: "",
     };
+  },
+  mounted() {
+    this.colorIcono = this.resaltado ? "white" : "black";
   },
   methods: {
     hover() {
       this.colorIcono = "white";
     },
     blur() {
-      this.colorIcono = "black";
+      this.colorIcono = this.resaltado ? "white" : "black";
     },
     redirigir() {
       if (this.link) this.$router.push(this.link);
@@ -54,6 +57,7 @@ export default {
 
   &.resaltado {
     background-color: var(--success);
+    color: white;
   }
 
   &:hover,
