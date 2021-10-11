@@ -11,7 +11,8 @@ ESTADOS = (
 ESTADOS_ESTIMADOS = (
     ("N", "No estimado"),
     ("P", "Parcial"),
-    ("C", "Completo")
+    ("C", "Completo"),
+    ("P", "Pendiente")
 )
 
 
@@ -36,13 +37,13 @@ class UserStory(models.Model):
     """
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(default="")
-    horas_estimadas = models.IntegerField(null=True)
+    horas_estimadas = models.IntegerField(default=0)
     prioridad = models.IntegerField(default=0)
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
     fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
     desarrollador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="user_stories", null=True)
-    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, null=True)
+    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
 
     def lanzar(self):
@@ -102,4 +103,8 @@ class UserStory(models.Model):
 
     def asignar_desarrollador(self, desarrollador):
         self.desarrollador = desarrollador
+        self.save()
+
+    def asignar_horas_estimadas(self, horas):
+        self.horas_estimadas = horas
         self.save()

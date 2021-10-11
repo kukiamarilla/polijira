@@ -1,10 +1,12 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto, UserStory
+from backend.api.models.ProductBacklog import ProductBacklog
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
+from django.db import transaction
 
 
 class SprintViewSet(viewsets.ViewSet):
@@ -259,6 +261,7 @@ class SprintViewSet(viewsets.ViewSet):
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
             miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            # Ver P.B - Ver miembro (Proyecto) - Ver US - Ver S.B
             if not miembro.tiene_permiso("ver_sprints") or \
                not miembro.tiene_permiso("iniciar_sprint_planning"):
                 response = {
@@ -266,9 +269,48 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            sprint.iniciar_sprint_planning()
+            sprint.iniciar_sprint_planning(planificador=miembro)
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @transaction.atomic
+    @action(detail=True, methods=["POST"])
+    def planificar_user_story(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not miembro.tiene_permiso("ver_user_stories") or \
+               not miembro.tiene_permiso("ver_sprints") or \
+               not miembro.tiene_permiso("planear_sprints"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            user_story = UserStory.objects.get(pk=request.get("user_story"))
+            sprint.planificar(
+                user_story=user_story,
+                planificador=miembro,
+                horas_estimadas=request.data.get("horas_estimadas") if request.data.get(
+                    "horas_estimadas") is not None else 0,
+                desarrollador=Miembro.objects.get(pk=request.data.get(
+                    "desarrollador")) if request.data.get("desarrollador") is not None else None,
+                sprint_backlog_handler=SprintBacklog.agregar_user_story,
+                product_backlog_handler=ProductBacklog.eliminar_user_story
+            )
         except Sprint.DoesNotExist:
             response = {
                 "message": "No existe el Sprint",

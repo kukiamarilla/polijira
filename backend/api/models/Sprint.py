@@ -104,3 +104,11 @@ class Sprint(models.Model):
                (fecha_inicio <= str(sprint.fecha_fin) and fecha_fin > str(sprint.fecha_fin)):
                 return True
         return False
+
+    def planificar(self, user_story=None, planificador=None, horas_estimadas=None, desarrollador=None, sprint_backlog_handler=None, product_backlog_handler=None):
+        self.planificador = planificador
+        self.save()
+        user_story.asignar_desarrollador(desarrollador)
+        user_story.asignar_horas_estimadas(horas_estimadas)
+        sprint_backlog_handler(self, user_story)
+        product_backlog_handler(user_story)
