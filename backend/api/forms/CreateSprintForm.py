@@ -15,13 +15,6 @@ class CreateSprintForm(forms.Form):
             "required": "El campo fecha de fin es obligatorio"
         }
     )
-    capacidad = forms.IntegerField(
-        min_value=0,
-        error_messages={
-            "required": "El campo capacidad es obligatorio",
-            "min_value": "La capacidad no puede ser negativa"
-        }
-    )
     proyecto = forms.IntegerField(
         error_messages={
             "required": "No se especificó ningún proyecto"

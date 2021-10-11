@@ -21,7 +21,6 @@ class SprintSerializer(serializers.ModelSerializer):
             "fecha_inicio",
             "fecha_fin",
             "estado",
-            "capacidad",
             "estado_sprint_planning",
             "planificador",
             "proyecto"

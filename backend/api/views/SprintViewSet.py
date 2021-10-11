@@ -85,7 +85,6 @@ class SprintViewSet(viewsets.ViewSet):
             sprint = Sprint.create(
                 fecha_inicio=request.data.get("fecha_inicio"),
                 fecha_fin=request.data.get("fecha_fin"),
-                capacidad=request.data.get("capacidad"),
                 proyecto=request.data.get("proyecto")
             )
             serializer = SprintSerializer(sprint, many=False)

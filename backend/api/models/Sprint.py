@@ -34,13 +34,12 @@ class Sprint(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     estado = models.CharField(max_length=1, choices=ESTADOS_SPRINT, default="P")
-    capacidad = models.IntegerField(default=0)
     estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, default="P")
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints", null=True)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
 
     @staticmethod
-    def create(fecha_inicio=None, fecha_fin=None, capacidad=None, proyecto=None):
+    def create(fecha_inicio=None, fecha_fin=None, proyecto=None):
         """
         create Crea un Sprint
 
@@ -58,7 +57,6 @@ class Sprint(models.Model):
             numero=numeracion,
             fecha_inicio=fecha_inicio,
             fecha_fin=fecha_fin,
-            capacidad=capacidad,
             proyecto_id=proyecto
         )
         return sprint
@@ -81,12 +79,6 @@ class Sprint(models.Model):
         """
         self.estado = "F"
         self.save()
-
-    def _capacidad(self):
-        """
-        capacidad Retorna la capacidad de este Sprint
-        """
-        return self.capacidad
 
     def iniciar_sprint_planning(self):
         """
