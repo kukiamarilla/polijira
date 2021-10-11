@@ -17,5 +17,6 @@ from .CreateUserStoryForm import CreateUserStoryForm
 from .UpdateUserStoryForm import UpdateUserStoryForm
 from .CreateSprintForm import CreateSprintForm
 from .UpdateSprintForm import UpdateSprintForm
-from .CreateMiembroSprintForm import CreateMiembroSprintForm
 from .PlanificarUserStoryForm import PlanificarUserStoryForm
+from .CreateMiembroSprintForm import CreateMiembroSprintForm
+from .EliminarMiembroSprintForm import EliminarMiembroSprintForm
