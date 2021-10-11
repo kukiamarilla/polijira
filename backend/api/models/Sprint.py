@@ -80,11 +80,12 @@ class Sprint(models.Model):
         self.estado = "F"
         self.save()
 
-    def iniciar_sprint_planning(self):
+    def iniciar_sprint_planning(self, planificador):
         """
         iniciar_sprint_planning Inicia el Sprint Planning
         """
         self.estado_sprint_planning = "I"
+        self.planificador = planificador
         self.save()
 
     @staticmethod
@@ -96,3 +97,16 @@ class Sprint(models.Model):
                (fecha_inicio <= str(sprint.fecha_fin) and fecha_fin > str(sprint.fecha_fin)):
                 return True
         return False
+
+    def planificar(self, user_story=None, horas_estimadas=None, desarrollador=None, sprint_backlog_handler=None,
+                   product_backlog_handler=None, registro_handler=None, planificador=None
+                   ):
+        product_backlog_handler(user_story)
+        user_story.update(
+            horas_estimadas=horas_estimadas,
+            desarrollador=desarrollador,
+            estado_estimacion="p",
+            registro_handler=registro_handler,
+            autor=planificador
+        )
+        sprint_backlog_handler(self, user_story)
