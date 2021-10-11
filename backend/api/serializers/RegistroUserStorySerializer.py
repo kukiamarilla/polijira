@@ -30,5 +30,6 @@ class RegistroUserStorySerializer(serializers.ModelSerializer):
             "desarrollador_despues",
             "user_story",
             "accion",
-            "autor"
+            "autor",
+            "fecha"
         )
