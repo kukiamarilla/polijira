@@ -72,7 +72,7 @@
           </TableBody>
         </Table>
         <div class="empty" v-else>
-            <h2>Aun no hay User Stories en el Product <br> Backlog. <a href="#" class="agregar" @click.prevent="crearUserStoryModal=true">Agregar uno</a></h2>
+            <h2>Aun no hay User Stories en el Product <br> Backlog. <a href="#" class="agregar" @click.prevent="crearUserStoryModal=true" v-if="hasProyectoPermissions(['crear_user_stories'])">Agregar uno</a></h2>
         </div>
       </div>
     </div>
