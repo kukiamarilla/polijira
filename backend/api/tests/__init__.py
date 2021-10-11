@@ -9,3 +9,4 @@ from .MiembroTestCase import MiembroTestCase
 from .HorarioTestCase import HorarioTestCase
 from .UserStoryTestCase import UserStoryTestCase
 from .SprintTestCase import SprintTestCase
+from .MiembroSprintTestCase import MiembroSprintTestCase
