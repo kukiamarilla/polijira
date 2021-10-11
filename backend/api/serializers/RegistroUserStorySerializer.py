@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from backend.api.models import RegistroUserStory
+from backend.api.serializers import MiembroSerializer
 
 
 class RegistroUserStorySerializer(serializers.ModelSerializer):
@@ -9,6 +10,8 @@ class RegistroUserStorySerializer(serializers.ModelSerializer):
     Args:
         serializers (ModelSerializer): Serializer del módulo rest_framework
     """
+    autor = MiembroSerializer(many=False, read_only=True)
+
     class Meta:
         """
          Metadatos de Registro de User Stories
@@ -30,5 +33,6 @@ class RegistroUserStorySerializer(serializers.ModelSerializer):
             "desarrollador_despues",
             "user_story",
             "accion",
-            "autor"
+            "autor",
+            "fecha"
         )

@@ -237,7 +237,6 @@ class UserStoryTestCase(TestCase):
             "prioridad": 2
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
-        print(response.json())
         self.assertEquals(response.status_code, 200)
         body = response.json()
         self.assertEquals(user_story_request["nombre"], body["nombre"])
