@@ -5,7 +5,7 @@
 
       <Icon :icono="icon" :color="iconColor" size="105px" />
 
-      <div class="highlight">{{ message }}</div>
+      <div class="highlight" v-html="message"></div>
 
       <Boton texto="Aceptar" tema="primary" v-on:click="hideAlert" />
     </div>
