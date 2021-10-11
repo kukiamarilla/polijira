@@ -12,7 +12,6 @@ class CreateUserStoryForm(forms.Form):
         }
     )
     prioridad = forms.IntegerField(
-        required=False,
         max_value=10,
         min_value=1,
         error_messages={

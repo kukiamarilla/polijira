@@ -31,5 +31,5 @@ class UserStorySerializer(serializers.ModelSerializer):
             "desarrollador",
             "estado_estimacion",
             "product_backlog",
-            "resgistros"
+            "registros"
         )

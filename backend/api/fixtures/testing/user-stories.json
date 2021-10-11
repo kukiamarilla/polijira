@@ -12,6 +12,7 @@
             "fecha_creacion": "2021-09-24",
             "desarrollador": null,
             "estado_estimacion": "C",
+            "proyecto": 1,
             "product_backlog": true
         }
     }
