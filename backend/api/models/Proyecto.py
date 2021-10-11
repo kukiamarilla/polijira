@@ -70,6 +70,9 @@ class Proyecto(models.Model):
         self.save()
         if scrum_master_handler is not None:
             scrum_master_handler(self, scrum_master)
+        else:
+            self.scrum_master = scrum_master if scrum_master is not None else self.scrum_master
+            self.save()
 
     def iniciar(self):
         """
