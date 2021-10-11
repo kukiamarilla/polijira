@@ -9,4 +9,3 @@ from .MiembroViewSet import MiembroViewSet
 from .HorarioViewSet import HorarioViewSet
 from .UserStoryViewSet import UserStoryViewSet
 from .SprintViewSet import SprintViewSet
-from .MiembroSprintViewSet import MiembroSprintViewSet

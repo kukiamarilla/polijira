@@ -6,7 +6,7 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
-          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"/> 
+          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"  v-if="hasProyectoPermissions(['crear_user_stories'])"/> 
         </div>
         <Table height="400px" v-if="userStories.length > 0">
           <TableHeader>
@@ -72,7 +72,7 @@
           </TableBody>
         </Table>
         <div class="empty" v-else>
-            <h2>Aun no hay User Stories en el Product <br> Backlog. <a href="#" class="agregar" @click.prevent="crearUserStoryModal=true">Agregar uno</a></h2>
+            <h2>Aun no hay User Stories en el Product <br> Backlog. <a href="#" class="agregar" @click.prevent="crearUserStoryModal=true" v-if="hasProyectoPermissions(['crear_user_stories'])">Agregar uno</a></h2>
         </div>
       </div>
     </div>
