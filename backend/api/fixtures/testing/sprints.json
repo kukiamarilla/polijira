@@ -26,5 +26,19 @@
             "planificador": null,
             "proyecto": 3
         }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 3,
+        "fields": {
+            "numero": 3,
+            "fecha_inicio": "2022-10-11",
+            "fecha_fin": "2022-10-20",
+            "estado": "P",
+            "capacidad": 12,
+            "estado_sprint_planning": "P",
+            "planificador": null,
+            "proyecto": 4
+        }
     }
 ]

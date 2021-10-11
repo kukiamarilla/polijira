@@ -31,5 +31,16 @@
             "estado": "A",
             "scrum_master": 1
         }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "ProyectoTest4",
+            "fecha_inicio": "2021-10-10",
+            "fecha_fin": "2022-10-24",
+            "estado": "A",
+            "scrum_master": 2
+        }
     }
 ]
