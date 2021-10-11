@@ -287,10 +287,8 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "": 20,
             "prioridad": 4,
             "proyecto": 1,
-            "": "P"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
@@ -308,10 +306,8 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest",
             "descripcion": "Esto es una descripcion",
-            "": 20,
             "prioridad": 4,
             "proyecto": 1,
-            "": "P"
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 403)
