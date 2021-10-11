@@ -14,3 +14,7 @@ class SprintBacklog(models.Model):
     """
     sprint = models.ForeignKey("Sprint", on_delete=models.CASCADE, related_name="sprint_backlogs")
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="sprint_backlogs")
+
+    @staticmethod
+    def agregar_user_story(sprint=None, user_story=None):
+        SprintBacklog.objects.create(sprint=sprint, user_story=user_story)

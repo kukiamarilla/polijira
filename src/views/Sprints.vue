@@ -24,16 +24,31 @@
               <Td width="25%"><span class="cutted-text">{{ sprint.estado == "P" ? "Pendiente" :  sprint.estado == "A" ? "Activo" : "Finalizado"}}</span></Td>
               <Td width="20%">
                 <div class="acciones" style="display: flex">
+                    <a
+                      href="#"
+                      v-if="
+                        hasProyectoPermissions(['planear_sprints']) &&
+                        sprint.estado_sprint_planning == 'I'
+                      "
+                      @click.prevent="$router.push(`/proyectos/${proyecto.id}/sprint-planning/${sprint.id}/paso-1`)"
+                    >
+                      <Icon
+                        icono="watch"
+                        size="16px"
+                        color="#bdbdbd"
+                        hover="#F25656"
+                      />
+                    </a>
                   <a
                     href="#"
-                    @click.prevent="versprint(sprint)"
                     v-if="
-                      hasProyectoPermissions(['ver_user_stories']) &&
-                      sprint.estado != 'P'
+                      hasProyectoPermissions(['planear_sprints']) &&
+                      sprint.estado_sprint_planning == 'P'
                     "
+                    @click.prevent="iniciarSprintPlanning(sprint)"
                   >
                     <Icon
-                      icono="watch"
+                      icono="checklist"
                       size="16px"
                       color="#bdbdbd"
                       hover="#F25656"
@@ -138,6 +153,12 @@ export default {
         sprintService.delete(sprint.id).then(() => {
             Alert.success("Sprint eliminado exitosamente");
             this.load();
+        })
+    },
+    iniciarSprintPlanning(sprint) {
+        sprintService.iniciarSprintPlanning(sprint.id).then(() => {
+            Alert.success("Spring Planning iniciado.")
+            this.$router.push(`/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-1`)
         })
     }
   },

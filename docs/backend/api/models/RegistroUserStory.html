@@ -134,7 +134,8 @@ Guarda todos los user stories creados, modificados o eliminados</p>
             <span class="n">horas_estimadas_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">horas_estimadas</span><span class="p">,</span>
             <span class="n">prioridad_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">prioridad</span><span class="p">,</span>
             <span class="n">estado_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span>
-            <span class="n">desarrollador_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="p">,</span>
+            <span class="n">desarrollador_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="o">.</span><span class="n">miembro_proyecto</span>
+            <span class="k">if</span> <span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">,</span>
             <span class="n">accion</span><span class="o">=</span><span class="s2">&quot;Modificacion&quot;</span><span class="p">,</span>
             <span class="n">fecha</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
@@ -149,7 +150,8 @@ Guarda todos los user stories creados, modificados o eliminados</p>
             <span class="n">horas_estimadas_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">horas_estimadas</span><span class="p">,</span>
             <span class="n">prioridad_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">prioridad</span><span class="p">,</span>
             <span class="n">estado_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span>
-            <span class="n">desarrollador_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="p">,</span>
+            <span class="n">desarrollador_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="o">.</span><span class="n">miembro_proyecto</span>
+            <span class="k">if</span> <span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">,</span>
             <span class="n">accion</span><span class="o">=</span><span class="s2">&quot;Eliminacion&quot;</span><span class="p">,</span>
             <span class="n">fecha</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>

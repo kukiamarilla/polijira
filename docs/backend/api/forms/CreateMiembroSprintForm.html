@@ -21,10 +21,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Miembro</span><span class="p">,</span> <span class="n">Sprint</span>
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-
-<span class="kn">from</span> <span class="nn">backend.api.models.MiembroSprint</span> <span class="kn">import</span> <span class="n">MiembroSprint</span></pre></div>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Miembro</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -53,21 +51,11 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">sprint</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
-        <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;No especificaste el sprint&quot;</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-    <span class="n">miembro</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
+      <div class="highlight"><pre>    <span class="n">miembro</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
         <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;No especificaste el miembro&quot;</span>
         <span class="p">}</span>
-    <span class="p">)</span>
-
-    <span class="n">miembro_sprint</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -77,14 +65,14 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>clean_sprint Valida que la id de sprint exista en la BD</p>
+      <p>clean_miembro Valida que la id de miembro exista en la BD</p>
 <p>Raises:
-    ValidationError: Error de validación</p>
+    ValidationError: Error de Validación</p>
 <p>Returns:
-    int: id de sprint</p>
+    int: id de miembro</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_sprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_miembro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -98,80 +86,11 @@
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
             <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sprint&quot;</span><span class="p">)</span>
-            <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;miembro&quot;</span><span class="p">)</span>
+            <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">id</span>
-        <span class="k">except</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontro un sprint en la base de datos&quot;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-5'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
-      </div>
-      <p>clean_miembro Valida que la id de miembro exista en la BD</p>
-<p>Raises:
-    ValidationError: Error de Validación</p>
-<p>Returns:
-    int: id de miembro</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_miembro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-6'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
-            <span class="n">miembro_id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;miembro&quot;</span><span class="p">)</span>
-            <span class="n">sprint_id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sprint&quot;</span><span class="p">)</span>
-            <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">miembro_id</span><span class="p">)</span>
-            <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">miembro</span><span class="o">.</span><span class="n">proyecto</span> <span class="o">!=</span> <span class="n">sprint</span><span class="o">.</span><span class="n">proyecto</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;El miembro no pertenece a este proyecto&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">miembro_id</span>
         <span class="k">except</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontro un miembro en la base de datos&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;El miembro no pertenece a este proyecto&quot;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-7'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
-      </div>
-      <p>clean_miembro_sprint Valida que ya no exista el miembro en el sprint</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_miembro_sprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-8'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
-        <span class="n">miembro</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;miembro&quot;</span><span class="p">)</span>
-        <span class="n">sprint</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sprint&quot;</span><span class="p">)</span>
-        <span class="n">miembro_sprint</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">miembro_proyecto</span><span class="o">=</span><span class="n">miembro</span><span class="p">,</span> <span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">miembro_sprint</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Ya existe el miembro&quot;</span><span class="p">)</span>
 
 </pre></div>
     </div>
