@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from backend.api.models import Permiso
+from backend.api.models import Permiso, Rol
 import json
 
 
@@ -55,3 +55,17 @@ class CreateRolForm(forms.Form):
             return permisos
         except Permiso.DoesNotExist:
             raise ValidationError("No se encontró algunos de los permisos especificados")
+
+    def clean_nombre(self):
+        """
+        clean_nombre Valida que el nombre del rol sea único
+
+        Raises:
+            ValidationError: Error de validacion si no se encuentra el rol
+        """
+        cleaned_data = super().clean()
+        nombre = cleaned_data.get("nombre")
+        rol = Rol.objects.filter(nombre=nombre)
+        if len(rol) > 0:
+            raise ValidationError("Ya existe un rol con ese nombre")
+        return nombre

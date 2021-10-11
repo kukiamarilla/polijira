@@ -36,7 +36,10 @@
     <span class="n">PlantillaRolProyectoViewSet</span><span class="p">,</span> \
     <span class="n">RolProyectoViewSet</span><span class="p">,</span> \
     <span class="n">MiembroViewSet</span><span class="p">,</span> \
-    <span class="n">HorarioViewSet</span>
+    <span class="n">HorarioViewSet</span><span class="p">,</span> \
+    <span class="n">UserStoryViewSet</span><span class="p">,</span> \
+    <span class="n">SprintViewSet</span><span class="p">,</span> \
+    <span class="n">MiembroSprintViewSet</span>
 
 <span class="n">index_view</span> <span class="o">=</span> <span class="n">never_cache</span><span class="p">(</span><span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;index.html&#39;</span><span class="p">))</span>
 
@@ -50,6 +53,9 @@
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;permisos-proyecto&quot;</span><span class="p">,</span> <span class="n">PermisoProyectoViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;permisos-proyecto&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;miembros&quot;</span><span class="p">,</span> <span class="n">MiembroViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;miembros&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;horarios&quot;</span><span class="p">,</span> <span class="n">HorarioViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;horarios&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;user-stories&quot;</span><span class="p">,</span> <span class="n">UserStoryViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;user-stories&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;sprints&quot;</span><span class="p">,</span> <span class="n">SprintViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;sprints&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;miembros-sprint&quot;</span><span class="p">,</span> <span class="n">MiembroSprintViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;miembros-sprint&quot;</span><span class="p">)</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span></pre></div>
     </div>

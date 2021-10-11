@@ -7,3 +7,7 @@ from .PlantillaRolProyectoTestCase import PlantillaRolProyectoTestCase
 from .RolProyectoTestCase import RolProyectoTestCase
 from .MiembroTestCase import MiembroTestCase
 from .HorarioTestCase import HorarioTestCase
+from .UserStoryTestCase import UserStoryTestCase
+from .SprintTestCase import SprintTestCase
+from .MiembroSprintTestCase import MiembroSprintTestCase
+from .SprintPlanningTestCase import SprintPlanningTestCase

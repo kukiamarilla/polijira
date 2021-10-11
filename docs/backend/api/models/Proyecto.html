@@ -139,7 +139,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">fecha_fin</span> <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">fecha_fin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">scrum_master_handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">scrum_master_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scrum_master</span><span class="p">)</span></pre></div>
+            <span class="n">scrum_master_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scrum_master</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scrum_master</span> <span class="o">=</span> <span class="n">scrum_master</span> <span class="k">if</span> <span class="n">scrum_master</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">scrum_master</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

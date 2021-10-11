@@ -13,3 +13,8 @@ from .AgregarPermisoRolProyectoForm import AgregarPermisoRolProyectoForm
 from .UpdateHorarioForm import UpdateHorarioForm
 from .CreateMiembroForm import CreateMiembroForm
 from .UpdateMiembroForm import UpdateMiembroForm
+from .CreateUserStoryForm import CreateUserStoryForm
+from .UpdateUserStoryForm import UpdateUserStoryForm
+from .CreateSprintForm import CreateSprintForm
+from .UpdateSprintForm import UpdateSprintForm
+from .CreateMiembroSprintForm import CreateMiembroSprintForm

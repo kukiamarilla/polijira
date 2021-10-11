@@ -1,0 +1,26 @@
+[
+    {
+        "model": "api.productbacklog",
+        "pk": 1,
+        "fields": {
+            "proyecto": 1,
+            "user_story": 1
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 2,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 2
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 3,
+        "fields": {
+            "proyecto": 4,
+            "user_story": 3
+        }
+    }
+]

@@ -1,13 +1,16 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario
+from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario, Horario
 from backend.api.serializers import \
     ProyectoSerializer, \
     PermisoProyectoSerializer, \
     RolProyectoSerializer, \
     MiembroSerializer, \
-    ImportarRolSerializer
+    ImportarRolSerializer, \
+    UserStorySerializer, \
+    SprintSerializer
+
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
@@ -50,14 +53,15 @@ class ProyectoViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not usuario_request.tiene_permiso("ver_proyectos"):
+            proyecto = Proyecto.objects.get(pk=pk)
+            if not usuario_request.tiene_permiso("ver_proyectos") and \
+               not Miembro.es_miembro(usuario_request, proyecto):
                 response = {
-                    "message": "No tiene permiso para realizar esta accion",
+                    "message": "Debe ser miembro y tener permiso para realizar esta acción",
                     "permission_required": ["ver_proyectos"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            proyecto = Proyecto.objects.get(pk=pk)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:
@@ -97,6 +101,17 @@ class ProyectoViewSet(viewsets.ViewSet):
                 roles_handler=RolProyecto.from_plantilla,
                 scrum_master_handler=Miembro.asignar_scrum_master
             )
+            miembro = Miembro.objects.get(rol__nombre="Scrum Master", proyecto=proyecto)
+            horario = Horario.objects.create(
+                lunes=0,
+                martes=0,
+                miercoles=0,
+                jueves=0,
+                viernes=0,
+                sabado=0,
+                domingo=0,
+            )
+            horario.asignar_horario(miembro)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Usuario.DoesNotExist:
@@ -142,6 +157,15 @@ class ProyectoViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             scrum_master = Usuario.objects.get(pk=request.data["scrum_master_id"])
+            p = Proyecto.objects.filter(~Q(id=pk), nombre=request.data['nombre'])
+            if len(p) > 0:
+                response = {
+                    "message": "Ya existe un proyecto con ese nombre",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            miembro = Miembro.objects.get(rol__nombre="Scrum Master", proyecto=proyecto)
+            miembro.horario.delete()
             proyecto.update(
                 nombre=request.data['nombre'],
                 fecha_inicio=request.data['fecha_inicio'],
@@ -149,6 +173,17 @@ class ProyectoViewSet(viewsets.ViewSet):
                 scrum_master=scrum_master,
                 scrum_master_handler=Miembro.actualizar_scrum_master
             )
+            miembro = Miembro.objects.get(usuario=scrum_master, proyecto=proyecto)
+            horario = Horario.objects.create(
+                lunes=0,
+                martes=0,
+                miercoles=0,
+                jueves=0,
+                viernes=0,
+                sabado=0,
+                domingo=0,
+            )
+            horario.asignar_horario(miembro)
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:
@@ -219,20 +254,16 @@ class ProyectoViewSet(viewsets.ViewSet):
         """
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            # if not usuario_request.tiene_permiso("activar_proyectos"):
-            #     response = {
-            #         "message": "No tiene permiso para realizar esta accion",
-            #         "permission_required": ["activar_proyectos"],
-            #         "error": "forbidden"
-            #     }
-            #     return Response(response, status=status.HTTP_403_FORBIDDEN)
             proyecto = Proyecto.objects.get(pk=pk)
-            if proyecto.scrum_master.id != usuario_request.id:
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=proyecto)
+            if not miembro.tiene_permiso("activar_proyecto"):
                 response = {
-                    "message": "Debe ser Scrum Master para realizar esta accion",
+                    "message": "No tiene permiso para realizar esta accion",
+                    "permission_required": ["activar_proyecto"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+
             if proyecto.estado != 'P' and proyecto.estado != "A":
                 response = {
                     "message": "No puedes activar el Proyecto en su estado actual",
@@ -450,6 +481,56 @@ class ProyectoViewSet(viewsets.ViewSet):
             response = {"message": "Usted no es miembro de este proyecto"}
             return Response(response, status=status.HTTP_403_FORBIDDEN)
 
+    @action(detail=True, methods=["GET"])
+    def user_stories(self, request, pk=None):
+        """
+        user_stories Lista todos los User Stories de este Proyecto
+
+        Args:
+            request (Any): Request del Usuario
+            pk (int, optional): Primary Key del Proyecto. Defaults to None.
+
+        Returns:
+            list(JSON): Lista de todos los User Story de este Proyecto en formato JSON
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
+            if not miembro_request.tiene_permiso("ver_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            user_stories = UserStory.objects.filter(product_backlogs__proyecto_id=pk)
+            serializer = UserStorySerializer(user_stories, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "No existe el Proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["GET"])
+    def sprints(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto_id=pk)
+            if not miembro.tiene_permiso("ver_sprints"):
+                sprints = Sprint.objects.filter(miembro_sprints__miembro_proyecto=miembro)
+                serializer = SprintSerializer(sprints, many=True)
+                return Response(serializer.data)
+            sprints = Sprint.objects.filter(proyecto_id=pk)
+            serializer = SprintSerializer(sprints, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
     # @action(detail=True, methods=['POST'])
     # def finalizar(self, request, pk=None):
     #     try:

@@ -12,6 +12,9 @@ import PlantillaRolProyecto from "@/views/PlantillaRolProyecto";
 import Proyecto from "@/views/Proyecto";
 import AutorizacionProyecto from "@/views/AutorizacionProyecto";
 import Miembros from "@/views/Miembros";
+import UserStories from "@/views/UserStories";
+import ProductBacklog from "@/views/ProductBacklog";
+import Sprints from "@/views/Sprints";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -83,6 +86,30 @@ const router = new Router({
       path: "/proyectos/:id/miembros",
       name: "Miembros Proyecto",
       component: Miembros,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/user-stories",
+      name: "User Stories",
+      component: UserStories,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/backlog",
+      name: "Product Backlog",
+      component: ProductBacklog,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/sprints",
+      name: "Sprints",
+      component: Sprints,
       meta: {
         middleware: [auth, activated, proyecto],
       },

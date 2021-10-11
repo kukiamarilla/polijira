@@ -8,7 +8,7 @@
       format="DD/MM/YYYY"
       type="date"
       placeholder="Seleccionar fecha"
-      @input="$emit('input', text)"
+      @input="$emit('input', (new Date(text)).toISOString().substr(0,10))"
       :disabled="disabled"
     ></DatePicker>
   </div>
@@ -26,12 +26,12 @@ export default {
   props: ["title", "value", "disabled"],
   data() {
     return {
-      text: this.value,
+      text: new Date(this.value),
     };
   },
   watch: {
     value() {
-      this.text = this.value;
+      this.text = new Date(this.value);
     },
   },
 };

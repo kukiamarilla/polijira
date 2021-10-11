@@ -90,16 +90,6 @@
             proyectoSelected.estado == 'P'
           "
         />
-        &nbsp; &nbsp;
-        <Boton
-          texto="Iniciar Proyecto"
-          tema="success"
-          @click="activarProyecto"
-          v-if="
-            proyectoSelected.scrum_master.id == me.id &&
-            proyectoSelected.estado == 'P'
-          "
-        />
       </div>
     </Modal>
 
@@ -206,7 +196,7 @@ export default {
         return false;
       }
       if (
-        proyecto.fecha_inicio.toISOString().substr(0, 10) <
+        proyecto.fecha_inicio <
         new Date().toISOString().substr(0, 10)
       ) {
         Alert.error("La Fecha de Inicio no puede estar en el pasado.");
@@ -233,8 +223,6 @@ export default {
       if (validacion) {
         let nuevo = this.nuevo;
         nuevo.scrum_master = this.usuarios[nuevo.usuarioSeleccionado];
-        nuevo.fecha_inicio = nuevo.fecha_inicio.toISOString().substr(0, 10);
-        nuevo.fecha_fin = nuevo.fecha_fin.toISOString().substr(0, 10);
         nuevo.scrum_master_id = nuevo.scrum_master.id;
         this.nuevo = nuevo;
         proyectoService.create(this.nuevo).then(() => {
@@ -272,10 +260,6 @@ export default {
       if (validacion) {
         let proyecto = this.proyectoSelected;
         proyecto.scrum_master = this.usuarios[proyecto.usuarioSeleccionado];
-        proyecto.fecha_inicio = proyecto.fecha_inicio
-          .toISOString()
-          .substr(0, 10);
-        proyecto.fecha_fin = proyecto.fecha_fin.toISOString().substr(0, 10);
         proyecto.scrum_master_id = proyecto.scrum_master.id;
         this.proyectoSelected = {
           ...proyecto,

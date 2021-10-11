@@ -63,13 +63,17 @@ export default {
   props: ["value", "permisos", "rol", "disabled"],
   computed: {
     ...mapGetters({
-      hasPermission: "auth/hasPermission",
+      hasPermission: "proyecto/hasPermission",
     }),
     ...mapState({
-      me: (state) => state.auth.me,
+      me: (state) => state.proyecto.me,
     }),
     canEdit() {
-      return !this.disabled;
+      return (
+        !this.disabled &&
+        this.hasPermission("modificar_roles_proyecto") &&
+        this.rol.id != this.me.rol.id
+      );
     },
   },
   watch: {

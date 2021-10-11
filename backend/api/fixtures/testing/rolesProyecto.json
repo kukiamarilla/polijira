@@ -37,7 +37,9 @@
                 29,
                 30,
                 31,
-                32
+                32,
+                33,
+                34
             ]
         }
     },
@@ -64,6 +66,20 @@
         "fields": {
             "nombre": "Stake Holder",
             "proyecto": 1,
+            "permisos": [
+                13,
+                18,
+                26,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 2,
             "permisos": [
                 13,
                 18,

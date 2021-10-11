@@ -23,8 +23,7 @@
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="p">,</span> <span class="n">status</span>
 <span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
 <span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">action</span>
-<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Usuario</span>
-<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Rol</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">MiembroSprint</span><span class="p">,</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Rol</span>
 <span class="kn">from</span> <span class="nn">backend.api.serializers</span> <span class="kn">import</span> <span class="n">UsuarioSerializer</span></pre></div>
     </div>
   </div>
@@ -231,6 +230,12 @@
             <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">usuario_request</span> <span class="o">==</span> <span class="n">usuario</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No puedes desactivarte a ti mismo&quot;</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_409_CONFLICT</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">pertenece_a_sprint_activo</span><span class="p">(</span><span class="n">usuario</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Este usuario pertenece a un Sprint Activo&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;conflict&quot;</span>
+                <span class="p">}</span>
                 <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_409_CONFLICT</span><span class="p">)</span>
             <span class="n">usuario</span><span class="o">.</span><span class="n">desactivar</span><span class="p">()</span>
             <span class="n">serializer</span> <span class="o">=</span> <span class="n">UsuarioSerializer</span><span class="p">(</span><span class="n">usuario</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

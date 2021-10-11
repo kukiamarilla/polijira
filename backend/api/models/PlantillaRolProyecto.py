@@ -12,7 +12,7 @@ class PlantillaRolProyecto(models.Model):
         nombre (CharField): Nombre del rol
         permisos (ManyToManyField): Permisos del rol
     """
-    nombre = models.CharField(max_length=255, default="")
+    nombre = models.CharField(max_length=255, default="", unique=True)
     permisos = models.ManyToManyField('PermisoProyecto')
 
     def agregar_permiso(self, permiso):

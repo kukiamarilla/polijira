@@ -33,7 +33,11 @@
                     <a
                       href="#"
                       @click.prevent="eliminarRol(rol)"
-                      v-if="rol.nombre != 'Scrum Master'"
+                      v-if="
+                        rol.nombre != 'Scrum Master' &&
+                        rol.id != me.rol.id &&
+                        hasPermission('eliminar_roles_proyecto')
+                      "
                     >
                       <Icon
                         icono="delete"
@@ -45,7 +49,11 @@
                     <a
                       href="#"
                       @click.prevent="abrirModificarModal(rol)"
-                      v-if="rol.nombre != 'Scrum Master'"
+                      v-if="
+                        rol.nombre != 'Scrum Master' &&
+                        rol.id != me.rol.id &&
+                        hasPermission('modificar_roles_proyecto')
+                      "
                     >
                       <Icon
                         icono="edit"
@@ -170,7 +178,7 @@ export default {
         this.$router.push(`/proyectos/${this.$route.params["id"]}`);
     } else {
       this.$store
-        .dispatch("proyecto/getMe", this.$router.params["id"])
+        .dispatch("proyecto/getMe", this.$route.params["id"])
         .then(() => {
           if (
             !this.hasAnyPermission([
@@ -188,7 +196,7 @@ export default {
   },
   computed: {
     ...mapState({
-      me: (state) => state.auth.me,
+      me: (state) => state.proyecto.me,
     }),
     ...mapGetters({
       hasAnyPermission: "proyecto/hasAnyPermission",
@@ -219,12 +227,14 @@ export default {
   },
   methods: {
     load() {
-      permisoProyectoService.list().then((permisos) => {
-        this.permisos = permisos;
-      });
-      rolProyectoService.list(this.$route.params["id"]).then((roles) => {
-        this.roles = roles;
-      });
+      if(this.hasPermission("ver_permisos_proyecto"))
+        permisoProyectoService.list().then((permisos) => {
+          this.permisos = permisos;
+        });
+      if(this.hasPermission("ver_roles_proyecto"))
+        rolProyectoService.list(this.$route.params["id"]).then((roles) => {
+          this.roles = roles;
+        });
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
         this.nuevoRol = { ...this.nuevoRol, proyecto: proyecto.id };
