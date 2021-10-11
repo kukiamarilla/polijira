@@ -242,6 +242,16 @@ class SprintPlanningViewSet(viewsets.ViewSet):
     @action(detail=True, methods=["POST"])
     @FormValidator(form=PlanificarUserStoryForm)
     def planificar_user_story(self, request, pk=None):
+        """
+        planificar_user_story Servicio para Planificar User Story en el Sprint Planning
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key
+
+        Returns:
+            JSON: Metadatos del Sprint
+        """
         try:
             usuario = Usuario.objects.get(user=request.user)
             sprint = Sprint.objects.get(pk=pk)
