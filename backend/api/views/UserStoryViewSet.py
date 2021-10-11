@@ -63,6 +63,7 @@ class UserStoryViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = UserStory.create(
                 nombre=request.data.get("nombre"),
+                proyecto=request.data.get("proyecto"),
                 descripcion=request.data.get("descripcion") if request.data.get("descripcion") is not None else "",
                 prioridad=request.data.get("prioridad") if request.data.get("prioridad") is not None else 0,
                 autor=miembro_request,

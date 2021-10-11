@@ -46,6 +46,7 @@ class UserStory(models.Model):
                                       related_name="user_stories", null=True)
     estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
+    proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="user_stories")
 
     def lanzar(self):
         """
@@ -72,11 +73,12 @@ class UserStory(models.Model):
 
     @staticmethod
     def create(
-        nombre=None, descripcion=None, prioridad=None, autor=None,
+        proyecto=None, nombre=None, descripcion=None, prioridad=None, autor=None,
         product_backlog_handler=None, registro_handler=None
     ):
         user_story = UserStory.objects.create(
             nombre=nombre,
+            proyecto_id=proyecto,
             descripcion=descripcion,
             prioridad=prioridad,
             fecha_creacion=datetime.date.today()
