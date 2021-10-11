@@ -12,6 +12,7 @@
             "fecha_creacion": "2021-09-24",
             "desarrollador": null,
             "estado_estimacion": "C",
+            "proyecto": 1,
             "product_backlog": true
         }
     },
@@ -28,7 +29,8 @@
             "fecha_creacion": "2021-09-24",
             "desarrollador": null,
             "estado_estimacion": "C",
-            "product_backlog": true
+            "product_backlog": true,
+            "proyecto": 3
         }
     },
     {
@@ -44,7 +46,13 @@
             "fecha_creacion": "2021-10-10",
             "desarrollador": 2,
             "estado_estimacion": "C",
+<<<<<<< HEAD
+            "product_backlog": true,
+            "proyecto": 4
+=======
+            "proyecto": 4,
             "product_backlog": true
+>>>>>>> feature/sprint
         }
     }
 ]

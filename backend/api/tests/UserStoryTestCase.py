@@ -2,6 +2,8 @@ from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserS
 from django.test import TestCase, Client
 from datetime import date
 
+from backend.api.models.MiembroSprint import MiembroSprint
+
 
 class UserStoryTestCase(TestCase):
     """
@@ -140,7 +142,7 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["desarrollador"], None)
         self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
-        user_story = UserStory.objects.filter(**body)
+        user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
         user_story = user_story[0]
         product_backlog = ProductBacklog.objects.filter(
@@ -194,7 +196,7 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["desarrollador"], None)
         self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
-        user_story = UserStory.objects.filter(**body)
+        user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
         user_story = user_story[0]
         product_backlog = ProductBacklog.objects.filter(
@@ -233,14 +235,15 @@ class UserStoryTestCase(TestCase):
         user_story_request = {
             "nombre": "USTest Caso 3",
             "descripcion": "Crear US en caso 3",
-            "proyecto": 1
+            "proyecto": 1,
+            "prioridad": 2
         }
         response = self.client.post("/api/user-stories/", user_story_request, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         body = response.json()
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
-        self.assertEquals(body["prioridad"], 0)
+        self.assertEquals(body["prioridad"], 2)
         self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
@@ -248,7 +251,7 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["desarrollador"], None)
         self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
-        user_story = UserStory.objects.filter(**body)
+        user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
         user_story = user_story[0]
         product_backlog = ProductBacklog.objects.filter(

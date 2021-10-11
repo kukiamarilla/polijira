@@ -10,7 +10,7 @@ ESTADOS = (
 
 ESTADOS_ESTIMADOS = (
     ("N", "No estimado"),
-    ("P", "Parcial"),
+    ("p", "Parcial"),
     ("C", "Completo"),
     ("P", "Pendiente")
 )
@@ -46,6 +46,7 @@ class UserStory(models.Model):
                                       related_name="user_stories", null=True)
     estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
+    proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="user_stories")
 
     def lanzar(self):
         """
@@ -72,11 +73,12 @@ class UserStory(models.Model):
 
     @staticmethod
     def create(
-        nombre=None, descripcion=None, prioridad=None, autor=None,
+        proyecto=None, nombre=None, descripcion=None, prioridad=None, autor=None,
         product_backlog_handler=None, registro_handler=None
     ):
         user_story = UserStory.objects.create(
             nombre=nombre,
+            proyecto_id=proyecto,
             descripcion=descripcion,
             prioridad=prioridad,
             fecha_creacion=datetime.date.today()
@@ -87,13 +89,14 @@ class UserStory(models.Model):
 
     def update(
         self, nombre=None, descripcion=None, horas_estimadas=None, prioridad=None, estado_estimacion=None, autor=None,
-        registro_handler=None
+        registro_handler=None, desarrollador=None
     ):
         self.nombre = nombre if nombre is not None else self.nombre
         self.descripcion = descripcion if descripcion is not None else self.descripcion
         self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
         self.prioridad = prioridad if prioridad is not None else self.prioridad
         self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
+        self.desarrollador = desarrollador if desarrollador is not None else self.desarrollador
         self.save()
         registro_handler(self, autor)
 
@@ -102,10 +105,6 @@ class UserStory(models.Model):
         registro_handler(self, autor)
         product_backlog_handler(self)
 
-    def asignar_desarrollador(self, desarrollador):
-        self.desarrollador = desarrollador
-        self.save()
-
-    def asignar_horas_estimadas(self, horas):
-        self.horas_estimadas = horas
+    def eliminar_del_product_backlog(self):
+        self.product_backlog = False
         self.save()

@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
+from backend.api.models.RegistroUserStory import RegistroUserStory
 from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import PlanificarUserStoryForm, CreateMiembroSprintForm, EliminarMiembroSprintForm
+from backend.api.forms import PlanificarUserStoryForm, CreateMiembroSprintForm, EliminarMiembroSprintForm, ResponderEstimacionForm
 
 
 class SprintPlanningViewSet(viewsets.ViewSet):
@@ -268,15 +269,17 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            product_backlog = ProductBacklog.objects.get(
-                proyecto=sprint.proyecto, user_story_id=request.data.get("user_story"))
+            user_story = ProductBacklog.objects.get(
+                proyecto=sprint.proyecto, user_story_id=request.data.get("user_story")).user_story
             sprint.planificar(
-                user_story=product_backlog.user_story,
+                user_story=user_story,
                 horas_estimadas=request.data.get("horas_estimadas"),
                 desarrollador=MiembroSprint.objects.get(
                     miembro_proyecto_id=request.data.get("desarrollador"), sprint=sprint),
+                planificador=miembro,
                 sprint_backlog_handler=SprintBacklog.agregar_user_story,
-                product_backlog_handler=ProductBacklog.eliminar_user_story
+                product_backlog_handler=ProductBacklog.eliminar_user_story,
+                registro_handler=RegistroUserStory.modificar_registro
             )
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
@@ -304,3 +307,63 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "bad_request"
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @transaction.atomic
+    @action(detail=True, methods=["POST"])
+    @FormValidator(form=ResponderEstimacionForm)
+    def responder_estimacion(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            user_story = UserStory.objects.get(sprint_backlogs__sprint=sprint)
+            if not sprint.estado_sprint_planning == "I":
+                response = {
+                    "message": "Un Planificador debe Iniciar el Sprint Planning para responder una estimación",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if not user_story.estado_estimacion == "p":
+                response = {
+                    "message": "Este User Story aun no fue estimado por el Planificador",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if not miembro == user_story.desarrollador:
+                response = {
+                    "message": "Usted no es desarrollador de este User Story",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if not sprint.estado == "P":
+                response = {
+                    "message": "Solo puedes responder una estimación de un Sprint Pendiente",
+                    "error": "conflict"
+                }
+                return Response(response, status=status.HTTP_409_CONFLICT)
+            user_story.update(
+                horas_estimadas=int((request.data.get("horas_estimadas") + user_story.horas_estimadas)/2),
+                estado_estimacion="C",
+                registro_handler=RegistroUserStory.modificar_registro
+            )
+            sprint_backlog = SprintBacklog.objects.get(sprint=sprint, user_story=user_story)
+            serializer = SprintBacklog(sprint_backlog, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except UserStory.DoesNotExist:
+            response = {
+                "message": "No existe ningún User Story relacionado con este Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)

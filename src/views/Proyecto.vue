@@ -4,19 +4,31 @@
     <div class="body">
       <SidebarProyecto :proyecto="proyecto" current="home" />
       <div class="d-flex content">
-        <div
-          class="iniciar"
-          v-if="hasPermission('activar_proyecto') && proyecto.estado == 'P'"
-        >
-          <Boton
-            texto="Iniciar Proyecto"
-            tema="success"
-            v-if="proyecto.estado == 'P'"
-            @click="activarProyecto(proyecto)"
-          />
+        <div class="cabecera">
+          <h1>Bienvenido a {{ proyecto.nombre }}</h1>
+
+          <div
+            class="iniciar"
+            v-if="hasPermission('activar_proyecto') && proyecto.estado == 'P'"
+          >
+            <Boton
+              texto="Iniciar Proyecto"
+              tema="success"
+              v-if="proyecto.estado == 'P'"
+              @click="activarProyecto(proyecto)"
+            />
+          </div>
         </div>
-        <div class="backlog">
-          <ProductBacklog />
+        <div class="accesos-directos">
+          <div v-for="(accesoDirecto, idx) in accesosDirectos" :key="idx">
+            <CardLink
+              :titulo="accesoDirecto.titulo"
+              :icono="accesoDirecto.icono"
+              :link="accesoDirecto.link"
+              :resaltado="accesoDirecto.resaltado"
+              v-if="accesoDirecto.tienePermiso"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -29,7 +41,7 @@ import Boton from "@/components/Boton";
 import Navbar from "@/components/Navbar";
 import Alert from "@/helpers/alert";
 import SidebarProyecto from "@/components/SidebarProyecto";
-import ProductBacklog from "@/components/ProductBacklog";
+import CardLink from "@/components/CardLink";
 import { mapGetters } from "vuex";
 
 export default {
@@ -37,7 +49,7 @@ export default {
     Navbar,
     Boton,
     SidebarProyecto,
-    ProductBacklog,
+    CardLink,
   },
   data() {
     return {
@@ -52,9 +64,15 @@ export default {
           email: "",
         },
       },
+      accesosDirectos: [],
     };
   },
   computed: {
+    accesosDirectosPermitidos() {
+      return this.accesosDirectos.map(
+        (accesoDirecto) => accesoDirecto.tienePermiso
+      );
+    },
     ...mapGetters({
       hasAnyPermission: "proyecto/hasAnyPermission",
       hasPermission: "proyecto/hasPermission",
@@ -73,7 +91,54 @@ export default {
     load() {
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
+        this.cargarAccesosDirectos();
       });
+    },
+    cargarAccesosDirectos() {
+      const id = this.proyecto.id;
+
+      this.accesosDirectos = [
+        {
+          titulo: "Miembros",
+          icono: "team",
+          link: `/proyectos/${id}/miembros`,
+          tienePermiso: this.hasPermission("ver_miembros"),
+        },
+        {
+          titulo: "Autorización",
+          icono: "key",
+          link: `/proyectos/${id}/autorizacion`,
+          tienePermiso: this.hasAnyPermission([
+            "ver_roles_proyecto",
+            "ver_permisos_proyecto",
+          ]),
+        },
+        {
+          titulo: "User Stories",
+          icono: "card",
+          link: `/proyectos/${id}/user-stories`,
+          tienePermiso: this.hasPermission("ver_user_stories"),
+        },
+        {
+          titulo: "Product Backlog",
+          icono: "box",
+          link: `/proyectos/${id}/backlog`,
+          tienePermiso: this.hasPermission("ver_user_stories"),
+        },
+        {
+          titulo: "Sprints",
+          icono: "flag",
+          link: `/proyectos/${id}/sprints`,
+          tienePermiso: this.hasPermission("ver_sprints"),
+        },
+        {
+          titulo: "Sprint Activo",
+          icono: "flag",
+          link: "",
+          resaltado: true,
+          tienePermiso: true,
+        },
+      ];
     },
   },
 };
@@ -83,14 +148,34 @@ export default {
 .body {
   display: flex;
 }
+
 .content {
   flex-direction: column;
   width: calc(100% - 380px);
   margin: 0 40px;
 }
-.iniciar {
+
+.cabecera {
+  align-items: center;
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  margin-bottom: 46px;
+}
+
+.iniciar {
+  flex-shrink: 0;
+  margin-left: 40px;
+}
+
+.accesos-directos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(276px, 1fr));
+  gap: 40px;
+  place-items: center;
+
+  & > div {
+    max-width: 100%;
+    min-width: 276px;
+  }
 }
 </style>

@@ -262,5 +262,13 @@
             "nombre": "Eliminar User Stories",
             "codigo": "eliminar_user_stories"
         }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 34,
+        "fields": {
+            "nombre": "Ver Miembros Sprint",
+            "codigo": "ver_miembros_sprint"
+        }
     }
 ]
