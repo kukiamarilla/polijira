@@ -159,7 +159,7 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             miembro_sprint = MiembroSprint.objects.filter(miembro_proyecto=miembro, sprint=sprint)
-            if len(miembro_request) > 0:
+            if len(miembro_sprint) > 0:
                 response = {
                     "message": "Este miembro ya fue agregado al Sprint",
                     "error": "bad_request"
