@@ -40,7 +40,7 @@ class SprintPlanningTestCase(TestCase):
         """
         print("\nProbando Iniciar un Sprint Planning")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/sprints/2/iniciar_sprint_planning/")
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 200)
         body = response.json()
         sprint = Sprint.objects.filter(**body)
@@ -55,7 +55,7 @@ class SprintPlanningTestCase(TestCase):
         """
         print("\nProbando Iniciar un Sprint Planning de un Sprint que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.post("/api/sprints/2000/iniciar_sprint_planning/")
+        response = self.client.post("/api/sprint-planning/2000/iniciar/")
         self.assertEquals(response.status_code, 404)
         body = response.json()
         self.assertEquals(body.get("error"), "not_found")
@@ -70,7 +70,7 @@ class SprintPlanningTestCase(TestCase):
         miembro = Miembro.objects.get(pk=4)
         miembro.usuario_id = 2
         miembro.save()
-        response = self.client.post("/api/sprints/2/iniciar_sprint_planning/")
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
@@ -83,7 +83,7 @@ class SprintPlanningTestCase(TestCase):
         print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver Sprints")
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_sprints").delete()
-        response = self.client.post("/api/sprints/2/iniciar_sprint_planning/")
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
@@ -95,8 +95,8 @@ class SprintPlanningTestCase(TestCase):
         """
         print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Iniciar Sprint Planning")
         self.client.login(username="testing", password="polijira2021")
-        PermisoProyecto.objects.get(codigo="iniciar_sprint_planning").delete()
-        response = self.client.post("/api/sprints/2/iniciar_sprint_planning/")
+        PermisoProyecto.objects.get(codigo="planear_sprints").delete()
+        response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
