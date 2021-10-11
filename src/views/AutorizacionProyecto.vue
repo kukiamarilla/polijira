@@ -227,12 +227,14 @@ export default {
   },
   methods: {
     load() {
-      permisoProyectoService.list().then((permisos) => {
-        this.permisos = permisos;
-      });
-      rolProyectoService.list(this.$route.params["id"]).then((roles) => {
-        this.roles = roles;
-      });
+      if(this.hasPermission("ver_permisos_proyecto"))
+        permisoProyectoService.list().then((permisos) => {
+          this.permisos = permisos;
+        });
+      if(this.hasPermission("ver_roles_proyecto"))
+        rolProyectoService.list(this.$route.params["id"]).then((roles) => {
+          this.roles = roles;
+        });
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
         this.nuevoRol = { ...this.nuevoRol, proyecto: proyecto.id };

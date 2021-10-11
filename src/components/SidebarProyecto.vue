@@ -16,7 +16,7 @@
           texto="Autorizacion"
           :to="`/proyectos/${proyecto.id}/autorizacion`"
           :active="current == 'autorizacion'"
-          v-if="hasProyectoPermission('ver_roles_proyecto')"
+          v-if="hasAnyProyectoPermission(['ver_roles_proyecto', 'ver_permisos_proyecto'])"
         />
         <SidebarProyectoItem
           icono="team"
@@ -67,6 +67,7 @@ export default {
   computed: {
     ...mapGetters({
       hasProyectoPermission: "proyecto/hasPermission",
+      hasAnyProyectoPermission: "proyecto/hasAnyPermission",
     }),
   },
 };

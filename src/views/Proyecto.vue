@@ -20,14 +20,15 @@
           </div>
         </div>
         <div class="accesos-directos">
-          <CardLink
-            v-for="accesoDirecto in accesosDirectos"
-            :titulo="accesoDirecto.titulo"
-            :icono="accesoDirecto.icono"
-            :link="accesoDirecto.link"
-            :resaltado="accesoDirecto.resaltado"
-            :key="accesoDirecto.titulo"
-          />
+          <div v-for="(accesoDirecto, idx) in accesosDirectos" :key="idx">
+            <CardLink
+              :titulo="accesoDirecto.titulo"
+              :icono="accesoDirecto.icono"
+              :link="accesoDirecto.link"
+              :resaltado="accesoDirecto.resaltado"
+              v-if="accesoDirecto.tienePermiso"
+            />
+          </div>
         </div>
       </div>
     </div>
