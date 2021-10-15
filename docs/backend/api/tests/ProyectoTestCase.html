@@ -21,7 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Miembro</span><span class="p">,</span> <span class="n">PermisoProyecto</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">RolProyecto</span><span class="p">,</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Permiso</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Miembro</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">RolProyecto</span><span class="p">,</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Permiso</span><span class="p">,</span> <span class="n">PermisoProyecto</span>
 <span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">Client</span></pre></div>
     </div>
   </div>
@@ -90,10 +90,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>test_listar_proyectos Prueba listar todos los proyectos al que es miembro el usuario</p>
+      <p>test_listar_proyectos_sin_permiso_ver_proyecto Prueba listar todos los proyectos al que es miembro el usuario</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_listar_todos_los_proyectos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_listar_todos_los_proyectos_sin_permiso_ver_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -121,10 +121,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
-      <p>test_obtener_proyecto Prueba obtener detalles de un proyecto</p>
+      <p>test_listar_todos_los_proyectos Prueba listar todos los proyectos del sistema</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_listar_todos_los_proyectos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -136,23 +136,12 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener detalles de un proyecto.&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando listar todos los proyectos del sistema.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
-        <span class="n">scrum_master</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;ProyectoTest&quot;</span><span class="p">,</span>
-            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
-            <span class="n">fecha_fin</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-            <span class="n">scrum_master</span><span class="o">=</span><span class="n">scrum_master</span>
-        <span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/&quot;</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;scrum_master&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;estado&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">body</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -161,10 +150,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>test_obtener_proyecto Prueba obtener detalles de un proyecto sin tener permiso para ver proyectos</p>
+      <p>test_obtener_proyecto Prueba obtener detalles de un proyecto</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto_sin_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -176,21 +165,17 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener detalles de un proyecto sin tener permiso para ver proyectos.&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener detalles de un proyecto.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
-        <span class="n">Permiso</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="n">scrum_master</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;ProyectoTest&quot;</span><span class="p">,</span>
-            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
-            <span class="n">fecha_fin</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-            <span class="n">scrum_master</span><span class="o">=</span><span class="n">scrum_master</span>
-        <span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;permission_required&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;ver_proyectos&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">],</span> <span class="s1">&#39;forbidden&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span></pre></div>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;scrum_master&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;estado&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -421,7 +406,7 @@ Prueba crear un proyecto pasando un estado que difiere de su estado inicial Pend
             <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;ProyectoTestCrear&quot;</span><span class="p">,</span>
             <span class="s2">&quot;fecha_inicio&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
             <span class="s2">&quot;fecha_fin&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">55</span>
         <span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/&quot;</span><span class="p">,</span> <span class="n">proyecto_body</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
@@ -435,6 +420,44 @@ Prueba crear un proyecto pasando un estado que difiere de su estado inicial Pend
       <div class='octowrap'>
         <a class='octothorpe' href='#section-23'>#</a>
       </div>
+      <p>test_crear_proyecto_con_nombre_existente Prueba crear un proyecto con nombre ya existente</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_crear_proyecto_con_nombre_existente</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando crear un proyecto con nombre existente.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;Proyecto A&quot;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+                                <span class="n">fecha_fin</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">scrum_master_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">proyecto_body</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;Proyecto A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fecha_inicio&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+            <span class="s2">&quot;fecha_fin&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/&quot;</span><span class="p">,</span> <span class="n">proyecto_body</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">422</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;Error de validación&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">][</span><span class="s2">&quot;nombre&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;Ya existe un proyecto con ese nombre&quot;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
       <p>test_crear_proyecto_con_campo_nombre_superando_max_length
 Prueba crear un proyecto con un nombre que supera el limite máximo de caracteres</p>
     </div>
@@ -443,10 +466,10 @@ Prueba crear un proyecto con un nombre que supera el limite máximo de caractere
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-26'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       
     </div>
@@ -470,10 +493,10 @@ Prueba crear un proyecto con un nombre que supera el limite máximo de caractere
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-27'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-27'>#</a>
       </div>
       <p>test_crear_proyecto_con_campo_nombre_no_asignado Prueba crear un proyecto sin especificar el campo nombre</p>
     </div>
@@ -482,10 +505,10 @@ Prueba crear un proyecto con un nombre que supera el limite máximo de caractere
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
       
     </div>
@@ -505,10 +528,10 @@ Prueba crear un proyecto con un nombre que supera el limite máximo de caractere
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       <p>test_crear_proyecto_con_campo_fecha_inicio_no_asignado
 Prueba crear un proyecto sin especificar el campo fecha de inicio</p>
@@ -518,10 +541,10 @@ Prueba crear un proyecto sin especificar el campo fecha de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-30'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-30'>#</a>
       </div>
       
     </div>
@@ -541,10 +564,10 @@ Prueba crear un proyecto sin especificar el campo fecha de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>test_crear_proyecto_con_campo_fecha_inicio_no_asignado
 Prueba crear un proyecto sin especificar el campo fecha de fin</p>
@@ -554,10 +577,10 @@ Prueba crear un proyecto sin especificar el campo fecha de fin</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
       
     </div>
@@ -577,10 +600,10 @@ Prueba crear un proyecto sin especificar el campo fecha de fin</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-33'>#</a>
       </div>
       <p>test_crear_proyecto_con_campo_scrum_master_id_sin_especificar
 Prueba crear un proyecto sin especificar al Scrum Master</p>
@@ -590,10 +613,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-32'>
+  <div class='section' id='section-34'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
+        <a class='octothorpe' href='#section-34'>#</a>
       </div>
       
     </div>
@@ -613,10 +636,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-33'>
+  <div class='section' id='section-35'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-33'>#</a>
+        <a class='octothorpe' href='#section-35'>#</a>
       </div>
       <p>test_modificar_proyecto Prueba modificar un proyecto</p>
     </div>
@@ -625,10 +648,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-34'>
+  <div class='section' id='section-36'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-34'>#</a>
+        <a class='octothorpe' href='#section-36'>#</a>
       </div>
       
     </div>
@@ -666,10 +689,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-35'>
+  <div class='section' id='section-37'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-35'>#</a>
+        <a class='octothorpe' href='#section-37'>#</a>
       </div>
       <p>TODO self.asserEquals(body[&ldquo;scrum_master&rdquo;][&ldquo;rol&rdquo;][&ldquo;nombre&rdquo;], &ldquo;Scrum Master&rdquo;)</p>
     </div>
@@ -678,10 +701,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-36'>
+  <div class='section' id='section-38'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-36'>#</a>
+        <a class='octothorpe' href='#section-38'>#</a>
       </div>
       <p>test_modificar_proyecto_con_estado_activo Prueba modificar un proyecto en estado Activado</p>
     </div>
@@ -690,10 +713,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-37'>
+  <div class='section' id='section-39'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-37'>#</a>
+        <a class='octothorpe' href='#section-39'>#</a>
       </div>
       
     </div>
@@ -716,10 +739,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-38'>
+  <div class='section' id='section-40'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
+        <a class='octothorpe' href='#section-40'>#</a>
       </div>
       <p>test_modificar_proyecto_con_estado_finalizado Prueba modificar un proyecto en estado Finalizado</p>
     </div>
@@ -728,10 +751,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-39'>
+  <div class='section' id='section-41'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-39'>#</a>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       
     </div>
@@ -754,10 +777,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-40'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       <p>test_modificar_proyecto_con_estado_cancelado Prueba modificar un proyecto en estado Cancelado</p>
     </div>
@@ -766,10 +789,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       
     </div>
@@ -792,10 +815,10 @@ Prueba crear un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-42'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <p>test_modificar_proyecto_sin_permiso_crear_proyectos
 Prueba modificar un proyecto sin tener permiso modificar proyectos</p>
@@ -805,10 +828,10 @@ Prueba modificar un proyecto sin tener permiso modificar proyectos</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
       
     </div>
@@ -830,10 +853,10 @@ Prueba modificar un proyecto sin tener permiso modificar proyectos</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-44'>
+  <div class='section' id='section-46'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
+        <a class='octothorpe' href='#section-46'>#</a>
       </div>
       <p>test_modificar_proyecto_sin_permiso_ver_proyectos
 Prueba modificar un proyecto sin tener permiso ver proyectos</p>
@@ -843,10 +866,10 @@ Prueba modificar un proyecto sin tener permiso ver proyectos</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-45'>
+  <div class='section' id='section-47'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
+        <a class='octothorpe' href='#section-47'>#</a>
       </div>
       
     </div>
@@ -868,10 +891,10 @@ Prueba modificar un proyecto sin tener permiso ver proyectos</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-46'>
+  <div class='section' id='section-48'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-46'>#</a>
+        <a class='octothorpe' href='#section-48'>#</a>
       </div>
       <p>test_modificar_proyecto_sin_permiso_ver_proyectos
 Prueba modificar un proyecto sin tener permiso ver usuarios</p>
@@ -881,10 +904,10 @@ Prueba modificar un proyecto sin tener permiso ver usuarios</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-47'>
+  <div class='section' id='section-49'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       
     </div>
@@ -906,10 +929,48 @@ Prueba modificar un proyecto sin tener permiso ver usuarios</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-48'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      <p>test_modificar_proyecto_con_nombre_existente Prueba modificar un proyecto con nombre ya existente</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_modificar_proyecto_con_nombre_existente</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando modificar un proyecto con nombre existente.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s2">&quot;Proyecto A&quot;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+                                <span class="n">fecha_fin</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">scrum_master_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">proyecto_body</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;Proyecto A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fecha_inicio&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+            <span class="s2">&quot;fecha_fin&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">,</span> <span class="n">proyecto_body</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;Ya existe un proyecto con ese nombre&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;forbidden&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       <p>test_modificar_proyecto_no_existente Prueba modificar un proyecto que no existe</p>
     </div>
@@ -918,10 +979,10 @@ Prueba modificar un proyecto sin tener permiso ver usuarios</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-53'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-53'>#</a>
       </div>
       
     </div>
@@ -941,10 +1002,10 @@ Prueba modificar un proyecto sin tener permiso ver usuarios</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-54'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       <p>test_modificar_proyecto_con_usuario_no_existente
 Prueba modificar un proyecto con un Scrum Master que no existe</p>
@@ -954,10 +1015,10 @@ Prueba modificar un proyecto con un Scrum Master que no existe</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-51'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-51'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       
     </div>
@@ -968,7 +1029,7 @@ Prueba modificar un proyecto con un Scrum Master que no existe</p>
             <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;ProyectoTestCrear&quot;</span><span class="p">,</span>
             <span class="s2">&quot;fecha_inicio&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
             <span class="s2">&quot;fecha_fin&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="s2">&quot;scrum_master_id&quot;</span><span class="p">:</span> <span class="mi">55</span>
         <span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">,</span> <span class="n">proyecto_body</span><span class="p">,</span> <span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
@@ -977,10 +1038,10 @@ Prueba modificar un proyecto con un Scrum Master que no existe</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-52'>
+  <div class='section' id='section-56'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-52'>#</a>
+        <a class='octothorpe' href='#section-56'>#</a>
       </div>
       <p>test_modificar_proyecto_con_campo_nombre_superando_max_length
 Prueba modificar un proyecto con un nombre que supera el limite máximo de caracteres</p>
@@ -990,10 +1051,10 @@ Prueba modificar un proyecto con un nombre que supera el limite máximo de carac
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-53'>
+  <div class='section' id='section-57'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-53'>#</a>
+        <a class='octothorpe' href='#section-57'>#</a>
       </div>
       
     </div>
@@ -1017,10 +1078,10 @@ Prueba modificar un proyecto con un nombre que supera el limite máximo de carac
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-54'>
+  <div class='section' id='section-58'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-54'>#</a>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
       <p>test_modificar_proyecto_con_campo_nombre_no_asignado
 Prueba modificar un proyecto sin especificar el campo nombre</p>
@@ -1030,10 +1091,10 @@ Prueba modificar un proyecto sin especificar el campo nombre</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-55'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-55'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
       
     </div>
@@ -1053,10 +1114,10 @@ Prueba modificar un proyecto sin especificar el campo nombre</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-56'>
+  <div class='section' id='section-60'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-56'>#</a>
+        <a class='octothorpe' href='#section-60'>#</a>
       </div>
       <p>test_modificar_proyecto_con_campo_fecha_inicio_no_asignado
 Prueba modificar un proyecto sin especificar el campo fecha de inicio</p>
@@ -1066,10 +1127,10 @@ Prueba modificar un proyecto sin especificar el campo fecha de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-57'>
+  <div class='section' id='section-61'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-57'>#</a>
+        <a class='octothorpe' href='#section-61'>#</a>
       </div>
       
     </div>
@@ -1089,10 +1150,10 @@ Prueba modificar un proyecto sin especificar el campo fecha de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-58'>
+  <div class='section' id='section-62'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-58'>#</a>
+        <a class='octothorpe' href='#section-62'>#</a>
       </div>
       <p>test_modificar_proyecto_con_campo_fecha_inicio_no_asignado
 Prueba modificar un proyecto sin especificar el campo fecha de fin</p>
@@ -1102,10 +1163,10 @@ Prueba modificar un proyecto sin especificar el campo fecha de fin</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-59'>
+  <div class='section' id='section-63'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-59'>#</a>
+        <a class='octothorpe' href='#section-63'>#</a>
       </div>
       
     </div>
@@ -1125,10 +1186,10 @@ Prueba modificar un proyecto sin especificar el campo fecha de fin</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-60'>
+  <div class='section' id='section-64'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-60'>#</a>
+        <a class='octothorpe' href='#section-64'>#</a>
       </div>
       <p>test_modificar_proyecto_con_campo_scrum_master_id_sin_especificar
 Prueba modificar un proyecto sin especificar al Scrum Master</p>
@@ -1138,10 +1199,10 @@ Prueba modificar un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-61'>
+  <div class='section' id='section-65'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-61'>#</a>
+        <a class='octothorpe' href='#section-65'>#</a>
       </div>
       
     </div>
@@ -1161,10 +1222,10 @@ Prueba modificar un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-62'>
+  <div class='section' id='section-66'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-62'>#</a>
+        <a class='octothorpe' href='#section-66'>#</a>
       </div>
       <p>test_eliminar_proyecto Prueba eliminar un proyecto</p>
     </div>
@@ -1173,10 +1234,10 @@ Prueba modificar un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-63'>
+  <div class='section' id='section-67'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-63'>#</a>
+        <a class='octothorpe' href='#section-67'>#</a>
       </div>
       
     </div>
@@ -1190,10 +1251,10 @@ Prueba modificar un proyecto sin especificar al Scrum Master</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-64'>
+  <div class='section' id='section-68'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-64'>#</a>
+        <a class='octothorpe' href='#section-68'>#</a>
       </div>
       <p>test_eliminar_proyecto_sin_permiso_eliminar_proyecto
 Prueba eliminar un proyecto sin tener permiso eliminar proyecto</p>
@@ -1203,10 +1264,10 @@ Prueba eliminar un proyecto sin tener permiso eliminar proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-65'>
+  <div class='section' id='section-69'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-65'>#</a>
+        <a class='octothorpe' href='#section-69'>#</a>
       </div>
       
     </div>
@@ -1222,10 +1283,10 @@ Prueba eliminar un proyecto sin tener permiso eliminar proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-66'>
+  <div class='section' id='section-70'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-66'>#</a>
+        <a class='octothorpe' href='#section-70'>#</a>
       </div>
       <p>test_eliminar_proyecto_sin_permiso_ver_proyecto
 Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
@@ -1235,10 +1296,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-67'>
+  <div class='section' id='section-71'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-67'>#</a>
+        <a class='octothorpe' href='#section-71'>#</a>
       </div>
       
     </div>
@@ -1254,10 +1315,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-68'>
+  <div class='section' id='section-72'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-68'>#</a>
+        <a class='octothorpe' href='#section-72'>#</a>
       </div>
       <p>test_eliminar_proyecto_no_existente Prueba eliminar un proyecto que no existe</p>
     </div>
@@ -1266,10 +1327,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-69'>
+  <div class='section' id='section-73'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-69'>#</a>
+        <a class='octothorpe' href='#section-73'>#</a>
       </div>
       
     </div>
@@ -1283,10 +1344,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-70'>
+  <div class='section' id='section-74'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-70'>#</a>
+        <a class='octothorpe' href='#section-74'>#</a>
       </div>
       <p>test_eliminar_proyecto_con_estado_activo Prueba eliminar un proyecto con estado Activado</p>
     </div>
@@ -1295,10 +1356,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-71'>
+  <div class='section' id='section-75'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-71'>#</a>
+        <a class='octothorpe' href='#section-75'>#</a>
       </div>
       
     </div>
@@ -1315,10 +1376,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-72'>
+  <div class='section' id='section-76'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-72'>#</a>
+        <a class='octothorpe' href='#section-76'>#</a>
       </div>
       <p>test_eliminar_proyecto_con_estado_cancelado Prueba eliminar un proyecto con estado Cancelado</p>
     </div>
@@ -1327,10 +1388,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-73'>
+  <div class='section' id='section-77'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-73'>#</a>
+        <a class='octothorpe' href='#section-77'>#</a>
       </div>
       
     </div>
@@ -1347,10 +1408,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-74'>
+  <div class='section' id='section-78'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-74'>#</a>
+        <a class='octothorpe' href='#section-78'>#</a>
       </div>
       <p>test_eliminar_proyecto_con_estado_finalizado Prueba eliminar un proyecto en estado Finalizado</p>
     </div>
@@ -1359,10 +1420,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-75'>
+  <div class='section' id='section-79'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-75'>#</a>
+        <a class='octothorpe' href='#section-79'>#</a>
       </div>
       
     </div>
@@ -1379,10 +1440,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-76'>
+  <div class='section' id='section-80'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-76'>#</a>
+        <a class='octothorpe' href='#section-80'>#</a>
       </div>
       <p>test_crear_proyecto_con_fecha_en_el_pasado Prueba crear un proyecto con una fecha en el pasado</p>
     </div>
@@ -1391,10 +1452,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-77'>
+  <div class='section' id='section-81'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-77'>#</a>
+        <a class='octothorpe' href='#section-81'>#</a>
       </div>
       
     </div>
@@ -1414,10 +1475,10 @@ Prueba eliminar un proyecto sin tener permiso ver proyecto</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-78'>
+  <div class='section' id='section-82'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-78'>#</a>
+        <a class='octothorpe' href='#section-82'>#</a>
       </div>
       <p>test_crear_proyecto_con_fecha_fin_menor_a_fecha_inicio
 Prueba crear un proyecto con una fecha de fin menor a la de inicio</p>
@@ -1427,10 +1488,10 @@ Prueba crear un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-79'>
+  <div class='section' id='section-83'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-79'>#</a>
+        <a class='octothorpe' href='#section-83'>#</a>
       </div>
       
     </div>
@@ -1450,10 +1511,10 @@ Prueba crear un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-80'>
+  <div class='section' id='section-84'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-80'>#</a>
+        <a class='octothorpe' href='#section-84'>#</a>
       </div>
       <p>test_modificar_proyecto_con_fecha_en_el_pasado Prueba modificar un proyecto con una fecha en el pasado</p>
     </div>
@@ -1462,10 +1523,10 @@ Prueba crear un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-81'>
+  <div class='section' id='section-85'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-81'>#</a>
+        <a class='octothorpe' href='#section-85'>#</a>
       </div>
       
     </div>
@@ -1485,10 +1546,10 @@ Prueba crear un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-82'>
+  <div class='section' id='section-86'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-82'>#</a>
+        <a class='octothorpe' href='#section-86'>#</a>
       </div>
       <p>test_modificar_proyecto_con_fecha_fin_menor_a_fecha_inicio
 Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
@@ -1498,10 +1559,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-83'>
+  <div class='section' id='section-87'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-83'>#</a>
+        <a class='octothorpe' href='#section-87'>#</a>
       </div>
       
     </div>
@@ -1521,10 +1582,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-84'>
+  <div class='section' id='section-88'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-84'>#</a>
+        <a class='octothorpe' href='#section-88'>#</a>
       </div>
       <p>test_activar_proyecto Prueba activar un proyecto</p>
     </div>
@@ -1533,10 +1594,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-85'>
+  <div class='section' id='section-89'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-85'>#</a>
+        <a class='octothorpe' href='#section-89'>#</a>
       </div>
       
     </div>
@@ -1551,31 +1612,30 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-86'>
+  <div class='section' id='section-90'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-86'>#</a>
+        <a class='octothorpe' href='#section-90'>#</a>
       </div>
-      <p>test_activar_proyecto_sin_rol_sm Prueba activar un proyecto no siendo Scrum Master</p>
+      <p>test_activar_proyecto_permiso activar un proyecto no teniendo el permiso activar_proyecto</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_activar_proyecto_sin_rol_sm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_activar_proyecto_sin_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-87'>
+  <div class='section' id='section-91'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-87'>#</a>
+        <a class='octothorpe' href='#section-91'>#</a>
       </div>
       
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando activar un proyecto sin ser Scrum Master&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
-        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">proyecto</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">rol</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">proyecto_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rol</span>
+        <span class="n">rol</span><span class="o">.</span><span class="n">eliminar_permiso</span><span class="p">(</span><span class="n">PermisoProyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codigo</span><span class="o">=</span><span class="s2">&quot;activar_proyecto&quot;</span><span class="p">))</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/activar/&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
@@ -1583,10 +1643,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-88'>
+  <div class='section' id='section-92'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-88'>#</a>
+        <a class='octothorpe' href='#section-92'>#</a>
       </div>
       <p>test_activar_proyecto_no_existente Prueba activar un proyecto que no existe</p>
     </div>
@@ -1595,10 +1655,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-89'>
+  <div class='section' id='section-93'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-89'>#</a>
+        <a class='octothorpe' href='#section-93'>#</a>
       </div>
       
     </div>
@@ -1612,10 +1672,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-90'>
+  <div class='section' id='section-94'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-90'>#</a>
+        <a class='octothorpe' href='#section-94'>#</a>
       </div>
       <p>test_activar_proyecto_activado Prueba activar un proyecto cancelado</p>
     </div>
@@ -1624,10 +1684,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-91'>
+  <div class='section' id='section-95'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-91'>#</a>
+        <a class='octothorpe' href='#section-95'>#</a>
       </div>
       
     </div>
@@ -1645,10 +1705,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-92'>
+  <div class='section' id='section-96'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-92'>#</a>
+        <a class='octothorpe' href='#section-96'>#</a>
       </div>
       <p>test_activar_proyecto_activado Prueba activar un proyecto finalizado</p>
     </div>
@@ -1657,10 +1717,10 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-93'>
+  <div class='section' id='section-97'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-93'>#</a>
+        <a class='octothorpe' href='#section-97'>#</a>
       </div>
       
     </div>
@@ -1674,7 +1734,109 @@ Prueba modificar un proyecto con una fecha de fin menor a la de inicio</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;estado&quot;</span><span class="p">],</span> <span class="s2">&quot;Finalizado&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;bad_request&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;bad_request&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-98'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-98'>#</a>
+      </div>
+      <p>test_obtener_proyecto_sin_ser_miembro_con_permiso_ver_proyectos
+Prueba obtener un proyecto sin ser miembro, pero teniendo permiso para ver proyectos</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto_sin_ser_miembro_con_permiso_ver_proyectos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-99'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-99'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener un proyecto sin ser miembro de ese proyecto y teniendo permiso para ver proyectos&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;scrum_master&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;estado&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-100'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-100'>#</a>
+      </div>
+      <p>test_obtener_proyecto_sin_permiso_ver_proyectos_siendo_miembro
+Prueba obtener un proyecto sin permiso ver proyectos y siendo miembro de ese proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto_sin_permiso_ver_proyectos_siendo_miembro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-101'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-101'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener un proyecto sin permiso ver proyectos y siendo miembro&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">Permiso</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codigo</span><span class="o">=</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_inicio&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;fecha_fin&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">proyecto</span><span class="o">.</span><span class="n">fecha_fin</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;scrum_master&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">scrum_master</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;estado&#39;</span><span class="p">],</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">estado</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-102'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-102'>#</a>
+      </div>
+      <p>test_obtener_proyecto_sin_permiso_ver_proyectos_no_siendo_miembro
+Prueba obtener un proyecto sin tener permiso ver proyectos y sin ser miembro del proyecto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_proyecto_sin_permiso_ver_proyectos_no_siendo_miembro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-103'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-103'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener un proyecto sin ser miembro y tener permiso de ver proyectos&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">Permiso</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codigo</span><span class="o">=</span><span class="s2">&quot;ver_proyectos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/proyectos/1/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
 
 </pre></div>
     </div>

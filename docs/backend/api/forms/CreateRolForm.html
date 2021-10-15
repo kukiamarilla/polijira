@@ -22,7 +22,7 @@
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Permiso</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">Permiso</span><span class="p">,</span> <span class="n">Rol</span>
 <span class="kn">import</span> <span class="nn">json</span></pre></div>
     </div>
   </div>
@@ -105,7 +105,38 @@
                 <span class="n">Permiso</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">permiso</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">permisos</span>
         <span class="k">except</span> <span class="n">Permiso</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontró algunos de los permisos especificados&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontró algunos de los permisos especificados&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>clean_nombre Valida que el nombre del rol sea único</p>
+<p>Raises:
+    ValidationError: Error de validacion si no se encuentra el rol</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">clean_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">)</span>
+        <span class="n">rol</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rol</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Ya existe un rol con ese nombre&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nombre</span>
 
 </pre></div>
     </div>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>RegistroUserStory.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>RegistroUserStory.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="n">ESTADOS_US</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Pendiente&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;Release&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;Cancelado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;Eliminado&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">ESTADOS_ESTIMADOS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;No estimado&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;Parcial&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;Completo&quot;</span><span class="p">)</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>RegistroUserStory Modela el Registro de User Stories.
+Guarda todos los user stories creados, modificados o eliminados</p>
+<p>Args:
+    models (Model): Modelo de django</p>
+<p>Atributes:
+    nombre_antes (CharField): Nombre del User Story al modificar o eliminar
+    descripcion_antes (TextField): Descripcion del User Story al modificar o eliminar
+    hora_estimada_antes (IntegerField): Hora estimada del User Story al modificar o eliminar
+    prioridad_antes (IntegerField): Prioridad del User Story al modificar o eliminar
+    estado_antes (CharField): Estado del User Story al modificar o eliminar
+    desarrollador_antes (ForeignKey): Desarrollador del User Story al modificar o eliminar
+    nombre_despues (CharField): Nombre del User Story al crear o modificar
+    descripcion_despues (TextField): Descripcion del User Story al crear o modificar
+    hora_estimada_despues (IntegerField): Hora estimada del User Story al crear o modificar
+    prioridad_despues (IntegerField): Prioridad del User Story al crear o modificar
+    estado_despues (CharField): Estado del User Story al crear o modificar
+    desarrollador_despues (ForeignKey): Desarrollador del User Story al crear o modificar
+    user_story (OneToOneField): User Story que se registra
+    accion (CharField): Indica si se realizo una creación, modificación o eliminación
+    autor (ForeignKey): Miembro que realiza el registro</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">RegistroUserStory</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">nombre_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">descripcion_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">horas_estimadas_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">prioridad_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">estado_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_US</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">desarrollador_antes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Miembro&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+                                            <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;registros_antes&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nombre_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">descripcion_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">horas_estimadas_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">prioridad_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">estado_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_US</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">desarrollador_despues</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="s2">&quot;Miembro&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;registros_despues&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_story</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;UserStory&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;registros&quot;</span><span class="p">)</span>
+    <span class="n">accion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">fecha</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">autor</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;Miembro&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;registros&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">crear_registro</span><span class="p">(</span><span class="n">user_story</span><span class="p">,</span> <span class="n">autor</span><span class="p">):</span>
+        <span class="n">RegistroUserStory</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="n">descripcion_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span>
+            <span class="n">prioridad_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">prioridad</span><span class="p">,</span>
+            <span class="n">estado_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span>
+            <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">,</span>
+            <span class="n">accion</span><span class="o">=</span><span class="s2">&quot;Creacion&quot;</span><span class="p">,</span>
+            <span class="n">fecha</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+            <span class="n">autor</span><span class="o">=</span><span class="n">autor</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">modificar_registro</span><span class="p">(</span><span class="n">user_story</span><span class="p">,</span> <span class="n">autor</span><span class="p">):</span>
+        <span class="n">registro</span> <span class="o">=</span> <span class="n">RegistroUserStory</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-id&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">RegistroUserStory</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">nombre_despues</span><span class="p">,</span>
+            <span class="n">descripcion_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">descripcion_despues</span><span class="p">,</span>
+            <span class="n">horas_estimadas_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">horas_estimadas_despues</span><span class="p">,</span>
+            <span class="n">prioridad_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">prioridad_despues</span><span class="p">,</span>
+            <span class="n">estado_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">estado_despues</span><span class="p">,</span>
+            <span class="n">desarrollador_antes</span><span class="o">=</span><span class="n">registro</span><span class="o">.</span><span class="n">desarrollador_despues</span><span class="p">,</span>
+            <span class="n">nombre_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="n">descripcion_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span>
+            <span class="n">horas_estimadas_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">horas_estimadas</span><span class="p">,</span>
+            <span class="n">prioridad_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">prioridad</span><span class="p">,</span>
+            <span class="n">estado_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span>
+            <span class="n">desarrollador_despues</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="p">,</span>
+            <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">,</span>
+            <span class="n">accion</span><span class="o">=</span><span class="s2">&quot;Modificacion&quot;</span><span class="p">,</span>
+            <span class="n">fecha</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+            <span class="n">autor</span><span class="o">=</span><span class="n">autor</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eliminar_registro</span><span class="p">(</span><span class="n">user_story</span><span class="p">,</span> <span class="n">autor</span><span class="p">):</span>
+        <span class="n">RegistroUserStory</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="n">descripcion_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span>
+            <span class="n">horas_estimadas_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">horas_estimadas</span><span class="p">,</span>
+            <span class="n">prioridad_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">prioridad</span><span class="p">,</span>
+            <span class="n">estado_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span>
+            <span class="n">desarrollador_antes</span><span class="o">=</span><span class="n">user_story</span><span class="o">.</span><span class="n">desarrollador</span><span class="p">,</span>
+            <span class="n">user_story</span><span class="o">=</span><span class="n">user_story</span><span class="p">,</span>
+            <span class="n">accion</span><span class="o">=</span><span class="s2">&quot;Eliminacion&quot;</span><span class="p">,</span>
+            <span class="n">fecha</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+            <span class="n">autor</span><span class="o">=</span><span class="n">autor</span>
+        <span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

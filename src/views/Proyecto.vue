@@ -129,15 +129,15 @@ export default {
           titulo: "Sprints",
           icono: "flag",
           link: `/proyectos/${id}/sprints`,
-          tienePermiso: this.hasPermission("ver_sprints"),
-        },
-        {
-          titulo: "Sprint Activo",
-          icono: "flag",
-          link: "",
-          resaltado: true,
           tienePermiso: true,
         },
+        // {
+        //   titulo: "Sprint Activo",
+        //   icono: "flag",
+        //   link: "",
+        //   resaltado: true,
+        //   tienePermiso: true,
+        // },
       ];
     },
   },

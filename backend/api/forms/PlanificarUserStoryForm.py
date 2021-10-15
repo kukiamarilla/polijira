@@ -32,7 +32,7 @@ class PlanificarUserStoryForm(forms.Form):
         try:
             cleaned_data = super().clean()
             id = cleaned_data.get("user_story")
-            if id == None:
+            if id is None:
                 raise ValidationError("Hubo problemas para recibir el User Story")
             UserStory.objects.get(pk=id)
             return id
@@ -43,7 +43,7 @@ class PlanificarUserStoryForm(forms.Form):
         try:
             cleaned_data = super().clean()
             id = cleaned_data.get("desarrollador")
-            if id == None:
+            if id is None:
                 raise ValidationError("Hubo problemas para recibir el Desarrollador")
             Miembro.objects.get(pk=id)
             return id

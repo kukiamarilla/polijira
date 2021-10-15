@@ -178,11 +178,19 @@
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
             <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rol&quot;</span><span class="p">)</span>
-            <span class="n">RolProyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="n">rol_id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rol&quot;</span><span class="p">)</span>
+            <span class="n">proyecto_id</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proyecto&quot;</span><span class="p">)</span>
+            <span class="n">rol</span> <span class="o">=</span> <span class="n">RolProyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">rol_id</span><span class="p">)</span>
+            <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">proyecto_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rol</span><span class="o">.</span><span class="n">proyecto</span> <span class="o">!=</span> <span class="n">proyecto</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;El rol no pertenece a este proyecto&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rol</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;Scrum Master&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;El rol de Scrum Master no es asignable&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">id</span>
         <span class="k">except</span> <span class="n">RolProyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontro un usuario en la base de datos&quot;</span><span class="p">)</span></pre></div>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;No se encontro un rol en la base de datos&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;El rol no pertenece a este proyecto&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -244,12 +252,9 @@
       <div class="highlight"><pre>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
         <span class="n">usuario</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;usuario&quot;</span><span class="p">)</span>
         <span class="n">proyecto</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proyecto&quot;</span><span class="p">)</span>
-        <span class="n">rol</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rol&quot;</span><span class="p">)</span>
-        <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">proyecto</span><span class="p">,</span> <span class="n">rol</span><span class="o">=</span><span class="n">rol</span><span class="p">)</span>
+        <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="n">usuario</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="n">proyecto</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">miembro</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Ya existe el miembro&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">miembro</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">miembro</span><span class="o">.</span><span class="n">id</span>
 
 </pre></div>
     </div>

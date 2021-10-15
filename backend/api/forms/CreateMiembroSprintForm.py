@@ -1,9 +1,6 @@
-import json
 from django.core.exceptions import ValidationError
-from backend.api.models import Miembro, Sprint
+from backend.api.models import Miembro
 from django import forms
-
-from backend.api.models.MiembroSprint import MiembroSprint
 
 
 class CreateMiembroSprintForm(forms.Form):

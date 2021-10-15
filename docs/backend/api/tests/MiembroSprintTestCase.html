@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>MiembroSprintTestCase.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>MiembroSprintTestCase.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">backend.api.models</span> <span class="kn">import</span> <span class="n">MiembroSprint</span><span class="p">,</span> <span class="n">Miembro</span>
+<span class="kn">from</span> <span class="nn">backend.api.models.Sprint</span> <span class="kn">import</span> <span class="n">Sprint</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>HorarioTestCase Prueba las funcionalidades de Horario</p>
+<p>Args:
+    TestCase (class): Clase Test del modulo test de django</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">MiembroSprintTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">fixtures</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/auth.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/usuarios.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/permisos.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/roles.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/proyectos.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/permisosProyecto.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/plantillas.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/miembros.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/horarios.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/rolesProyecto.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/user-stories.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/product-backlogs.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/registro-user-stories.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/sprints.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/sprintbacklogs.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;backend/api/fixtures/testing/miembrosprints.json&quot;</span>
+    <span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>setUp Configura el testcase</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>test_obtener_miembro_sprint Prueba obtener miembro sprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_miembro_sprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener miembro sprint.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/2/&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">miembro</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;miembro_proyecto&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="o">.</span><span class="n">miembro_proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;sprint&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="o">.</span><span class="n">sprint</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>test_obtener_miembro_sprint_inexistente Prueba obtener miembro sprint inexistente</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_miembro_sprint_inexistente</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener miembro sprint inexistente.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/99/&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;No existe el Miembro en el Sprint especificado&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;not_found&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>test_obtener_miembro_sprint_sin_ser_miembro_proyecto
+Prueba obtener un miembro sprint sin ser miembro del proyecto del miembro especificado</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_miembro_sprint_sin_ser_miembro_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener un miembro sprint sin ser miembro del proyecto del miembro especificado.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/3/&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;Usted no es miembro de este proyecto&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>test_obtener_miembro_sprint_sin_permiso Prueba obtener miembro sprint sin permiso</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_obtener_miembro_sprint_sin_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando obtener miembro sprint sin permiso.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">rol</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rol</span>
+        <span class="n">permiso</span> <span class="o">=</span> <span class="n">rol</span><span class="o">.</span><span class="n">permisos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codigo</span><span class="o">=</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">)</span>
+        <span class="n">rol</span><span class="o">.</span><span class="n">eliminar_permiso</span><span class="p">(</span><span class="n">permiso</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/2/&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">403</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;No tiene permiso para realizar esta acción&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;permission_required&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;ver_sprints&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">],</span> <span class="s2">&quot;forbidden&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>test_crear_miembro_sprint Prueba la creación de miembro sprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_crear_miembro_sprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando crear miembro sprint.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">request_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;miembro&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;sprint&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/&quot;</span><span class="p">,</span> <span class="n">request_data</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">miembro</span> <span class="o">=</span> <span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request_data</span><span class="p">[</span><span class="s2">&quot;miembro&quot;</span><span class="p">])</span>
+        <span class="n">sprint</span> <span class="o">=</span> <span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request_data</span><span class="p">[</span><span class="s2">&quot;sprint&quot;</span><span class="p">])</span>
+        <span class="n">miembro</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">miembro_proyecto</span><span class="o">=</span><span class="n">miembro</span><span class="p">,</span> <span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">miembro</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;miembro_proyecto&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">miembro_proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;sprint&quot;</span><span class="p">],</span> <span class="n">miembro</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sprint</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>test_eliminar_miembro_sprint Prueba la eliminación de miembro sprint</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_eliminar_miembro_sprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probando eliminar un miembro sprint.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;polijira2021&quot;</span><span class="p">)</span>
+        <span class="n">miembro</span> <span class="o">=</span> <span class="n">MiembroSprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">miembro_proyecto</span><span class="o">=</span><span class="n">Miembro</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">sprint</span><span class="o">=</span><span class="n">Sprint</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;/api/miembros-sprint/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">miembro</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="s2">&quot;Miembro Sprint eliminado.&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -109,9 +109,11 @@ class SprintTestCase(TestCase):
         request_data = {
             "fecha_inicio": str(date.today()),
             "fecha_fin": str(date.today() + timedelta(5)),
-            "capacidad": 30,
             "proyecto": 3
         }
+        sprints = Sprint.objects.all()
+        for sprint in sprints:
+            sprint.delete()
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 200)
         body = response.json()
@@ -121,7 +123,6 @@ class SprintTestCase(TestCase):
             "fecha_inicio": request_data.get("fecha_inicio"),
             "fecha_fin": request_data.get("fecha_fin"),
             "estado": "P",
-            "capacidad": request_data.get("capacidad"),
             "estado_sprint_planning": "P",
             "planificador": None,
             "proyecto": 3
@@ -251,14 +252,12 @@ class SprintTestCase(TestCase):
         request_data = {
             "fecha_inicio": "2021-09-01",
             "fecha_fin": "2021-09-10",
-            "capacidad": -30,
             "proyecto": 1000
         }
         response = self.client.post("/api/sprints/", request_data, content_type="application/json")
         self.assertEquals(response.status_code, 422)
         errors = response.json().get("errors")
         self.assertEquals(len(errors["fecha_inicio"]), 1)
-        self.assertEquals(len(errors["capacidad"]), 1)
         self.assertEquals(len(errors["proyecto"]), 1)
 
     def test_validar_crear_sprint_fecha_fin(self):
@@ -499,7 +498,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_fin(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha de fin es mayor a la fecha de inicio al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin Valida si la fecha
+        de fin es mayor a la fecha de inicio al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de fin al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -514,7 +514,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_inicio(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha de inicio no esté en el pasado al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin Valida si la fecha de inicio
+        no esté en el pasado al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de inicio al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -642,7 +643,8 @@ class SprintTestCase(TestCase):
 
     def test_listar_sprint_backlogs_sin_ser_miembro(self):
         """
-        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint backlogs de un Sprint  sin ser miembro del Proyecto
+        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint
+        backlogs de un Sprint  sin ser miembro del Proyecto
         """
         print("\nProbando listar los sprint backlogs de un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
