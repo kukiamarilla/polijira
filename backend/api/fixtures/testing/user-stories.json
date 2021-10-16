@@ -44,7 +44,7 @@
             "estado": "P",
             "fecha_release": null,
             "fecha_creacion": "2021-10-10",
-            "desarrollador": 2,
+            "desarrollador": null,
             "estado_estimacion": "C",
             "product_backlog": true,
             "proyecto": 4
