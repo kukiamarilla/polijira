@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 from django.test import TestCase, Client
+from rest_framework import response
 from backend.api.models import Sprint, Miembro, PermisoProyecto
 from backend.api.serializers import SprintSerializer
 
@@ -680,4 +681,111 @@ class SprintTestCase(TestCase):
         response = self.client.get("/api/sprints/1/sprint_backlogs/")
         self.assertEquals(response.status_code, 403)
         body = response.json()
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint(self):
+        """
+        test_activar_sprint Prueba la activación de un sprint
+        """
+        print("\nProbando activar un sprint.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        sprint = Sprint.objects.get(pk=2)
+        self.assertEquals(body["id"], sprint.pk)
+        self.assertEquals(body["estado"], sprint.estado)
+        self.assertEquals(body["estado_sprint_planning"], sprint.estado_sprint_planning)
+
+    def test_activar_sprint_sin_permiso_ver_sprints(self):
+        """
+        test_activar_sprint_sin_permiso Prueba la activación de un sprint sin permiso ver sprints
+        """
+        print("\nProbando activar un sprint sin permiso ver sprints.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_sprints").delete()
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tienes permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_sprints", "activar_sprints"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint_sin_permiso_activar_sprints(self):
+        """
+        test_activar_sprint_sin_permiso Prueba la activación de un sprint sin permiso activar sprints
+        """
+        print("\nProbando activar un sprint sin permiso activar sprints.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="activar_sprints").delete()
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tienes permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_sprints", "activar_sprints"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint_con_sprint_planning_sin_finalizar(self):
+        """
+        test_activar_sprint_con_sprint_planning_sin_finalizar Prueba la activación de un sprint con sprint planning sin finalizar
+        """
+        print("\nProbando activar sprint con sprint planning sin finalizar.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'I'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Sprint Planning aún no fue finalizado")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint_con_sprint_con_estado_no_pendiente(self):
+        """
+        test_activar_sprint_con_sprint_con_estado_no_pendiente Prueba la activación de un sprint con estado no pendiente
+        """
+        print("\nProbando activar un sprint con estado no pendiente.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Sprint no se puede activar en el estado actual")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint_inexistente(self):
+        """
+        test_activar_sprint_inexistente Prueba la activación de un sprint inexistente
+        """
+        print("\nProbando activar un sprint que no existe.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprints/99/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el Sprint especificado")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_activar_sprint_sin_ser_miembro_del_proyecto(self):
+        """
+        test_activar_sprint_sin_ser_miembro_del_proyecto Prueba la activación de un sprint sin ser miembro del proyecto
+        """
+        print("\nProbando activar un sprint sin ser miembro del proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=3)
+        sprint.estado_sprint_planning = 'F'
+        sprint.estado = 'P'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
         self.assertEquals(body["error"], "forbidden")
