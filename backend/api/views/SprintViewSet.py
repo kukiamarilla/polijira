@@ -283,8 +283,13 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            sprint.estado = 'A'
-            sprint.save()
+            if sprint.estado != 'P':
+                response = {
+                    "message": "Sprint no se puede activar en el estado actual",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprint.activar()
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:
