@@ -1,6 +1,5 @@
 from datetime import date, timedelta
 from django.test import TestCase, Client
-from rest_framework import response
 from backend.api.models import Sprint, Miembro, PermisoProyecto
 from backend.api.serializers import SprintSerializer
 
@@ -736,7 +735,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint_con_sprint_planning_sin_finalizar(self):
         """
-        test_activar_sprint_con_sprint_planning_sin_finalizar Prueba la activación de un sprint con sprint planning sin finalizar
+        test_activar_sprint_con_sprint_planning_sin_finalizar
+        Prueba la activación de un sprint con sprint planning sin finalizar
         """
         print("\nProbando activar sprint con sprint planning sin finalizar.")
         self.client.login(username="testing", password="polijira2021")
@@ -751,7 +751,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint_con_sprint_con_estado_no_pendiente(self):
         """
-        test_activar_sprint_con_sprint_con_estado_no_pendiente Prueba la activación de un sprint con estado no pendiente
+        test_activar_sprint_con_sprint_con_estado_no_pendiente
+        Prueba la activación de un sprint con estado no pendiente
         """
         print("\nProbando activar un sprint con estado no pendiente.")
         self.client.login(username="testing", password="polijira2021")
