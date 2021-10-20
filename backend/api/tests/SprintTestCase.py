@@ -780,6 +780,24 @@ class SprintTestCase(TestCase):
         self.assertEquals(body["message"], "Error de validación")
         self.assertEquals(body["errors"]["user_story"], ["No especificaste el user story"])
 
+    def test_mover_kanban_con_user_story_inexistente(self):
+        """
+        test_mover_kanban_con_user_story_inexistente Prueba mover un user story a otra columna del kanban con user story inexistente
+        """
+        print("\nProbando mover un user story a otra columna del kanban con user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 99,
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["user_story"], ["No se encontró un user story en la base de datos"])
+
     def test_mover_kanban_con_estado_kanban_sin_especificar(self):
         """
         test_mover_kanban_con_estado_kanban_sin_especificar Prueba mover un user story a otra columna del kanban con estado kanban sin especificar
