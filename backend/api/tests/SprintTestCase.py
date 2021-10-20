@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 from django.test import TestCase, Client
+from rest_framework import response
 from backend.api.models import Sprint, Miembro, PermisoProyecto
+from backend.api.models.SprintBacklog import SprintBacklog
 from backend.api.serializers import SprintSerializer
 
 
@@ -681,3 +683,22 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_kanban(self):
+        """
+        test_mover_kanban Prueba mover un user story a otra columna del kanban
+        """
+        print("\nProbando mover un user story a otra columna del kanban.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 1,
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["sprint"]["id"], sprint.pk)
+        self.assertEquals(body["user_story"]["id"], request_data["user_story"])
+        self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
