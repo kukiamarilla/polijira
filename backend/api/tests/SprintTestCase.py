@@ -705,7 +705,7 @@ class SprintTestCase(TestCase):
 
     def test_mover_kanban_sin_permiso_ver_kanban(self):
         """
-        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso ver kanban
+        test_mover_kanban_sin_permiso_ver_kanban Prueba mover un user story a otra columna del kanban sin permiso ver kanban
         """
         print("\nProbando mover un user story a otra columna del kanban sin permiso ver kanban.")
         self.client.login(username="testing", password="polijira2021")
@@ -725,7 +725,7 @@ class SprintTestCase(TestCase):
 
     def test_mover_kanban_sin_permiso_ver_user_stories(self):
         """
-        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso ver user stories
+        test_mover_kanban_sin_permiso_ver_user_stories Prueba mover un user story a otra columna del kanban sin permiso ver user stories
         """
         print("\nProbando mover un user story a otra columna del kanban sin permiso ver user stories.")
         self.client.login(username="testing", password="polijira2021")
@@ -745,7 +745,7 @@ class SprintTestCase(TestCase):
 
     def test_mover_kanban_sin_permiso_mover_user_stories(self):
         """
-        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso mover user stories
+        test_mover_kanban_sin_permiso_mover_user_stories Prueba mover un user story a otra columna del kanban sin permiso mover user stories
         """
         print("\nProbando mover un user story a otra columna del kanban sin permiso mover user stories.")
         self.client.login(username="testing", password="polijira2021")
@@ -762,3 +762,20 @@ class SprintTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
         self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_kanban_con_user_story_sin_especificar(self):
+        """
+        test_mover_kanban_con_user_story_sin_especificar Prueba mover un user story a otra columna del kanban con user story sin especificar
+        """
+        print("\nProbando mover un user story a otra columna del kanban con user story sin especificar.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["user_story"], ["No especificaste el user story"])
