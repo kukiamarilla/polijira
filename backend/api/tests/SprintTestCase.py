@@ -702,3 +702,63 @@ class SprintTestCase(TestCase):
         self.assertEquals(body["sprint"]["id"], sprint.pk)
         self.assertEquals(body["user_story"]["id"], request_data["user_story"])
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
+
+    def test_mover_kanban_sin_permiso_ver_kanban(self):
+        """
+        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso ver kanban
+        """
+        print("\nProbando mover un user story a otra columna del kanban sin permiso ver kanban.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_kanban").delete()
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 1,
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_kanban_sin_permiso_ver_user_stories(self):
+        """
+        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso ver user stories
+        """
+        print("\nProbando mover un user story a otra columna del kanban sin permiso ver user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 1,
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_kanban_sin_permiso_mover_user_stories(self):
+        """
+        test_mover_kanban Prueba mover un user story a otra columna del kanban sin permiso mover user stories
+        """
+        print("\nProbando mover un user story a otra columna del kanban sin permiso mover user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 1,
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
