@@ -1,10 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, Usuario, Proyecto, UserStory, SprintBacklog
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import CreateSprintForm, UpdateSprintForm
+from backend.api.forms import CreateSprintForm, UpdateSprintForm, MoverKanbanForm
 
 
 class SprintViewSet(viewsets.ViewSet):
@@ -252,3 +252,53 @@ class SprintViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @FormValidator(form=MoverKanbanForm)
+    @action(detail=True, methods=["POST"])
+    def mover_kanban(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=sprint.proyecto)
+            if not (miembro_request.tiene_permiso("ver_kanban") and miembro_request.tiene_permiso("ver_user_stories")
+                    and miembro_request.tiene_permiso("mover_user_stories")):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_kanban",
+                        "ver_user_stories",
+                        "mover_user_stories"
+                    ],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint.estado != 'A':
+                response = {
+                    "message": "El kanban no se puede modificar en el estado actual del Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            user_story = UserStory.objects.get(pk=request.data.get("user_story"))
+            sprint_backlog = SprintBacklog.objects.get(sprint=sprint, user_story=user_story)
+            estado = request.data.get("estado_kanban")
+            sprint_backlog.mover_kanban(estado)
+            serializer = SprintBacklogSerializer(sprint_backlog, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except SprintBacklog.DoesNotExist:
+            response = {
+                "message": "User Story no pertenece al Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
