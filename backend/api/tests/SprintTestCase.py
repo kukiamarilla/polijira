@@ -779,3 +779,20 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         self.assertEquals(body["message"], "Error de validación")
         self.assertEquals(body["errors"]["user_story"], ["No especificaste el user story"])
+
+    def test_mover_kanban_con_estado_kanban_sin_especificar(self):
+        """
+        test_mover_kanban_con_estado_kanban_sin_especificar Prueba mover un user story a otra columna del kanban con estado kanban sin especificar
+        """
+        print("\nProbando mover un user story a otra columna del kanban con estado kanban sin especificar.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        request_data = {
+            "user_story": 1
+        }
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/mover_kanban/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 422)
+        self.assertEquals(body["message"], "Error de validación")
+        self.assertEquals(body["errors"]["estado_kanban"], ["No especificaste el estado del kanban"])
