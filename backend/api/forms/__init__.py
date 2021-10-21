@@ -21,4 +21,4 @@ from .PlanificarUserStoryForm import PlanificarUserStoryForm
 from .CreateMiembroSprintForm import CreateMiembroSprintForm
 from .EliminarMiembroSprintForm import EliminarMiembroSprintForm
 from .ResponderEstimacionForm import ResponderEstimacionForm
-from .MoverKanbanForm import MoverKanbanForm
+from .MoverUserStoryForm import MoverUserStoryForm
