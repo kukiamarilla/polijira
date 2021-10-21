@@ -1,8 +1,6 @@
 from datetime import date, timedelta
 from django.test import TestCase, Client
-from rest_framework import response
 from backend.api.models import Sprint, Miembro, PermisoProyecto
-from backend.api.models.SprintBacklog import SprintBacklog
 from backend.api.serializers import SprintSerializer
 
 
