@@ -1,11 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario, UserStory, SprintBacklog
+from backend.api.models import Miembro, Usuario, SprintBacklog
 from backend.api.models.MiembroSprint import MiembroSprint
 from backend.api.serializers import SprintBacklogSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import MoverKanbanForm
+from backend.api.forms import MoverUserStoryForm
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
@@ -16,7 +16,7 @@ class SprintBacklogViewSet(viewsets.ViewSet):
         viewsets (ViewSet): View del módulo rest_framework
     """
 
-    @FormValidator(form=MoverKanbanForm)
+    @FormValidator(form=MoverUserStoryForm)
     @action(detail=True, methods=["POST"])
     def mover(self, request, pk=None):
         """
