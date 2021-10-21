@@ -9,7 +9,7 @@ from backend.api.forms import CreateSprintForm, UpdateSprintForm
 
 class SprintViewSet(viewsets.ViewSet):
     """
-    SprintViewSet View para el Sprint 
+    SprintViewSet View para el Sprint
 
     Args:
         viewsets (ViewSet): View del módulo rest_framework
