@@ -6,5 +6,13 @@
             "sprint": 1,
             "user_story": 1
         }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 2,
+        "fields": {
+            "sprint": 3,
+            "user_story": 3
+        }
     }
 ]
