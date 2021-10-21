@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from backend.api.models import PermisoProyecto, SprintBacklog
+from backend.api.models.MiembroSprint import MiembroSprint
 
 
 class SprintBacklogTestCase(TestCase):
@@ -93,15 +94,18 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
         self.assertEquals(body["error"], "forbidden")
 
-    def test_mover_user_story_sin_permiso_mover_user_stories(self):
+    def test_mover_user_story_sin_permiso_mover_user_stories_y_sin_ser_desarrollador(self):
         """
-        test_mover_user_story_sin_permiso_mover_user_stories
-        Prueba mover un user story a otra columna del kanban sin permiso mover user stories
+        test_mover_user_story_sin_permiso_mover_user_stories_y_sin_ser_desarrollador
+        Prueba mover un user story a otra columna del kanban sin permiso mover user stories y sin ser desarrollador
         """
-        print("\nProbando mover un user story a otra columna del kanban sin permiso mover user stories.")
+        print("\nProbando mover un user story a otra columna del kanban sin permiso mover user stories y sin ser desarrollador.")
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        user_story = sprint_backlog.user_story
+        user_story.desarrollador = MiembroSprint.objects.get(pk=1)
+        user_story.save()
         request_data = {
             "estado_kanban": "D"
         }
@@ -112,6 +116,46 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
         self.assertEquals(body["permission_required"], ["ver_kanban", "ver_user_stories", "mover_user_stories"])
         self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_user_story_sin_permiso_mover_user_stories_y_siendo_desarrollador(self):
+        """
+        test_mover_user_story_sin_permiso_mover_user_stories_y_siendo_desarrollador
+        Prueba mover un user story a otra columna del kanban sin permiso mover user stories y siendo desarrollador
+        """
+        print("\nProbando mover un user story a otra columna del kanban sin permiso mover user stories y siendo desarrollador.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
+
+    def test_mover_user_story_con_permiso_mover_user_stories_y_sin_ser_desarrollador(self):
+        """
+        test_mover_user_story_con_permiso_mover_user_stories_y_sin_ser_desarrollador
+        Prueba mover un user story a otra columna del kanban con permiso mover user stories y sin ser desarrollador
+        """
+        print("\nProbando mover un user story a otra columna del kanban con permiso mover user stories y sin ser desarrollador.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        user_story = sprint_backlog.user_story
+        user_story.desarrollador = MiembroSprint.objects.get(pk=1)
+        user_story.save()
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_con_estado_kanban_sin_especificar(self):
         """
@@ -168,10 +212,29 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(body["message"], "El kanban no se puede modificar en el estado actual del Sprint")
         self.assertEquals(body["error"], "forbidden")
 
-    def test_mover_user_story_con_sprintbacklog_inexistente(self):
+    def test_mover_user_story_sin_ser_miembro_del_proyecto(self):
         """
-        test_mover_user_story_con_sprintbacklog_inexistente
-        Prueba mover un user story a otra columna del kanban con sprintbacklog inexistente
+        test_mover_user_story_sin_ser_miembro_del_proyecto
+        Prueba mover un user story a otra columna del kanban sin ser miembro del proyecto
+        """
+        print("\nProbando mover un user story a otra columna del kanban sin ser miembro del proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=2)
+        sprint_backlog.sprint.activar()
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_user_story_con_sprint_backlog_inexistente(self):
+        """
+        test_mover_user_story_con_sprint_backlog_inexistente
+        Prueba mover un user story a otra columna del kanban con sprint backlog inexistente
         """
         print("\nProbando mover un user story a otra columna del kanban con sprint backlog inexistente.")
         self.client.login(username="testing", password="polijira2021")
