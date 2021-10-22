@@ -108,3 +108,23 @@ class UserStory(models.Model):
     def eliminar_del_product_backlog(self):
         self.product_backlog = False
         self.save()
+
+    def planificar(
+        self,
+        sprint=None,
+        horas_estimadas=None,
+        desarrollador=None,
+        sprint_backlog_handler=None,
+        product_backlog_handler=None,
+        registro_handler=None,
+        planificador=None
+    ):
+        product_backlog_handler(self)
+        self.update(
+            horas_estimadas=horas_estimadas,
+            desarrollador=desarrollador,
+            estado_estimacion="p",
+            registro_handler=registro_handler,
+            autor=planificador
+        )
+        sprint_backlog_handler(sprint, self)

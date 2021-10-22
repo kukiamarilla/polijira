@@ -434,8 +434,10 @@ class SprintPlanningTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
-        sprint.planificar(
-            user_story=UserStory.objects.get(pk=2),
+        user_story = UserStory.objects.get(pk=2)
+
+        user_story.planificar(
+            sprint=sprint,
             horas_estimadas=2,
             desarrollador=MiembroSprint.objects.get(pk=1),
             planificador=Miembro.objects.get(pk=4),
