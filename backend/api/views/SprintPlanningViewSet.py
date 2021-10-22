@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
 from backend.api.models.RegistroUserStory import RegistroUserStory
-from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
+from backend.api.serializers import SprintBacklogSerializer, SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import PlanificarUserStoryForm, \
     CreateMiembroSprintForm, \
@@ -332,7 +332,7 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            if not miembro == user_story.desarrollador:
+            if not miembro == user_story.desarrollador.miembro_proyecto:
                 response = {
                     "message": "Usted no es desarrollador de este User Story",
                     "error": "bad_request"
@@ -345,12 +345,13 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_409_CONFLICT)
             user_story.update(
-                horas_estimadas=int((request.data.get("horas_estimadas") + user_story.horas_estimadas)/2),
+                horas_estimadas=(int(request.data.get("horas_estimadas")) + int(user_story.horas_estimadas))/2,
                 estado_estimacion="C",
+                autor=miembro,
                 registro_handler=RegistroUserStory.modificar_registro
             )
             sprint_backlog = SprintBacklog.objects.get(sprint=sprint, user_story=user_story)
-            serializer = SprintBacklog(sprint_backlog, many=False)
+            serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:
             response = {
