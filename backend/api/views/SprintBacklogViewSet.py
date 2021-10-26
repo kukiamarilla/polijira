@@ -33,7 +33,7 @@ class SprintBacklogViewSet(views.View):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            if not miembro == user_story.desarrollador.miembro_proyecto:
+            if not user_story.desarrollador and not miembro == user_story.desarrollador.miembro_proyecto:
                 response = {
                     "message": "Usted no es desarrollador de este User Story",
                     "error": "bad_request"
