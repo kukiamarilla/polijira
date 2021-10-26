@@ -8,13 +8,6 @@ ESTADOS = (
     ("E", "Eliminado")
 )
 
-ESTADOS_ESTIMADOS = (
-    ("N", "No estimado"),
-    ("p", "Parcial"),
-    ("C", "Completo"),
-    ("P", "Pendiente")
-)
-
 
 class UserStory(models.Model):
     """
@@ -37,14 +30,10 @@ class UserStory(models.Model):
     """
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(default="")
-    horas_estimadas = models.IntegerField(default=0)
     prioridad = models.IntegerField(default=0)
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
     fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
-    desarrollador = models.ForeignKey("MiembroSprint", on_delete=models.CASCADE,
-                                      related_name="user_stories", null=True)
-    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="user_stories")
 
