@@ -6,7 +6,7 @@
       <div class="container shadow">
         <div class="header">
           <h2>Spring Planning</h2><br>
-          <h4>Paso 1: Elegir miembros de Sprint</h4><br><br><br>
+          <h4>Paso 2: Sprint Backlog</h4><br><br><br>
         </div>
         <Table height="400px">
           <TableHeader>
