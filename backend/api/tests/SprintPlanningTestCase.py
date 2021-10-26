@@ -190,6 +190,7 @@ class SprintPlanningTestCase(TestCase):
         }
         sprint = Sprint.objects.get(pk=2)
         miembro = Miembro.objects.get(pk=4)
+        MiembroSprint.objects.get(miembro_proyecto=miembro, sprint=sprint).delete()
         sprint.iniciar_sprint_planning(miembro)
         self.client.login(username="testing", password="polijira2021")
         response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
@@ -434,10 +435,12 @@ class SprintPlanningTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        user_story_antes = UserStory.objects.get(pk=2)
+        desarrollador = MiembroSprint.objects.get(pk=2)
         sprint.planificar(
-            user_story=UserStory.objects.get(pk=2),
+            user_story=user_story_antes,
             horas_estimadas=2,
-            desarrollador=MiembroSprint.objects.get(pk=1),
+            desarrollador=desarrollador,
             planificador=Miembro.objects.get(pk=4),
             product_backlog_handler=ProductBacklog.eliminar_user_story,
             sprint_backlog_handler=SprintBacklog.agregar_user_story,
@@ -447,4 +450,26 @@ class SprintPlanningTestCase(TestCase):
             "horas_estimadas": 5
         }
         response = self.client.post("/api/sprint-planning/2/responder_estimacion/", request_data)
-        print(response.json())
+        self.assertEquals(response.status_code, 200)
+        body = response.json()
+        self.assertEquals(body.get("user_story").get("horas_estimadas"), int((2 + 5)/2))
+        self.assertEquals(body.get("user_story").get("estado_estimacion"), "C")
+        registro = RegistroUserStory.objects.filter(
+            nombre_antes=user_story_antes.nombre,
+            descripcion_antes=user_story_antes.descripcion,
+            horas_estimadas_antes=2,
+            prioridad_antes=user_story_antes.prioridad,
+            estado_antes=user_story_antes.estado,
+            desarrollador_antes=desarrollador.miembro_proyecto,
+            nombre_despues=user_story_antes.nombre,
+            descripcion_despues=user_story_antes.descripcion,
+            horas_estimadas_despues=body.get("user_story").get("horas_estimadas"),
+            prioridad_despues=user_story_antes.prioridad,
+            estado_despues=user_story_antes.estado,
+            desarrollador_despues=desarrollador.miembro_proyecto,
+            user_story=user_story_antes,
+            accion="Modificacion",
+            fecha=date.today(),
+            autor=4
+        )
+        self.assertEquals(len(registro), 1)
