@@ -77,15 +77,11 @@ class UserStory(models.Model):
         return user_story
 
     def update(
-        self, nombre=None, descripcion=None, horas_estimadas=None, prioridad=None, estado_estimacion=None, autor=None,
-        registro_handler=None, desarrollador=None
+        self, nombre=None, descripcion=None, prioridad=None, autor=None, registro_handler=None
     ):
         self.nombre = nombre if nombre is not None else self.nombre
         self.descripcion = descripcion if descripcion is not None else self.descripcion
-        self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
         self.prioridad = prioridad if prioridad is not None else self.prioridad
-        self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
-        self.desarrollador = desarrollador if desarrollador is not None else self.desarrollador
         self.save()
         registro_handler(self, autor)
 

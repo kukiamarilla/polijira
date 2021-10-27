@@ -20,20 +20,19 @@ class SprintBacklogViewSet(views.View):
             sprint_backlog = SprintBacklog.objects.get(pk=pk)
             sprint = sprint_backlog.sprint
             miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
-            user_story = sprint_backlog.user_story
             if not sprint.estado_sprint_planning == "I":
                 response = {
                     "message": "Un Planificador debe Iniciar el Sprint Planning para responder una estimación",
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            if not user_story.estado_estimacion == "p":
+            if not sprint_backlog.estado_estimacion == "p":
                 response = {
                     "message": "Este User Story aun no fue estimado por el Planificador",
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            if not user_story.desarrollador and not miembro == user_story.desarrollador.miembro_proyecto:
+            if not sprint_backlog.desarrollador and not miembro == sprint_backlog.desarrollador.miembro_proyecto:
                 response = {
                     "message": "Usted no es desarrollador de este User Story",
                     "error": "bad_request"
@@ -45,11 +44,9 @@ class SprintBacklogViewSet(views.View):
                     "error": "conflict"
                 }
                 return Response(response, status=status.HTTP_409_CONFLICT)
-            user_story.update(
-                horas_estimadas=(int(request.data.get("horas_estimadas")) + int(user_story.horas_estimadas))/2,
-                estado_estimacion="C",
-                autor=miembro,
-                registro_handler=RegistroUserStory.modificar_registro
+            sprint_backlog.update(
+                horas_estimadas=(int(request.data.get("horas_estimadas")) + int(sprint_backlog.horas_estimadas))/2,
+                estado_estimacion="C"
             )
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)

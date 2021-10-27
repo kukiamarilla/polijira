@@ -29,3 +29,8 @@ class SprintBacklog(models.Model):
     @staticmethod
     def agregar_user_story(sprint=None, user_story=None):
         SprintBacklog.objects.create(sprint=sprint, user_story=user_story)
+
+    def update(self, horas_estimadas=None, estado_estimacion=None):
+        self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
+        self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
+        self.save()
