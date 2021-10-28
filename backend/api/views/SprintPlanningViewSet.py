@@ -1,3 +1,4 @@
+from re import split
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -272,8 +273,9 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = ProductBacklog.objects.get(
                 proyecto=sprint.proyecto, user_story_id=request.data.get("user_story")).user_story
-            sprint.planificar(
-                user_story=user_story,
+
+            user_story.planificar(
+                sprint=sprint,
                 horas_estimadas=request.data.get("horas_estimadas"),
                 desarrollador=MiembroSprint.objects.get(
                     miembro_proyecto_id=request.data.get("desarrollador"), sprint=sprint),
