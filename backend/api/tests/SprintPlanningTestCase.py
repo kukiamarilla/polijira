@@ -190,6 +190,7 @@ class SprintPlanningTestCase(TestCase):
         }
         sprint = Sprint.objects.get(pk=2)
         miembro = Miembro.objects.get(pk=4)
+        MiembroSprint.objects.get(miembro_proyecto=miembro, sprint=sprint).delete()
         sprint.iniciar_sprint_planning(miembro)
         self.client.login(username="testing", password="polijira2021")
         response = self.client.post("/api/sprint-planning/" + str(sprint.id) + "/miembros/",
@@ -425,6 +426,7 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
+<<<<<<< HEAD
 
     def test_responder_estimacion(self):
         """
@@ -450,3 +452,5 @@ class SprintPlanningTestCase(TestCase):
         }
         response = self.client.post("/api/sprint-planning/2/responder_estimacion/", request_data)
         print(response.json())
+=======
+>>>>>>> 24bf14317925678196dbe4e011cd9965b0c5a7e4
