@@ -15,6 +15,6 @@ class Review(models.Model):
         autor (ForeignKey): Miembro del proyecto que hace el review
     """
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="reviews")
-    observacion = models.TextField(default="")
+    observacion = models.TextField()
     fecha_creacion = models.DateField()
     autor = models.ForeignKey("Usuario", on_delete=models.CASCADE, related_name="reviews")
