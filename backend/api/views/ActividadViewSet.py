@@ -14,8 +14,16 @@ class ActividadViewSet(viewsets.ViewSet):
     """
 
     def create(self, request):
-        try:
+        """
+        create Registra una Actividad del Desarrollador
 
+        Args:
+            request (Any): Contiene: id del Sprint Backlog, horas dedicadas, y una descripcion
+
+        Returns:
+            JSON: Actividad
+        """
+        try:
             usuario = Usuario.objects.get(user=request.user)
             sprint_backlog = SprintBacklog.objects.get(pk=request.data.get("sprint_backlog"))
             miembro_proyecto = Miembro.objects.get(
@@ -66,3 +74,36 @@ class ActividadViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, pk=None):
+        """
+        update Modifica una Actividad realizada
+
+        Args:
+            request (Any): Contiene: hora a modificar, descripcion a modificar
+            pk (int, optional): id de Actividad a modificar
+
+        Returns:
+            JSON: Actividad modificada
+        """
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            actividad = Actividad.objects.get(pk=pk)
+            if not usuario == actividad.desarrollador:
+                response = {
+                    "message": "Usted no es desarrollador de esta Actividad",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            actividad.update(
+                horas=request.data.get("horas"),
+                descripcion=request.data.get("descripcion")
+            )
+            serializer = ActividadSerializer(actividad)
+            return Response(serializer.data)
+        except Actividad.DoesNotExist:
+            response = {
+                "message": "No existe la Actividad",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)

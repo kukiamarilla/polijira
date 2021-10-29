@@ -15,3 +15,8 @@ class Actividad(models.Model):
     sprint_backlog = models.ForeignKey("SprintBacklog", on_delete=models.CASCADE,
                                        related_name="actividades", null=True)
     desarrollador = models.ForeignKey("Usuario", on_delete=models.CASCADE, null=True)
+
+    def update(self, horas=None, descripcion=None):
+        self.horas = horas if horas is not None else self.horas
+        self.descripcion = descripcion if descripcion is not None else self.descripcion
+        self.save()

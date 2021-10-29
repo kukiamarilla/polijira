@@ -28,7 +28,8 @@ class ActividadTestCase(TestCase):
         "backend/api/fixtures/testing/registro-user-stories.json",
         "backend/api/fixtures/testing/sprints.json",
         "backend/api/fixtures/testing/sprintbacklogs.json",
-        "backend/api/fixtures/testing/miembrosprints.json"
+        "backend/api/fixtures/testing/miembrosprints.json",
+        "backend/api/fixtures/testing/actividades.json"
     ]
 
     def setUp(self):
@@ -46,7 +47,6 @@ class ActividadTestCase(TestCase):
             username="testing",
             password="polijira2021"
         )
-        sprint_backlog = SprintBacklog.objects.get(pk=1)
         sprint = Sprint.objects.get(pk=2)
         sprint.estado = "A"
         sprint.save()
@@ -57,5 +57,28 @@ class ActividadTestCase(TestCase):
         }
         response = self.client.post("/api/actividades/", request_data)
         body = response.json()
+        actividad = Actividad.objects.filter(**body)
+        self.assertEquals(len(actividad), 1)
+
+    def test_modificar_actividad(self):
+        """
+        test_modificar_actividad Prueba modificar una Actividad
+        """
+        print("\nProbando modificar una Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        request_data = {
+            "descripcion": "Holiii :)",
+            "horas": 3
+        }
+        response = self.client.put("/api/actividades/1/", request_data, content_type="application/json")
+        body = response.json()
+        print(body)
         actividad = Actividad.objects.filter(**body)
         self.assertEquals(len(actividad), 1)
