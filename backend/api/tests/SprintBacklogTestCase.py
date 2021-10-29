@@ -1,15 +1,13 @@
 from datetime import date
 from django.test import TestCase
 from django.test.client import Client
-from backend.api.models import Permiso, \
-    PermisoProyecto, \
+from backend.api.models import PermisoProyecto, \
     ProductBacklog,\
     Sprint,\
     Miembro,\
     SprintBacklog,\
     UserStory,\
     MiembroSprint,\
-    Proyecto, \
     RegistroUserStory
 
 
@@ -54,6 +52,7 @@ class SprintBacklogTestCase(TestCase):
         print("\nProbando mover un user story en el kanban.")
         self.client.login(username="testing", password="polijira2021")
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
@@ -61,7 +60,7 @@ class SprintBacklogTestCase(TestCase):
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_sin_permiso_ver_kanban(self):
@@ -73,6 +72,7 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_kanban").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
@@ -93,6 +93,7 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
@@ -113,12 +114,12 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
-        user_story = sprint_backlog.user_story
-        user_story.desarrollador = MiembroSprint.objects.get(pk=1)
-        user_story.save()
+        sprint_backlog.desarrollador = MiembroSprint.objects.get(pk=1)
+        sprint_backlog.save()
         request_data = {
             "estado_kanban": "D"
         }
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
         response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
@@ -136,6 +137,7 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
@@ -143,7 +145,7 @@ class SprintBacklogTestCase(TestCase):
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_con_permiso_mover_user_stories_y_sin_ser_desarrollador(self):
@@ -154,6 +156,7 @@ class SprintBacklogTestCase(TestCase):
         print("\nProbando mover un user story en el kanban con permiso mover user stories y sin ser desarrollador.")
         self.client.login(username="testing", password="polijira2021")
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         user_story = sprint_backlog.user_story
         user_story.desarrollador = MiembroSprint.objects.get(pk=1)
         user_story.save()
@@ -164,7 +167,7 @@ class SprintBacklogTestCase(TestCase):
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_con_estado_kanban_sin_especificar(self):

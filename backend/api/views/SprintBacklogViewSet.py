@@ -1,4 +1,4 @@
-from rest_framework import status, views
+from rest_framework import status, viewsets
 from django.db import transaction
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from backend.api.models import Miembro, SprintBacklog, Usuario, RegistroUserStor
 from backend.api.serializers import SprintBacklogSerializer
 
 
-class SprintBacklogViewSet(views.View):
+class SprintBacklogViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     @action(detail=True, methods=["POST"])
@@ -84,7 +84,7 @@ class SprintBacklogViewSet(views.View):
             if not miembro_request.tiene_permiso("ver_kanban") \
                 or not miembro_request.tiene_permiso("ver_user_stories") \
                 or (
-                    not sprint_backlog.user_story.desarrollador == miembro_sprint
+                    not sprint_backlog.desarrollador == miembro_sprint
                     and not miembro_request.tiene_permiso("mover_user_stories")
             ):
                 response = {
@@ -113,3 +113,15 @@ class SprintBacklogViewSet(views.View):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except MiembroSprint.DoesNotExist:
+            response = {
+                "message": "No eres desarrollador de este User Story",
+                "error": "unathorized"
+            }
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
