@@ -37,8 +37,15 @@ class SprintBacklog(models.Model):
     estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
 
     @staticmethod
-    def agregar_user_story(sprint=None, user_story=None):
-        SprintBacklog.objects.create(sprint=sprint, user_story=user_story)
+    def create(sprint=None, user_story=None, horas_estimadas=None, desarrollador=None):
+        sprint_backlog = SprintBacklog.objects.create(
+            sprint=sprint,
+            user_story=user_story,
+            desarrollador=desarrollador,
+            horas_estimadas=horas_estimadas,
+            estado_estimacion="p" if sprint.planificador is not None else "P"
+        )
+        return sprint_backlog
 
     def mover_kanban(self, estado):
         """

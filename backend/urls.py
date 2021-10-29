@@ -39,7 +39,7 @@ router.register("horarios", HorarioViewSet, basename="horarios")
 router.register("user-stories", UserStoryViewSet, basename="user-stories")
 router.register("sprints", SprintViewSet, basename="sprints")
 router.register("sprint-planning", SprintPlanningViewSet, basename="sprint-planning")
-router.register("sprint-backlog", SprintBacklogViewSet, basename="sprint-backlog")
+router.register("sprint-backlogs", SprintBacklogViewSet, basename="sprint-backlogs")
 
 urlpatterns = [
 
