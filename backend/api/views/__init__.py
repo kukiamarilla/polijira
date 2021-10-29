@@ -11,3 +11,4 @@ from .UserStoryViewSet import UserStoryViewSet
 from .SprintViewSet import SprintViewSet
 from .SprintPlanningViewSet import SprintPlanningViewSet
 from .ReviewViewSet import ReviewViewSet
+from .SprintBacklogViewSet import SprintBacklogViewSet

@@ -18,4 +18,11 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
          Metadatos de Sprint Backlog
         """
         model = SprintBacklog
-        fields = ("sprint", "user_story")
+        fields = (
+            "sprint",
+            "user_story",
+            "estado_kanban",
+            "horas_estimadas",
+            "estado_estimacion",
+            "desarrollador"
+        )

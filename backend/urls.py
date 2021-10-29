@@ -22,7 +22,8 @@ from backend.api.views import \
     UserStoryViewSet, \
     SprintViewSet, \
     SprintPlanningViewSet, \
-    ReviewViewSet
+    ReviewViewSet, \
+    SprintBacklogViewSet
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -40,6 +41,7 @@ router.register("user-stories", UserStoryViewSet, basename="user-stories")
 router.register("sprints", SprintViewSet, basename="sprints")
 router.register("sprint-planning", SprintPlanningViewSet, basename="sprint-planning")
 router.register("reviews", ReviewViewSet, basename="reviews")
+router.register("sprint-backlogs", SprintBacklogViewSet, basename="sprint-backlogs")
 
 urlpatterns = [
 

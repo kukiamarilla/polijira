@@ -5,13 +5,10 @@
         "fields": {
             "nombre": "USTesting",
             "descripcion": "Testing",
-            "horas_estimadas": 4,
             "prioridad": 6,
             "estado": "P",
             "fecha_release": null,
             "fecha_creacion": "2021-09-24",
-            "desarrollador": null,
-            "estado_estimacion": "C",
             "proyecto": 1,
             "product_backlog": true
         }
@@ -22,13 +19,10 @@
         "fields": {
             "nombre": "USTesting2",
             "descripcion": "Testing2",
-            "horas_estimadas": 0,
             "prioridad": 0,
             "estado": "P",
             "fecha_release": null,
             "fecha_creacion": "2021-09-24",
-            "desarrollador": null,
-            "estado_estimacion": "C",
             "product_backlog": true,
             "proyecto": 3
         }
@@ -39,13 +33,10 @@
         "fields": {
             "nombre": "USTesting3",
             "descripcion": "Testing3",
-            "horas_estimadas": 0,
             "prioridad": 0,
             "estado": "P",
             "fecha_release": null,
             "fecha_creacion": "2021-10-10",
-            "desarrollador": 2,
-            "estado_estimacion": "C",
             "product_backlog": true,
             "proyecto": 4
         }

@@ -128,7 +128,6 @@ h1,
 .d-flex {
   display: flex;
 }
-
 .align-items-center {
   align-items: center;
 }
@@ -145,8 +144,14 @@ h1,
   justify-content: center;
 }
 
-.justify-content-end {
-  justify-content: end;
+.justify-content-flex-end {
+  justify-content: flex-end;
+}
+.justify-content-space-between{
+  justify-content: space-between;
+}
+.justify-content-space-around{
+  justify-content: space-around;
 }
 
 .centrado-absoluto {

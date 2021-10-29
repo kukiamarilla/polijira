@@ -9,7 +9,7 @@ from backend.api.forms import CreateSprintForm, UpdateSprintForm
 
 class SprintViewSet(viewsets.ViewSet):
     """
-    SprintPlanningViewSet View para el Sprint Planning
+    SprintViewSet View para el Sprint
 
     Args:
         viewsets (ViewSet): View del módulo rest_framework
@@ -24,7 +24,7 @@ class SprintViewSet(viewsets.ViewSet):
             pk (int, optional): Primary key
 
         Returns:
-            JSON: Metados del Sprint
+            JSON: Metadatos del Sprint
         """
         try:
             usuario = Usuario.objects.get(user=request.user)
