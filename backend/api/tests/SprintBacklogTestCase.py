@@ -55,6 +55,7 @@ class SprintBacklogTestCase(TestCase):
         }
         response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
+        print(response.content)
         body = response.json()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
