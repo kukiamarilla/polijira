@@ -109,3 +109,7 @@ class UserStory(models.Model):
             horas_estimadas=horas_estimadas,
             estado_estimacion="C"
         )
+
+    def devolver(self, sprint=None, sprint_backlog_handler=None, product_backlog_handler=None):
+        sprint_backlog_handler(sprint=sprint, user_story=self)
+        product_backlog_handler(self)

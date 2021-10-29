@@ -405,27 +405,22 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
 
-    def test_responder_estimacion(self):
+    def test_devolver_user_story(self):
         """
-        test_responder_estimacion Prueba responder una estimacion de un Sprint Planning
+        test_devolver_user_story devolver User Story al Product Backlog
         """
-        print("\nProbando responder una estimacion de un Sprint Planning")
+        print("\nProbando devolver User Story al Product Backlog")
         self.client.login(username="testing", password="polijira2021")
         sprint = Sprint.objects.get(pk=2)
-        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
-        user_story = UserStory.objects.get(pk=2)
-
-        user_story.planificar(
-            sprint=sprint,
-            horas_estimadas=2,
-            desarrollador=MiembroSprint.objects.get(pk=1),
-            planificador=Miembro.objects.get(pk=4),
-            product_backlog_handler=ProductBacklog.eliminar_user_story,
-            sprint_backlog_handler=SprintBacklog.agregar_user_story,
-            registro_handler=RegistroUserStory.modificar_registro
-        )
+        sprint.planificador = Miembro.objects.get(pk=4)
+        sprint.save()
         request_data = {
-            "horas_estimadas": 5
+            "sprint_backlog": 1
         }
-        response = self.client.post("/api/sprint-planning/2/responder_estimacion/", request_data)
-        print(response.json())
+        response = self.client.post("/api/sprint-planning/2/devolver_user_story/", request_data)
+        self.assertEquals(response.status_code, 200)
+        sprint_backlog = SprintBacklog.objects.filter(sprint_id=2, user_story_id=2)
+        self.assertEquals(len(sprint_backlog), 0)
+        ProductBacklog.objects.get(pk=2).delete()
+        product_backlog = ProductBacklog.objects.filter(user_story_id=2, proyecto_id=3)
+        self.assertEquals(len(product_backlog), 1)

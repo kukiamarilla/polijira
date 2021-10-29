@@ -309,3 +309,55 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @transaction.atomic
+    @action(detail=True, methods=["POST"])
+    def devolver_user_story(self, request, pk=None):
+        """
+        devolver_user_story Pasa el User Story del Sprint Backlog al Product Backlog
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key del Sprint
+        """
+        try:
+
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(
+                usuario=usuario,
+                proyecto=sprint.proyecto
+            )
+            if not sprint.planificador == miembro:
+                response = {
+                    "message": "Usted no es planificador de este Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprint_backlog = SprintBacklog.objects.get(pk=request.data.get("sprint_backlog"))
+            sprint_backlog.devolver_al_product_backlog(
+                product_backlog_handler=ProductBacklog.almacenar_user_story
+            )
+            response = {
+                "message": "¡¡¡¡User Story movido al Product Backlog exitosamente!!!!"
+            }
+            return Response(response, status=status.HTTP_200_OK)
+
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except SprintBacklog.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint Backlog",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
