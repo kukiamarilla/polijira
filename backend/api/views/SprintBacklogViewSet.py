@@ -1,15 +1,15 @@
-from rest_framework import status, views
+from rest_framework import status, viewsets
 from django.db import transaction
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from backend.api.decorators import FormValidator
-from backend.api.forms import ResponderEstimacionForm
-from backend.api.models import Miembro, SprintBacklog, Usuario, RegistroUserStory
-from backend.api.serializers import SprintBacklogSerializer
+from backend.api.forms import PlanificarUserStoryForm, ResponderEstimacionForm
+from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, Usuario, RegistroUserStory
+from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 
 
-class SprintBacklogViewSet(views.View):
+class SprintBacklogViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     @action(detail=True, methods=["POST"])
@@ -18,9 +18,8 @@ class SprintBacklogViewSet(views.View):
         try:
             usuario = Usuario.objects.get(user=request.user)
             sprint_backlog = SprintBacklog.objects.get(pk=pk)
-            sprint = sprint_backlog.sprint
-            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
-            if not sprint.estado_sprint_planning == "I":
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint_backlog.sprint.proyecto)
+            if not sprint_backlog.sprint.estado_sprint_planning == "I":
                 response = {
                     "message": "Un Planificador debe Iniciar el Sprint Planning para responder una estimación",
                     "error": "bad_request"
@@ -38,15 +37,15 @@ class SprintBacklogViewSet(views.View):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            if not sprint.estado == "P":
+            if not sprint_backlog.sprint.estado == "P":
                 response = {
                     "message": "Solo puedes responder una estimación de un Sprint Pendiente",
                     "error": "conflict"
                 }
                 return Response(response, status=status.HTTP_409_CONFLICT)
-            sprint_backlog.update(
-                horas_estimadas=(int(request.data.get("horas_estimadas")) + int(sprint_backlog.horas_estimadas))/2,
-                estado_estimacion="C"
+            sprint_backlog.user_story.responder(
+                sprint_backlog=sprint_backlog,
+                horas_estimadas=(int(request.data.get("horas_estimadas")) + int(sprint_backlog.horas_estimadas))/2
             )
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)
