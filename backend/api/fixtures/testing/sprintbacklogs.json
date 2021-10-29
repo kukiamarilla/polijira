@@ -15,7 +15,10 @@
         "pk": 2,
         "fields": {
             "sprint": 3,
-            "user_story": 3
+            "user_story": 3,
+            "horas_estimadas": 4,
+            "desarrollador": 2,
+            "estado_estimacion": "C"
         }
     }
 ]

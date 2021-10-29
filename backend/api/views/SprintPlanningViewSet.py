@@ -3,13 +3,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
-from backend.api.models.RegistroUserStory import RegistroUserStory
-from backend.api.serializers import SprintBacklogSerializer, SprintSerializer, MiembroSprintSerializer
+from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import PlanificarUserStoryForm, \
     CreateMiembroSprintForm, \
-    EliminarMiembroSprintForm, \
-    ResponderEstimacionForm
+    EliminarMiembroSprintForm
 
 
 class SprintPlanningViewSet(viewsets.ViewSet):

@@ -3,9 +3,9 @@ from django.db import transaction
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from backend.api.decorators import FormValidator
-from backend.api.forms import PlanificarUserStoryForm, ResponderEstimacionForm, MoverUserStoryForm
-from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, Usuario, RegistroUserStory
-from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
+from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
+from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
+from backend.api.serializers import SprintBacklogSerializer
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
