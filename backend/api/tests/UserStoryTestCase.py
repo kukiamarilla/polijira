@@ -817,3 +817,15 @@ class UserStoryTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["permission_required"], ["ver_user_stories"])
         self.assertEquals(body["error"], "forbidden")
+
+    def test_listar_reviews_de_un_user_story(self):
+        """
+        test_listar_reviews_de_un_user_story
+        Prueba listar los reviews de un user story
+        """
+        print("\nProbando listar todos los reviews de un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/user-stories/1/reviews/")
+        body = response.json()
+        print(body)
+        self.assertEquals(response.status_code, 200)
