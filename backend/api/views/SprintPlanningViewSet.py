@@ -272,6 +272,16 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = UserStory.objects.get(pk=request.data.get("user_story"))
+            sprint_backlog = SprintBacklog.objects.filter(
+                sprint=sprint,
+                user_story=user_story
+            )
+            if not len(sprint_backlog) == 0:
+                response = {
+                    "message": "Este User Story ya se planificó",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             user_story.planificar(
                 sprint=sprint,
                 horas_estimadas=request.data.get("horas_estimadas"),
