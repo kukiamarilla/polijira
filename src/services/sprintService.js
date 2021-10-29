@@ -24,5 +24,8 @@ export default {
     },
     eliminarMiembro(id, miembro) {
         return api.delete(`/sprint-planning/${id}/miembros/`, {data: miembro}).then(response => response.data)
+    },
+    sprintBacklog(id) {
+        return api.get(`/sprints/${id}/sprint_backlogs/`).then(response => response.data)
     }
 }

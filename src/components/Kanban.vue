@@ -1,77 +1,44 @@
 <template>
   <div class="kanban">
-      <div class="column todo">
-        <div class="header">
-          <h4>To Do</h4>
-        </div>
-        <div class="user-stories-container" @drop.prevent="finishDrag" @dragover.prevent>
-          <div class="user-story" draggable="true" @dragstart="startDrag" @dragover.stop>
-            <div class="d-flex top">
-              <div class="title">
-                <span class="highlight">Pantalla de Login</span>
-              </div>
-              <div>
-                <div class="d-flex">
-                  <span>8 hs.</span>&nbsp;&nbsp;
-                  <Icon icono="clock" size="16px"/>
-                </div>
-              </div>
-            </div>
-            <div>Asignado a: Panchito Lopez</div>
-          </div>
-        </div>
-      </div>
-      <div class="column doing">
-        <div class="header">
-          <h4>Doing</h4>
-        </div>
-        <div class="user-stories-container"  @drop.prevent="finishDrag" @dragover.prevent></div>
-      </div>
-      <div class="column done">
-        <div class="header">
-          <h4>Done</h4>
-        </div>
-        <div class="user-stories-container"  @drop.prevent="finishDrag" @dragover.prevent></div>
-      </div>
+    <ColumnaKanban nombre="To Do" color="var(--info)">
+      <UserStoryKanban/>
+      <UserStoryKanban/>
+      <UserStoryKanban/>
+    </ColumnaKanban>
+    <ColumnaKanban nombre="Doing" color="var(--warning)">
+      <UserStoryKanban/>
+    </ColumnaKanban>
+    <ColumnaKanban nombre="Done" color="var(--success)">
+      <UserStoryKanban/>
+      <UserStoryKanban/>
+    </ColumnaKanban>
   </div>
 </template>
 
 <script>
-import Icon from "@/components/Icon";
+import UserStoryKanban from "@/components/UserStoryKanban";
+import ColumnaKanban from "@/components/ColumnaKanban";
+import sprintService from "@/services/sprintService";
 
 export default {
+  components: {
+    ColumnaKanban,
+    UserStoryKanban
+  },
   data() {
-    return{
-      dragState: {
-        columns: {
-          todo: "inactive",
-          doing: "inactive",
-          done: "inactive",
-        }
-      }
+    return {
+      sprintBacklogs: []
     }
   },
-  components: {
-    Icon
+  mounted() {
+    this.load()
   },
   methods: {
-    startDrag(evt) {
-      evt.dataTransfer.setData("US", "hola")
-      evt.dataTransfer.effectAllowed = 'move'
-      console.log("Drag Start")
+    load() {
+      sprintService.sprintBacklogs(sb => {
+        this.sprintBacklogs = sb;
+      })
     },
-    finishDrag(evt) {
-      const el = evt.dataTransfer.getData("US")
-      console.log(el)
-      console.log("Drag End")
-    },
-    dragEnter(column, evt) {
-      if (evt.dataTransfer.types.includes['US']) {
-        // Only handle cards.
-        evt.preventDefault();
-      }
-      this.dragState = {...this.dragState, columns: {...this.dragState.columns, doing: "active"}};
-    }
   }
 }
 </script>
@@ -120,29 +87,6 @@ export default {
       background-color: var(--success);
     }
   }
-}
-.user-story {
-  height: 96px;
-  padding: 16px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  .top{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    .title {
-      max-width: calc(100% - 50px);
-    }
-  }
-}
-
-.user-stories-container {
-  min-height: 108px;
-  display: flex;
-  flex-direction: column;
 }
 
 </style>
