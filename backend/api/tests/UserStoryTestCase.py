@@ -42,13 +42,10 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["id"], user_story.id)
         self.assertEquals(body["nombre"], user_story.nombre)
         self.assertEquals(body["descripcion"], user_story.descripcion)
-        self.assertEquals(body["horas_estimadas"], user_story.horas_estimadas)
         self.assertEquals(body["prioridad"], user_story.prioridad)
         self.assertEquals(body["estado"], user_story.estado)
         self.assertEquals(body["fecha_release"], user_story.fecha_release)
         self.assertEquals(body["fecha_creacion"], str(user_story.fecha_creacion))
-        self.assertEquals(body["desarrollador"], user_story.desarrollador)
-        self.assertEquals(body["estado_estimacion"], user_story.estado_estimacion)
         self.assertEquals(body["product_backlog"], user_story.product_backlog)
 
     def test_obtener_user_story_no_existente(self):
@@ -133,12 +130,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -151,15 +145,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -187,12 +178,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
         self.assertEquals(body["descripcion"], "")
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -205,15 +193,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -242,12 +227,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(body["prioridad"], 2)
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -260,15 +242,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -443,12 +422,10 @@ class UserStoryTestCase(TestCase):
             descripcion_antes=user_story_antes.descripcion,
             prioridad_antes=user_story_antes.prioridad,
             estado_antes=user_story_antes.estado,
-            desarrollador_antes=user_story_antes.desarrollador,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Modificacion",
@@ -488,16 +465,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=user_story_antes.nombre,
             descripcion_antes=user_story_antes.descripcion,
-            horas_estimadas_antes=user_story_antes.horas_estimadas,
             prioridad_antes=user_story_antes.prioridad,
             estado_antes=user_story_antes.estado,
-            desarrollador_antes=user_story_antes.desarrollador,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Modificacion",
@@ -734,16 +707,12 @@ class UserStoryTestCase(TestCase):
         registro = registro[0]
         self.assertEquals(registro.nombre_antes, user_story.nombre)
         self.assertEquals(registro.descripcion_antes, user_story.descripcion)
-        self.assertEquals(registro.horas_estimadas_antes, user_story.horas_estimadas)
         self.assertEquals(registro.prioridad_antes, user_story.prioridad)
         self.assertEquals(registro.estado_antes, user_story.estado)
-        self.assertEquals(registro.desarrollador_antes, user_story.desarrollador)
         self.assertEquals(registro.nombre_despues, None)
         self.assertEquals(registro.descripcion_despues, None)
-        self.assertEquals(registro.horas_estimadas_despues, None)
         self.assertEquals(registro.prioridad_despues, None)
         self.assertEquals(registro.estado_despues, None)
-        self.assertEquals(registro.desarrollador_despues, None)
 
     def test_eliminar_user_story_no_existente(self):
         """

@@ -1,6 +1,11 @@
-from django.test import TestCase, Client
-from backend.api.models import PermisoProyecto, SprintBacklog
-from backend.api.models.MiembroSprint import MiembroSprint
+from django.test import TestCase
+from django.test.client import Client
+from backend.api.models import PermisoProyecto, \
+    Sprint,\
+    Miembro,\
+    SprintBacklog,\
+    UserStory,\
+    MiembroSprint
 
 
 class SprintBacklogTestCase(TestCase):
@@ -44,14 +49,15 @@ class SprintBacklogTestCase(TestCase):
         print("\nProbando mover un user story en el kanban.")
         self.client.login(username="testing", password="polijira2021")
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_sin_permiso_ver_kanban(self):
@@ -63,10 +69,11 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_kanban").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -83,10 +90,11 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -103,13 +111,13 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
-        user_story = sprint_backlog.user_story
-        user_story.desarrollador = MiembroSprint.objects.get(pk=1)
-        user_story.save()
+        sprint_backlog.desarrollador = MiembroSprint.objects.get(pk=1)
+        sprint_backlog.save()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -126,14 +134,15 @@ class SprintBacklogTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="mover_user_stories").delete()
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_con_permiso_mover_user_stories_y_sin_ser_desarrollador(self):
@@ -144,17 +153,18 @@ class SprintBacklogTestCase(TestCase):
         print("\nProbando mover un user story en el kanban con permiso mover user stories y sin ser desarrollador.")
         self.client.login(username="testing", password="polijira2021")
         sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
         user_story = sprint_backlog.user_story
         user_story.desarrollador = MiembroSprint.objects.get(pk=1)
         user_story.save()
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(body["sprint"]["id"], sprint_backlog.pk)
+        self.assertEquals(body["sprint"]["id"], sprint_backlog.sprint.pk)
         self.assertEquals(body["estado_kanban"], request_data["estado_kanban"])
 
     def test_mover_user_story_con_estado_kanban_sin_especificar(self):
@@ -168,7 +178,7 @@ class SprintBacklogTestCase(TestCase):
         request_data = {
             "estado_kanban": None
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 422)
@@ -186,7 +196,7 @@ class SprintBacklogTestCase(TestCase):
         request_data = {
             "estado_kanban": "Z"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 422)
@@ -205,7 +215,7 @@ class SprintBacklogTestCase(TestCase):
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -224,7 +234,7 @@ class SprintBacklogTestCase(TestCase):
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/" + str(sprint_backlog.pk) + "/mover/",
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 403)
@@ -241,9 +251,33 @@ class SprintBacklogTestCase(TestCase):
         request_data = {
             "estado_kanban": "D"
         }
-        response = self.client.post("/api/sprint-backlog/99/mover/",
+        response = self.client.post("/api/sprint-backlogs/99/mover/",
                                     request_data, content_type="application/json")
         body = response.json()
         self.assertEquals(response.status_code, 404)
         self.assertEquals(body["message"], "SprintBacklog no existe")
         self.assertEquals(body["error"], "not_found")
+
+    def test_responder_estimacion(self):
+        """
+        test_responder_estimacion Prueba responder una estimacion de un Sprint Planning
+        """
+        print("\nProbando responder una estimacion de un Sprint Planning")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        user_story = UserStory.objects.get(pk=2)
+        sprint_backlog = SprintBacklog.objects.get(sprint=sprint, user_story=user_story)
+        sprint_backlog.estado_estimacion = "p"
+        sprint_backlog.save()
+        h1 = sprint_backlog.horas_estimadas
+        request_data = {
+            "horas_estimadas": 5
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.id) +
+                                    "/responder_estimacion/", request_data)
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body.get("horas_estimadas"), int((h1 + request_data["horas_estimadas"])/2))
+        self.assertEquals(body.get("estado_estimacion"), "C")
+        self.assertEquals(body.get("desarrollador"), 2)
