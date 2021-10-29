@@ -107,3 +107,35 @@ class ActividadViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, pk=None):
+        """
+        destroy Elimina una Actividad
+
+        Args:
+            request (Any): Contiene: Usuario que solicita el servicio de eliminar
+            pk (int, optional): id de la Actividad a eliminar
+
+        Returns:
+            JSON: Mensaje de Eliminacion Exitosa
+        """
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            actividad = Actividad.objects.get(pk=pk)
+            if not usuario == actividad.desarrollador:
+                response = {
+                    "message": "Usted no es desarrollador de esta Actividad",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            actividad.delete()
+            response = {
+                "message": "Actividad Eliminada"
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Actividad.DoesNotExist:
+            response = {
+                "message": "No existe la Actividad",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)

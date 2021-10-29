@@ -79,6 +79,19 @@ class ActividadTestCase(TestCase):
         }
         response = self.client.put("/api/actividades/1/", request_data, content_type="application/json")
         body = response.json()
-        print(body)
         actividad = Actividad.objects.filter(**body)
         self.assertEquals(len(actividad), 1)
+
+    def test_eliminar_actividad(self):
+        """
+        test_eliminar_actividad Prueba eliminar una Actividad
+        """
+        print("\nProbando eliminar una Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        response = self.client.delete("/api/actividades/1/")
+        self.assertEquals(response.status_code, 200)
+        actividad = Actividad.objects.filter(pk=1)
+        self.assertEquals(len(actividad), 0)
