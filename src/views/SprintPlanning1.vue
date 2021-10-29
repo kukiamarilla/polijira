@@ -86,7 +86,7 @@ export default {
       let capacidad = 0;
       this.miembrosSprint.forEach((ms) => {
         capacidad += this.capacidadPorMiembro(
-          this.miembros.find((miembro) => miembro.id == ms.miembro_proyecto)
+          this.miembros.find((miembro) => miembro.id == ms.miembro_proyecto.id)
         );
       });
       return capacidad;
@@ -148,14 +148,14 @@ export default {
           );
       });
       sprintService.miembros(idSprint).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint;
         miembroService.list(idProyecto).then((miembros) => {
           miembros = miembros.map((miembro) => ({
             ...miembro,
             included: miembrosSprint
-              .map((x) => x.miembro_proyecto)
+              .map((x) => x.miembro_proyecto.id)
               .includes(miembro.id),
           }));
+          this.miembrosSprint = miembrosSprint;
           this.miembros = miembros;
         });
       });
@@ -170,7 +170,7 @@ export default {
     },
     eliminarMiembro(miembro) {
       miembro = this.miembrosSprint.find(
-        (ms) => ms.miembro_proyecto == miembro.id
+        (ms) => ms.miembro_proyecto.id == miembro.id
       );
       sprintService
         .eliminarMiembro(this.sprint.id, { miembro_sprint: miembro.id })
