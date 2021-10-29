@@ -13,3 +13,4 @@ from .RegistroUserStory import RegistroUserStory
 from .Sprint import Sprint
 from .SprintBacklog import SprintBacklog
 from .MiembroSprint import MiembroSprint
+from .Actividad import Actividad
