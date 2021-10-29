@@ -2,6 +2,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario, Horario
+from backend.api.models.ProductBacklog import ProductBacklog
 from backend.api.serializers import \
     ProyectoSerializer, \
     PermisoProyectoSerializer, \
@@ -9,7 +10,8 @@ from backend.api.serializers import \
     MiembroSerializer, \
     ImportarRolSerializer, \
     UserStorySerializer, \
-    SprintSerializer
+    SprintSerializer, \
+    ProductBacklogSerializer
 
 from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
@@ -531,54 +533,76 @@ class ProyectoViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
-    # @action(detail=True, methods=['POST'])
-    # def finalizar(self, request, pk=None):
-    #     try:
-    #         usuario_request = Usuario.objects.get(user=request.user)
-    #         if not usuario_request.tiene_permiso("finalizar_proyectos"):
-    #             response = {
-    #                 "message": "No tiene permiso para realizar esta accion",
-    #                 "permission_required": ["finalizar_proyectos"],
-    #                 "error": "forbidden"
-    #             }
-    #             return Response(response, status=status.HTTP_403_FORBIDDEN)
-    #         proyecto = Proyecto.objects.get(pk=pk)
-    #         if proyecto.estado != 'A':
-    #             response = {
-    #                 "message": "No puedes finalizar el Proyecto en su estado actual",
-    #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
-    #                 "error": "bad_request"
-    #             }
-    #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-    #         proyecto.finalizar()
-    #         serializer = ProyectoSerializer(proyecto, many=False)
-    #         return Response(serializer.data)
-    #     except Proyecto.DoesNotExist:
-    #         response = {"message": "El proyecto no existe"}
-    #         return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-    # @action(detail=True, methods=['POST'])
-    # def cancelar(self, request, pk=None):
-    #     try:
-    #         usuario_request = Usuario.objects.get(user=request.user)
-    #         if not usuario_request.tiene_permiso("cancelar_proyectos"):
-    #             response = {
-    #                 "message": "No tiene permiso para realizar esta accion",
-    #                 "permission_required": ["cancelar_proyectos"],
-    #                 "error": "forbidden"
-    #             }
-    #             return Response(response, status=status.HTTP_403_FORBIDDEN)
-    #         proyecto = Proyecto.objects.get(pk=pk)
-    #         if proyecto.estado != 'A':
-    #             response = {
-    #                 "message": "No puedes cancelar el Proyecto en su estado actual",
-    #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
-    #                 "error": "bad_request"
-    #             }
-    #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-    #         proyecto.cancelar()
-    #         serializer = ProyectoSerializer(proyecto, many=False)
-    #         return Response(serializer.data)
-    #     except Proyecto.DoesNotExist:
-    #         response = {"message": "El proyecto no existe"}
-    #         return Response(response, status=status.HTTP_404_NOT_FOUND)
+    @action(detail=True, methods=["GET"])
+    def product_backlogs(self, request, pk=None):
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto_id=pk)
+            if not usuario.tiene_permiso("ver_proyectos") or \
+               not miembro.tiene_permiso("ver_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            product_backlogs = ProductBacklog.objects.filter(proyecto_id=pk)
+            serializer = ProductBacklogSerializer(product_backlogs, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+            # @action(detail=True, methods=['POST'])
+            # def finalizar(self, request, pk=None):
+            #     try:
+            #         usuario_request = Usuario.objects.get(user=request.user)
+            #         if not usuario_request.tiene_permiso("finalizar_proyectos"):
+            #             response = {
+            #                 "message": "No tiene permiso para realizar esta accion",
+            #                 "permission_required": ["finalizar_proyectos"],
+            #                 "error": "forbidden"
+            #             }
+            #             return Response(response, status=status.HTTP_403_FORBIDDEN)
+            #         proyecto = Proyecto.objects.get(pk=pk)
+            #         if proyecto.estado != 'A':
+            #             response = {
+            #                 "message": "No puedes finalizar el Proyecto en su estado actual",
+            #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
+            #                 "error": "bad_request"
+            #             }
+            #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            #         proyecto.finalizar()
+            #         serializer = ProyectoSerializer(proyecto, many=False)
+            #         return Response(serializer.data)
+            #     except Proyecto.DoesNotExist:
+            #         response = {"message": "El proyecto no existe"}
+            #         return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+            # @action(detail=True, methods=['POST'])
+            # def cancelar(self, request, pk=None):
+            #     try:
+            #         usuario_request = Usuario.objects.get(user=request.user)
+            #         if not usuario_request.tiene_permiso("cancelar_proyectos"):
+            #             response = {
+            #                 "message": "No tiene permiso para realizar esta accion",
+            #                 "permission_required": ["cancelar_proyectos"],
+            #                 "error": "forbidden"
+            #             }
+            #             return Response(response, status=status.HTTP_403_FORBIDDEN)
+            #         proyecto = Proyecto.objects.get(pk=pk)
+            #         if proyecto.estado != 'A':
+            #             response = {
+            #                 "message": "No puedes cancelar el Proyecto en su estado actual",
+            #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
+            #                 "error": "bad_request"
+            #             }
+            #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            #         proyecto.cancelar()
+            #         serializer = ProyectoSerializer(proyecto, many=False)
+            #         return Response(serializer.data)
+            #     except Proyecto.DoesNotExist:
+            #         response = {"message": "El proyecto no existe"}
+            #         return Response(response, status=status.HTTP_404_NOT_FOUND)
