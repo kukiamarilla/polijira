@@ -10,3 +10,4 @@ from .HorarioViewSet import HorarioViewSet
 from .UserStoryViewSet import UserStoryViewSet
 from .SprintViewSet import SprintViewSet
 from .SprintPlanningViewSet import SprintPlanningViewSet
+from .SprintBacklogViewSet import SprintBacklogViewSet

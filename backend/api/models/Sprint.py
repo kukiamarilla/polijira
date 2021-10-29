@@ -97,3 +97,7 @@ class Sprint(models.Model):
                (fecha_inicio <= str(sprint.fecha_fin) and fecha_fin > str(sprint.fecha_fin)):
                 return True
         return False
+
+    def asignar_planificador(self, planificador):
+        self.planificador = planificador
+        self.save()
