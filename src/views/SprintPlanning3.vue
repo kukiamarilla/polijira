@@ -8,39 +8,28 @@
         <div class="header">
           <h2>Spring Planning</h2>
           <br />
-          <h4>Paso 2: Sprint Backlog</h4>
+          <h4>Paso 3: Finalización</h4>
           <br /><br /><br />
         </div>
         <Table height="400px">
           <TableHeader>
             <Th width="5%">ID</Th>
             <Th width="25%">Nombre</Th>
-            <Th width="25%">Descripción</Th>
-            <Th width="15%">Prioridad</Th>
-            <Th width="15%">Acciones</Th>
-            <Th width="15%">Incluir</Th>
+            <Th width="25%">Desarrollador</Th>
+            <Th width="25%">Prioridad</Th>
+            <Th width="15%">Estado de la estimación</Th>
+            <Th width="15%">Estimación</Th>
           </TableHeader>
           <TableBody>
             <Tr v-for="us in sprintBacklog" :key="us.user_story.id">
               <Td width="5%">{{ us.user_story.id }}</Td>
               <Td width="25%">{{ us.user_story.nombre }}</Td>
-              <Td width="25%">{{ us.user_story.descripcion }}</Td>
-              <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
-              <Td width="15%">
-                <Checkbox v-model="us.included" @input="eliminarUS(us)" />
-              </Td>
-            </Tr>
-
-            <Tr v-for="us in productBacklog" :key="us.id">
-              <Td width="5%">{{ us.id }}</Td>
-              <Td width="25%">{{ us.user_story.nombre }}</Td>
-              <Td width="25%">{{ us.user_story.descripcion }}</Td>
-              <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
-              <Td width="15%">
-                <Checkbox v-model="us.included" @input="verPlanificacion(us)" />
-              </Td>
+              <Td width="25%">{{
+                us.user_story.desarrollador.miembro_proyecto.usuario.nombre
+              }}</Td>
+              <Td width="25%">{{ us.user_story.prioridad }}</Td>
+              <Td width="15%">{{ us.user_story.estado_estimacion }}</Td>
+              <Td width="15%">{{ us.sprint.estimacion }}</Td>
             </Tr>
           </TableBody>
         </Table>
@@ -50,35 +39,10 @@
             {{ totalAsignado }} / {{ capacidadTotal }}
           </span>
 
-          <Boton texto="Siguiente" @click="siguiente" tema="primary" />
+          <Boton texto="Finalizar" @click="finalizar" tema="primary" />
         </div>
       </div>
     </div>
-
-    <Modal v-model="verUSPlanning" @input="deshacerPlanUS" width="496px">
-      <h1>Planificar User Story</h1>
-      <br /><br />
-
-      <label class="highlight">Título</label>
-      <p>{{ userStory.user_story.nombre }}</p>
-
-      <InputNumber
-        title="Estimación en horas:"
-        v-model="userStory.estimacion"
-        :min="0"
-      />
-
-      <label class="highlight">Asignar a:</label>
-      <WeightedSelect
-        :options="weightedMembers"
-        v-model="miembroSelecto"
-        @input="asignarMiembro()"
-      />
-
-      <div class="d-flex justify-content-flex-end">
-        <Boton texto="Guardar" tema="primary" @click="planificarUS" />
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -89,13 +53,8 @@ import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import sprintService from "@/services/sprintService";
 import proyectoService from "@/services/proyectoService";
 import miembroService from "@/services/miembroService";
-import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
-import Checkbox from "@/components/Checkbox";
-import InputNumber from "@/components/InputNumber";
 import Boton from "@/components/Boton";
-import Modal from "@/components/Modal";
-import WeightedSelect from "@/components/WeightedSelect";
 
 export default {
   components: {
@@ -107,16 +66,12 @@ export default {
     Th,
     Tr,
     Td,
-    Checkbox,
-    InputNumber,
     Boton,
-    Modal,
-    WeightedSelect,
   },
   created() {},
   mounted() {
     this.load();
-    localStorage.setItem("spring-planning-paso", 2);
+    localStorage.setItem("spring-planning-paso", 3);
   },
   computed: {
     capacidadesDeMiembros() {
@@ -127,13 +82,6 @@ export default {
       });
 
       return capacidades;
-    },
-    weightedMembers() {
-      return this.miembrosSprint.map((miembro) => ({
-        text: miembro.nombre,
-        currWeight: this.horasAsignadasDeMiembros[miembro.id],
-        totalWeight: this.capacidadesDeMiembros[miembro.id],
-      }));
     },
     horasAsignadasDeMiembros() {
       const usPlanning = this.productBacklog.filter((us) => us.included);
@@ -196,20 +144,6 @@ export default {
       },
       miembrosSprint: [],
       sprintBacklog: [],
-      productBacklog: [],
-      userStory: {
-        id: "",
-        user_story: {
-          nombre: "",
-          descripcion: "",
-          prioridad: 0,
-        },
-        estimacion: 0,
-        desarrollador: {},
-        included: false,
-      },
-      miembroSelecto: -1,
-      verUSPlanning: false,
     };
   },
   methods: {
@@ -255,63 +189,6 @@ export default {
           included: true,
         }));
       });
-
-      // cargamos el product backlog
-      proyectoService.backlog(idProyecto).then((productBacklog) => {
-        this.productBacklog = productBacklog.map((us) => ({
-          ...us,
-          included: false,
-          desarrollador: null,
-        }));
-      });
-    },
-    verPlanificacion(userStory) {
-      this.userStory = userStory;
-      this.verUSPlanning = true;
-    },
-    planificarUS() {
-      const payload = {
-        user_story: this.userStory.id,
-        horas_estimadas: this.userStory.estimacion,
-        desarrollador: this.userStory.desarrollador.id,
-      };
-
-      sprintService.agregarUserStory(this.sprint.id, payload).then(() => {
-        this.verUSPlanning = false;
-        this.load();
-        Alert.success("Se ha agregado el user story al sprint backlog");
-      });
-    },
-    eliminarUS(userStory) {
-      sprintService
-        .eliminarUserStory(this.sprint.id, {
-          sprint_backlog: userStory.sprint.id,
-        })
-        .then(() => {
-          userStory.included = false;
-          this.load();
-          Alert.success("Se ha eliminado el user story del sprint backlog");
-        });
-    },
-    asignarMiembro() {
-      this.userStory.desarrollador = this.miembrosSprint[this.miembroSelecto];
-    },
-    deshacerPlanUS() {
-      this.userStory.included = false;
-      this.userStory.estimacion = 0;
-      this.userStory.desarrollador = null;
-      this.miembroSelecto = -1;
-    },
-    eliminarMiembro(miembro) {
-      miembro = this.miembrosSprint.find(
-        (ms) => ms.miembro_proyecto == miembro.id
-      );
-      sprintService
-        .eliminarMiembro(this.sprint.id, { miembro_sprint: miembro.id })
-        .then(() => {
-          this.load();
-          Alert.success("Se ha eliminado el miembro");
-        });
     },
     capacidadPorMiembro(miembro) {
       const ini = new Date(this.sprint.fecha_inicio).getTime();
@@ -334,11 +211,7 @@ export default {
         horario.sabado,
       ];
     },
-    siguiente() {
-      this.$router.push(
-        `/proyectos/${this.$route.params["id"]}/sprint-planning/${this.$route.params["idSprint"]}/paso-3`
-      );
-    },
+    finalizar() {},
   },
 };
 </script>

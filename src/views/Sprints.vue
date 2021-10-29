@@ -6,7 +6,15 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Sprints de {{ proyecto.nombre }}</h2>
-          <Boton texto="Crear Sprint" tema="primary" @click="crearSprintModal=true" v-if="!sprints.some(sprint => sprint.estado =='P') && proyecto.estado == 'A'"/> 
+          <Boton
+            texto="Crear Sprint"
+            tema="primary"
+            @click="crearSprintModal = true"
+            v-if="
+              !sprints.some((sprint) => sprint.estado == 'P') &&
+                proyecto.estado == 'A'
+            "
+          />
         </div>
         <Table height="400px" v-if="sprints.length > 0">
           <TableHeader>
@@ -20,30 +28,51 @@
             <Tr v-for="(sprint, idx) in sprints" :key="idx">
               <Td width="10%">{{ sprint.id }}</Td>
               <Td width="20%">Sprint {{ sprint.numero }}</Td>
-              <Td width="25%"><span class="cutted-text">{{ sprint.estado_sprint_planning == "P" ? "Pendiente" :  sprint.estado_sprint_planning == "I" ? "Iniciado" : "Finalizado"}}</span></Td>
-              <Td width="25%"><span class="cutted-text">{{ sprint.estado == "P" ? "Pendiente" :  sprint.estado == "A" ? "Activo" : "Finalizado"}}</span></Td>
+              <Td width="25%"
+                ><span class="cutted-text">{{
+                  sprint.estado_sprint_planning == "P"
+                    ? "Pendiente"
+                    : sprint.estado_sprint_planning == "I"
+                    ? "Iniciado"
+                    : "Finalizado"
+                }}</span></Td
+              >
+              <Td width="25%"
+                ><span class="cutted-text">{{
+                  sprint.estado == "P"
+                    ? "Pendiente"
+                    : sprint.estado == "A"
+                    ? "Activo"
+                    : "Finalizado"
+                }}</span></Td
+              >
               <Td width="20%">
                 <div class="acciones" style="display: flex">
-                    <a
-                      href="#"
-                      v-if="
-                        hasProyectoPermissions(['planear_sprints']) &&
-                        sprint.estado_sprint_planning == 'I'
-                      "
-                      @click.prevent="$router.push(`/proyectos/${proyecto.id}/sprint-planning/${sprint.id}/paso-1`)"
-                    >
-                      <Icon
-                        icono="watch"
-                        size="16px"
-                        color="#bdbdbd"
-                        hover="#F25656"
-                      />
-                    </a>
                   <a
                     href="#"
                     v-if="
                       hasProyectoPermissions(['planear_sprints']) &&
-                      sprint.estado_sprint_planning == 'P'
+                        sprint.estado_sprint_planning == 'I'
+                    "
+                    title="Planificar Sprint"
+                    @click.prevent="
+                      $router.push(
+                        `/proyectos/${proyecto.id}/sprint-planning/${sprint.id}/paso-1`
+                      )
+                    "
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+                  <a
+                    href="#"
+                    v-if="
+                      hasProyectoPermissions(['planear_sprints']) &&
+                        sprint.estado_sprint_planning == 'P'
                     "
                     @click.prevent="iniciarSprintPlanning(sprint)"
                   >
@@ -59,8 +88,8 @@
                     @click.prevent="eliminarSprint(sprint)"
                     v-if="
                       hasProyectoPermissions(['eliminar_sprints']) &&
-                      sprint.estado == 'P' &&
-                      sprint.estado_sprint_planning == 'P'
+                        sprint.estado == 'P' &&
+                        sprint.estado_sprint_planning == 'P'
                     "
                   >
                     <Icon
@@ -76,7 +105,16 @@
           </TableBody>
         </Table>
         <div class="empty" v-else>
-            <h2>Aun no hay Sprints en el Proyecto. <a href="#" class="agregar" @click.prevent="crearSprintModal=true" v-if="proyecto.estado == 'A'">Crear uno</a></h2>
+          <h2>
+            Aun no hay Sprints en el Proyecto.
+            <a
+              href="#"
+              class="agregar"
+              @click.prevent="crearSprintModal = true"
+              v-if="proyecto.estado == 'A'"
+              >Crear uno</a
+            >
+          </h2>
         </div>
       </div>
     </div>
@@ -112,7 +150,7 @@ export default {
     Tr,
     Td,
     Boton,
-    CrearSprint
+    CrearSprint,
   },
   created() {},
   mounted() {
@@ -137,7 +175,7 @@ export default {
         nombre: "",
       },
       sprints: [],
-      crearSprintModal: false
+      crearSprintModal: false,
     };
   },
   methods: {
@@ -146,21 +184,23 @@ export default {
         this.proyecto = proyecto;
       });
       sprintService.list(this.$route.params["id"]).then((sprints) => {
-          this.sprints = sprints;
+        this.sprints = sprints;
       });
     },
     eliminarSprint(sprint) {
-        sprintService.delete(sprint.id).then(() => {
-            Alert.success("Sprint eliminado exitosamente");
-            this.load();
-        })
+      sprintService.delete(sprint.id).then(() => {
+        Alert.success("Sprint eliminado exitosamente");
+        this.load();
+      });
     },
     iniciarSprintPlanning(sprint) {
-        sprintService.iniciarSprintPlanning(sprint.id).then(() => {
-            Alert.success("Spring Planning iniciado.")
-            this.$router.push(`/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-1`)
-        })
-    }
+      sprintService.iniciarSprintPlanning(sprint.id).then(() => {
+        Alert.success("Spring Planning iniciado.");
+        this.$router.push(
+          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-1`
+        );
+      });
+    },
   },
 };
 </script>
@@ -185,23 +225,23 @@ export default {
   margin-left: 16px;
 }
 .empty {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    h2 {
-        color: var(--gray-4);
-        text-align: center;
-        a.agregar {
-          color: var(--primary-light);
-          text-decoration: none;
-          &:hover{
-            color: var(--primary)
-          }
-        }
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h2 {
+    color: var(--gray-4);
+    text-align: center;
+    a.agregar {
+      color: var(--primary-light);
+      text-decoration: none;
+      &:hover {
+        color: var(--primary);
+      }
     }
+  }
 }
-span.cutted-text{
+span.cutted-text {
   width: 80%;
   display: block;
   text-overflow: ellipsis;
