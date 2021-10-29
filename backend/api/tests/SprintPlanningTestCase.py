@@ -311,7 +311,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
@@ -321,7 +321,7 @@ class SprintPlanningTestCase(TestCase):
             sprint_id=2,
             user_story_id=2,
             horas_estimadas=5,
-            desarrollador_id=4
+            desarrollador_id=2
         )
         self.assertEquals(len(sprint_backlog), 1)
 
@@ -335,7 +335,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
@@ -355,7 +355,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
@@ -377,7 +377,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         response = self.client.post("/api/sprint-planning/2/planificar_user_story/",
                                     request_data, content_type="application/json")
@@ -395,7 +395,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=2))

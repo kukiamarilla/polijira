@@ -275,9 +275,7 @@ class SprintPlanningViewSet(viewsets.ViewSet):
             user_story.planificar(
                 sprint=sprint,
                 horas_estimadas=request.data.get("horas_estimadas"),
-                desarrollador=MiembroSprint.objects.get(
-                    miembro_proyecto_id=request.data.get("desarrollador"), sprint=sprint
-                ),
+                desarrollador=MiembroSprint.objects.get(pk=request.data.get("desarrollador")),
                 planificador=miembro,
                 sprint_backlog_handler=SprintBacklog.create,
                 product_backlog_handler=ProductBacklog.eliminar_user_story
