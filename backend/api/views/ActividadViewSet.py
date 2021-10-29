@@ -17,7 +17,7 @@ class ActividadViewSet(viewsets.ViewSet):
         try:
 
             usuario = Usuario.objects.get(user=request.user)
-            sprint_backlog = SprintBacklog.objects.get(request.data.get("sprint_backlog"))
+            sprint_backlog = SprintBacklog.objects.get(pk=request.data.get("sprint_backlog"))
             miembro_proyecto = Miembro.objects.get(
                 usuario=usuario,
                 proyecto=sprint_backlog.sprint.proyecto
@@ -42,7 +42,7 @@ class ActividadViewSet(viewsets.ViewSet):
                 descripcion=request.data.get("descripcion"),
                 horas=request.data.get("horas"),
                 fecha_creacion=date.today(),
-                user_story=sprint_backlog.user_story,
+                sprint_backlog=sprint_backlog,
                 desarrollador=usuario
             )
             serializer = ActividadSerializer(actividad, many=False)

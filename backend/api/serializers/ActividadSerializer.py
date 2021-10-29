@@ -20,5 +20,5 @@ class ActividadSerializer(serializers.ModelSerializer):
             "descripcion",
             "horas",
             "fecha_creacion",
-            "user_story"
+            "sprint_backlog"
         )

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
-from backend.api.models import MiembroSprint, SprintBacklog
+from backend.api.models import Actividad, MiembroSprint, SprintBacklog, Sprint
 
 
 class ActividadTestCase(TestCase):
@@ -47,11 +47,15 @@ class ActividadTestCase(TestCase):
             password="polijira2021"
         )
         sprint_backlog = SprintBacklog.objects.get(pk=1)
-        sprint_backlog.desarrollador = MiembroSprint.objects.get(pk=1)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
         request_data = {
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
         }
         response = self.client.post("/api/actividades/", request_data)
-        print(response.json())
+        body = response.json()
+        actividad = Actividad.objects.filter(**body)
+        self.assertEquals(len(actividad), 1)

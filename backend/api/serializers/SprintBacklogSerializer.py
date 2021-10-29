@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from backend.api.models import SprintBacklog
-from backend.api.serializers import SprintSerializer, UserStorySerializer, MiembroSprintSerializer
+from backend.api.serializers import SprintSerializer, MiembroSprintSerializer, ActividadSerializer
 
 
 class SprintBacklogSerializer(serializers.ModelSerializer):
@@ -11,8 +11,8 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
         serializers (ModelSerializer): Modelo Serializer del módulo rest framework
     """
     sprint = SprintSerializer(many=False, read_only=True)
-    user_story = UserStorySerializer(many=False, read_only=True)
     desarrollador = MiembroSprintSerializer(many=False, read_only=True)
+    actividades = ActividadSerializer(many=True, read_only=True)
 
     class Meta:
         """
@@ -21,8 +21,8 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
         model = SprintBacklog
         fields = (
             "sprint",
-            "user_story",
             "horas_estimadas",
             "estado_estimacion",
-            "desarrollador"
+            "desarrollador",
+            "actividades"
         )

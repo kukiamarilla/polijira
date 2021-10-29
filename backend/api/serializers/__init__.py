@@ -13,6 +13,6 @@ from .RegistroUserStorySerializer import RegistroUserStorySerializer
 from .UserStorySerializer import UserStorySerializer
 from .SprintSerializer import SprintSerializer
 from .MiembroSprintSerializer import MiembroSprintSerializer
+from .ActividadSerializer import ActividadSerializer
 from .SprintBacklogSerializer import SprintBacklogSerializer
 from .ProductBacklogSerializer import ProductBacklogSerializer
-from .ActividadSerializer import ActividadSerializer
