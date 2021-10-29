@@ -252,3 +252,55 @@ class SprintViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["POST"])
+    def activar(self, request, pk=None):
+        """
+        activar Servicio para activar sprint
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, opcional): Primary key. Defaults to None.
+        """
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not (miembro.tiene_permiso("ver_sprints") and
+                    miembro.tiene_permiso("activar_sprints")):
+                response = {
+                    "message": "No tienes permiso para realizar esta acción",
+                    "permission_required": [
+                        "ver_sprints",
+                        "activar_sprints"
+                    ],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint.estado_sprint_planning != 'F':
+                response = {
+                    "message": "Sprint Planning aún no fue finalizado",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint.estado != 'P':
+                response = {
+                    "message": "Sprint no se puede activar en el estado actual",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprint.activar()
+            serializer = SprintSerializer(sprint, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint especificado",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)

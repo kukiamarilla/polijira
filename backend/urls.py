@@ -21,7 +21,8 @@ from backend.api.views import \
     HorarioViewSet, \
     UserStoryViewSet, \
     SprintViewSet, \
-    SprintPlanningViewSet
+    SprintPlanningViewSet, \
+    SprintBacklogViewSet
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -38,6 +39,7 @@ router.register("horarios", HorarioViewSet, basename="horarios")
 router.register("user-stories", UserStoryViewSet, basename="user-stories")
 router.register("sprints", SprintViewSet, basename="sprints")
 router.register("sprint-planning", SprintPlanningViewSet, basename="sprint-planning")
+router.register("sprint-backlogs", SprintBacklogViewSet, basename="sprint-backlogs")
 
 urlpatterns = [
 
