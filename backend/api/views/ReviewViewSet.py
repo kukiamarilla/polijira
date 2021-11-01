@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from backend.api.models import Miembro, Usuario, Review, UserStory, SprintBacklog
 from backend.api.serializers import ReviewSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import CreateReviewForm
+from backend.api.forms import CreateReviewForm, UpdateReviewForm
 import datetime
 from django.db import transaction
 
@@ -112,6 +112,8 @@ class ReviewViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
 
+    @transaction.atomic
+    @FormValidator(form=UpdateReviewForm)
     def update(self, request, pk=None):
         """
         update
