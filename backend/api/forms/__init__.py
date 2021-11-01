@@ -22,4 +22,5 @@ from .CreateMiembroSprintForm import CreateMiembroSprintForm
 from .EliminarMiembroSprintForm import EliminarMiembroSprintForm
 from .ResponderEstimacionForm import ResponderEstimacionForm
 from .CreateReviewForm import CreateReviewForm
+from .UpdateReviewForm import UpdateReviewForm
 from .MoverUserStoryForm import MoverUserStoryForm

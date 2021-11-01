@@ -1,4 +1,3 @@
-import json
 from django.core.exceptions import ValidationError
 from backend.api.models import UserStory
 from django import forms
@@ -13,7 +12,7 @@ class CreateReviewForm(forms.Form):
 
     Atributes:
         user_story (IntegerField): Campo para validar que exista el user story
-        observacion (TextField): Campo para validar que exista el observacion
+        observacion (TextField): Campo para validar que se especifca la observacion
     """
     user_story = forms.IntegerField(
         min_value=1,
