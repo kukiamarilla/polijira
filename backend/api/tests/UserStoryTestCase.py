@@ -827,5 +827,4 @@ class UserStoryTestCase(TestCase):
         self.client.login(username="testing", password="polijira2021")
         response = self.client.get("/api/user-stories/1/reviews/")
         body = response.json()
-        print(body)
         self.assertEquals(response.status_code, 200)
