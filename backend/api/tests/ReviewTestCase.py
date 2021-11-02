@@ -1,10 +1,5 @@
-from backend.api.models.PermisoProyecto import PermisoProyecto
-from backend.api.models.Proyecto import Proyecto
-from backend.api.models import RolProyecto, Miembro, Usuario, UserStory, Review
 from django.test import TestCase, Client
-from django.db.models import Q
-
-from backend.api.models.SprintBacklog import SprintBacklog
+from backend.api.models import UserStory, Review, PermisoProyecto, SprintBacklog
 
 
 class ReviewTestCase(TestCase):
@@ -119,7 +114,7 @@ class ReviewTestCase(TestCase):
     def test_crear_review_sin_permiso_ver_user_stories(self):
         """
         test_crear_review_sin_permiso_ver_user_stories
-        Prueba crear un review de user story sin permiso ver user stories 
+        Prueba crear un review de user story sin permiso ver user stories
         """
         print("\nProbando crear un review de User Story sin permiso ver user stories.")
         self.client.login(username="testing", password="polijira2021")
@@ -161,7 +156,7 @@ class ReviewTestCase(TestCase):
     def test_crear_review_con_user_story_no_pendiente(self):
         """
         test_crear_review_con_user_story_no_pendiente
-        Prueba crear un review de user story con estado no pendiente 
+        Prueba crear un review de user story con estado no pendiente
         """
         print("\nProbando crear un review de User Story con estado no pendiente.")
         self.client.login(username="testing", password="polijira2021")
@@ -336,7 +331,7 @@ class ReviewTestCase(TestCase):
     def test_modificar_review_sin_permiso_ver_user_stories(self):
         """
         test_modificar_review_sin_permiso_ver_user_stories
-        Prueba modificar un review de user story sin permiso ver user stories 
+        Prueba modificar un review de user story sin permiso ver user stories
         """
         print("\nProbando modificar un review de User Story sin permiso ver user stories.")
         self.client.login(username="testing", password="polijira2021")
@@ -359,7 +354,7 @@ class ReviewTestCase(TestCase):
     def test_modificar_review_con_user_story_no_pendiente(self):
         """
         test_modificar_review_con_user_story_no_pendiente
-        Prueba modificar un review de user story con estado no pendiente 
+        Prueba modificar un review de user story con estado no pendiente
         """
         print("\nProbando modificar un review de User Story con estado no pendiente.")
         self.client.login(username="testing", password="polijira2021")
@@ -519,7 +514,7 @@ class ReviewTestCase(TestCase):
     def test_eliminar_review_con_user_story_no_pendiente(self):
         """
         test_eliminar_review_con_user_story_no_pendiente
-        Prueba eliminar un review de user story con estado no pendiente 
+        Prueba eliminar un review de user story con estado no pendiente
         """
         print("\nProbando eliminar un review de User Story con estado no pendiente.")
         self.client.login(username="testing", password="polijira2021")
