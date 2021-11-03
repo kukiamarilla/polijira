@@ -55,11 +55,7 @@
                         sprint.estado_sprint_planning == 'I'
                     "
                     title="Planificar Sprint"
-                    @click.prevent="
-                      $router.push(
-                        `/proyectos/${proyecto.id}/sprint-planning/${sprint.id}/paso-1`
-                      )
-                    "
+                    @click.prevent="irAPlanificacion(sprint)"
                   >
                     <Icon
                       icono="watch"
@@ -201,6 +197,12 @@ export default {
         );
       });
     },
+    irAPlanificacion(sprint) {
+     const paso = localStorage.getItem('sprint-planning-paso');
+     this.$router.push(
+          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-${ paso ?? 1}`
+        );
+    }
   },
 };
 </script>

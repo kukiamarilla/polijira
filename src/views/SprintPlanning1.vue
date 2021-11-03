@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     load() {
-      const paso = localStorage.getItem("sprint-planning");
+      const paso = localStorage.getItem("sprint-planning-paso");
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
       proyectoService.retrieve(idProyecto).then((proyecto) => {
@@ -144,7 +144,7 @@ export default {
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
         if (![null, 1].includes(paso))
           this.$router.push(
-            `/proyecto/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
       });
       sprintService.miembros(idSprint).then((miembrosSprint) => {

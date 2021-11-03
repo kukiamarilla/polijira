@@ -26,7 +26,19 @@
               <Td width="25%">{{ us.user_story.nombre }}</Td>
               <Td width="25%">{{ us.user_story.descripcion }}</Td>
               <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
+              <Td width="15%">
+                <a
+                    href="#"
+                    @click.prevent="verUserStory(us.user_story)"
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+              </Td>
               <Td width="15%">
                 <Checkbox v-model="us.included" @input="eliminarUS(us)" />
               </Td>
@@ -37,7 +49,19 @@
               <Td width="25%">{{ us.user_story.nombre }}</Td>
               <Td width="25%">{{ us.user_story.descripcion }}</Td>
               <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
+              <Td width="15%">
+                <a
+                    href="#"
+                    @click.prevent="verUserStory(us.user_story)"
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+              </Td>
               <Td width="15%">
                 <Checkbox v-model="us.included" @input="verPlanificacion(us)" />
               </Td>
@@ -79,6 +103,7 @@
         <Boton texto="Guardar" tema="primary" @click="planificarUS" />
       </div>
     </Modal>
+    <UserStory v-model="verUserStory" :userStory="verUserStorySelected"/>
   </div>
 </template>
 
@@ -96,6 +121,7 @@ import InputNumber from "@/components/InputNumber";
 import Boton from "@/components/Boton";
 import Modal from "@/components/Modal";
 import WeightedSelect from "@/components/WeightedSelect";
+import UserStory from "@/components/UserStory";
 
 export default {
   components: {
@@ -112,11 +138,13 @@ export default {
     Boton,
     Modal,
     WeightedSelect,
+    UserStory
   },
-  created() {},
+  created() { 
+  },
   mounted() {
     this.load();
-    localStorage.setItem("spring-planning-paso", 2);
+    localStorage.setItem("sprint-planning-paso", 2);
   },
   computed: {
     capacidadesDeMiembros() {
@@ -210,6 +238,11 @@ export default {
       },
       miembroSelecto: -1,
       verUSPlanning: false,
+      verUserStorySelected: {
+        nombre: "",
+        descripcion: "",
+        prioridad: 0,
+      },
     };
   },
   methods: {
@@ -339,6 +372,10 @@ export default {
         `/proyectos/${this.$route.params["id"]}/sprint-planning/${this.$route.params["idSprint"]}/paso-3`
       );
     },
+    verUserStory(userStory) {
+      this.verUserStoryModal = true,
+      this.verUserStorySelected = userStory
+    }
   },
 };
 </script>

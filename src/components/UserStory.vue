@@ -7,16 +7,8 @@
         <p>
           <span class="highlight">Título:</span> {{ us.registros[seleccionado].nombre_despues }}
         </p>
-        <p>
-          <span class="highlight">Horas:</span>
-          {{ horasAsignadas }}
-        </p>
       </div>
       <div class="fila">
-        <p>
-          <span class="highlight">Miembro asignado:</span>
-          {{ miembroAsignado }}
-        </p>
         <p>
           <span class="highlight">Prioridad:</span>
           {{ us.registros[seleccionado].prioridad_despues }}
