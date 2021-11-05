@@ -55,4 +55,9 @@ export default {
       .post(`/sprint-planning/${id}/devolver_user_story/`, payload)
       .then((response) => response.data);
   },
+  responderEstimacion(id, payload) {
+    return api
+      .post(`/sprint-backlogs/${id}/responder_estimacion/`, payload)
+      .then((response) => response.data);
+  }
 };

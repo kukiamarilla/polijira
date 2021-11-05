@@ -15,7 +15,8 @@
           <TableHeader>
             <Th width="10%">ID</Th>
             <Th width="20%">Nombre</Th>
-            <Th width="20%">Prioridad</Th>
+            <Th width="10%">Prioridad</Th>
+            <Th width="20%">Asignado a</Th>
             <Th width="20%">Estado de la Estimación</Th>
             <Th width="20%">Estimación</Th>
           </TableHeader>
@@ -23,7 +24,8 @@
             <Tr v-for="(userStory, index) in sprintBacklog" :key="index">
               <Td width="10%">{{userStory.user_story.id}}</Td>
               <Td width="20%">{{userStory.user_story.nombre}}</Td>
-              <Td width="20%">{{userStory.user_story.prioridad}}</Td>
+              <Td width="10%">{{userStory.user_story.prioridad}}</Td>
+              <Td width="20%">{{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</Td>
               <Td width="20%">{{userStory.estado_estimacion == "p" ? "Parcialmente estimado" : "Completamente Estimado"}}</Td>
               <Td width="20%">{{userStory.horas_estimadas}}</Td>
             </Tr>
@@ -35,7 +37,7 @@
             {{ totalAsignado }} / {{ capacidadTotal }}
           </span>
 
-          <Boton texto="Finalizar"  tema="primary" @click="finalizar" />
+          <Boton texto="Finalizar"  tema="primary" @click="finalizar" :disabled="!enableFinalizar" />
         </div>
       </div>
     </div>
@@ -44,6 +46,9 @@
 </template>
 
 <script>
+
+import { mapState } from 'vuex'
+
 import proyectoService from '@/services/proyectoService.js'
 import sprintService from '@/services/sprintService.js'
 
@@ -58,6 +63,7 @@ import SidebarProyecto from '@/components/SidebarProyecto.vue'
 import Navbar from '@/components/Navbar.vue'
 
 import Alert from '@/helpers/alert'
+
 
 export default {
   components: {
@@ -102,26 +108,47 @@ export default {
       return total
     },
     enableFinalizar() {
-      return this.sprintBacklog.every(userStory => {
-        return userStory.estado_estimacion == "C"
-      })
+      return this.sprintBacklog.every(userStory => userStory.estado_estimacion == "C")
     },
+    ...mapState({
+      me: (state) => state.auth.me,
+      meProyecto: (state) => state.proyecto.me,
+    }),
   },
   mounted() {
     this.load();
   },
   methods: {
     load() {
-      proyectoService.retrieve(this.$route.params["id"]).then(proyecto => {
+      let idProyecto = this.$route.params.id;
+      let idSprint = this.$route.params.idSprint
+      proyectoService.retrieve(idProyecto).then(proyecto => {
         this.proyecto = proyecto;
       });
-      sprintService.retrieve(this.$route.params["idSprint"]).then(sprint => {
+      sprintService.retrieve(idSprint).then(sprint => {
         this.sprint = sprint;
+        if(!sprint.estado_planificacion == "P") this.$router.back();
+        if (sprint.planificador != this.meProyecto.id) this.$router.back();
+        if(!sprint.estado_planificacion == "P") this.$router.back();
+        let paso = localStorage.getItem("sprint-planning-paso");
+        if(!paso) {
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-1`
+          );
+          return
+        }
+        if (!["2", "3"].includes(paso)){
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
+          );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 3);
       });
-      sprintService.sprintBacklog(this.$route.params["idSprint"]).then(sprintBacklog => {
+      sprintService.sprintBacklog(idSprint).then(sprintBacklog => {
         this.sprintBacklog = sprintBacklog;
       });
-      sprintService.miembros(this.$route.params["idSprint"]).then(miembros => {
+      sprintService.miembros(idSprint).then(miembros => {
         this.miembros = miembros;
       });
     },
@@ -147,7 +174,8 @@ export default {
       return capacidad;
     },
     finalizar() {
-      sprintService.finalizarSprintPlanning(this.$route.params["idSprint"]).then(() => {
+      let idSprint = this.$route.params.idSprint
+      sprintService.finalizarSprintPlanning(idSprint).then(() => {
         Alert.success("Sprint Planning finalizado.");
         this.$router.push({ name: 'Sprints', params: { id: this.proyecto.id } });
       });

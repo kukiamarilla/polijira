@@ -145,7 +145,6 @@ export default {
   },
   mounted() {
     this.load();
-    localStorage.setItem("sprint-planning-paso", 2);
   },
   computed: {
     capacidadesDeMiembros() {
@@ -255,7 +254,6 @@ export default {
   },
   methods: {
     load() {
-      const paso = localStorage.getItem("sprint-planning");
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
 
@@ -268,12 +266,22 @@ export default {
       // cargamos el sprint
       sprintService.retrieve(idSprint).then((sprint) => {
         this.sprint = sprint;
-        if (!sprint.planificador) this.$router.back();
+        if (!sprint.estado_planificacion == "I") this.$router.back();
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
-        if (![null, 2].includes(paso))
+        const paso = localStorage.getItem("sprint-planning-paso");
+        if(!paso) {
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-1`
+          );
+          return
+        }
+        if (!["1", "2"].includes(paso)){
           this.$router.push(
             `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 2);
       });
 
 

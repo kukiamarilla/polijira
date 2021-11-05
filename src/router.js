@@ -18,6 +18,7 @@ import Sprints from "@/views/Sprints";
 import SprintPlanning1 from "@/views/SprintPlanning1";
 import SprintPlanning2 from "@/views/SprintPlanning2";
 import SprintPlanning3 from "@/views/SprintPlanning3";
+import EstimacionesPendientes from "@/views/EstimacionesPendientes";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -137,6 +138,14 @@ const router = new Router({
       path: "/proyectos/:id/sprint-planning/:idSprint/paso-3",
       name: "Sprint Planning Paso 3",
       component: SprintPlanning3,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/estimaciones-pendientes",
+      name: "Estimaciones Pendientes",
+      component: EstimacionesPendientes,
       meta: {
         middleware: [auth, activated, proyecto],
       },

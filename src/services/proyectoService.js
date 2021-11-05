@@ -29,4 +29,9 @@ export default {
       .get(`/proyectos/${id}/product_backlogs/`)
       .then((response) => response.data);
   },
+  estimacionesPendientes(id) {
+    return api
+      .get(`/proyectos/${id}/estimaciones_pendientes/`)
+      .then((response) => response.data);
+  }
 };

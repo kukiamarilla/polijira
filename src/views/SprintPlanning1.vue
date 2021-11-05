@@ -79,7 +79,6 @@ export default {
   created() {},
   mounted() {
     this.load();
-    localStorage.setItem("sprint-planning-paso", 1);
   },
   computed: {
     capacidad() {
@@ -132,7 +131,6 @@ export default {
   },
   methods: {
     load() {
-      const paso = localStorage.getItem("sprint-planning-paso");
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
       proyectoService.retrieve(idProyecto).then((proyecto) => {
@@ -140,12 +138,16 @@ export default {
       });
       sprintService.retrieve(idSprint).then((sprint) => {
         this.sprint = sprint;
-        if (!sprint.planificador) this.$router.back();
+        if (!sprint.estado_planificacion == "I") this.$router.back();
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
-        if (![null, 1].includes(paso))
+        const paso = localStorage.getItem("sprint-planning-paso");
+        if (![null, "1"].includes(paso)){
           this.$router.push(
             `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 1);
       });
       sprintService.miembros(idSprint).then((miembrosSprint) => {
         miembroService.list(idProyecto).then((miembros) => {

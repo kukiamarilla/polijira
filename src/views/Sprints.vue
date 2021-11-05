@@ -200,7 +200,7 @@ export default {
     irAPlanificacion(sprint) {
      const paso = localStorage.getItem('sprint-planning-paso');
      this.$router.push(
-          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-${ paso ?? 1}`
+          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-${ paso != null? paso : 1}`
         );
     }
   },

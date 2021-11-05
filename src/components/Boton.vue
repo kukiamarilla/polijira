@@ -18,7 +18,9 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("click");
+      if (!this.disabled) {
+        this.$emit("click");
+      }
     },
   },
 };
@@ -73,6 +75,7 @@ button {
 }
 
 .disabled {
+  cursor: not-allowed;
   color: white;
   background-color: var(--gray-4);
 }
