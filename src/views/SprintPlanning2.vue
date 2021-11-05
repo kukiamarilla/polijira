@@ -45,7 +45,7 @@
             </Tr>
 
             <Tr v-for="us in productBacklog" :key="us.id">
-              <Td width="5%">{{ us.id }}</Td>
+              <Td width="5%">{{ us.user_story.id }}</Td>
               <Td width="25%">{{ us.user_story.nombre }}</Td>
               <Td width="25%">{{ us.user_story.descripcion }}</Td>
               <Td width="15%">{{ us.user_story.prioridad }}</Td>
