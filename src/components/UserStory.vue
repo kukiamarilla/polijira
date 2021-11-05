@@ -7,8 +7,6 @@
         <p>
           <span class="highlight">Título:</span> {{ us.registros[seleccionado].nombre_despues }}
         </p>
-      </div>
-      <div class="fila">
         <p>
           <span class="highlight">Prioridad:</span>
           {{ us.registros[seleccionado].prioridad_despues }}
@@ -89,7 +87,7 @@ export default {
       if (!this.show) this.$emit("input", null);
     },
     userStory() {
-      this.us = {...this.userStory, registros: this.userStory.registros.sort((a, b) => a.id < b.id)}
+      this.us = this.userStory ? {...this.userStory, registros: this.userStory.registros.sort((a, b) => a.id < b.id)} : this.us;
     }
   },
   methods: {

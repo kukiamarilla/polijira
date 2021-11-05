@@ -17,6 +17,7 @@ import ProductBacklog from "@/views/ProductBacklog";
 import Sprints from "@/views/Sprints";
 import SprintPlanning1 from "@/views/SprintPlanning1";
 import SprintPlanning2 from "@/views/SprintPlanning2";
+import SprintPlanning3 from "@/views/SprintPlanning3";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -128,6 +129,14 @@ const router = new Router({
       path: "/proyectos/:id/sprint-planning/:idSprint/paso-2",
       name: "Sprint Planning Paso 2",
       component: SprintPlanning2,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/sprint-planning/:idSprint/paso-3",
+      name: "Sprint Planning Paso 3",
+      component: SprintPlanning3,
       meta: {
         middleware: [auth, activated, proyecto],
       },

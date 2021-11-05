@@ -20,6 +20,7 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
         """
         model = SprintBacklog
         fields = (
+            "id",
             "sprint",
             "user_story",
             "horas_estimadas",

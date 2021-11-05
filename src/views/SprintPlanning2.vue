@@ -35,7 +35,7 @@
                       icono="watch"
                       size="16px"
                       color="#bdbdbd"
-                      hover="#F25656"
+                      hover="var(--primary)"
                     />
                   </a>
               </Td>
@@ -58,7 +58,7 @@
                       icono="watch"
                       size="16px"
                       color="#bdbdbd"
-                      hover="#F25656"
+                      hover="var(--primary)"
                     />
                   </a>
               </Td>
@@ -103,7 +103,7 @@
         <Boton texto="Guardar" tema="primary" @click="planificarUS" />
       </div>
     </Modal>
-    <UserStory v-model="verUserStory" :userStory="verUserStorySelected"/>
+    <UserStory v-model="verUserStorySelected" :userStory="verUserStorySelected"/>
   </div>
 </template>
 
@@ -113,7 +113,6 @@ import SidebarProyecto from "@/components/SidebarProyecto";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import sprintService from "@/services/sprintService";
 import proyectoService from "@/services/proyectoService";
-import miembroService from "@/services/miembroService";
 import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
 import Checkbox from "@/components/Checkbox";
@@ -122,6 +121,7 @@ import Boton from "@/components/Boton";
 import Modal from "@/components/Modal";
 import WeightedSelect from "@/components/WeightedSelect";
 import UserStory from "@/components/UserStory";
+import Icon from "@/components/Icon";
 
 export default {
   components: {
@@ -137,6 +137,7 @@ export default {
     InputNumber,
     Boton,
     Modal,
+    Icon,
     WeightedSelect,
     UserStory
   },
@@ -151,17 +152,23 @@ export default {
       const capacidades = {};
 
       this.miembrosSprint.forEach((miembro) => {
-        capacidades[miembro.id] = this.capacidadPorMiembro(miembro);
+        capacidades[miembro.id] = this.capacidadPorMiembro(miembro.miembro_proyecto);
       });
 
       return capacidades;
     },
     weightedMembers() {
-      return this.miembrosSprint.map((miembro) => ({
-        text: miembro.nombre,
-        currWeight: this.horasAsignadasDeMiembros[miembro.id],
-        totalWeight: this.capacidadesDeMiembros[miembro.id],
-      }));
+      return this.miembrosSprint.map((miembro, idx) => {
+        
+        let horasAsignadas = this.sprintBacklog.filter(us => us.desarrollador.id === miembro.id).reduce((acc, us) => acc + us.horas_estimadas, 0);
+        horasAsignadas += this.userStory.estimacion && this.miembroSelecto === idx ? this.userStory.estimacion : 0;
+
+        return {
+          text: miembro.nombre,
+          currWeight: horasAsignadas,
+          totalWeight: this.capacidadPorMiembro(miembro.miembro_proyecto),
+        }
+      });
     },
     horasAsignadasDeMiembros() {
       const usPlanning = this.productBacklog.filter((us) => us.included);
@@ -186,9 +193,9 @@ export default {
     totalAsignado() {
       let sumaAsignadas = 0;
 
-      for (let miembro in this.horasAsignadasDeMiembros) {
-        sumaAsignadas += this.horasAsignadasDeMiembros[miembro];
-      }
+      this.sprintBacklog.forEach((us) => {
+        sumaAsignadas += us.horas_estimadas;
+      });
 
       return sumaAsignadas;
     },
@@ -238,6 +245,7 @@ export default {
       },
       miembroSelecto: -1,
       verUSPlanning: false,
+      verUserStoryShow: true,
       verUserStorySelected: {
         nombre: "",
         descripcion: "",
@@ -246,7 +254,7 @@ export default {
     };
   },
   methods: {
-    async load() {
+    load() {
       const paso = localStorage.getItem("sprint-planning");
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
@@ -256,11 +264,6 @@ export default {
         this.proyecto = proyecto;
       });
 
-      // cargamos los miembros del proyecto temporalmente,
-      // para usar los datos del usuario
-      const miembrosProyecto = await miembroService
-        .list(idProyecto)
-        .then((miembros) => miembros);
 
       // cargamos el sprint
       sprintService.retrieve(idSprint).then((sprint) => {
@@ -273,13 +276,6 @@ export default {
           );
       });
 
-      // cargamos miembros del sprint
-      sprintService.miembros(idSprint).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint.map((ms) => {
-          const mp = miembrosProyecto.find((m) => m.id === ms.miembro_proyecto);
-          return { ...ms, nombre: mp.usuario.nombre, horario: mp.horario };
-        });
-      });
 
       // cargamos el sprint backlog
       sprintService.sprintBacklog(idSprint).then((sprintBacklog) => {
@@ -287,6 +283,12 @@ export default {
           ...us,
           included: true,
         }));
+        // cargamos miembros del sprint
+        sprintService.miembros(idSprint).then((miembrosSprint) => {
+          this.miembrosSprint = miembrosSprint.map((ms) => {
+            return { ...ms, nombre: ms.miembro_proyecto.usuario.nombre, horario: ms.miembro_proyecto.horario,  };
+          });
+        });
       });
 
       // cargamos el product backlog
@@ -304,7 +306,7 @@ export default {
     },
     planificarUS() {
       const payload = {
-        user_story: this.userStory.id,
+        user_story: this.userStory.user_story.id,
         horas_estimadas: this.userStory.estimacion,
         desarrollador: this.userStory.desarrollador.id,
       };
@@ -318,7 +320,7 @@ export default {
     eliminarUS(userStory) {
       sprintService
         .eliminarUserStory(this.sprint.id, {
-          sprint_backlog: userStory.sprint.id,
+          sprint_backlog: userStory.id,
         })
         .then(() => {
           userStory.included = false;
@@ -373,7 +375,7 @@ export default {
       );
     },
     verUserStory(userStory) {
-      this.verUserStoryModal = true,
+      this.verUserStoryShow = true,
       this.verUserStorySelected = userStory
     }
   },

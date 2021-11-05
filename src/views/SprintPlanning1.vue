@@ -79,7 +79,7 @@ export default {
   created() {},
   mounted() {
     this.load();
-    localStorage.setItem("spring-planning-paso", 1);
+    localStorage.setItem("sprint-planning-paso", 1);
   },
   computed: {
     capacidad() {

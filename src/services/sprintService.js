@@ -47,7 +47,7 @@ export default {
   },
   eliminarUserStory(id, payload) {
     return api
-      .post(`/sprint-planning/${id}/eliminar_user_story/`, payload)
+      .post(`/sprint-planning/${id}/devolver_user_story/`, payload)
       .then((response) => response.data);
   },
 };
