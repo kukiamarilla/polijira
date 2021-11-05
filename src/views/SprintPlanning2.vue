@@ -6,7 +6,7 @@
       <SidebarProyecto current="miembros" :proyecto="proyecto" />
       <div class="container shadow">
         <div class="header">
-          <h2>Spring Planning</h2>
+          <h2>Sprint Planning</h2>
           <br />
           <h4>Paso 2: Sprint Backlog</h4>
           <br /><br /><br />

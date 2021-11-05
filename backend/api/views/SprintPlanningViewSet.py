@@ -369,3 +369,46 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["POST"])
+    def finalizar(self, request, pk=None):
+        """
+        finalizar Finaliza el Sprint Planning
+
+        Returns:
+            JSON: Metadatos del Sprint
+        """
+        try:
+            sprint = Sprint.objects.get(pk=pk)
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(
+                usuario=usuario,
+                proyecto=sprint.proyecto
+            )
+            if not sprint.planificador == miembro:
+                response = {
+                    "message": "Usted no es planificador de este Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not sprint.estado_sprint_planning == "I":
+                response = {
+                    "message": "No se inició la Planificación de este Sprint",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprint.finalizar_sprint_planning()
+            serializer = SprintSerializer(sprint, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Sprint.NotAbleFinalizarSprintPlanning:
+            response = {
+                "message": "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados",
+                "error": "bad_request"
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

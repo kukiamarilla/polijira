@@ -20,6 +20,11 @@ export default {
       .post(`/sprint-planning/${id}/iniciar/`)
       .then((response) => response.data);
   },
+  finalizarSprintPlanning(id) {
+    return api
+      .post(`/sprint-planning/${id}/finalizar/`)
+      .then((response) => response.data);
+  },
   miembros(id) {
     return api
       .get(`/sprint-planning/${id}/miembros/`)

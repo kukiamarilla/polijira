@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, UserStory, Usuario, Horario
+from backend.api.models import Miembro, Proyecto, RolProyecto, Sprint, SprintBacklog, UserStory, Usuario, Horario
 from backend.api.models.ProductBacklog import ProductBacklog
 from backend.api.serializers import \
     ProyectoSerializer, \
@@ -17,6 +17,8 @@ from backend.api.forms import CreateProyectoForm, UpdateProyectoForm
 from backend.api.decorators import FormValidator
 from django.db import transaction
 from django.db.models import Q
+
+from backend.api.serializers.SprintBacklogSerializer import SprintBacklogSerializer
 
 
 class ProyectoViewSet(viewsets.ViewSet):
@@ -555,6 +557,38 @@ class ProyectoViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["GET"])
+    def estimaciones_pendientes(self, request, pk=None):
+        """
+        estimaciones_pendientes Devuelve los Sprint Backlogs parcialmente estimados asignados al Usuario.
+
+        Args:
+            request (Any): Request que se solicita
+
+        Returns:
+            JSON: Sprint Backlogs
+        """
+        try:
+            usuario = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+            us = SprintBacklog.objects.filter(estado_estimacion='p', desarrollador__miembro_proyecto=miembro)
+            serializer = SprintBacklogSerializer(us, many=True)
+            return Response(serializer.data)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except Proyecto.DoesNotExist:
+            response = {
+                "message": "No existe el Proyecto",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
             # @action(detail=True, methods=['POST'])
             # def finalizar(self, request, pk=None):
             #     try:
