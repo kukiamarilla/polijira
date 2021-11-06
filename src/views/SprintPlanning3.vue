@@ -6,30 +6,28 @@
       <SidebarProyecto current="miembros" :proyecto="proyecto" />
       <div class="container shadow">
         <div class="header">
-          <h2>Spring Planning</h2>
+          <h2>Sprint Planning</h2>
           <br />
-          <h4>Paso 3: Finalización</h4>
+          <h4>Paso 3: Confirmación</h4>
           <br /><br /><br />
         </div>
         <Table height="400px">
           <TableHeader>
-            <Th width="5%">ID</Th>
-            <Th width="25%">Nombre</Th>
-            <Th width="25%">Desarrollador</Th>
-            <Th width="25%">Prioridad</Th>
-            <Th width="15%">Estado de la estimación</Th>
-            <Th width="15%">Estimación</Th>
+            <Th width="10%">ID</Th>
+            <Th width="20%">Nombre</Th>
+            <Th width="10%">Prioridad</Th>
+            <Th width="20%">Asignado a</Th>
+            <Th width="20%">Estado de la Estimación</Th>
+            <Th width="20%">Estimación</Th>
           </TableHeader>
           <TableBody>
-            <Tr v-for="us in sprintBacklog" :key="us.user_story.id">
-              <Td width="5%">{{ us.user_story.id }}</Td>
-              <Td width="25%">{{ us.user_story.nombre }}</Td>
-              <Td width="25%">{{
-                us.user_story.desarrollador.miembro_proyecto.usuario.nombre
-              }}</Td>
-              <Td width="25%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ us.user_story.estado_estimacion }}</Td>
-              <Td width="15%">{{ us.sprint.estimacion }}</Td>
+            <Tr v-for="(userStory, index) in sprintBacklog" :key="index">
+              <Td width="10%">{{userStory.user_story.id}}</Td>
+              <Td width="20%">{{userStory.user_story.nombre}}</Td>
+              <Td width="10%">{{userStory.user_story.prioridad}}</Td>
+              <Td width="20%">{{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</Td>
+              <Td width="20%">{{userStory.estado_estimacion == "p" ? "Parcialmente estimado" : "Completamente Estimado"}}</Td>
+              <Td width="20%">{{userStory.horas_estimadas}}</Td>
             </Tr>
           </TableBody>
         </Table>
@@ -39,166 +37,120 @@
             {{ totalAsignado }} / {{ capacidadTotal }}
           </span>
 
-          <Boton texto="Finalizar" @click="finalizar" tema="primary" />
+          <Boton texto="Finalizar"  tema="primary" @click="finalizar" :disabled="!enableFinalizar" />
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import Navbar from "@/components/Navbar";
-import SidebarProyecto from "@/components/SidebarProyecto";
-import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
-import sprintService from "@/services/sprintService";
-import proyectoService from "@/services/proyectoService";
-import miembroService from "@/services/miembroService";
-import { mapGetters, mapState } from "vuex";
-import Boton from "@/components/Boton";
+
+import { mapState } from 'vuex'
+
+import proyectoService from '@/services/proyectoService.js'
+import sprintService from '@/services/sprintService.js'
+
+import Boton from '@/components/Boton.vue'
+import Table from '@/components/Table/Table.vue'
+import TableHeader from '@/components/Table/TableHeader.vue'
+import TableBody from '@/components/Table/TableBody.vue'
+import Th from '@/components/Table/Th.vue'
+import Tr from '@/components/Table/Tr.vue'
+import Td from '@/components/Table/Td.vue'
+import SidebarProyecto from '@/components/SidebarProyecto.vue'
+import Navbar from '@/components/Navbar.vue'
+
+import Alert from '@/helpers/alert'
+
 
 export default {
   components: {
-    Navbar,
-    SidebarProyecto,
+    Boton,
     Table,
     TableHeader,
     TableBody,
     Th,
     Tr,
     Td,
-    Boton,
-  },
-  created() {},
-  mounted() {
-    this.load();
-    localStorage.setItem("spring-planning-paso", 3);
-  },
-  computed: {
-    capacidadesDeMiembros() {
-      const capacidades = {};
-
-      this.miembrosSprint.forEach((miembro) => {
-        capacidades[miembro.id] = this.capacidadPorMiembro(miembro);
-      });
-
-      return capacidades;
-    },
-    horasAsignadasDeMiembros() {
-      const usPlanning = this.productBacklog.filter((us) => us.included);
-      const todosLosUS = [...usPlanning, ...this.sprintBacklog];
-
-      const horasAsignadas = {};
-
-      this.miembrosSprint.forEach((miembro) => {
-        let asignado = 0;
-
-        todosLosUS.forEach((us) => {
-          if (us.desarrollador === miembro) {
-            asignado += us.estimacion;
-          }
-        });
-
-        horasAsignadas[miembro.id] = asignado;
-      });
-
-      return horasAsignadas;
-    },
-    totalAsignado() {
-      let sumaAsignadas = 0;
-
-      for (let miembro in this.horasAsignadasDeMiembros) {
-        sumaAsignadas += this.horasAsignadasDeMiembros[miembro];
-      }
-
-      return sumaAsignadas;
-    },
-    capacidadTotal() {
-      let capacidad = 0;
-      this.miembrosSprint.forEach((miembro) => {
-        capacidad += this.capacidadesDeMiembros[miembro.id];
-      });
-      return capacidad;
-    },
-    ...mapGetters({
-      hasPermission: "auth/hasPermission",
-      hasPermissions: "auth/hasPermissions",
-      hasAnyPermission: "auth/hasAnyPermission",
-      hasProyectoPermission: "proyecto/hasPermission",
-      hasProyectoPermissions: "proyecto/hasPermissions",
-      hasProyectoAnyPermission: "proyecto/hasAnyPermission",
-    }),
-    ...mapState({
-      me: (state) => state.auth.me,
-      meProyecto: (state) => state.proyecto.me,
-    }),
+    SidebarProyecto,
+    Navbar
   },
   data() {
     return {
       proyecto: {
-        nombre: "",
+        id: 0,
+        nombre: '',
       },
       sprint: {
         planificador: 0,
         fecha_inicio: undefined,
         fecha_fin: undefined,
       },
-      miembrosSprint: [],
       sprintBacklog: [],
-    };
+      miembros: [],
+    }
+  },
+  computed: {
+    totalAsignado() {
+      let total = 0
+      this.sprintBacklog.forEach(userStory => {
+        total += userStory.horas_estimadas
+      })
+      return total
+    },
+    capacidadTotal() {
+      let total = 0
+      this.miembros.forEach(miembro => {
+        total += this.capacidadPorMiembro(miembro.miembro_proyecto)
+      })
+      return total
+    },
+    enableFinalizar() {
+      return this.sprintBacklog.every(userStory => userStory.estado_estimacion == "C")
+    },
+    ...mapState({
+      me: (state) => state.auth.me,
+      meProyecto: (state) => state.proyecto.me,
+    }),
+  },
+  mounted() {
+    this.load();
   },
   methods: {
-    async load() {
-      const paso = localStorage.getItem("sprint-planning");
-      const idProyecto = this.$route.params["id"];
-      const idSprint = this.$route.params["idSprint"];
-
-      // cargamos el proyecto
-      proyectoService.retrieve(idProyecto).then((proyecto) => {
+    load() {
+      let idProyecto = this.$route.params.id;
+      let idSprint = this.$route.params.idSprint
+      proyectoService.retrieve(idProyecto).then(proyecto => {
         this.proyecto = proyecto;
       });
-
-      // cargamos los miembros del proyecto temporalmente,
-      // para usar los datos del usuario
-      const miembrosProyecto = await miembroService
-        .list(idProyecto)
-        .then((miembros) => miembros);
-
-      // cargamos el sprint
-      sprintService.retrieve(idSprint).then((sprint) => {
+      sprintService.retrieve(idSprint).then(sprint => {
         this.sprint = sprint;
-        if (!sprint.planificador) this.$router.back();
+        if(!sprint.estado_planificacion == "P") this.$router.back();
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
-        if (![null, 2].includes(paso))
+        if(!sprint.estado_planificacion == "P") this.$router.back();
+        let paso = localStorage.getItem("sprint-planning-paso");
+        if(!paso) {
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-1`
+          );
+          return
+        }
+        if (!["2", "3"].includes(paso)){
           this.$router.push(
             `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 3);
       });
-
-      // cargamos miembros del sprint
-      sprintService.miembros(idSprint).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint.map((ms) => {
-          const mp = miembrosProyecto.find((m) => m.id === ms.miembro_proyecto);
-          return { ...ms, nombre: mp.usuario.nombre, horario: mp.horario };
-        });
+      sprintService.sprintBacklog(idSprint).then(sprintBacklog => {
+        this.sprintBacklog = sprintBacklog;
       });
-
-      // cargamos el sprint backlog
-      sprintService.sprintBacklog(idSprint).then((sprintBacklog) => {
-        this.sprintBacklog = sprintBacklog.map((us) => ({
-          ...us,
-          included: true,
-        }));
+      sprintService.miembros(idSprint).then(miembros => {
+        this.miembros = miembros;
       });
-    },
-    capacidadPorMiembro(miembro) {
-      const ini = new Date(this.sprint.fecha_inicio).getTime();
-      const fin = new Date(this.sprint.fecha_fin).getTime();
-      let capacidad = 0;
-      let horario = this.horarioToArray(miembro.horario);
-      for (let curr = ini; curr <= fin; curr += 1000 * 60 * 60 * 24) {
-        capacidad += horario[new Date(curr).getDay()];
-      }
-      return capacidad;
     },
     horarioToArray(horario) {
       return [
@@ -211,8 +163,24 @@ export default {
         horario.sabado,
       ];
     },
-    finalizar() {},
-  },
+    capacidadPorMiembro(miembro) {
+      const ini = new Date(this.sprint.fecha_inicio).getTime();
+      const fin = new Date(this.sprint.fecha_fin).getTime();
+      let capacidad = 0;
+      let horario = this.horarioToArray(miembro.horario);
+      for (let curr = ini; curr <= fin; curr += 1000 * 60 * 60 * 24) {
+        capacidad += horario[new Date(curr).getDay()];
+      }
+      return capacidad;
+    },
+    finalizar() {
+      let idSprint = this.$route.params.idSprint
+      sprintService.finalizarSprintPlanning(idSprint).then(() => {
+        Alert.success("Sprint Planning finalizado.");
+        this.$router.push({ name: 'Sprints', params: { id: this.proyecto.id } });
+      });
+    },
+  }  
 };
 </script>
 

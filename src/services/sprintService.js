@@ -20,6 +20,11 @@ export default {
       .post(`/sprint-planning/${id}/iniciar/`)
       .then((response) => response.data);
   },
+  finalizarSprintPlanning(id) {
+    return api
+      .post(`/sprint-planning/${id}/finalizar/`)
+      .then((response) => response.data);
+  },
   miembros(id) {
     return api
       .get(`/sprint-planning/${id}/miembros/`)
@@ -47,7 +52,15 @@ export default {
   },
   eliminarUserStory(id, payload) {
     return api
-      .post(`/sprint-planning/${id}/eliminar_user_story/`, payload)
+      .post(`/sprint-planning/${id}/devolver_user_story/`, payload)
       .then((response) => response.data);
   },
+  responderEstimacion(id, payload) {
+    return api
+      .post(`/sprint-backlogs/${id}/responder_estimacion/`, payload)
+      .then((response) => response.data);
+  },
+  activar(id) {
+      return api.post(`/sprints/${id}/activar/`).then(response => response.data)
+  }
 };

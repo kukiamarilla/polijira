@@ -19,34 +19,22 @@
         <Table height="400px" v-if="sprints.length > 0">
           <TableHeader>
             <Th width="10%">ID</Th>
-            <Th width="20%">Nombre</Th>
-            <Th width="25%">Planificación</Th>
-            <Th width="25%">Estado</Th>
-            <Th width="20%">Acciones</Th>
+            <Th width="15%">Nombre</Th>
+            <Th width="15%">Inicio</Th>
+            <Th width="15%">Fin</Th>
+            <Th width="15%">Planificación</Th>
+            <Th width="15%">Estado</Th>
+            <Th width="15%">Acciones</Th>
           </TableHeader>
           <TableBody>
             <Tr v-for="(sprint, idx) in sprints" :key="idx">
               <Td width="10%">{{ sprint.id }}</Td>
-              <Td width="20%">Sprint {{ sprint.numero }}</Td>
-              <Td width="25%"
-                ><span class="cutted-text">{{
-                  sprint.estado_sprint_planning == "P"
-                    ? "Pendiente"
-                    : sprint.estado_sprint_planning == "I"
-                    ? "Iniciado"
-                    : "Finalizado"
-                }}</span></Td
-              >
-              <Td width="25%"
-                ><span class="cutted-text">{{
-                  sprint.estado == "P"
-                    ? "Pendiente"
-                    : sprint.estado == "A"
-                    ? "Activo"
-                    : "Finalizado"
-                }}</span></Td
-              >
-              <Td width="20%">
+              <Td width="15%">Sprint {{ sprint.numero }}</Td>
+              <Td width="15%">{{sprint.fecha_inicio}}</Td>
+              <Td width="15%">{{sprint.fecha_fin}}</Td>
+              <Td width="15%"><span class="cutted-text">{{ sprint.estado_sprint_planning == "P" ? "Pendiente" :  sprint.estado_sprint_planning == "I" ? "Iniciado" : "Finalizado"}}</span></Td>
+              <Td width="15%"><span class="cutted-text">{{ sprint.estado == "P" ? "Pendiente" :  sprint.estado == "A" ? "Activo" : "Finalizado"}}</span></Td>
+              <Td width="15%">
                 <div class="acciones" style="display: flex">
                   <a
                     href="#"
@@ -55,11 +43,7 @@
                         sprint.estado_sprint_planning == 'I'
                     "
                     title="Planificar Sprint"
-                    @click.prevent="
-                      $router.push(
-                        `/proyectos/${proyecto.id}/sprint-planning/${sprint.id}/paso-1`
-                      )
-                    "
+                    @click.prevent="irAPlanificacion(sprint)"
                   >
                     <Icon
                       icono="watch"
@@ -78,6 +62,22 @@
                   >
                     <Icon
                       icono="checklist"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+                  <a
+                    href="#"
+                    v-if="
+                      hasProyectoPermissions(['activar_sprints']) &&
+                      sprint.estado_sprint_planning == 'F' &&
+                      sprint.estado == 'P'
+                    "
+                    @click.prevent="activarSprint(sprint)"
+                  >
+                    <Icon
+                      icono="play"
                       size="16px"
                       color="#bdbdbd"
                       hover="#F25656"
@@ -194,13 +194,23 @@ export default {
       });
     },
     iniciarSprintPlanning(sprint) {
-      sprintService.iniciarSprintPlanning(sprint.id).then(() => {
-        Alert.success("Spring Planning iniciado.");
-        this.$router.push(
-          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-1`
-        );
-      });
+        sprintService.iniciarSprintPlanning(sprint.id).then(() => {
+            Alert.success("Spring Planning iniciado.")
+            this.$router.push(`/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-1`)
+        })
     },
+    activarSprint(sprint) {
+        sprintService.activar(sprint.id).then(() => {
+            Alert.success("Sprint activado exitosamente.")
+            this.load();
+        })
+    },
+    irAPlanificacion(sprint) {
+     const paso = localStorage.getItem('sprint-planning-paso');
+     this.$router.push(
+          `/proyectos/${this.proyecto.id}/sprint-planning/${sprint.id}/paso-${ paso != null? paso : 1}`
+        );
+    }
   },
 };
 </script>

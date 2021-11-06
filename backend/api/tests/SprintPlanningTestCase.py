@@ -196,7 +196,7 @@ class SprintPlanningTestCase(TestCase):
         miembro_sprint = MiembroSprint.objects.filter(miembro_proyecto=miembro, sprint=sprint)
         self.assertEquals(len(miembro_sprint), 1)
         self.assertEquals(body["id"], miembro_sprint[0].id)
-        self.assertEquals(body["miembro_proyecto"], miembro_sprint[0].miembro_proyecto.id)
+        self.assertEquals(body["miembro_proyecto"]['id'], miembro_sprint[0].miembro_proyecto.id)
         self.assertEquals(body["sprint"], miembro_sprint[0].sprint.id)
 
     def test_agregar_miembro_sprint_sin_iniciar(self):

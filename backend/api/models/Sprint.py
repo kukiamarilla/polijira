@@ -38,6 +38,14 @@ class Sprint(models.Model):
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints", null=True)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
 
+    class NotAbleFinalizarSprintPlanning(Exception):
+        """
+        NotAbleFinalizarSprintPlanning 
+        Excepción que se lanza cuando se intenta finalizar la planificación 
+        un Sprint que tiene user stories no estimados completamente.
+        """
+        pass
+
     @staticmethod
     def create(fecha_inicio=None, fecha_fin=None, proyecto=None):
         """
@@ -86,6 +94,21 @@ class Sprint(models.Model):
         """
         self.estado_sprint_planning = "I"
         self.planificador = planificador
+        self.save()
+
+    def finalizar_sprint_planning(self):
+        """
+        finalizar_sprint_planning Finalizar el Sprint Planning
+        """
+        self.estado_sprint_planning = "F"
+
+        uss = self.sprint_backlogs.all()
+        if not uss:
+            raise self.NotAbleFinalizarSprintPlanning("No se puede finalizar un Sprint Planning sin User Stories")
+        uss = self.sprint_backlogs.filter(estado_estimacion="p")
+        if uss:
+            raise self.NotAbleFinalizarSprintPlanning(
+                "No se puede finalizar un Sprint Planning con User Stories pendientes de estimación")
         self.save()
 
     @staticmethod

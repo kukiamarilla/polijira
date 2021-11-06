@@ -5,7 +5,7 @@
       <SidebarProyecto current="miembros" :proyecto="proyecto" />
       <div class="container shadow">
         <div class="header">
-          <h2>Spring Planning</h2>
+          <h2>Sprint Planning</h2>
           <br />
           <h4>Paso 1: Elegir miembros de Sprint</h4>
           <br /><br /><br />
@@ -79,14 +79,13 @@ export default {
   created() {},
   mounted() {
     this.load();
-    localStorage.setItem("spring-planning-paso", 1);
   },
   computed: {
     capacidad() {
       let capacidad = 0;
       this.miembrosSprint.forEach((ms) => {
         capacidad += this.capacidadPorMiembro(
-          this.miembros.find((miembro) => miembro.id == ms.miembro_proyecto)
+          this.miembros.find((miembro) => miembro.id == ms.miembro_proyecto.id)
         );
       });
       return capacidad;
@@ -132,7 +131,6 @@ export default {
   },
   methods: {
     load() {
-      const paso = localStorage.getItem("sprint-planning");
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
       proyectoService.retrieve(idProyecto).then((proyecto) => {
@@ -140,22 +138,26 @@ export default {
       });
       sprintService.retrieve(idSprint).then((sprint) => {
         this.sprint = sprint;
-        if (!sprint.planificador) this.$router.back();
+        if (!sprint.estado_planificacion == "I") this.$router.back();
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
-        if (![null, 1].includes(paso))
+        const paso = localStorage.getItem("sprint-planning-paso");
+        if (![null, "1"].includes(paso)){
           this.$router.push(
-            `/proyecto/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 1);
       });
       sprintService.miembros(idSprint).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint;
         miembroService.list(idProyecto).then((miembros) => {
           miembros = miembros.map((miembro) => ({
             ...miembro,
             included: miembrosSprint
-              .map((x) => x.miembro_proyecto)
+              .map((x) => x.miembro_proyecto.id)
               .includes(miembro.id),
           }));
+          this.miembrosSprint = miembrosSprint;
           this.miembros = miembros;
         });
       });
@@ -170,7 +172,7 @@ export default {
     },
     eliminarMiembro(miembro) {
       miembro = this.miembrosSprint.find(
-        (ms) => ms.miembro_proyecto == miembro.id
+        (ms) => ms.miembro_proyecto.id == miembro.id
       );
       sprintService
         .eliminarMiembro(this.sprint.id, { miembro_sprint: miembro.id })

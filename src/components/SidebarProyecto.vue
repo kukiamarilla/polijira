@@ -48,7 +48,7 @@
         <SidebarProyectoItem
           icono="clock"
           texto="Estimaciones Pend."
-          to=""
+          :to="`/proyectos/${proyecto.id}/estimaciones-pendientes`"
           :active="current == ''"
           v-if="true"
         />

@@ -6,7 +6,7 @@
       <SidebarProyecto current="miembros" :proyecto="proyecto" />
       <div class="container shadow">
         <div class="header">
-          <h2>Spring Planning</h2>
+          <h2>Sprint Planning</h2>
           <br />
           <h4>Paso 2: Sprint Backlog</h4>
           <br /><br /><br />
@@ -26,18 +26,42 @@
               <Td width="25%">{{ us.user_story.nombre }}</Td>
               <Td width="25%">{{ us.user_story.descripcion }}</Td>
               <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
+              <Td width="15%">
+                <a
+                    href="#"
+                    @click.prevent="verUserStory(us.user_story)"
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="var(--primary)"
+                    />
+                  </a>
+              </Td>
               <Td width="15%">
                 <Checkbox v-model="us.included" @input="eliminarUS(us)" />
               </Td>
             </Tr>
 
             <Tr v-for="us in productBacklog" :key="us.id">
-              <Td width="5%">{{ us.id }}</Td>
+              <Td width="5%">{{ us.user_story.id }}</Td>
               <Td width="25%">{{ us.user_story.nombre }}</Td>
               <Td width="25%">{{ us.user_story.descripcion }}</Td>
               <Td width="15%">{{ us.user_story.prioridad }}</Td>
-              <Td width="15%">{{ "[Acciones]" }}</Td>
+              <Td width="15%">
+                <a
+                    href="#"
+                    @click.prevent="verUserStory(us.user_story)"
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="var(--primary)"
+                    />
+                  </a>
+              </Td>
               <Td width="15%">
                 <Checkbox v-model="us.included" @input="verPlanificacion(us)" />
               </Td>
@@ -79,6 +103,7 @@
         <Boton texto="Guardar" tema="primary" @click="planificarUS" />
       </div>
     </Modal>
+    <UserStory v-model="verUserStorySelected" :userStory="verUserStorySelected"/>
   </div>
 </template>
 
@@ -88,7 +113,6 @@ import SidebarProyecto from "@/components/SidebarProyecto";
 import { Table, TableHeader, TableBody, Th, Tr, Td } from "@/components/Table";
 import sprintService from "@/services/sprintService";
 import proyectoService from "@/services/proyectoService";
-import miembroService from "@/services/miembroService";
 import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
 import Checkbox from "@/components/Checkbox";
@@ -96,6 +120,8 @@ import InputNumber from "@/components/InputNumber";
 import Boton from "@/components/Boton";
 import Modal from "@/components/Modal";
 import WeightedSelect from "@/components/WeightedSelect";
+import UserStory from "@/components/UserStory";
+import Icon from "@/components/Icon";
 
 export default {
   components: {
@@ -111,29 +137,37 @@ export default {
     InputNumber,
     Boton,
     Modal,
+    Icon,
     WeightedSelect,
+    UserStory
   },
-  created() {},
+  created() { 
+  },
   mounted() {
     this.load();
-    localStorage.setItem("spring-planning-paso", 2);
   },
   computed: {
     capacidadesDeMiembros() {
       const capacidades = {};
 
       this.miembrosSprint.forEach((miembro) => {
-        capacidades[miembro.id] = this.capacidadPorMiembro(miembro);
+        capacidades[miembro.id] = this.capacidadPorMiembro(miembro.miembro_proyecto);
       });
 
       return capacidades;
     },
     weightedMembers() {
-      return this.miembrosSprint.map((miembro) => ({
-        text: miembro.nombre,
-        currWeight: this.horasAsignadasDeMiembros[miembro.id],
-        totalWeight: this.capacidadesDeMiembros[miembro.id],
-      }));
+      return this.miembrosSprint.map((miembro, idx) => {
+        
+        let horasAsignadas = this.sprintBacklog.filter(us => us.desarrollador.id === miembro.id).reduce((acc, us) => acc + us.horas_estimadas, 0);
+        horasAsignadas += this.userStory.estimacion && this.miembroSelecto === idx ? this.userStory.estimacion : 0;
+
+        return {
+          text: miembro.nombre,
+          currWeight: horasAsignadas,
+          totalWeight: this.capacidadPorMiembro(miembro.miembro_proyecto),
+        }
+      });
     },
     horasAsignadasDeMiembros() {
       const usPlanning = this.productBacklog.filter((us) => us.included);
@@ -158,9 +192,9 @@ export default {
     totalAsignado() {
       let sumaAsignadas = 0;
 
-      for (let miembro in this.horasAsignadasDeMiembros) {
-        sumaAsignadas += this.horasAsignadasDeMiembros[miembro];
-      }
+      this.sprintBacklog.forEach((us) => {
+        sumaAsignadas += us.horas_estimadas;
+      });
 
       return sumaAsignadas;
     },
@@ -210,11 +244,16 @@ export default {
       },
       miembroSelecto: -1,
       verUSPlanning: false,
+      verUserStoryShow: true,
+      verUserStorySelected: {
+        nombre: "",
+        descripcion: "",
+        prioridad: 0,
+      },
     };
   },
   methods: {
-    async load() {
-      const paso = localStorage.getItem("sprint-planning");
+    load() {
       const idProyecto = this.$route.params["id"];
       const idSprint = this.$route.params["idSprint"];
 
@@ -223,30 +262,28 @@ export default {
         this.proyecto = proyecto;
       });
 
-      // cargamos los miembros del proyecto temporalmente,
-      // para usar los datos del usuario
-      const miembrosProyecto = await miembroService
-        .list(idProyecto)
-        .then((miembros) => miembros);
 
       // cargamos el sprint
       sprintService.retrieve(idSprint).then((sprint) => {
         this.sprint = sprint;
-        if (!sprint.planificador) this.$router.back();
+        if (!sprint.estado_planificacion == "I") this.$router.back();
         if (sprint.planificador != this.meProyecto.id) this.$router.back();
-        if (![null, 2].includes(paso))
+        const paso = localStorage.getItem("sprint-planning-paso");
+        if(!paso) {
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-1`
+          );
+          return
+        }
+        if (!["1", "2"].includes(paso)){
           this.$router.push(
             `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
           );
+          return
+        }
+        localStorage.setItem("sprint-planning-paso", 2);
       });
 
-      // cargamos miembros del sprint
-      sprintService.miembros(idSprint).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint.map((ms) => {
-          const mp = miembrosProyecto.find((m) => m.id === ms.miembro_proyecto);
-          return { ...ms, nombre: mp.usuario.nombre, horario: mp.horario };
-        });
-      });
 
       // cargamos el sprint backlog
       sprintService.sprintBacklog(idSprint).then((sprintBacklog) => {
@@ -254,6 +291,12 @@ export default {
           ...us,
           included: true,
         }));
+        // cargamos miembros del sprint
+        sprintService.miembros(idSprint).then((miembrosSprint) => {
+          this.miembrosSprint = miembrosSprint.map((ms) => {
+            return { ...ms, nombre: ms.miembro_proyecto.usuario.nombre, horario: ms.miembro_proyecto.horario,  };
+          });
+        });
       });
 
       // cargamos el product backlog
@@ -271,7 +314,7 @@ export default {
     },
     planificarUS() {
       const payload = {
-        user_story: this.userStory.id,
+        user_story: this.userStory.user_story.id,
         horas_estimadas: this.userStory.estimacion,
         desarrollador: this.userStory.desarrollador.id,
       };
@@ -285,7 +328,7 @@ export default {
     eliminarUS(userStory) {
       sprintService
         .eliminarUserStory(this.sprint.id, {
-          sprint_backlog: userStory.sprint.id,
+          sprint_backlog: userStory.id,
         })
         .then(() => {
           userStory.included = false;
@@ -339,6 +382,10 @@ export default {
         `/proyectos/${this.$route.params["id"]}/sprint-planning/${this.$route.params["idSprint"]}/paso-3`
       );
     },
+    verUserStory(userStory) {
+      this.verUserStoryShow = true,
+      this.verUserStorySelected = userStory
+    }
   },
 };
 </script>
