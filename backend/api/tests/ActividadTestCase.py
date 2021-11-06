@@ -120,9 +120,9 @@ class ActividadTestCase(TestCase):
     def test_error_validacion_crear_actividad_sprint_backlog(self):
         """
         test_error_validacion_crear_actividad_sprint_backlog
-        Prueba validar la existencia del campo Sprint Backlog en la BD
+        Prueba validar la existencia del campo Sprint Backlog en la BD al Crear Actividad
         """
-        print("\nProbando validar la existencia del campo Sprint Backlog en la BD")
+        print("\nProbando validar la existencia del campo Sprint Backlog en la BD al Crear Actividad")
         self.client.login(
             username="testing",
             password="polijira2021"
@@ -144,9 +144,9 @@ class ActividadTestCase(TestCase):
     def test_error_validacion_crear_actividad_horas(self):
         """
         test_error_validacion_crear_actividad_horas
-        Prueba validar que el valor de la hora sea mayor a cero
+        Prueba validar que el valor de la hora sea mayor a cero al Crear Actividad
         """
-        print("\nProbando validar que el valor de la hora sea mayor a cero")
+        print("\nProbando validar que el valor de la hora sea mayor a cero al Crear Actividad")
         self.client.login(
             username="testing",
             password="polijira2021"
@@ -263,3 +263,45 @@ class ActividadTestCase(TestCase):
         body = response.json()
         self.assertEquals(body.get("message"), "Para registrar una actividad el Sprint debe estar Activo")
         self.assertEquals(body.get("error"), "bad_request")
+
+    def test_error_validacion_modificar_actividad_campos(self):
+        """
+        test_error_validacion_modificar_actividad_campos
+        Prueba validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Modificar Actividad
+        """
+        print("\nProbando validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Modificar Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        response = self.client.put("/api/actividades/1/")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body.get("errors").get("descripcion"), ["No se pasó: Descripcion"])
+        self.assertEquals(body.get("errors").get("horas"), ["No se pasó: Horas"])
+
+    def test_error_validacion_modificar_actividad_horas(self):
+        """
+        test_error_validacion_modificar_actividad_horas
+        Prueba validar que el valor de la hora sea mayor a cero en Modificar Actividad
+        """
+        print("\nProbando validar que el valor de la hora sea mayor a cero en Modificar Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": -2
+        }
+        response = self.client.put("/api/actividades/1/", request_data, "application/json")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body.get("errors").get("horas"), ["La hora no puede ser negativa"])

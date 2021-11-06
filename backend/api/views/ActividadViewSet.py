@@ -4,7 +4,7 @@ from datetime import date
 from backend.api.models import Actividad, Miembro, MiembroSprint, SprintBacklog, Usuario, UserStory
 from backend.api.serializers import ActividadSerializer
 from backend.api.decorators import FormValidator
-from backend.api.forms import CreateActividadForm
+from backend.api.forms import CreateActividadForm, UpdateActividadForm
 
 
 class ActividadViewSet(viewsets.ViewSet):
@@ -71,6 +71,7 @@ class ActividadViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
 
+    @FormValidator(form=UpdateActividadForm)
     def update(self, request, pk=None):
         """
         update Modifica una Actividad realizada
