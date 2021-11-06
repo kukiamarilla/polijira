@@ -55,6 +55,22 @@
                   <a
                     href="#"
                     v-if="
+                      hasProyectoPermissions(['ver_sprints']) &&
+                        (sprint.estado == 'A' || sprint.estado == 'F')
+                    "
+                    title="Ver Sprint"
+                    @click.prevent="$router.push(`/proyectos/${proyecto.id}/sprints/${sprint.id}`)"
+                  >
+                    <Icon
+                      icono="watch"
+                      size="16px"
+                      color="#bdbdbd"
+                      hover="#F25656"
+                    />
+                  </a>
+                  <a
+                    href="#"
+                    v-if="
                       hasProyectoPermissions(['planear_sprints']) &&
                         sprint.estado_sprint_planning == 'P'
                     "

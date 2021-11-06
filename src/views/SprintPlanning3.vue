@@ -176,6 +176,7 @@ export default {
     finalizar() {
       let idSprint = this.$route.params.idSprint
       sprintService.finalizarSprintPlanning(idSprint).then(() => {
+        localStorage.removeItem("sprint-planning-paso");
         Alert.success("Sprint Planning finalizado.");
         this.$router.push({ name: 'Sprints', params: { id: this.proyecto.id } });
       });
