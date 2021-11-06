@@ -9,14 +9,14 @@
     <ColumnaKanban nombre="Done" color="var(--success)" @receive="moverUserStory($event, 'N')">
       <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'N' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
-    <SprintBacklog v-model="verUserStory" :userStory="userStorySelected"/>
+    <VerSprintBacklog v-model="verUserStory" :userStory="userStorySelected"/>
   </div>
 </template>
 
 <script>
 import UserStoryKanban from "@/components/UserStoryKanban";
 import ColumnaKanban from "@/components/ColumnaKanban";
-import SprintBacklog from "@/components/SprintBacklog";
+import VerSprintBacklog from "@/components/VerSprintBacklog";
 
 import sprintService from "@/services/sprintService";
 import userStoryService from "@/services/userStoryService";
@@ -25,7 +25,7 @@ export default {
   components: {
     ColumnaKanban,
     UserStoryKanban,
-    SprintBacklog
+    VerSprintBacklog
   },
   data() {
     return{

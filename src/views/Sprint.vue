@@ -14,7 +14,7 @@
                 <Kanban/>
             </template>
             <template #miembros>
-                Miembros
+                <MiembrosSprint/>
             </template>
             <template #sprint-backlog>
                 Sprint Backlog
@@ -33,6 +33,7 @@ import Navbar from "@/components/Navbar";
 import SidebarProyecto from "@/components/SidebarProyecto";
 import TabNavigation from "@/components/TabNavigation";
 import Kanban from "@/components/Kanban";
+import MiembrosSprint from "@/components/MiembrosSprint";
 import proyectoService from "@/services/proyectoService";
 import sprintService from "@/services/sprintService";
 import { mapGetters, mapState } from "vuex";
@@ -42,7 +43,8 @@ export default {
     Navbar,
     SidebarProyecto,
     TabNavigation,
-    Kanban
+    Kanban,
+    MiembrosSprint
   },
   created() {},
   mounted() {
