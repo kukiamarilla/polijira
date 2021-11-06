@@ -10,9 +10,9 @@ from .MiembroSerializer import MiembroSerializer
 from .HorarioSerializer import HorarioSerializer
 from .ImportarRolSerializer import ImportarRolSerializer
 from .RegistroUserStorySerializer import RegistroUserStorySerializer
+from .ReviewSerializer import ReviewSerializer
 from .UserStorySerializer import UserStorySerializer
 from .SprintSerializer import SprintSerializer
 from .MiembroSprintSerializer import MiembroSprintSerializer
-from .ReviewSerializer import ReviewSerializer
 from .SprintBacklogSerializer import SprintBacklogSerializer
 from .ProductBacklogSerializer import ProductBacklogSerializer
