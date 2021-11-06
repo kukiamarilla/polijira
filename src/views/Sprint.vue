@@ -17,7 +17,7 @@
                 <MiembrosSprint/>
             </template>
             <template #sprint-backlog>
-                Sprint Backlog
+                <SprintBacklog/>
             </template>
             <template #burndown-chart>
                 Burndown Chart
@@ -34,6 +34,7 @@ import SidebarProyecto from "@/components/SidebarProyecto";
 import TabNavigation from "@/components/TabNavigation";
 import Kanban from "@/components/Kanban";
 import MiembrosSprint from "@/components/MiembrosSprint";
+import SprintBacklog from "@/components/SprintBacklog";
 import proyectoService from "@/services/proyectoService";
 import sprintService from "@/services/sprintService";
 import { mapGetters, mapState } from "vuex";
@@ -44,7 +45,8 @@ export default {
     SidebarProyecto,
     TabNavigation,
     Kanban,
-    MiembrosSprint
+    MiembrosSprint,
+    SprintBacklog
   },
   created() {},
   mounted() {
