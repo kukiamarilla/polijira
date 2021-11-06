@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
-from backend.api.models import Actividad, MiembroSprint, SprintBacklog, Sprint
+from backend.api.models import Actividad, Miembro, MiembroSprint, Proyecto, SprintBacklog, Sprint
 
 
 class ActividadTestCase(TestCase):
@@ -163,3 +163,103 @@ class ActividadTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body.get("errors").get("horas"), ["La hora no puede ser negativa"])
+
+    def test_validar_miembro_proyecto_crear_actividad(self):
+        """
+        test_validar_miembro_proyecto_crear_actividad
+        Prueba validar que el usuario sea miembro del proyecto al Crear Actividad
+        """
+        print("\nProbando validar que el usuario sea miembro del proyecto al Crear Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.proyecto = Proyecto.objects.get(pk=4)
+        sprint.save()
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("message"), "Usted no es miembro de este Proyecto")
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_validar_miembro_sprint_crear_actividad(self):
+        """
+        test_validar_miembro_sprint_crear_actividad
+        Prueba validar que el usuario sea miembro del sprint al Crear Actividad
+        """
+        print("\nProbando validar que el usuario sea miembro del sprint al Crear Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        miembro_sprint = MiembroSprint.objects.get(pk=2)
+        miembro_sprint.miembro_proyecto = Miembro.objects.get(pk=2)
+        miembro_sprint.save()
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("message"), "Usted no es miembro de este Sprint")
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_validar_desarrollador_crear_actividad(self):
+        """
+        test_validar_desarrollador_crear_actividad
+        Prueba validar que el usuario sea desarrollador del User Story al Crear Actividad
+        """
+        print("\nProbando validar que el usuario sea desarrollador del User Story al Crear Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.desarrollador = MiembroSprint.objects.get(pk=1)
+        sprint_backlog.save()
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("message"), "Usted no es desarrollador del User Story")
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_validar_sprint_crear_actividad(self):
+        """
+        test_validar_sprint_crear_actividad
+        Prueba validar que el sprint este activo al Crear Actividad
+        """
+        print("\nProbando validar que el sprint este activo al Crear Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body.get("message"), "Para registrar una actividad el Sprint debe estar Activo")
+        self.assertEquals(body.get("error"), "bad_request")
