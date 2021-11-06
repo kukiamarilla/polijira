@@ -31,7 +31,10 @@
 
     <TabNavigation :tabs="tabs" default="reviews">
       <template #reviews>
-        Reviews
+        <Reviews/>
+      </template>
+      <template #actividades>
+        <Actividades/>
       </template>
     </TabNavigation>
   </Modal>
@@ -39,22 +42,31 @@
 
 <script>
 import Modal from "@/components/Modal";
+import TabNavigation from "@/components/TabNavigation";
+import Reviews from "@/components/Reviews";
+import Actividades from "@/components/Actividades";
 
 export default {
   components: {
     Modal,
-    // Table,
-    // TableHeader,
-    // TableBody,
-    // Th,
-    // Tr,
-    // Td,
+    TabNavigation,
+    Reviews,
+    Actividades
   },
   props: ["value", "userStory"],
   computed: {},
   data() {
     return {
-      tabs: [{ name: "reviews", title: "Reviews" }],
+      tabs: [
+        { 
+          name: "reviews", 
+          title: "Reviews" 
+        },
+        {
+          name: "actividades", 
+          title: "Actividades"
+        }
+      ],
     };
   },
   watch: {
