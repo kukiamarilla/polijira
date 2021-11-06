@@ -52,6 +52,7 @@ class SprintBacklog(models.Model):
         mover Mueve el user story a la siguiente columna del Kanban
         """
         self.estado_kanban = estado
+        self.save()
 
     def update(self, horas_estimadas=None, estado_estimacion=None):
         self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
