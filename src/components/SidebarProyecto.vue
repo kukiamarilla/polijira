@@ -49,7 +49,7 @@
           icono="clock"
           texto="Estimaciones Pend."
           :to="`/proyectos/${proyecto.id}/estimaciones-pendientes`"
-          :active="current == ''"
+          :active="current == 'estimacion'"
           v-if="true"
         />
       </div>
