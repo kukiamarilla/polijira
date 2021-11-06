@@ -1,12 +1,12 @@
 <template>
   <div class="kanban">
-    <ColumnaKanban nombre="To Do" color="var(--info)">
+    <ColumnaKanban nombre="To Do" color="var(--info)" @receive="moverUserStory($event, 'T')">
       <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'T' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
-    <ColumnaKanban nombre="Doing" color="var(--warning)">
+    <ColumnaKanban nombre="Doing" color="var(--warning)" @receive="moverUserStory($event, 'D')">
       <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'D' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
-    <ColumnaKanban nombre="Done" color="var(--success)">
+    <ColumnaKanban nombre="Done" color="var(--success)" @receive="moverUserStory($event, 'N')">
       <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'N' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
     <SprintBacklog v-model="verUserStory" :userStory="userStorySelected"/>
@@ -18,8 +18,10 @@ import UserStoryKanban from "@/components/UserStoryKanban";
 import ColumnaKanban from "@/components/ColumnaKanban";
 import SprintBacklog from "@/components/SprintBacklog";
 
+import sprintService from "@/services/sprintService";
+import userStoryService from "@/services/userStoryService";
+
 export default {
-  props: ["sprintBacklog"],
   components: {
     ColumnaKanban,
     UserStoryKanban,
@@ -28,13 +30,28 @@ export default {
   data() {
     return{
       verUserStory: null,
-      userStorySelected: null
+      userStorySelected: null,
+      sprintBacklog: []
     }
   },
+  mounted() {
+    this.load()
+  },
   methods: {
+    load() {
+      sprintService.sprintBacklog(this.$route.params["idSprint"]).then(sb => {
+        this.sprintBacklog = sb
+      })
+    },
     ver(us) {
       this.verUserStory = true;
       this.userStorySelected = us;
+    },
+    moverUserStory(id, estado) {
+      console.log(id, estado)
+      userStoryService.mover(id, estado).then(() => {
+        this.load()
+      })
     }
   }
 }

@@ -30,7 +30,7 @@ export default {
       setTimeout(() => {
         el.style.display = "none"
       }, 0)
-      evt.dataTransfer.setData("element", el)
+      evt.dataTransfer.setData("userStory", this.userStory.id)
       evt.dataTransfer.effectAllowed = 'move'
       console.log("Drag Start")
     },

@@ -32,10 +32,9 @@ export default {
     },
     finishDrag(evt) {
       this.enter = false
-      const el = evt.dataTransfer.getData("element")
-      el.style.display = "block"
-      evt.target.appendChild(el)
-      console.log("Drag End")
+      const us = evt.dataTransfer.getData("userStory")
+      console.log("Drag end", us)
+      this.$emit("receive", us)
     },
   }
 }
