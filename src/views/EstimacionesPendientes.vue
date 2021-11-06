@@ -2,7 +2,7 @@
   <div>
     <Navbar />
     <div class="d-flex">
-      <SidebarProyecto current="miembros" :proyecto="proyecto" />
+      <SidebarProyecto current="estimacion" :proyecto="proyecto" />
       <div class="container shadow">
         <div class="header">
           <h2>Estimaciones Pendientes</h2>
