@@ -1,17 +1,18 @@
 <template>
-  <div class="user-story" draggable="true" @dragstart="startDrag" @dragover.prevent>
+  <div class="user-story" draggable="true" @dragstart="startDrag" @dragover.prevent @click="verSprintBacklog">
     <div class="d-flex top">
       <div class="title">
-        <span class="highlight">Pantalla de Login</span>
+        <span class="highlight" >{{userStory.user_story.nombre}}</span>
       </div>
       <div>
         <div class="d-flex">
-          <span>8 hs.</span>&nbsp;&nbsp;
-          <Icon icono="clock" size="16px"/>
+          <span>{{userStory.horas_estimadas}} hs.</span>&nbsp;&nbsp;
+          <Icon icono="clock" size="16px" color="#000" hover="#000"/>
         </div>
       </div>
     </div>
-    <div>Asignado a: Panchito Lopez</div>
+    <div>Asignado a: {{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</div>
+    
   </div>
 </template>
 
@@ -19,8 +20,9 @@
 import Icon from "@/components/Icon";
 
 export default {
+  props: ["userStory"],
   components: {
-    Icon
+    Icon,
   },
   methods: {
     startDrag(evt) {
@@ -32,6 +34,9 @@ export default {
       evt.dataTransfer.effectAllowed = 'move'
       console.log("Drag Start")
     },
+    verSprintBacklog() {
+      this.verUserStory = this.userStory;
+    }
   }
 }
 </script>

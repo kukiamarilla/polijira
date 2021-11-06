@@ -1,44 +1,41 @@
 <template>
   <div class="kanban">
     <ColumnaKanban nombre="To Do" color="var(--info)">
-      <UserStoryKanban/>
-      <UserStoryKanban/>
-      <UserStoryKanban/>
+      <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'T' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
     <ColumnaKanban nombre="Doing" color="var(--warning)">
-      <UserStoryKanban/>
+      <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'D' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
     <ColumnaKanban nombre="Done" color="var(--success)">
-      <UserStoryKanban/>
-      <UserStoryKanban/>
+      <UserStoryKanban v-for="us in sprintBacklog.filter(sb => sb.estado_kanban == 'N' )" :key="us.id" :userStory="us" @click.native="ver(us)"/>
     </ColumnaKanban>
+    <SprintBacklog v-model="verUserStory" :userStory="userStorySelected"/>
   </div>
 </template>
 
 <script>
 import UserStoryKanban from "@/components/UserStoryKanban";
 import ColumnaKanban from "@/components/ColumnaKanban";
-import sprintService from "@/services/sprintService";
+import SprintBacklog from "@/components/SprintBacklog";
 
 export default {
+  props: ["sprintBacklog"],
   components: {
     ColumnaKanban,
-    UserStoryKanban
+    UserStoryKanban,
+    SprintBacklog
   },
   data() {
-    return {
-      sprintBacklogs: []
+    return{
+      verUserStory: null,
+      userStorySelected: null
     }
   },
-  mounted() {
-    this.load()
-  },
   methods: {
-    load() {
-      sprintService.sprintBacklogs(sb => {
-        this.sprintBacklogs = sb;
-      })
-    },
+    ver(us) {
+      this.verUserStory = true;
+      this.userStorySelected = us;
+    }
   }
 }
 </script>

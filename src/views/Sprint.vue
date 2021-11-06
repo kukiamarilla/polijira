@@ -11,7 +11,7 @@
         <br>
         <TabNavigation :tabs="tabs" default="kanban">
             <template #kanban>
-                <Kanban/>
+                <Kanban :sprintBacklog="sprintBacklog"/>
             </template>
             <template #miembros>
                 Miembros
@@ -63,32 +63,33 @@ export default {
   },
   data() {
     return {
-        sprint: {
-            id: 0,
-            numero: 0,
+      sprintBacklog: [],
+      sprint: {
+          id: 0,
+          numero: 0,
+      },
+      proyecto: {
+          id: 0,
+          nombre: ""
+      },
+      tabs: [
+        {
+          name: "kanban",
+          title: "Kanban"
         },
-        proyecto: {
-            id: 0,
-            nombre: ""
+        {
+          name: "miembros",
+          title: "Miembros"
         },
-        tabs: [
-            {
-                name: "kanban",
-                title: "Kanban"
-            },
-            {
-                name: "miembros",
-                title: "Miembros"
-            },
-            {
-                name: "sprint-backlog",
-                title: "Sprint Backlog"
-            },
-            {
-                name: "burndown-chart",
-                title: "Burndown Chart"
-            }
-        ]
+        {
+          name: "sprint-backlog",
+          title: "Sprint Backlog"
+        },
+        {
+          name: "burndown-chart",
+          title: "Burndown Chart"
+        }
+      ]
     }
   },
   methods: {
@@ -98,6 +99,9 @@ export default {
         })
         proyectoService.retrieve(this.$route.params["id"]).then(proyecto => {
             this.proyecto = proyecto
+        })
+        sprintService.sprintBacklog(this.$route.params["idSprint"]).then(sprintBacklog => {
+            this.sprintBacklog = sprintBacklog
         })
     },
   },
