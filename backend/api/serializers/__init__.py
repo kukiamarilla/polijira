@@ -12,6 +12,7 @@ from .ImportarRolSerializer import ImportarRolSerializer
 from .RegistroUserStorySerializer import RegistroUserStorySerializer
 from .UserStorySerializer import UserStorySerializer
 from .SprintSerializer import SprintSerializer
-from .SprintBacklogSerializer import SprintBacklogSerializer
 from .MiembroSprintSerializer import MiembroSprintSerializer
 from .ReviewSerializer import ReviewSerializer
+from .SprintBacklogSerializer import SprintBacklogSerializer
+from .ProductBacklogSerializer import ProductBacklogSerializer

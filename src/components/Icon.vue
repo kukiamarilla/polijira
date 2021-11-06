@@ -26,6 +26,7 @@ const iconosValidos = [
   "logout",
   "minus",
   "options",
+  "play",
   "protected",
   "success",
   "team",

@@ -196,7 +196,7 @@ class SprintPlanningTestCase(TestCase):
         miembro_sprint = MiembroSprint.objects.filter(miembro_proyecto=miembro, sprint=sprint)
         self.assertEquals(len(miembro_sprint), 1)
         self.assertEquals(body["id"], miembro_sprint[0].id)
-        self.assertEquals(body["miembro_proyecto"], miembro_sprint[0].miembro_proyecto.id)
+        self.assertEquals(body["miembro_proyecto"]['id'], miembro_sprint[0].miembro_proyecto.id)
         self.assertEquals(body["sprint"], miembro_sprint[0].sprint.id)
 
     def test_agregar_miembro_sprint_sin_iniciar(self):
@@ -306,17 +306,18 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        SprintBacklog.objects.get(pk=1).delete()
         response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
         self.assertEquals(response.status_code, 200)
         sprint_backlog = SprintBacklog.objects.filter(
             sprint_id=2,
             user_story_id=2,
             horas_estimadas=5,
-            desarrollador_id=4
+            desarrollador_id=2
         )
         self.assertEquals(len(sprint_backlog), 1)
 
@@ -330,7 +331,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
@@ -350,7 +351,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
@@ -372,7 +373,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         response = self.client.post("/api/sprint-planning/2/planificar_user_story/",
                                     request_data, content_type="application/json")
@@ -390,7 +391,7 @@ class SprintPlanningTestCase(TestCase):
         request_data = {
             "user_story": 2,
             "horas_estimadas": 5,
-            "desarrollador": 5
+            "desarrollador": 2
         }
         sprint = Sprint.objects.get(pk=2)
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=2))
@@ -399,3 +400,39 @@ class SprintPlanningTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
+
+    def test_devolver_user_story(self):
+        """
+        test_devolver_user_story devolver User Story al Product Backlog
+        """
+        print("\nProbando devolver User Story al Product Backlog")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.planificador = Miembro.objects.get(pk=4)
+        sprint.save()
+        request_data = {
+            "sprint_backlog": 1
+        }
+        response = self.client.post("/api/sprint-planning/2/devolver_user_story/", request_data)
+        self.assertEquals(response.status_code, 200)
+        sprint_backlog = SprintBacklog.objects.filter(sprint_id=2, user_story_id=2)
+        self.assertEquals(len(sprint_backlog), 0)
+        ProductBacklog.objects.get(pk=2).delete()
+        product_backlog = ProductBacklog.objects.filter(user_story_id=2, proyecto_id=3)
+        self.assertEquals(len(product_backlog), 1)
+
+    def test_planificar_us_existente(self):
+        """
+        test_planificar_us_existente Prueba Planificar un User Story que ya planificó anteriormente
+        """
+        print("\nProbando Planificar un User Story que ya planificó anteriormente")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "user_story": 2,
+            "horas_estimadas": 5,
+            "desarrollador": 2
+        }
+        sprint = Sprint.objects.get(pk=2)
+        sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
+        response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
+        self.assertEquals(response.status_code, 400)

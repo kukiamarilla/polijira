@@ -48,8 +48,8 @@
         <SidebarProyectoItem
           icono="clock"
           texto="Estimaciones Pend."
-          to=""
-          :active="current == ''"
+          :to="`/proyectos/${proyecto.id}/estimaciones-pendientes`"
+          :active="current == 'estimacion'"
           v-if="true"
         />
       </div>

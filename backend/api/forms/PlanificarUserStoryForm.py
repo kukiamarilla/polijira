@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from backend.api.models import UserStory, Miembro
+from backend.api.models import MiembroSprint, UserStory
 
 
 class PlanificarUserStoryForm(forms.Form):
@@ -45,7 +45,7 @@ class PlanificarUserStoryForm(forms.Form):
             id = cleaned_data.get("desarrollador")
             if id is None:
                 raise ValidationError("Hubo problemas para recibir el Desarrollador")
-            Miembro.objects.get(pk=id)
+            MiembroSprint.objects.get(pk=id)
             return id
-        except Miembro.DoesNotExist:
+        except MiembroSprint.DoesNotExist:
             raise ValidationError("No se encontró un Miembro de Sprint en la base de datos")
