@@ -38,6 +38,14 @@ class Sprint(models.Model):
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints", null=True)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
 
+    class NotAbleFinalizarSprintPlanning(Exception):
+        """
+        NotAbleFinalizarSprintPlanning 
+        Excepción que se lanza cuando se intenta finalizar la planificación 
+        un Sprint que tiene user stories no estimados completamente.
+        """
+        pass
+
     @staticmethod
     def create(fecha_inicio=None, fecha_fin=None, proyecto=None):
         """
@@ -88,6 +96,21 @@ class Sprint(models.Model):
         self.planificador = planificador
         self.save()
 
+    def finalizar_sprint_planning(self):
+        """
+        finalizar_sprint_planning Finalizar el Sprint Planning
+        """
+        self.estado_sprint_planning = "F"
+
+        uss = self.sprint_backlogs.all()
+        if not uss:
+            raise self.NotAbleFinalizarSprintPlanning("No se puede finalizar un Sprint Planning sin User Stories")
+        uss = self.sprint_backlogs.filter(estado_estimacion="p")
+        if uss:
+            raise self.NotAbleFinalizarSprintPlanning(
+                "No se puede finalizar un Sprint Planning con User Stories pendientes de estimación")
+        self.save()
+
     @staticmethod
     def se_solapa(proyecto=None, fecha_inicio=None, fecha_fin=None):
         sprints = Sprint.objects.filter(proyecto=proyecto).exclude(estado="F")
@@ -98,15 +121,6 @@ class Sprint(models.Model):
                 return True
         return False
 
-    def planificar(self, user_story=None, horas_estimadas=None, desarrollador=None, sprint_backlog_handler=None,
-                   product_backlog_handler=None, registro_handler=None, planificador=None
-                   ):
-        product_backlog_handler(user_story)
-        user_story.update(
-            horas_estimadas=horas_estimadas,
-            desarrollador=desarrollador,
-            estado_estimacion="p",
-            registro_handler=registro_handler,
-            autor=planificador
-        )
-        sprint_backlog_handler(self, user_story)
+    def asignar_planificador(self, planificador):
+        self.planificador = planificador
+        self.save()

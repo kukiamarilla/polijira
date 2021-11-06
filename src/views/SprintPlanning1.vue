@@ -4,8 +4,11 @@
     <div class="d-flex">
       <SidebarProyecto current="miembros" :proyecto="proyecto" />
       <div class="container shadow">
-        <div class="d-flex header">
-          <h2>Miembros de {{ proyecto.nombre }}</h2>
+        <div class="header">
+          <h2>Sprint Planning</h2>
+          <br />
+          <h4>Paso 1: Elegir miembros de Sprint</h4>
+          <br /><br /><br />
         </div>
         <Table height="400px">
           <TableHeader>
@@ -24,12 +27,25 @@
                 {{ miembro.rol.nombre }}
               </Td>
               <Td width="20%">
-                <Checkbox v-model="miembro.included" @input="miembro.included ? agregarMiembro(miembro) : eliminarMiembro(miembro)"/> 
+                <Checkbox
+                  v-model="miembro.included"
+                  @input="
+                    miembro.included
+                      ? agregarMiembro(miembro)
+                      : eliminarMiembro(miembro)
+                  "
+                />
               </Td>
             </Tr>
           </TableBody>
         </Table>
-        <div><span class="highlight">Capacidad del sprint:</span> {{capacidad}} hs.</div>
+        <div class="d-flex justify-content-space-between align-items-center">
+          <div>
+            <span class="highlight">Capacidad del sprint:</span>
+            {{ capacidad }} hs.
+          </div>
+          <Boton texto="Siguiente" @click="siguiente" tema="primary" />
+        </div>
       </div>
     </div>
   </div>
@@ -45,6 +61,7 @@ import proyectoService from "@/services/proyectoService";
 import Alert from "@/helpers/alert";
 import { mapGetters, mapState } from "vuex";
 import Checkbox from "@/components/Checkbox";
+import Boton from "@/components/Boton";
 
 export default {
   components: {
@@ -56,13 +73,23 @@ export default {
     Th,
     Tr,
     Td,
-    Checkbox
+    Checkbox,
+    Boton,
   },
   created() {},
   mounted() {
     this.load();
   },
   computed: {
+    capacidad() {
+      let capacidad = 0;
+      this.miembrosSprint.forEach((ms) => {
+        capacidad += this.capacidadPorMiembro(
+          this.miembros.find((miembro) => miembro.id == ms.miembro_proyecto.id)
+        );
+      });
+      return capacidad;
+    },
     ...mapGetters({
       hasPermission: "auth/hasPermission",
       hasPermissions: "auth/hasPermissions",
@@ -74,13 +101,6 @@ export default {
     ...mapState({
       me: (state) => state.auth.me,
       meProyecto: (state) => state.proyecto.me,
-      capacidad() {
-        let capacidad = 0;
-        this.miembrosSprint.forEach(ms => {
-          capacidad += this.capacidadPorMiembro(this.miembros.find(miembro => miembro.id == ms.miembro_proyecto))
-        });
-        return capacidad
-      }
     }),
   },
   data() {
@@ -89,7 +109,7 @@ export default {
         nombre: "",
       },
       sprint: {
-        planificador: 0
+        planificador: 0,
       },
       miembros: [],
       miembrosSprint: [],
@@ -111,38 +131,55 @@ export default {
   },
   methods: {
     load() {
-      proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
+      const idProyecto = this.$route.params["id"];
+      const idSprint = this.$route.params["idSprint"];
+      proyectoService.retrieve(idProyecto).then((proyecto) => {
         this.proyecto = proyecto;
       });
-      sprintService.retrieve(this.$route.params["idSprint"]).then((sprint) => {
+      sprintService.retrieve(idSprint).then((sprint) => {
         this.sprint = sprint;
-        if(!sprint.planificador) {
-          this.$router.back()
+        if (!sprint.estado_planificacion == "I") this.$router.back();
+        if (sprint.planificador != this.meProyecto.id) this.$router.back();
+        const paso = localStorage.getItem("sprint-planning-paso");
+        if (![null, "1"].includes(paso)){
+          this.$router.push(
+            `/proyectos/${idProyecto}/sprint-planning/${idSprint}/paso-${paso}`
+          );
           return
         }
-        if(sprint.planificador != this.meProyecto.id)
-          this.$router.back()
+        localStorage.setItem("sprint-planning-paso", 1);
       });
-      sprintService.miembros(this.$route.params["idSprint"]).then((miembrosSprint) => {
-        this.miembrosSprint = miembrosSprint;
-        miembroService.list(this.$route.params["id"]).then((miembros) => {
-          miembros = miembros.map(miembro => ({...miembro, included: miembrosSprint.map(x=>x.miembro_proyecto).includes(miembro.id)}));
+      sprintService.miembros(idSprint).then((miembrosSprint) => {
+        miembroService.list(idProyecto).then((miembros) => {
+          miembros = miembros.map((miembro) => ({
+            ...miembro,
+            included: miembrosSprint
+              .map((x) => x.miembro_proyecto.id)
+              .includes(miembro.id),
+          }));
+          this.miembrosSprint = miembrosSprint;
           this.miembros = miembros;
         });
       });
     },
     agregarMiembro(miembro) {
-      sprintService.agregarMiembro(this.sprint.id, {miembro: miembro.id}).then(() => {
-        this.load();
-        Alert.success("Se ha agregado el miembro al sprint");
-      });
+      sprintService
+        .agregarMiembro(this.sprint.id, { miembro: miembro.id })
+        .then(() => {
+          this.load();
+          Alert.success("Se ha agregado el miembro al sprint");
+        });
     },
     eliminarMiembro(miembro) {
-      miembro = this.miembrosSprint.find(ms => ms.miembro_proyecto == miembro.id)
-      sprintService.eliminarMiembro(this.sprint.id, {miembro_sprint: miembro.id}).then(() => {
-        this.load();
-        Alert.success("Se ha eliminado el miembro");
-      });
+      miembro = this.miembrosSprint.find(
+        (ms) => ms.miembro_proyecto.id == miembro.id
+      );
+      sprintService
+        .eliminarMiembro(this.sprint.id, { miembro_sprint: miembro.id })
+        .then(() => {
+          this.load();
+          Alert.success("Se ha eliminado el miembro");
+        });
     },
     horarioToArray(horario) {
       return [
@@ -153,18 +190,23 @@ export default {
         horario.jueves,
         horario.viernes,
         horario.sabado,
-      ]
+      ];
     },
     capacidadPorMiembro(miembro) {
-      const ini = new Date(this.sprint.fecha_inicio).getTime()
-      const fin = new Date(this.sprint.fecha_fin).getTime()
+      const ini = new Date(this.sprint.fecha_inicio).getTime();
+      const fin = new Date(this.sprint.fecha_fin).getTime();
       let capacidad = 0;
-      let horario = this.horarioToArray(miembro.horario)
-      for (let curr = ini; curr <= fin; curr += 1000*60*60*24) {
-        capacidad += horario[(new Date(curr)).getDay()]
+      let horario = this.horarioToArray(miembro.horario);
+      for (let curr = ini; curr <= fin; curr += 1000 * 60 * 60 * 24) {
+        capacidad += horario[new Date(curr).getDay()];
       }
       return capacidad;
-    }
+    },
+    siguiente() {
+      this.$router.push(
+        `/proyectos/${this.$route.params["id"]}/sprint-planning/${this.$route.params["idSprint"]}/paso-2`
+      );
+    },
   },
 };
 </script>

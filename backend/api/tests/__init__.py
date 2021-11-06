@@ -10,3 +10,4 @@ from .HorarioTestCase import HorarioTestCase
 from .UserStoryTestCase import UserStoryTestCase
 from .SprintTestCase import SprintTestCase
 from .SprintPlanningTestCase import SprintPlanningTestCase
+from .SprintBacklogTestCase import SprintBacklogTestCase
