@@ -1,5 +1,5 @@
 <template>
-  <div class="user-story" draggable="true" @dragstart="startDrag" @dragover.prevent @click="verSprintBacklog">
+  <div class="user-story" v-show="!hide" draggable="true" @dragstart="startDrag" @dragover.prevent @click="verSprintBacklog" @dragend="dropped">
     <div class="d-flex top">
       <div class="title">
         <span class="highlight" >{{userStory.user_story.nombre}}</span>
@@ -21,14 +21,18 @@ import Icon from "@/components/Icon";
 
 export default {
   props: ["userStory"],
+  data() {
+    return {
+      hide: false
+    };
+  },
   components: {
     Icon,
   },
   methods: {
     startDrag(evt) {
-      const el = evt.target;
       setTimeout(() => {
-        el.style.display = "none"
+        this.hide = true;
       }, 0)
       evt.dataTransfer.setData("userStory", this.userStory.id)
       evt.dataTransfer.effectAllowed = 'move'
@@ -36,6 +40,12 @@ export default {
     },
     verSprintBacklog() {
       this.verUserStory = this.userStory;
+    },
+    dropped() {
+      this.$emit("dropped")
+      setTimeout(() => {
+        this.hide = false;
+      }, 500)
     }
   }
 }
