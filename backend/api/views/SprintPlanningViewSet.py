@@ -1,3 +1,4 @@
+from re import split
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -269,12 +270,20 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = UserStory.objects.get(pk=request.data.get("user_story"))
+            sprint_backlog = SprintBacklog.objects.filter(
+                sprint=sprint,
+                user_story=user_story
+            )
+            if not len(sprint_backlog) == 0:
+                response = {
+                    "message": "Este User Story ya se planificó",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             user_story.planificar(
                 sprint=sprint,
                 horas_estimadas=request.data.get("horas_estimadas"),
-                desarrollador=MiembroSprint.objects.get(
-                    miembro_proyecto_id=request.data.get("desarrollador"), sprint=sprint
-                ),
+                desarrollador=MiembroSprint.objects.get(pk=request.data.get("desarrollador")),
                 planificador=miembro,
                 sprint_backlog_handler=SprintBacklog.create,
                 product_backlog_handler=ProductBacklog.eliminar_user_story
@@ -306,3 +315,98 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @transaction.atomic
+    @action(detail=True, methods=["POST"])
+    def devolver_user_story(self, request, pk=None):
+        """
+        devolver_user_story Pasa el User Story del Sprint Backlog al Product Backlog
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, optional): Primary Key del Sprint
+        """
+        try:
+
+            usuario = Usuario.objects.get(user=request.user)
+            sprint = Sprint.objects.get(pk=pk)
+            miembro = Miembro.objects.get(
+                usuario=usuario,
+                proyecto=sprint.proyecto
+            )
+            if not sprint.planificador == miembro:
+                response = {
+                    "message": "Usted no es planificador de este Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprint_backlog = SprintBacklog.objects.get(pk=request.data.get("sprint_backlog"))
+            sprint_backlog.devolver_al_product_backlog(
+                product_backlog_handler=ProductBacklog.almacenar_user_story
+            )
+            response = {
+                "message": "¡¡¡¡User Story movido al Product Backlog exitosamente!!!!"
+            }
+            return Response(response, status=status.HTTP_200_OK)
+
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except SprintBacklog.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint Backlog",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["POST"])
+    def finalizar(self, request, pk=None):
+        """
+        finalizar Finaliza el Sprint Planning
+
+        Returns:
+            JSON: Metadatos del Sprint
+        """
+        try:
+            sprint = Sprint.objects.get(pk=pk)
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(
+                usuario=usuario,
+                proyecto=sprint.proyecto
+            )
+            if not sprint.planificador == miembro:
+                response = {
+                    "message": "Usted no es planificador de este Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not sprint.estado_sprint_planning == "I":
+                response = {
+                    "message": "No se inició la Planificación de este Sprint",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprint.finalizar_sprint_planning()
+            serializer = SprintSerializer(sprint, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Sprint.NotAbleFinalizarSprintPlanning:
+            response = {
+                "message": "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados",
+                "error": "bad_request"
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

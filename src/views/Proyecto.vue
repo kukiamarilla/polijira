@@ -37,6 +37,7 @@
 
 <script>
 import proyectoService from "@/services/proyectoService";
+import sprintService from "@/services/sprintService";
 import Boton from "@/components/Boton";
 import Navbar from "@/components/Navbar";
 import Alert from "@/helpers/alert";
@@ -65,6 +66,13 @@ export default {
         },
       },
       accesosDirectos: [],
+      sprintActivo: {
+        id: 0,
+        nombre: "",
+        fecha_inicio: "",
+        fecha_fin: "",
+        estado: "",
+      },
     };
   },
   computed: {
@@ -92,6 +100,9 @@ export default {
       proyectoService.retrieve(this.$route.params["id"]).then((proyecto) => {
         this.proyecto = proyecto;
         this.cargarAccesosDirectos();
+      });
+      sprintService.list(this.$route.params["id"]).then((sprints) => {
+        this.sprintActivo = sprints.find((sprint) => sprint.estado == 'A');
       });
     },
     cargarAccesosDirectos() {
@@ -131,13 +142,13 @@ export default {
           link: `/proyectos/${id}/sprints`,
           tienePermiso: true,
         },
-        // {
-        //   titulo: "Sprint Activo",
-        //   icono: "flag",
-        //   link: "",
-        //   resaltado: true,
-        //   tienePermiso: true,
-        // },
+        {
+          titulo: "Sprint Activo",
+          icono: "flag",
+          link: `/proyectos/${id}/sprints/${this.sprintActivo.id}`,
+          resaltado: true,
+          tienePermiso: this.sprintActivo.id != 0,
+        },
       ];
     },
   },

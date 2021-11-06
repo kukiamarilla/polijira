@@ -1,24 +1,32 @@
 <template>
-  <Modal v-model="show" height="550px" v-if="us">
+  <Modal v-model="show" height="550px" v-if="userStory">
     <h2 class="titulo">User Story</h2>
 
     <div class="datos-de-registro">
       <div class="fila">
         <p>
-          <span class="highlight">Título:</span> {{ us.registros[seleccionado].nombre_despues }}
+          <span class="highlight">Título:</span> {{ userStory.user_story.nombre }}
+        </p>
+        <p>
+          <span class="highlight">Horas Estimadas:</span> {{ userStory.horas_estimadas }}
+        </p>
+      </div>
+      <div class="fila">
+        <p>
+          <span class="highlight">Miembro Asignado:</span> {{ userStory.desarrollador.miembro_proyecto.usuario.nombre }}
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
-          {{ us.registros[seleccionado].prioridad_despues }}
+          {{ userStory.user_story.prioridad }}
         </p>
       </div>
       <div>
         <label class="highlight">Descripción:</label>
-        <p class="multiline">{{ us.registros[seleccionado].descripcion_despues }}</p>
+        <p class="multiline">{{ userStory.user_story.descripcion }}</p>
       </div>
     </div>
 
-    <h4>Versiones del User Story</h4>
+    <!-- <h4>Versiones del User Story</h4>
     <Table height="200px" v-if="us.registros.length > 0">
       <TableHeader>
         <Th class="pl-8" width="10%">ID</Th>
@@ -37,58 +45,45 @@
           <Td width="45%">{{ formatearFecha(registro.fecha) }}</Td>
         </Tr>
       </TableBody>
-    </Table>
+    </Table> -->
   </Modal>
 </template>
 
 <script>
 import Modal from "@/components/Modal";
-import Table from "@/components/Table/Table";
-import TableHeader from "@/components/Table/TableHeader";
-import TableBody from "@/components/Table/TableBody";
-import Th from "@/components/Table/Th";
-import Tr from "@/components/Table/Tr";
-import Td from "@/components/Table/Td";
+// import Table from "@/components/Table/Table";
+// import TableHeader from "@/components/Table/TableHeader";
+// import TableBody from "@/components/Table/TableBody";
+// import Th from "@/components/Table/Th";
+// import Tr from "@/components/Table/Tr";
+// import Td from "@/components/Table/Td";
 
 export default {
   components: {
     Modal,
-    Table,
-    TableHeader,
-    TableBody,
-    Th,
-    Tr,
-    Td,
+    // Table,
+    // TableHeader,
+    // TableBody,
+    // Th,
+    // Tr,
+    // Td,
   },
   props: ["value", "userStory"],
   computed: {
-    miembroAsignado() {
-      const dev = this.userStory.registros[this.seleccionado].desarrollador_despues;
-      return dev ? dev : "No asignado.";
-    },
-    horasAsignadas() {
-      const horas = this.userStory.registros[this.seleccionado].horas_estimadas_despues;
-      return horas ? horas : "No estimado.";
-    },
   },
   data() {
     return {
       seleccionado: 0,
       show: false,
-      us: null
     };
   },
   watch: {
     value() {
-      this.show = this.value != null;
-      this.verRegistro(0);
+      this.show = this.value;
     },
     show() {
       if (!this.show) this.$emit("input", null);
     },
-    userStory() {
-      this.us = this.userStory ? {...this.userStory, registros: this.userStory.registros.sort((a, b) => a.id < b.id)} : this.us;
-    }
   },
   methods: {
     formatearFecha(date) {
@@ -103,10 +98,7 @@ export default {
     fill(numero) {
       if (numero < 10) return `0${numero}`;
       else return numero;
-    },
-    verRegistro(registro) {
-      this.seleccionado = registro;
-    },
+    }
   },
 };
 </script>

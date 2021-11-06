@@ -57,3 +57,7 @@ class SprintBacklog(models.Model):
         self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
         self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
         self.save()
+
+    def devolver_al_product_backlog(self, product_backlog_handler=None):
+        product_backlog_handler(self.user_story, self.sprint.proyecto)
+        self.delete()

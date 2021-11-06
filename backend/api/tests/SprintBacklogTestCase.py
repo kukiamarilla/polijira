@@ -280,4 +280,4 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body.get("horas_estimadas"), int((h1 + request_data["horas_estimadas"])/2))
         self.assertEquals(body.get("estado_estimacion"), "C")
-        self.assertEquals(body.get("desarrollador"), 2)
+        self.assertEquals(body.get("desarrollador").get("id"), 2)
