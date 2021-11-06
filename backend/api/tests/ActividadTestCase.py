@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
-from backend.api.models import Actividad, Miembro, MiembroSprint, Proyecto, SprintBacklog, Sprint
+from backend.api.models import Actividad, Miembro, MiembroSprint, Proyecto, SprintBacklog, Sprint, Usuario
 
 
 class ActividadTestCase(TestCase):
@@ -297,7 +297,6 @@ class ActividadTestCase(TestCase):
         sprint.estado = "A"
         sprint.save()
         request_data = {
-            "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": -2
         }
@@ -305,3 +304,45 @@ class ActividadTestCase(TestCase):
         self.assertEquals(response.status_code, 422)
         body = response.json()
         self.assertEquals(body.get("errors").get("horas"), ["La hora no puede ser negativa"])
+
+    def test_validar_desarrollador_modificar_actividad(self):
+        """
+        test_validar_desarrollador_modificar_actividad
+        Prueba validar que el usuario sea desarrollador del User Story al Modificar Actividad
+        """
+        print("\nProbando validar que el usuario sea desarrollador del User Story al Modificar Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        actividad = Actividad.objects.get(pk=1)
+        actividad.desarrollador = Usuario.objects.get(pk=2)
+        actividad.save()
+        request_data = {
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.put("/api/actividades/1/", request_data, "application/json")
+        self.assertEquals(response.status_code, 403)
+        body = response.json()
+        self.assertEquals(body.get("message"), "Usted no es desarrollador de esta Actividad")
+        self.assertEquals(body.get("error"), "forbidden")
+
+    def test_validar_actividad_modificar_actividad(self):
+        """
+        test_validar_actividad_modificar_activida Prueba validar que exista la actividad en la BD al Modificar Actividad
+        """
+        print("\nProbando validar que exista la actividad en la BD al Modificar Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        request_data = {
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.put("/api/actividades/1000/", request_data, "application/json")
+        self.assertEquals(response.status_code, 404)
+        body = response.json()
+        self.assertEquals(body.get("message"), "No existe la Actividad")
+        self.assertEquals(body.get("error"), "not_found")
