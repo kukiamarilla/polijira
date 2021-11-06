@@ -12,7 +12,7 @@
         <Tr v-for="us in sprintBacklog" :key="us.id">
           <Td width="20%">{{us.user_story.id}}</Td>
           <Td width="20%">{{us.user_story.nombre}}</Td>
-          <Td width="20%">{{us.user_story.descripcion}}</Td>
+          <Td width="20%"><span class="cutted-text">{{us.user_story.descripcion}}</span></Td>
           <Td width="20%">{{us.user_story.prioridad}}</Td>
           <Td width="20%">
             <a
@@ -77,5 +77,11 @@ export default {
 </script>
 
 <style>
-
+span.cutted-text{
+  width: 80%;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 </style>
