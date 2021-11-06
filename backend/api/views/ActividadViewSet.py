@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from datetime import date
 from backend.api.models import Actividad, Miembro, MiembroSprint, SprintBacklog, Usuario, UserStory
 from backend.api.serializers import ActividadSerializer
+from backend.api.decorators import FormValidator
+from backend.api.forms import CreateActividadForm
 
 
 class ActividadViewSet(viewsets.ViewSet):
@@ -13,6 +15,7 @@ class ActividadViewSet(viewsets.ViewSet):
         viewsets (ViewSet): View del módulo Rest Framework
     """
 
+    @FormValidator(form=CreateActividadForm)
     def create(self, request):
         """
         create Registra una Actividad del Desarrollador
@@ -55,13 +58,6 @@ class ActividadViewSet(viewsets.ViewSet):
             )
             serializer = ActividadSerializer(actividad, many=False)
             return Response(serializer.data)
-
-        except SprintBacklog.DoesNotExist:
-            response = {
-                "message": "No existe el Sprint Backlog",
-                "error": "not_found"
-            }
-            return Response(response, status=status.HTTP_404_NOT_FOUND)
         except Miembro.DoesNotExist:
             response = {
                 "message": "Usted no es miembro de este Proyecto",

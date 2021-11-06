@@ -38,11 +38,11 @@ class ActividadTestCase(TestCase):
         """
         self.client = Client()
 
-    def test_registrar_actividad(self):
+    def test_crear_actividad(self):
         """
-        test_registrar_actividad Prueba registrar una Actividad
+        test_crear_actividad Prueba crear una Actividad
         """
-        print("\nProbando registrar una Actividad")
+        print("\nProbando crear una Actividad")
         self.client.login(
             username="testing",
             password="polijira2021"
@@ -56,6 +56,7 @@ class ActividadTestCase(TestCase):
             "horas": 2
         }
         response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 200)
         body = response.json()
         actividad = Actividad.objects.filter(**body)
         self.assertEquals(len(actividad), 1)
@@ -95,3 +96,70 @@ class ActividadTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         actividad = Actividad.objects.filter(pk=1)
         self.assertEquals(len(actividad), 0)
+
+    def test_error_validacion_crear_actividad_campos(self):
+        """
+        test_error_validacion_crear_actividad_campos
+        Prueba validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Crear Actividad
+        """
+        print("\nProbando validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Crear Actividad")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        response = self.client.post("/api/actividades/")
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body.get("errors").get("sprint_backlog"), ["No se pasó: Sprint Backlog"])
+        self.assertEquals(body.get("errors").get("descripcion"), ["No se pasó: Descripcion"])
+        self.assertEquals(body.get("errors").get("horas"), ["No se pasó: Horas"])
+
+    def test_error_validacion_crear_actividad_sprint_backlog(self):
+        """
+        test_error_validacion_crear_actividad_sprint_backlog
+        Prueba validar la existencia del campo Sprint Backlog en la BD
+        """
+        print("\nProbando validar la existencia del campo Sprint Backlog en la BD")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        request_data = {
+            "sprint_backlog": 1000,
+            "descripcion": "Holiii",
+            "horas": 2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body.get("errors").get("sprint_backlog"), [
+                          "No se encontró el Sprint Backlog en la base de datos"])
+
+    def test_error_validacion_crear_actividad_horas(self):
+        """
+        test_error_validacion_crear_actividad_horas
+        Prueba validar que el valor de la hora sea mayor a cero
+        """
+        print("\nProbando validar que el valor de la hora sea mayor a cero")
+        self.client.login(
+            username="testing",
+            password="polijira2021"
+        )
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado = "A"
+        sprint.save()
+        request_data = {
+            "sprint_backlog": 1,
+            "descripcion": "Holiii",
+            "horas": -2
+        }
+        response = self.client.post("/api/actividades/", request_data)
+        self.assertEquals(response.status_code, 422)
+        body = response.json()
+        self.assertEquals(body.get("errors").get("horas"), ["La hora no puede ser negativa"])
