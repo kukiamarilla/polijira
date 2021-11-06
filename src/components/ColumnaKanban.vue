@@ -33,7 +33,6 @@ export default {
     finishDrag(evt) {
       this.enter = false
       const us = evt.dataTransfer.getData("userStory")
-      console.log("Drag end", us)
       this.$emit("receive", us)
     },
   }

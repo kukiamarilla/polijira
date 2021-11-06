@@ -36,7 +36,6 @@ export default {
       }, 0)
       evt.dataTransfer.setData("userStory", this.userStory.id)
       evt.dataTransfer.effectAllowed = 'move'
-      console.log("Drag Start")
     },
     verSprintBacklog() {
       this.verUserStory = this.userStory;

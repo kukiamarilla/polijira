@@ -48,7 +48,6 @@ export default {
       this.userStorySelected = us;
     },
     moverUserStory(id, estado) {
-      console.log(id, estado)
       userStoryService.mover(id, estado).then(() => {
         this.load()
       })
