@@ -23,3 +23,4 @@ from .EliminarMiembroSprintForm import EliminarMiembroSprintForm
 from .ResponderEstimacionForm import ResponderEstimacionForm
 from .CreateActividadForm import CreateActividadForm
 from .UpdateActividadForm import UpdateActividadForm
+from .MoverUserStoryForm import MoverUserStoryForm

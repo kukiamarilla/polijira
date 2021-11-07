@@ -4,13 +4,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
-from backend.api.models.RegistroUserStory import RegistroUserStory
-from backend.api.serializers import SprintBacklogSerializer, SprintSerializer, MiembroSprintSerializer
+from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import PlanificarUserStoryForm, \
     CreateMiembroSprintForm, \
-    EliminarMiembroSprintForm, \
-    ResponderEstimacionForm
+    EliminarMiembroSprintForm
 
 
 class SprintPlanningViewSet(viewsets.ViewSet):
@@ -272,6 +270,16 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story = UserStory.objects.get(pk=request.data.get("user_story"))
+            sprint_backlog = SprintBacklog.objects.filter(
+                sprint=sprint,
+                user_story=user_story
+            )
+            if not len(sprint_backlog) == 0:
+                response = {
+                    "message": "Este User Story ya se planificó",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             user_story.planificar(
                 sprint=sprint,
                 horas_estimadas=request.data.get("horas_estimadas"),
@@ -359,3 +367,46 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["POST"])
+    def finalizar(self, request, pk=None):
+        """
+        finalizar Finaliza el Sprint Planning
+
+        Returns:
+            JSON: Metadatos del Sprint
+        """
+        try:
+            sprint = Sprint.objects.get(pk=pk)
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(
+                usuario=usuario,
+                proyecto=sprint.proyecto
+            )
+            if not sprint.planificador == miembro:
+                response = {
+                    "message": "Usted no es planificador de este Sprint",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not sprint.estado_sprint_planning == "I":
+                response = {
+                    "message": "No se inició la Planificación de este Sprint",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprint.finalizar_sprint_planning()
+            serializer = SprintSerializer(sprint, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Sprint.NotAbleFinalizarSprintPlanning:
+            response = {
+                "message": "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados",
+                "error": "bad_request"
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

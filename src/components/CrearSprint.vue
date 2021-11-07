@@ -53,7 +53,7 @@ export default {
     crearSprint() {
       sprintService.create(this.sprint).then(() => {
         this.$emit('input', false);
-        Alert.success("User Story creado exitosamente")
+        Alert.success("Sprint creado exitosamente")
       })
     }
   }

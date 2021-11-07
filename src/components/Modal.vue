@@ -32,7 +32,6 @@ export default {
 <style lang="scss" scoped>
 .modal {
   display: none;
-
   &.show {
     display: block;
   }
