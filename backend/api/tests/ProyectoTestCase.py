@@ -887,3 +887,15 @@ class ProyectoTestCase(TestCase):
         Permiso.objects.get(codigo="ver_proyectos").delete()
         response = self.client.get("/api/proyectos/1/")
         self.assertEquals(response.status_code, 403)
+
+    def test_obtener_estimaciones_pendientes(self):
+        """
+        test_obtener_estimaciones_pendientes
+        Prueba obtener las estimaciones pendientes del Proyecto
+        """
+        print("\nProbando obtener las estimaciones pendientes del Proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/proyectos/1/estimaciones_pendientes/")
+        body = response.json()
+        self.assertEqual(response.status_code, 200)
+        print(body)

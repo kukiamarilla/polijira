@@ -2,6 +2,8 @@ from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserS
 from django.test import TestCase, Client
 from datetime import date
 
+from backend.api.models.Review import Review
+
 
 class UserStoryTestCase(TestCase):
     """
@@ -20,7 +22,8 @@ class UserStoryTestCase(TestCase):
         "backend/api/fixtures/testing/horarios.json",
         "backend/api/fixtures/testing/user-stories.json",
         "backend/api/fixtures/testing/product-backlogs.json",
-        "backend/api/fixtures/testing/registro-user-stories.json"
+        "backend/api/fixtures/testing/registro-user-stories.json",
+        "backend/api/fixtures/testing/reviews.json"
     ]
 
     def setUp(self):
@@ -817,3 +820,58 @@ class UserStoryTestCase(TestCase):
         body = response.json()
         self.assertEquals(body["permission_required"], ["ver_user_stories"])
         self.assertEquals(body["error"], "forbidden")
+
+    def test_listar_reviews_de_un_user_story(self):
+        """
+        test_listar_reviews_de_un_user_story
+        Prueba listar los reviews de un user story
+        """
+        print("\nProbando listar todos los reviews de un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEqual(len(body), Review.objects.filter(user_story=user_story).count())
+
+    def test_listar_reviews_de_un_user_story_sin_permiso(self):
+        """
+        test_listar_reviews_de_un_user_story_sin_permiso
+        Prueba listar los reviews de un user story sin permiso
+        """
+        print("\nProbando listar todos los reviews de un user story sin permiso.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEqual(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEqual(body["permission_required"], ["ver_user_stories"])
+
+    def test_listar_reviews_de_un_user_story_inexistente(self):
+        """
+        test_listar_reviews_de_un_user_story_inexistente
+        Prueba listar los reviews de un user story inexistente
+        """
+        print("\nProbando listar todos los reviews de un user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/user-stories/99/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEqual(body["message"], "No existe el User Story")
+        self.assertEqual(body["error"], "not_found")
+
+    def test_listar_reviews_de_un_user_story_sin_ser_miembro(self):
+        """
+        test_listar_reviews_de_un_user_story_sin_ser_miembro
+        Prueba listar los reviews de un user story sin ser miembro
+        """
+        print("\nProbando listar todos los reviews de un user story sin ser miembro.")
+        self.client.login(username="user_test", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEqual(body["error"], "forbidden")
