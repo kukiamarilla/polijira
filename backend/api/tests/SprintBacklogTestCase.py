@@ -1,16 +1,11 @@
-from datetime import date
 from django.test import TestCase
 from django.test.client import Client
-from backend.api.models import Permiso, \
-    PermisoProyecto, \
-    ProductBacklog,\
+from backend.api.models import ProductBacklog,\
     Sprint,\
     Miembro,\
     SprintBacklog,\
     UserStory,\
-    MiembroSprint,\
-    Proyecto, \
-    RegistroUserStory
+    MiembroSprint
 
 
 class SprintBacklogTestCase(TestCase):

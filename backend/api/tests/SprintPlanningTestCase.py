@@ -1,4 +1,3 @@
-from datetime import date
 from django.test import TestCase, Client
 from backend.api.models import Permiso, \
     PermisoProyecto, \
@@ -6,10 +5,7 @@ from backend.api.models import Permiso, \
     Sprint,\
     Miembro,\
     SprintBacklog,\
-    UserStory,\
-    MiembroSprint,\
-    Proyecto
-from backend.api.models.RegistroUserStory import RegistroUserStory
+    MiembroSprint
 
 
 class SprintPlanningTestCase(TestCase):
