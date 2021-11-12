@@ -17,3 +17,4 @@ from .MiembroSprintSerializer import MiembroSprintSerializer
 from .ActividadSerializer import ActividadSerializer
 from .SprintBacklogSerializer import SprintBacklogSerializer
 from .ProductBacklogSerializer import ProductBacklogSerializer
+from .BurndownChartSerializer import BurndownChartSerializer
