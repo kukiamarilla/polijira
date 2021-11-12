@@ -95,3 +95,6 @@ class Proyecto(models.Model):
         """
         self.estado = 'C'
         self.save()
+
+    def tiene_sprint_activo(self):
+        return False if len(self.sprints.filter(estado="A")) == 0 else True

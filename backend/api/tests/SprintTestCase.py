@@ -688,13 +688,13 @@ class SprintTestCase(TestCase):
         """
         print("\nProbando activar un sprint.")
         self.client.login(username="testing", password="polijira2021")
-        sprint = Sprint.objects.get(pk=2)
-        sprint.estado_sprint_planning = 'F'
+        sprint = Sprint.objects.get(pk=1)
+        sprint.estado = "P"
         sprint.save()
         response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
-        sprint = Sprint.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=1)
         self.assertEquals(body["id"], sprint.pk)
         self.assertEquals(body["estado"], sprint.estado)
         self.assertEquals(body["estado_sprint_planning"], sprint.estado_sprint_planning)
@@ -790,3 +790,19 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
         self.assertEquals(body["error"], "forbidden")
+
+    def test_activar_sprint_con_proyecto_con_sprint_activo(self):
+        """
+        test_activar_sprint_con_proyecto_con_sprint_activo
+        Prueba activar un Sprint de un Proyecto que ya posee un Sprint Activo
+        """
+        print("\nProbando activar un Sprint de un Proyecto que ya posee un Sprint Activo")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        response = self.client.post("/api/sprints/2/activar/")
+        self.assertEquals(response.status_code, 400)
+        body = response.json()
+        self.assertEquals(body.get("message"), "No puede haber mas de un Sprint Activo")
+        self.assertEquals(body.get("error"), "bad_request")
