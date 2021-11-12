@@ -15,4 +15,3 @@ from .SprintBacklog import SprintBacklog
 from .MiembroSprint import MiembroSprint
 from .Actividad import Actividad
 from .Review import Review
-from .BurndownChart import BurndownChart
