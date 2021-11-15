@@ -13,7 +13,6 @@ class ActividadTestCase(TestCase):
 
     fixtures = [
         "backend/api/fixtures/testing/auth.json",
-
         "backend/api/fixtures/testing/usuarios.json",
         "backend/api/fixtures/testing/permisos.json",
         "backend/api/fixtures/testing/roles.json",
@@ -51,6 +50,7 @@ class ActividadTestCase(TestCase):
         sprint.estado = "A"
         sprint.save()
         request_data = {
+            "titulo": "Actividad",
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
@@ -58,7 +58,7 @@ class ActividadTestCase(TestCase):
         response = self.client.post("/api/actividades/", request_data)
         self.assertEquals(response.status_code, 200)
         body = response.json()
-        actividad = Actividad.objects.filter(**body)
+        actividad = Actividad.objects.filter(**request_data)
         self.assertEquals(len(actividad), 1)
 
     def test_modificar_actividad(self):
@@ -75,12 +75,13 @@ class ActividadTestCase(TestCase):
         sprint.estado = "A"
         sprint.save()
         request_data = {
+            "titulo": "Actividad",
             "descripcion": "Holiii :)",
             "horas": 3
         }
         response = self.client.put("/api/actividades/1/", request_data, content_type="application/json")
         body = response.json()
-        actividad = Actividad.objects.filter(**body)
+        actividad = Actividad.objects.filter(**request_data)
         self.assertEquals(len(actividad), 1)
 
     def test_eliminar_actividad(self):
@@ -179,6 +180,7 @@ class ActividadTestCase(TestCase):
         sprint.proyecto = Proyecto.objects.get(pk=4)
         sprint.save()
         request_data = {
+            "titulo": "Actividad",
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
@@ -206,6 +208,7 @@ class ActividadTestCase(TestCase):
         miembro_sprint.miembro_proyecto = Miembro.objects.get(pk=2)
         miembro_sprint.save()
         request_data = {
+            "titulo": "Actividad",
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
@@ -233,6 +236,7 @@ class ActividadTestCase(TestCase):
         sprint_backlog.desarrollador = MiembroSprint.objects.get(pk=1)
         sprint_backlog.save()
         request_data = {
+            "titulo": "Actividad",
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
@@ -254,6 +258,7 @@ class ActividadTestCase(TestCase):
             password="polijira2021"
         )
         request_data = {
+            "titulo": "Actividad",
             "sprint_backlog": 1,
             "descripcion": "Holiii",
             "horas": 2
@@ -319,6 +324,7 @@ class ActividadTestCase(TestCase):
         actividad.desarrollador = Usuario.objects.get(pk=2)
         actividad.save()
         request_data = {
+            "titulo": "Actividad",
             "descripcion": "Holiii",
             "horas": 2
         }
@@ -338,6 +344,7 @@ class ActividadTestCase(TestCase):
             password="polijira2021"
         )
         request_data = {
+            "titulo": "Actividad",
             "descripcion": "Holiii",
             "horas": 2
         }
