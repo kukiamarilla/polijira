@@ -5,9 +5,7 @@ from backend.api.models import Permiso, \
     Sprint,\
     Miembro,\
     SprintBacklog,\
-    MiembroSprint, \
-    UserStory, \
-    RegistroUserStory
+    MiembroSprint
 
 
 class SprintPlanningTestCase(TestCase):
@@ -536,7 +534,8 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            body["message"], "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
+            body["message"],
+            "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
         self.assertEqual(body["error"], "bad_request")
 
     def test_finalizar_sprint_planning_con_user_stories_pendientes_de_estimacion(self):
@@ -560,5 +559,6 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            body["message"], "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
+            body["message"],
+            "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
         self.assertEqual(body["error"], "bad_request")
