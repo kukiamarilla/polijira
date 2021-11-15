@@ -1,7 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from datetime import date
-from backend.api.models import Actividad, Miembro, MiembroSprint, SprintBacklog, Usuario, UserStory
+from backend.api.models import Actividad, Miembro, MiembroSprint, SprintBacklog, Usuario
 from backend.api.serializers import ActividadSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateActividadForm, UpdateActividadForm

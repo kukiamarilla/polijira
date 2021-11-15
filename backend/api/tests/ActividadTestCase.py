@@ -57,7 +57,6 @@ class ActividadTestCase(TestCase):
         }
         response = self.client.post("/api/actividades/", request_data)
         self.assertEquals(response.status_code, 200)
-        body = response.json()
         actividad = Actividad.objects.filter(**request_data)
         self.assertEquals(len(actividad), 1)
 
@@ -70,7 +69,6 @@ class ActividadTestCase(TestCase):
             username="testing",
             password="polijira2021"
         )
-        sprint_backlog = SprintBacklog.objects.get(pk=1)
         sprint = Sprint.objects.get(pk=2)
         sprint.estado = "A"
         sprint.save()
@@ -79,8 +77,7 @@ class ActividadTestCase(TestCase):
             "descripcion": "Holiii :)",
             "horas": 3
         }
-        response = self.client.put("/api/actividades/1/", request_data, content_type="application/json")
-        body = response.json()
+        self.client.put("/api/actividades/1/", request_data, content_type="application/json")
         actividad = Actividad.objects.filter(**request_data)
         self.assertEquals(len(actividad), 1)
 
@@ -103,7 +100,7 @@ class ActividadTestCase(TestCase):
         test_error_validacion_crear_actividad_campos
         Prueba validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Crear Actividad
         """
-        print("\nProbando validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Crear Actividad")
+        print("\nProbando validar la existencia de: Sprint Backlog, Descripcion y Horas. En Crear Actividad")
         self.client.login(
             username="testing",
             password="polijira2021"
@@ -274,7 +271,7 @@ class ActividadTestCase(TestCase):
         test_error_validacion_modificar_actividad_campos
         Prueba validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Modificar Actividad
         """
-        print("\nProbando validar la existencia de los campos: Sprint Backlog, Descripcion y Horas. En Modificar Actividad")
+        print("\nProbando validar la existencia de: Sprint Backlog, Descripcion y Horas. En Modificar Actividad")
         self.client.login(
             username="testing",
             password="polijira2021"
@@ -336,7 +333,8 @@ class ActividadTestCase(TestCase):
 
     def test_validar_actividad_modificar_actividad(self):
         """
-        test_validar_actividad_modificar_activida Prueba validar que exista la actividad en la BD al Modificar Actividad
+        test_validar_actividad_modificar_activida
+        Prueba validar que exista la actividad en la BD al Modificar Actividad
         """
         print("\nProbando validar que exista la actividad en la BD al Modificar Actividad")
         self.client.login(
