@@ -8,6 +8,11 @@ class UpdateActividadForm(forms.Form):
     Args:
         forms (Form): Form del módulo django
     """
+    titulo = forms.CharField(
+        error_messages={
+            "required": "No se pasó: Título"
+        }
+    )
     descripcion = forms.CharField(
         error_messages={
             "required": "No se pasó: Descripcion"

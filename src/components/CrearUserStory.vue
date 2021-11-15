@@ -71,7 +71,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
   .justify-content-flex-end{
     justify-content: flex-end;
   }

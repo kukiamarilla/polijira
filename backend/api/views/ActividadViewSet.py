@@ -50,6 +50,7 @@ class ActividadViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             actividad = Actividad.objects.create(
+                titulo=request.data.get("titulo"),
                 descripcion=request.data.get("descripcion"),
                 horas=request.data.get("horas"),
                 fecha_creacion=date.today(),
@@ -94,7 +95,8 @@ class ActividadViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             actividad.update(
                 horas=request.data.get("horas"),
-                descripcion=request.data.get("descripcion")
+                descripcion=request.data.get("descripcion"),
+                titulo=request.data.get("titulo")
             )
             serializer = ActividadSerializer(actividad)
             return Response(serializer.data)

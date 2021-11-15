@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from backend.api.decorators import FormValidator
 from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
 from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
-from backend.api.serializers import SprintBacklogSerializer
+from backend.api.serializers import SprintBacklogSerializer, ActividadSerializer
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
@@ -123,3 +123,26 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 "error": "unathorized"
             }
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(detail=True, methods=["GET"])
+    def actividades(self, request, pk=None):
+        """
+        actividades Devuelve las actividades de un user story
+
+        Args:
+            request (Any): request que se solicita
+            pk (int, optional): Primary key. Defaults to None.
+
+        Returns:
+            JSON: Metadatos del SprintBacklog
+        """
+        try:
+            sprint_backlog = SprintBacklog.objects.get(pk=pk)
+            serializer = ActividadSerializer(sprint_backlog.actividades, many=True)
+            return Response(serializer.data)
+        except SprintBacklog.DoesNotExist:
+            response = {
+                "message": "SprintBacklog no existe",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)

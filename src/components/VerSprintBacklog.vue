@@ -34,7 +34,7 @@
         <Reviews/>
       </template>
       <template #actividades>
-        <Actividades/>
+        <Actividades :sprintBacklog="userStory"/>
       </template>
     </TabNavigation>
   </Modal>
