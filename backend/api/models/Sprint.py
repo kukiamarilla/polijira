@@ -40,8 +40,8 @@ class Sprint(models.Model):
 
     class NotAbleFinalizarSprintPlanning(Exception):
         """
-        NotAbleFinalizarSprintPlanning 
-        Excepción que se lanza cuando se intenta finalizar la planificación 
+        NotAbleFinalizarSprintPlanning
+        Excepción que se lanza cuando se intenta finalizar la planificación
         un Sprint que tiene user stories no estimados completamente.
         """
         pass

@@ -94,7 +94,15 @@ class UserStory(models.Model):
         self.product_backlog = False
         self.save()
 
-    def planificar(self, sprint=None, horas_estimadas=None, desarrollador=None, planificador=None, sprint_backlog_handler=None, product_backlog_handler=None):
+    def planificar(
+            self,
+            sprint=None,
+            horas_estimadas=None,
+            desarrollador=None,
+            planificador=None,
+            sprint_backlog_handler=None,
+            product_backlog_handler=None):
+
         sprint_backlog_handler(
             sprint=sprint,
             user_story=self,
