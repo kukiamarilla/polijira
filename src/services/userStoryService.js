@@ -12,5 +12,8 @@ export default {
     },
     delete(id) {
         return api.delete(`/user-stories/${id}/`).then(response => response.data)
+    },
+    mover(id, estado) {
+        return api.post(`/sprint-backlogs/${id}/mover/`, {"estado_kanban": estado}).then(response => response.data)
     }
 }
