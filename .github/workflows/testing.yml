@@ -23,7 +23,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9.6]
     env:
       FIREBASE_APP_ID: 1:594739410205:web:7e5ee43538410b60f3ddf4
       FIREBASE_PROJECT_ID: polijira-cc147
