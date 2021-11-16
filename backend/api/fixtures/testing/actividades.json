@@ -3,6 +3,7 @@
         "model": "api.actividad",
         "pk": 1,
         "fields": {
+            "titulo": "Actividad 1",
             "descripcion": "Wombo Combo",
             "horas": 3,
             "fecha_creacion": "2021-10-29",

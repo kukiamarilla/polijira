@@ -10,6 +10,11 @@ class CreateActividadForm(forms.Form):
     Args:
         forms (Form): Form del módulo django
     """
+    titulo = forms.CharField(
+        error_messages={
+            "required": "No se pasó: Título"
+        }
+    )
     sprint_backlog = forms.IntegerField(
         error_messages={
             "required": "No se pasó: Sprint Backlog"
@@ -22,6 +27,7 @@ class CreateActividadForm(forms.Form):
     )
     horas = forms.IntegerField(
         min_value=0,
+        required=True,
         error_messages={
             "required": "No se pasó: Horas",
             "min_value": "La hora no puede ser negativa"

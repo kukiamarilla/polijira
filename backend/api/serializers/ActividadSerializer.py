@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from backend.api.models import Actividad
+from backend.api.serializers.UsuarioSerializer import UsuarioSerializer
 
 
 class ActividadSerializer(serializers.ModelSerializer):
@@ -10,6 +11,8 @@ class ActividadSerializer(serializers.ModelSerializer):
         serializers (ModelSerializer): Serializer del módulo Rest Framework
     """
 
+    desarrollador = UsuarioSerializer(many=False, read_only=True)
+
     class Meta:
         """
          Metadatos de Actividad
@@ -17,8 +20,10 @@ class ActividadSerializer(serializers.ModelSerializer):
         model = Actividad
         fields = (
             "id",
+            "titulo",
             "descripcion",
             "horas",
             "fecha_creacion",
-            "sprint_backlog"
+            "sprint_backlog",
+            "desarrollador",
         )

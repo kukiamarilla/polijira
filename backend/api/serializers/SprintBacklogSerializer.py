@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from backend.api.models import SprintBacklog
-from backend.api.serializers import SprintSerializer, MiembroSprintSerializer, ActividadSerializer
+from backend.api.serializers import SprintSerializer, MiembroSprintSerializer, ActividadSerializer, UserStorySerializer
 
 
 class SprintBacklogSerializer(serializers.ModelSerializer):
@@ -13,6 +13,7 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
     sprint = SprintSerializer(many=False, read_only=True)
     desarrollador = MiembroSprintSerializer(many=False, read_only=True)
     actividades = ActividadSerializer(many=True, read_only=True)
+    user_story = UserStorySerializer(many=False, read_only=True)
 
     class Meta:
         """

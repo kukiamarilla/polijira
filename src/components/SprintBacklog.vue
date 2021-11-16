@@ -76,7 +76,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 span.cutted-text{
   width: 80%;
   display: block;
