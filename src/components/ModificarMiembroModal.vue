@@ -187,7 +187,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .form-group {
   margin-top: 24px;
 }

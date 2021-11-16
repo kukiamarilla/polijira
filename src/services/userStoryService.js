@@ -15,5 +15,17 @@ export default {
     },
     mover(id, estado) {
         return api.post(`/sprint-backlogs/${id}/mover/`, {"estado_kanban": estado}).then(response => response.data)
+    },
+    actividades(id) {
+        return api.get(`/sprint-backlogs/${id}/actividades/`).then(response => response.data)
+    },
+    registrarActividad(actividad) {
+        return api.post(`/actividades/`, actividad).then(response => response.data)
+    },
+    eliminarActividad(id) {
+        return api.delete(`/actividades/${id}/`,).then(response => response.data)
+    },
+    actualizarActividad(id, actividad) {
+        return api.put(`/actividades/${id}/`, actividad).then(response => response.data)
     }
 }

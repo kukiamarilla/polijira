@@ -5,15 +5,18 @@
     <div class="datos-de-registro">
       <div class="fila">
         <p>
-          <span class="highlight">Título:</span> {{ userStory.user_story.nombre }}
+          <span class="highlight">Título:</span>
+          {{ userStory.user_story.nombre }}
         </p>
         <p>
-          <span class="highlight">Horas Estimadas:</span> {{ userStory.horas_estimadas }}
+          <span class="highlight">Horas Estimadas:</span>
+          {{ userStory.horas_estimadas }}
         </p>
       </div>
       <div class="fila">
         <p>
-          <span class="highlight">Miembro Asignado:</span> {{ userStory.desarrollador.miembro_proyecto.usuario.nombre }}
+          <span class="highlight">Miembro Asignado:</span>
+          {{ userStory.desarrollador.miembro_proyecto.usuario.nombre }}
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
@@ -26,55 +29,44 @@
       </div>
     </div>
 
-    <!-- <h4>Versiones del User Story</h4>
-    <Table height="200px" v-if="us.registros.length > 0">
-      <TableHeader>
-        <Th class="pl-8" width="10%">ID</Th>
-        <Th width="45%">Autor</Th>
-        <Th width="45%">Fecha de creación</Th>
-      </TableHeader>
-      <TableBody>
-        <Tr
-          v-for="(registro, idx) in us.registros"
-          :class="{ seleccionado: seleccionado == idx }"
-          :key="registro.id"
-          @click.native="verRegistro(idx)"
-        >
-          <Td class="pl-8" width="10%">{{ registro.id }}</Td>
-          <Td width="45%">{{ registro.autor.usuario.nombre }}</Td>
-          <Td width="45%">{{ formatearFecha(registro.fecha) }}</Td>
-        </Tr>
-      </TableBody>
-    </Table> -->
+    <TabNavigation :tabs="tabs" default="reviews">
+      <template #reviews>
+        <Reviews/>
+      </template>
+      <template #actividades>
+        <Actividades :sprintBacklog="userStory"/>
+      </template>
+    </TabNavigation>
   </Modal>
 </template>
 
 <script>
 import Modal from "@/components/Modal";
-// import Table from "@/components/Table/Table";
-// import TableHeader from "@/components/Table/TableHeader";
-// import TableBody from "@/components/Table/TableBody";
-// import Th from "@/components/Table/Th";
-// import Tr from "@/components/Table/Tr";
-// import Td from "@/components/Table/Td";
+import TabNavigation from "@/components/TabNavigation";
+import Reviews from "@/components/Reviews";
+import Actividades from "@/components/Actividades";
 
 export default {
   components: {
     Modal,
-    // Table,
-    // TableHeader,
-    // TableBody,
-    // Th,
-    // Tr,
-    // Td,
+    TabNavigation,
+    Reviews,
+    Actividades
   },
   props: ["value", "userStory"],
-  computed: {
-  },
+  computed: {},
   data() {
     return {
-      seleccionado: 0,
-      show: false,
+      tabs: [
+        { 
+          name: "reviews", 
+          title: "Reviews" 
+        },
+        {
+          name: "actividades", 
+          title: "Actividades"
+        }
+      ],
     };
   },
   watch: {
@@ -98,7 +90,7 @@ export default {
     fill(numero) {
       if (numero < 10) return `0${numero}`;
       else return numero;
-    }
+    },
   },
 };
 </script>

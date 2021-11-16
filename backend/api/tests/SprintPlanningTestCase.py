@@ -4,7 +4,7 @@ from backend.api.models import Permiso, \
     Sprint,\
     Miembro,\
     SprintBacklog,\
-    ProductBacklog,\
+    ProductBacklog, \
     MiembroSprint
 
 
