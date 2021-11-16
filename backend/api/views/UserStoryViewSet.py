@@ -1,6 +1,6 @@
 from django.db import transaction
 from backend.api.forms import CreateUserStoryForm, UpdateUserStoryForm
-from backend.api.serializers import RegistroUserStorySerializer, UserStorySerializer
+from backend.api.serializers import RegistroUserStorySerializer, UserStorySerializer, ReviewSerializer
 from rest_framework.response import Response
 from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserStory, Usuario
 from rest_framework import viewsets, status
@@ -194,3 +194,38 @@ class UserStoryViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=["GET"])
+    def reviews(self, request, pk=None):
+        """
+        list
+        Lista todos los reviews
+
+        Args:
+            request (Any): request
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            user_story = UserStory.objects.get(pk=pk)
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto=user_story.proyecto)
+            if not miembro.tiene_permiso("ver_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            reviews = user_story.reviews.all()
+            serializer = ReviewSerializer(reviews, many=True)
+            return Response(serializer.data)
+        except UserStory.DoesNotExist:
+            response = {
+                "message": "No existe el User Story",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)

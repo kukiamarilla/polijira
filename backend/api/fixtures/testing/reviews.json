@@ -1,0 +1,22 @@
+[
+    {
+        "model": "api.review",
+        "pk": 1,
+        "fields": {
+            "user_story": 2,
+            "observacion": "Excelente user story",
+            "fecha_creacion": "2021-10-29",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.review",
+        "pk": 2,
+        "fields": {
+            "user_story": 2,
+            "observacion": "Corregir User Story",
+            "fecha_creacion": "2021-10-29",
+            "autor": 1
+        }
+    }
+]
