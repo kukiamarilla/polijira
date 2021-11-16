@@ -437,3 +437,128 @@ class SprintPlanningTestCase(TestCase):
         sprint.iniciar_sprint_planning(Miembro.objects.get(pk=4))
         response = self.client.post("/api/sprint-planning/2/planificar_user_story/", request_data)
         self.assertEquals(response.status_code, 400)
+
+    def test_finalizar_sprint_planning(self):
+        """
+        test_finalizar_sprint_planning
+        Prueba finalizar un sprint planning
+        """
+        print("\nProbando finalizar un sprint planning.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "C"
+        sprint_backlog.save()
+        miembro = Miembro.objects.get(pk=4)
+        sprint = sprint_backlog.sprint
+        sprint.planificador = miembro
+        sprint.estado_sprint_planning = "I"
+        sprint.save()
+        response = self.client.post("/api/sprint-planning/2/finalizar/")
+        body = response.json()
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint = sprint_backlog.sprint
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body["estado_sprint_planning"], sprint.estado_sprint_planning)
+        self.assertEqual(body["planificador"], sprint.planificador.pk)
+
+    def test_finalizar_sprint_planning_sin_ser_planificador(self):
+        """
+        test_finalizar_sprint_planning_sin_ser_planificador
+        Prueba finalizar un sprint planning sin ser planificador
+        """
+        print("\nProbando finalizar un sprint planning sin ser planificador.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "C"
+        sprint_backlog.save()
+        sprint = sprint_backlog.sprint
+        sprint.estado_sprint_planning = "I"
+        sprint.save()
+        response = self.client.post("/api/sprint-planning/2/finalizar/")
+        body = response.json()
+        sprint = sprint_backlog.sprint
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es planificador de este Sprint")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_finalizar_sprint_planning_con_estado_sprint_no_iniciado(self):
+        """
+        test_finalizar_sprint_planning_con_estado_sprint_no_iniciado
+        Prueba finalizar un sprint planning con estado de sprint no iniciado
+        """
+        print("\nProbando finalizar un sprint planning con estado de sprint no iniciado.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "C"
+        sprint_backlog.save()
+        miembro = Miembro.objects.get(pk=4)
+        sprint = sprint_backlog.sprint
+        sprint.planificador = miembro
+        sprint.save()
+        response = self.client.post("/api/sprint-planning/2/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(body["message"], "No se inició la Planificación de este Sprint")
+        self.assertEqual(body["error"], "bad_request")
+
+    def test_finalizar_sprint_planning_con_sprint_inexistente(self):
+        """
+        test_finalizar_sprint_planning_con_sprint_inexistente
+        Prueba finalizar un sprint planning con sprint inexistente
+        """
+        print("\nProbando finalizar un sprint planning con sprint inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprint-planning/99/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(body["message"], "No existe el Sprint")
+        self.assertEqual(body["error"], "not_found")
+
+    def test_finalizar_sprint_planning_sin_user_stories(self):
+        """
+        test_finalizar_sprint_planning_sin_user_stories
+        Prueba finalizar un sprint planning sin user stories
+        """
+        print("\nProbando finalizar un sprint planning sin user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "C"
+        sprint_backlog.save()
+        miembro = Miembro.objects.get(pk=4)
+        sprint = sprint_backlog.sprint
+        sprint.planificador = miembro
+        sprint.estado_sprint_planning = "I"
+        sprint.save()
+        SprintBacklog.objects.get(pk=1).delete()
+        response = self.client.post("/api/sprint-planning/2/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            body["message"],
+            "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
+        self.assertEqual(body["error"], "bad_request")
+
+    def test_finalizar_sprint_planning_con_user_stories_pendientes_de_estimacion(self):
+        """
+        test_finalizar_sprint_planning_con_user_stories_pendientes_de_estimacion
+        Prueba finalizar un sprint planning con user stories pendientes de estimación
+        """
+        print("\nProbando finalizar un sprint planning con user stories pendientes de estimación.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "C"
+        sprint_backlog.save()
+        miembro = Miembro.objects.get(pk=4)
+        sprint = sprint_backlog.sprint
+        sprint.planificador = miembro
+        sprint.estado_sprint_planning = "I"
+        sprint.save()
+        sprint_backlog.estado_estimacion = "p"
+        sprint_backlog.save()
+        response = self.client.post("/api/sprint-planning/2/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            body["message"],
+            "Deben haber User Stories dentro del Sprint Backlog y deben estar Completamente Estimados")
+        self.assertEqual(body["error"], "bad_request")

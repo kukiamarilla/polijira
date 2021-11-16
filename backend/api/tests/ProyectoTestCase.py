@@ -1,6 +1,6 @@
 import datetime
-from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso, PermisoProyecto
 from django.test import TestCase, Client
+from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso, PermisoProyecto, SprintBacklog
 
 
 class ProyectoTestCase(TestCase):
@@ -17,7 +17,13 @@ class ProyectoTestCase(TestCase):
         "backend/api/fixtures/testing/plantillas.json",
         "backend/api/fixtures/testing/rolesProyecto.json",
         "backend/api/fixtures/testing/miembros.json",
-        "backend/api/fixtures/testing/horarios.json"
+        "backend/api/fixtures/testing/horarios.json",
+        "backend/api/fixtures/testing/user-stories.json",
+        "backend/api/fixtures/testing/product-backlogs.json",
+        "backend/api/fixtures/testing/registro-user-stories.json",
+        "backend/api/fixtures/testing/sprints.json",
+        "backend/api/fixtures/testing/sprintbacklogs.json",
+        "backend/api/fixtures/testing/miembrosprints.json",
     ]
 
     def setUp(self):
@@ -895,7 +901,47 @@ class ProyectoTestCase(TestCase):
         """
         print("\nProbando obtener las estimaciones pendientes del Proyecto.")
         self.client.login(username="testing", password="polijira2021")
-        response = self.client.get("/api/proyectos/1/estimaciones_pendientes/")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "p"
+        sprint_backlog.save()
+        usuario = Usuario.objects.get(pk=1)
+        proyecto = Proyecto.objects.get(pk=3)
+        miembro = Miembro.objects.get(usuario=usuario, proyecto=proyecto)
+        us = SprintBacklog.objects.filter(estado_estimacion='p', desarrollador__miembro_proyecto=miembro)
+        response = self.client.get("/api/proyectos/" + str(proyecto.id) + "/estimaciones_pendientes/")
         body = response.json()
         self.assertEqual(response.status_code, 200)
-        print(body)
+        self.assertEqual(len(body), len(us))
+
+    def test_obtener_estimaciones_pendientes_sin_ser_miembro(self):
+        """
+        test_obtener_estimaciones_pendientes_sin_ser_miembro
+        Prueba obtener las estimaciones pendientes del Proyecto sin ser miembro
+        """
+        print("\nProbando obtener las estimaciones pendientes del Proyecto sin ser miembro.")
+        self.client.login(username="user_test", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "p"
+        sprint_backlog.save()
+        proyecto = Proyecto.objects.get(pk=3)
+        response = self.client.get("/api/proyectos/" + str(proyecto.id) + "/estimaciones_pendientes/")
+        body = response.json()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_obtener_estimaciones_pendientes_proyecto_inexistente(self):
+        """
+        test_obtener_estimaciones_pendientes_proyecto_inexistente
+        Prueba obtener las estimaciones pendientes de Proyecto inexistente
+        """
+        print("\nProbando obtener las estimaciones pendientes de Proyecto inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.estado_estimacion = "p"
+        sprint_backlog.save()
+        response = self.client.get("/api/proyectos/99/estimaciones_pendientes/")
+        body = response.json()
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(body["message"], "No existe el Proyecto")
+        self.assertEqual(body["error"], "not_found")
