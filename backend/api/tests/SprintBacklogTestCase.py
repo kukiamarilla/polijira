@@ -5,8 +5,7 @@ from backend.api.models import PermisoProyecto, \
     Miembro,\
     SprintBacklog,\
     UserStory,\
-    MiembroSprint, \
-    ProductBacklog
+    MiembroSprint
 
 
 class SprintBacklogTestCase(TestCase):
