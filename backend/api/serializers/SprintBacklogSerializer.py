@@ -23,6 +23,7 @@ class SprintBacklogSerializer(serializers.ModelSerializer):
             "id",
             "sprint",
             "user_story",
+            "estado_kanban",
             "horas_estimadas",
             "estado_estimacion",
             "desarrollador"

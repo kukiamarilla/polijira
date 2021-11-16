@@ -19,6 +19,7 @@ import SprintPlanning1 from "@/views/SprintPlanning1";
 import SprintPlanning2 from "@/views/SprintPlanning2";
 import SprintPlanning3 from "@/views/SprintPlanning3";
 import EstimacionesPendientes from "@/views/EstimacionesPendientes";
+import Sprint from "@/views/Sprint";
 
 import guest from "@/middleware/guest";
 import auth from "@/middleware/auth";
@@ -146,6 +147,14 @@ const router = new Router({
       path: "/proyectos/:id/estimaciones-pendientes",
       name: "Estimaciones Pendientes",
       component: EstimacionesPendientes,
+      meta: {
+        middleware: [auth, activated, proyecto],
+      },
+    },
+    {
+      path: "/proyectos/:id/sprints/:idSprint",
+      name: "Sprint",
+      component: Sprint,
       meta: {
         middleware: [auth, activated, proyecto],
       },

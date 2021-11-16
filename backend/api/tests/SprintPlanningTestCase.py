@@ -1,10 +1,10 @@
 from django.test import TestCase, Client
 from backend.api.models import Permiso, \
     PermisoProyecto, \
-    ProductBacklog,\
     Sprint,\
     Miembro,\
     SprintBacklog,\
+    ProductBacklog,\
     MiembroSprint
 
 

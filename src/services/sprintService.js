@@ -59,5 +59,8 @@ export default {
     return api
       .post(`/sprint-backlogs/${id}/responder_estimacion/`, payload)
       .then((response) => response.data);
+  },
+  activar(id) {
+      return api.post(`/sprints/${id}/activar/`).then(response => response.data)
   }
 };
