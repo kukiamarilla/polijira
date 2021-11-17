@@ -27,5 +27,11 @@ export default {
     },
     actualizarActividad(id, actividad) {
         return api.put(`/actividades/${id}/`, actividad).then(response => response.data)
+    },
+    lanzar(id) {
+        return api.post(`/user-stories/${id}/lanzar/`).then(response => response.data)
+    },
+    cancelar(id) {
+        return api.post(`/user-stories/${id}/cancelar/`).then(response => response.data)
     }
 }
