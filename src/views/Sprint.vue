@@ -20,7 +20,7 @@
                 <SprintBacklog/>
             </template>
             <template #burndown-chart>
-                Burndown Chart
+                <BurndownChart :sprint="sprint"/>
             </template>
         </TabNavigation>
       </div>
@@ -35,6 +35,7 @@ import TabNavigation from "@/components/TabNavigation";
 import Kanban from "@/components/Kanban";
 import MiembrosSprint from "@/components/MiembrosSprint";
 import SprintBacklog from "@/components/SprintBacklog";
+import BurndownChart from "@/components/BurndownChart";
 import proyectoService from "@/services/proyectoService";
 import sprintService from "@/services/sprintService";
 import { mapGetters, mapState } from "vuex";
@@ -46,7 +47,8 @@ export default {
     TabNavigation,
     Kanban,
     MiembrosSprint,
-    SprintBacklog
+    SprintBacklog,
+    BurndownChart
   },
   created() {},
   mounted() {
@@ -68,12 +70,14 @@ export default {
   data() {
     return {
       sprint: {
-          id: 0,
-          numero: 0,
+        id: 0,
+        numero: 0,
+        fecha_inicio: 0,
+        fecha_fin: 0,
       },
       proyecto: {
-          id: 0,
-          nombre: ""
+        id: 0,
+        nombre: ""
       },
       tabs: [
         {
@@ -97,12 +101,12 @@ export default {
   },
   methods: {
     load() {
-        sprintService.retrieve(this.$route.params["idSprint"]).then(sprint => {
-            this.sprint = sprint
-        })
-        proyectoService.retrieve(this.$route.params["id"]).then(proyecto => {
-            this.proyecto = proyecto
-        })
+      sprintService.retrieve(this.$route.params["idSprint"]).then(sprint => {
+        this.sprint = sprint
+      })
+      proyectoService.retrieve(this.$route.params["id"]).then(proyecto => {
+        this.proyecto = proyecto
+      })
     },
   },
 };

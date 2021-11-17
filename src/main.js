@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import LottieVuePlayer from "@lottiefiles/vue-lottie-player";
+import vueCompositionApi from '@vue/composition-api';
 import * as firebase from "firebase";
 
 import App from '@/App.vue'
@@ -12,6 +13,7 @@ Vue.config.productionTip = false
 
 // Vue.use(VueRouter)
 Vue.use(LottieVuePlayer);
+Vue.use(vueCompositionApi);
 
 var firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
