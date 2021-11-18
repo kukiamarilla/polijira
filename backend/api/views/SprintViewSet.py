@@ -1,7 +1,9 @@
+from datetime import date, timedelta
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto
+from backend.api.models.Actividad import Actividad
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import CreateSprintForm, UpdateSprintForm
@@ -295,6 +297,56 @@ class SprintViewSet(viewsets.ViewSet):
         except Sprint.DoesNotExist:
             response = {
                 "message": "No existe el Sprint especificado",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["GET"])
+    def burndown_chart(self, request, pk=None):
+        try:
+            sprint = Sprint.objects.get(pk=pk)
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not miembro.tiene_permiso("ver_sprints") or \
+               not miembro.tiene_permiso("ver_burndown_chart"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_sprints", "ver_burndown_chart"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not sprint.estado == "A" and \
+               not sprint.estado == "F":
+                response = {
+                    "message": "Solo puedes ver el Burndown Chart de un Sprint Activo o Finalizado",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            burndown_chart = []
+            horas_restantes = sum([sb.horas_estimadas for sb in sprint.sprint_backlogs])
+            fecha_ini = sprint.fecha_inicio
+            fecha_fin = date.today() if sprint.estado == "A" else sprint.fecha_fin_real
+            actual = fecha_ini
+            while actual < fecha_fin:
+                burndown_chart.append(
+                    {
+                        "dia": str(actual),
+                        "horas_restantes": horas_restantes
+                    }
+                )
+                actividades = Actividad.objects.filter(fecha_creacion=actual, sprint_backlog__sprint=sprint)
+                horas_restantes -= sum([act.horas for act in actividades])
+                actual += timedelta(days=1)
+            return Response(burndown_chart, status=status.HTTP_200_OK)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
