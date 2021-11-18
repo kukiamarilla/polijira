@@ -1,5 +1,5 @@
 <template>
-  <div class="user-story" v-show="!hide" draggable="true" @dragstart="startDrag" @dragover.prevent @click="verSprintBacklog" @dragend="dropped">
+  <div class="user-story" v-show="!hide" draggable="true" @dragstart="startDrag" @dragover.prevent @dragend="dropped">
     <div class="d-flex top">
       <div class="title">
         <span class="highlight" >{{userStory.user_story.nombre}}</span>
@@ -36,9 +36,6 @@ export default {
       }, 0)
       evt.dataTransfer.setData("userStory", this.userStory.id)
       evt.dataTransfer.effectAllowed = 'move'
-    },
-    verSprintBacklog() {
-      this.verUserStory = this.userStory;
     },
     dropped() {
       this.$emit("dropped")

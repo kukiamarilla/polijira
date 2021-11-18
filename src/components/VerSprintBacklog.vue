@@ -5,6 +5,14 @@
     <div class="datos-de-registro">
       <div class="fila">
         <p>
+          <span class="highlight">Estado:</span>
+          {{ userStory.user_story.estado == "P" ? "Pendiente" : "" }}
+          {{ userStory.user_story.estado == "R" ? "Lanzado" : "" }}
+          {{ userStory.user_story.estado == "C" ? "Cancelado" : "" }}
+        </p>
+      </div>
+      <div class="fila">
+        <p>
           <span class="highlight">Título:</span>
           {{ userStory.user_story.nombre }}
         </p>
@@ -28,6 +36,30 @@
         <p class="multiline">{{ userStory.user_story.descripcion }}</p>
       </div>
     </div>
+    <div class="d-flex justify-content-flex-end">
+      <div class="botone">
+        <Boton 
+          tema="danger" 
+          texto="Cancelar" 
+          @click="cancelar" 
+          v-if="
+            userStory.user_story.estado == 'P' &&
+            hasPermission('cancelar_user_stories')
+          " />
+        &nbsp;
+        &nbsp;
+        <Boton 
+          tema="success" 
+          texto="Lanzar" 
+          @click="lanzar"
+          v-if="
+            userStory.user_story.estado == 'P' &&
+            hasPermission('lanzar_user_stories') &&
+            userStory.estado_kanban == 'N'
+          "
+        />
+      </div>
+    </div>
 
     <TabNavigation :tabs="tabs" default="reviews">
       <template #reviews>
@@ -45,18 +77,30 @@ import Modal from "@/components/Modal";
 import TabNavigation from "@/components/TabNavigation";
 import Reviews from "@/components/Reviews";
 import Actividades from "@/components/Actividades";
+import Boton from "@/components/Boton";
+
+import userStoryService from "@/services/userStoryService";
+
+import Alert from "@/helpers/alert";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     Modal,
     TabNavigation,
     Reviews,
-    Actividades
+    Actividades,
+    Boton
   },
   props: ["value", "userStory"],
-  computed: {},
+  computed: {
+    ...mapGetters({
+      hasPermission: "proyecto/hasPermission",
+    }),
+  },
   data() {
     return {
+      show: false,
       tabs: [
         { 
           name: "reviews", 
@@ -74,10 +118,10 @@ export default {
       this.show = this.value;
     },
     show() {
-      if (!this.show) this.$emit("input", null);
+      if (!this.show) this.$emit("input", false);
     },
   },
-  methods: {
+  methods: {    
     formatearFecha(date) {
       const fecha = new Date(date);
 
@@ -90,6 +134,24 @@ export default {
     fill(numero) {
       if (numero < 10) return `0${numero}`;
       else return numero;
+    },
+    lanzar() {
+      const confirmar = confirm("¿Está seguro que desea lanzar esta User Story?");
+      if (confirmar) {
+        userStoryService.lanzar(this.userStory.user_story.id).then(() => {
+          Alert.success("User Story lanzado!");
+          this.userStory.user_story.estado = "R";
+        });
+      }
+    },
+    cancelar() {
+      const confirmar = confirm("¿Está seguro que desea cancelar esta User Story?");
+      if (confirmar) {
+        userStoryService.cancelar(this.userStory.user_story.id).then(() => {
+          Alert.success("User Story cancelado.");
+          this.userStory.user_story.estado = "C";
+        });
+      }
     },
   },
 };
