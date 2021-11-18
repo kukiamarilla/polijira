@@ -21,7 +21,7 @@
 
     <CrearReview
       v-if="hasPermission('crear_reviews') && verCrearReview"
-      :userStory="userStory"
+      :userStory="userStory.user_story"
       v-on:creado="loadReviews"
       v-on:cerrar-crear="verCrearReview = false"
     />
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     loadReviews() {
-      userStoryService.reviews(this.userStory.id).then((result) => {
+      userStoryService.reviews(this.userStory.user_story.id).then((result) => {
         this.reviews = result;
       });
     },
