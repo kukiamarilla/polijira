@@ -266,13 +266,57 @@ class UserStoryViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if not sprint_backlog.estado_kanban == "N":
+            if not sprint_backlog[0].estado_kanban == "N":
                 response = {
                     "message": "User Story no se encuentra en estado Done",
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             user_story.lanzar()
+            serializer = UserStorySerializer(user_story, many=False)
+            return Response(serializer.data)
+        except UserStory.DoesNotExist:
+            response = {
+                "message": "No existe el User Story",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["POST"])
+    def cancelar(self, request, pk=None):
+        """
+        cancelar
+        Cancela un User Story
+
+        Args:
+            request (Any): request
+            pk (int, optional): Primary key del User Story. Defaults to None.
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            user_story = UserStory.objects.get(pk=pk)
+            miembro = Miembro.objects.get(
+                usuario=usuario_request, proyecto=user_story.registros.get(accion="Creacion").autor.proyecto)
+            if not miembro.tiene_permiso("ver_user_stories") or not miembro.tiene_permiso("cancelar_user_stories"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["ver_user_stories", "cancelar_user_stories"]
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprint_backlog = SprintBacklog.objects.filter(user_story=user_story)
+            if user_story.product_backlog == True and not len(sprint_backlog) > 0:
+                response = {
+                    "message": "User Story se encuentra en el Product Backlog",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            user_story.cancelar()
             serializer = UserStorySerializer(user_story, many=False)
             return Response(serializer.data)
         except UserStory.DoesNotExist:
