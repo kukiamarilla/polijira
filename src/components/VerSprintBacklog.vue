@@ -67,6 +67,7 @@ export default {
           title: "Reviews",
         },
       ],
+      show: false,
     };
   },
   watch: {
