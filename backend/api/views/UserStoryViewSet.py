@@ -231,7 +231,7 @@ class UserStoryViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
 
-    @action(detail=True, methods=["GET"])
+    @action(detail=True, methods=["POST"])
     def lanzar(self, request, pk=None):
         """
         lanzar
