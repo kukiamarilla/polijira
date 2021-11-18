@@ -14,9 +14,14 @@
         </p>
       </div>
       <div class="fila">
-        <p>
+        <p v-if="userStory.desarrollador">
           <span class="highlight">Miembro Asignado:</span>
           {{ userStory.desarrollador.miembro_proyecto.usuario.nombre }}
+        </p>
+        <p v-else>
+          <span class="highlight">Miembro Asignado:</span>
+          Nadie
+          ( <a href="#" class="reasignar">Reasignar</a> )
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
@@ -137,5 +142,12 @@ p {
 
 .pl-8 {
   padding-left: 8px;
+}
+.reasignar {
+  color: var(--primary);
+  text-decoration: none;
+  &:hover {
+    color: var(--primary-dark);
+  }
 }
 </style>

@@ -13,6 +13,31 @@
           <Td width="30%">{{miembro.miembro_proyecto.usuario.nombre}}</Td>
           <Td width="30%">{{miembro.miembro_proyecto.usuario.email}}</Td>
           <Td width="30%">
+            <div class="d-flex" style="gap: 16px">
+              <a
+                href="#"
+                title="Reemplazar miembro"
+              >
+                <Icon
+                  icono="reemplazar"
+                  size="16px"
+                  color="#bdbdbd"
+                  hover="var(--primary)"
+                />
+              </a>
+              <a
+                href="#"
+                title="Eliminar miembro"
+                @click.prevent="eliminar(miembro)"
+              >
+                <Icon
+                  icono="delete"
+                  size="16px"
+                  color="#bdbdbd"
+                  hover="var(--danger)"
+                />
+              </a>
+            </div>
           </Td>
         </Tr>
       </TableBody>
@@ -23,7 +48,8 @@
 <script>
 import { Table, TableHeader, TableBody, Th, Tr, Td } from '@/components/Table' 
 import sprintService from '@/services/sprintService'
-
+import Icon from '@/components/Icon.vue'
+import miembroSprintService from '@/services/miembroSprintService'
 export default {
   components: {
     Table,
@@ -31,7 +57,8 @@ export default {
     TableBody,
     Th,
     Tr,
-    Td
+    Td,
+    Icon
   },
   data() {
     return {
@@ -45,6 +72,11 @@ export default {
     load() {
       sprintService.miembros(this.$route.params.idSprint).then(miembros => {
         this.miembros = miembros
+      })
+    },
+    eliminar(miembro) {
+      miembroSprintService.eliminar(miembro.id).then(() => {
+        this.load()
       })
     }
   },

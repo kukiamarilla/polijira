@@ -270,5 +270,13 @@
             "nombre": "Ver Miembros Sprint",
             "codigo": "ver_miembros_sprint"
         }
+    },
+    {
+        "model": "api.permisoProyecto",
+        "pk": 35,
+        "fields": {
+            "nombre": "Modificar Miembros Sprint",
+            "codigo": "modificar_miembros_sprint"
+        }
     }
 ]

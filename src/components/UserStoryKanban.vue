@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div>Asignado a: {{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</div>
+    <div>Asignado a: {{userStory.desarrollador ? userStory.desarrollador.miembro_proyecto.usuario.nombre : "Nadie"}}</div>
     
   </div>
 </template>

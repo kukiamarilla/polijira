@@ -27,5 +27,8 @@ export default {
     },
     actualizarActividad(id, actividad) {
         return api.put(`/actividades/${id}/`, actividad).then(response => response.data)
-    }
+    },
+    reasignar(id, miembroSprint) {
+        return api.post(`/sprint-backlogs/${id}/reasignar/`, {"miembro_sprint": miembroSprint}).then(response => response.data)
+    },
 }
