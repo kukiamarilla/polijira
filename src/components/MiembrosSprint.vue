@@ -17,6 +17,11 @@
               <a
                 href="#"
                 title="Reemplazar miembro"
+                @click.prevent="reemplazarMiembro(miembro)"
+                v-if="
+                  hasPermission('modificar_miembros_sprint')
+                  && miembro.miembro_proyecto.id != me.id
+                "
               >
                 <Icon
                   icono="reemplazar"
@@ -29,6 +34,10 @@
                 href="#"
                 title="Eliminar miembro"
                 @click.prevent="eliminar(miembro)"
+                v-if="
+                  hasPermission('modificar_miembros_sprint')
+                  && miembro.miembro_proyecto.id != me.id
+                "
               >
                 <Icon
                   icono="delete"
@@ -42,6 +51,7 @@
         </Tr>
       </TableBody>
     </Table>
+    <ReemplazarMiembro v-model="reemplazar" @input="load"/>
   </div>
 </template>
 
@@ -50,6 +60,8 @@ import { Table, TableHeader, TableBody, Th, Tr, Td } from '@/components/Table'
 import sprintService from '@/services/sprintService'
 import Icon from '@/components/Icon.vue'
 import miembroSprintService from '@/services/miembroSprintService'
+import ReemplazarMiembro from './ReemplazarMiembro.vue'
+import { mapGetters, mapState } from 'vuex'
 export default {
   components: {
     Table,
@@ -58,15 +70,23 @@ export default {
     Th,
     Tr,
     Td,
-    Icon
+    Icon,
+    ReemplazarMiembro
   },
   data() {
     return {
-      miembros: []
+      miembros: [],
+      reemplazar: null,
     }
   },
   mounted() {
     this.load()
+  },
+  computed: {
+    ...mapState("proyecto", ["me"]),
+    ...mapGetters({
+      hasPermission: "proyecto/hasPermission"
+    })
   },
   methods: {
     load() {
@@ -75,9 +95,15 @@ export default {
       })
     },
     eliminar(miembro) {
-      miembroSprintService.eliminar(miembro.id).then(() => {
-        this.load()
-      })
+      let confirmar = confirm('¿Está seguro de eliminar este miembro?')
+      if(confirmar){
+        miembroSprintService.eliminar(miembro.id).then(() => {
+          this.load()
+        })
+      }
+    },
+    reemplazarMiembro(miembro) {
+      this.reemplazar = miembro
     }
   },
 }
