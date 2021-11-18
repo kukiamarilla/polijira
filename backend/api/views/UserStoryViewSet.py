@@ -310,7 +310,7 @@ class UserStoryViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             sprint_backlog = SprintBacklog.objects.filter(user_story=user_story)
-            if user_story.product_backlog == True and not len(sprint_backlog) > 0:
+            if user_story.product_backlog is True and not len(sprint_backlog) > 0:
                 response = {
                     "message": "User Story se encuentra en el Product Backlog",
                     "error": "forbidden"

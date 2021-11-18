@@ -222,6 +222,50 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(body["message"], "El kanban no se puede modificar en el estado actual del Sprint")
         self.assertEquals(body["error"], "forbidden")
 
+    def test_mover_user_story_con_user_story_cancelado(self):
+        """
+        test_mover_user_story_con_user_story_cancelado
+        Prueba mover un user story cancelado en el kanban
+        """
+        print("\nProbando mover un user story cancelado en el kanban.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
+        user_story = sprint_backlog.user_story
+        user_story.estado = "C"
+        user_story.save()
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede modificar el kanban de un user story lanzado o cancelado")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_mover_user_story_con_user_story_lanzado(self):
+        """
+        test_mover_user_story_con_user_story_lanzado
+        Prueba mover un user story lanzado en el kanban
+        """
+        print("\nProbando mover un user story lanzado en el kanban.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
+        user_story = sprint_backlog.user_story
+        user_story.estado = "R"
+        user_story.save()
+        request_data = {
+            "estado_kanban": "D"
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/mover/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No se puede modificar el kanban de un user story lanzado o cancelado")
+        self.assertEquals(body["error"], "forbidden")
+
     def test_mover_user_story_sin_ser_miembro_del_proyecto(self):
         """
         test_mover_user_story_sin_ser_miembro_del_proyecto
