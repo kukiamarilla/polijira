@@ -30,11 +30,11 @@
     </div>
 
     <TabNavigation :tabs="tabs" default="reviews">
-      <template #reviews>
-        <Reviews/>
-      </template>
       <template #actividades>
-        <Actividades :sprintBacklog="userStory"/>
+        <Actividades :sprintBacklog="userStory" />
+      </template>
+      <template #reviews>
+        <Reviews :userStory="userStory" />
       </template>
     </TabNavigation>
   </Modal>
@@ -51,21 +51,21 @@ export default {
     Modal,
     TabNavigation,
     Reviews,
-    Actividades
+    Actividades,
   },
   props: ["value", "userStory"],
   computed: {},
   data() {
     return {
       tabs: [
-        { 
-          name: "reviews", 
-          title: "Reviews" 
+        {
+          name: "actividades",
+          title: "Actividades",
         },
         {
-          name: "actividades", 
-          title: "Actividades"
-        }
+          name: "reviews",
+          title: "Reviews",
+        },
       ],
     };
   },
