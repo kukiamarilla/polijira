@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, Usuario, Proyecto, ProductBacklog
 from backend.api.models.Actividad import Actividad
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator
@@ -390,6 +390,10 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            user_stories = [sb.user_story for sb in sprint.sprint_backlogs.all()]
+            for user_story in user_stories:
+                if(user_story.estado == "P"):
+                    ProductBacklog.objects.create(user_story=user_story, proyecto=sprint.proyecto)
             sprint.finalizar()
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
