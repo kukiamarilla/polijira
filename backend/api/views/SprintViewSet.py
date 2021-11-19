@@ -356,3 +356,45 @@ class SprintViewSet(viewsets.ViewSet):
                 "error": "forbidden"
             }
             return Response(response, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=["POST"])
+    def finalizar(self, request, pk=None):
+        """
+        finalizar Finalizar el sprint
+
+        Args:
+            request (Any): Request que se solicita
+            pk (int, opcional): Primary key. Defaults to None.
+        """
+        try:
+            sprint = Sprint.objects.get(pk=pk)
+            usuario = Usuario.objects.get(user=request.user)
+            miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
+            if not miembro.tiene_permiso("finalizar_sprints"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": ["finalizar_sprints"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint.estado != "A":
+                response = {
+                    "message": "Solo puedes finalizar un Sprint Activo",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprint.finalizar()
+            serializer = SprintSerializer(sprint, many=False)
+            return Response(serializer.data)
+        except Sprint.DoesNotExist:
+            response = {
+                "message": "No existe el Sprint",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
