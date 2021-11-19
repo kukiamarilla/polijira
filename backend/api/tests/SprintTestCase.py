@@ -39,10 +39,13 @@ class SprintTestCase(TestCase):
 
     def test_desactivar_usuario_en_sprint_activo(self):
         """
-        test_desactivar_usuario_en_sprint_activo Prueba desactivar un Usuario que pertenece a un Sprint activo
+        test_desactivar_usuario_en_sprint_activo
+        Prueba desactivar un Usuario que pertenece a un Sprint activo
         """
         print("\nProbando desactivar un usuario que pertenece a un Sprint Activo")
         self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        sprint.activar()
         response = self.client.post("/api/usuarios/2/desactivar/")
         self.assertEquals(response.status_code, 409)
         body = response.json()
@@ -50,7 +53,8 @@ class SprintTestCase(TestCase):
 
     def test_obtener_sprint(self):
         """
-        test_obtener_sprint Prueba obtener los detalles de un Sprint
+        test_obtener_sprint
+        Prueba obtener los detalles de un Sprint
         """
         print("\nProbando obtener los detalles de un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -77,7 +81,8 @@ class SprintTestCase(TestCase):
 
     def test_obtener_sprint_no_existente(self):
         """
-        test_obtener_sprint_no_existente Prueba obtener los detalles de un Sprint que no existe
+        test_obtener_sprint_no_existente
+        Prueba obtener los detalles de un Sprint que no existe
         """
         print("\nProbando obtener los detalles de un Sprint que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -88,7 +93,8 @@ class SprintTestCase(TestCase):
 
     def test_obtener_sprint_sin_ser_miembro(self):
         """
-        test_obtener_sprint_sin_ser_miembro Prueba obtener los detalles de un Sprint sin ser miembro del Proyecto
+        test_obtener_sprint_sin_ser_miembro
+        Prueba obtener los detalles de un Sprint sin ser miembro del Proyecto
         """
         print("\nProbando obtener los detalles de un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -102,7 +108,8 @@ class SprintTestCase(TestCase):
 
     def test_crear_sprint(self):
         """
-        test_crear_sprint Prueba crear un Sprint
+        test_crear_sprint
+        Prueba crear un Sprint
         """
         print("\nProbando crear un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -133,7 +140,8 @@ class SprintTestCase(TestCase):
 
     def test_crear_sprint_sin_ser_miembro(self):
         """
-        test_crear_sprint_sin_ser_miembro Prueba crear un Sprint sin ser miembro del Proyecto
+        test_crear_sprint_sin_ser_miembro
+        Prueba crear un Sprint sin ser miembro del Proyecto
         """
         print("\nProbando crear un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -245,7 +253,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_crear_sprint_all(self):
         """
-        test_validar_crear_sprint_all Prueba validar los datos enviados al crear un Sprint
+        test_validar_crear_sprint_all
+        Prueba validar los datos enviados al crear un Sprint
         """
         print("\nProbando validar: Creacion de Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -262,7 +271,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_crear_sprint_fecha_fin(self):
         """
-        test_validar_crear_sprint_fecha_fin Valida si la fecha de fin es mayor a la fecha de inicio al Crear un Sprint
+        test_validar_crear_sprint_fecha_fin
+        Valida si la fecha de fin es mayor a la fecha de inicio al Crear un Sprint
         """
         print("\nProbando validar: La fecha de fin al Crear un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -279,7 +289,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_crear_sprint_proyecto(self):
         """
-        test_validar_crear_sprint_proyecto Prueba validar que el proyecto esté activado al Crear un Sprint
+        test_validar_crear_sprint_proyecto
+        Prueba validar que el proyecto esté activado al Crear un Sprint
         """
         print("\nProbando validar: El estado del Proyecto al Crear Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -296,7 +307,8 @@ class SprintTestCase(TestCase):
 
     def test_modificar_sprint(self):
         """
-        test_modificar_sprint Prueba modificar un Sprint
+        test_modificar_sprint
+        Prueba modificar un Sprint
         """
         print("\nProbando modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -313,7 +325,8 @@ class SprintTestCase(TestCase):
 
     def test_modificar_sprint_no_existente(self):
         """
-        test_modificar_sprint_no_existente Prueba modificar los detalles de un Sprint que no existe
+        test_modificar_sprint_no_existente
+        Prueba modificar los detalles de un Sprint que no existe
         """
         print("\nProbando modificar un Sprint que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -330,7 +343,8 @@ class SprintTestCase(TestCase):
 
     def test_modificar_sprint_sin_ser_miembro(self):
         """
-        test_modificar_sprint_sin_ser_miembro Prueba modificar un Sprint sin ser miembro del Proyecto
+        test_modificar_sprint_sin_ser_miembro
+        Prueba modificar un Sprint sin ser miembro del Proyecto
         """
         print("\nProbando modificar un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -388,7 +402,8 @@ class SprintTestCase(TestCase):
 
     def test_modificar_sprint_activo(self):
         """
-        test_modificar_sprint_activo Prueba modificar un Sprint en estado Activo
+        test_modificar_sprint_activo
+        Prueba modificar un Sprint en estado Activo
         """
         print("\nProbando modificar un Sprint en estado Activo")
         self.client.login(username="testing", password="polijira2021")
@@ -407,7 +422,8 @@ class SprintTestCase(TestCase):
 
     def test_modificar_sprint_finalizado(self):
         """
-        test_modificar_sprint_finalizado Prueba modificar un Sprint en estado Finalizado
+        test_modificar_sprint_finalizado
+        Prueba modificar un Sprint en estado Finalizado
         """
         print("\nProbando modificar un Sprint en estado Finalizado")
         self.client.login(username="testing", password="polijira2021")
@@ -498,8 +514,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_fin(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha
-        de fin es mayor a la fecha de inicio al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin
+        Valida si la fecha de fin es mayor a la fecha de inicio al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de fin al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -514,8 +530,8 @@ class SprintTestCase(TestCase):
 
     def test_validar_modificar_sprint_fecha_inicio(self):
         """
-        test_validar_modificar_sprint_fecha_fin Valida si la fecha de inicio
-        no esté en el pasado al Modificar un Sprint
+        test_validar_modificar_sprint_fecha_fin
+        Valida si la fecha de inicio no esté en el pasado al Modificar un Sprint
         """
         print("\nProbando validar: La fecha de inicio al Modificar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -530,7 +546,8 @@ class SprintTestCase(TestCase):
 
     def test_eliminar_sprint(self):
         """
-        test_eliminar_sprint Prueba eliminar un Sprint
+        test_eliminar_sprint
+        Prueba eliminar un Sprint
         """
         print("\nProbando eliminar un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -543,7 +560,8 @@ class SprintTestCase(TestCase):
 
     def test_eliminar_sprint_no_existente(self):
         """
-        test_eliminar_sprint_no_existente Prueba eliminar un Sprint que no existe en la BD
+        test_eliminar_sprint_no_existente
+        Prueba eliminar un Sprint que no existe en la BD
         """
         print("\nProbando eliminar un Sprint que no existe")
         self.client.login(username="testing", password="polijira2021")
@@ -554,7 +572,8 @@ class SprintTestCase(TestCase):
 
     def test_eliminar_sprint_sin_ser_miembro(self):
         """
-        test_eliminar_sprint_sin_ser_miembro Prueba eliminar un Sprint sin ser miembro del Proyecto
+        test_eliminar_sprint_sin_ser_miembro
+        Prueba eliminar un Sprint sin ser miembro del Proyecto
         """
         print("\nProbando eliminar un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -596,10 +615,13 @@ class SprintTestCase(TestCase):
 
     def test_eliminar_sprint_activo(self):
         """
-        test_eliminar_sprint_activo Prueba eliminar un Sprint Activo
+        test_eliminar_sprint_activo
+        Prueba eliminar un Sprint Activo
         """
         print("\nProbando eliminar un Sprint Activo")
         self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        sprint.activar()
         response = self.client.delete("/api/sprints/1/")
         self.assertEquals(response.status_code, 409)
         body = response.json()
@@ -607,7 +629,8 @@ class SprintTestCase(TestCase):
 
     def test_eliminar_sprint_finalizado(self):
         """
-        test_eliminar_sprint_finalizado Prueba eliminar un Sprint Finalizado
+        test_eliminar_sprint_finalizado
+        Prueba eliminar un Sprint Finalizado
         """
         print("\nProbando eliminar un Sprint Finalizado")
         self.client.login(username="testing", password="polijira2021")
@@ -620,7 +643,8 @@ class SprintTestCase(TestCase):
 
     def test_listar_sprint_backlogs(self):
         """
-        test_listar_sprint_backlogs Prueba listar los sprint backlogs de un Sprint
+        test_listar_sprint_backlogs
+        Prueba listar los sprint backlogs de un Sprint
         """
         print("\nProbando listar los sprint backlogs de un Sprint")
         self.client.login(username="testing", password="polijira2021")
@@ -632,7 +656,8 @@ class SprintTestCase(TestCase):
 
     def test_listar_sprint_backlogs_no_existente(self):
         """
-        test_listar_sprint_backlogs_no_existente Prueba listar los sprint backlogs de un Sprint que no existe en la BD
+        test_listar_sprint_backlogs_no_existente
+        Prueba listar los sprint backlogs de un Sprint que no existe en la BD
         """
         print("\nProbando listar los sprint backlogs de un Sprint que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -643,8 +668,8 @@ class SprintTestCase(TestCase):
 
     def test_listar_sprint_backlogs_sin_ser_miembro(self):
         """
-        test_listar_sprint_backlogs_sin_ser_miembro Prueba listar los sprint
-        backlogs de un Sprint  sin ser miembro del Proyecto
+        test_listar_sprint_backlogs_sin_ser_miembro
+        Prueba listar los sprint backlogs de un Sprint  sin ser miembro del Proyecto
         """
         print("\nProbando listar los sprint backlogs de un Sprint sin ser miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -684,7 +709,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint(self):
         """
-        test_activar_sprint Prueba la activación de un sprint
+        test_activar_sprint
+        Prueba la activación de un sprint
         """
         print("\nProbando activar un sprint.")
         self.client.login(username="testing", password="polijira2021")
@@ -701,7 +727,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint_sin_permiso_ver_sprints(self):
         """
-        test_activar_sprint_sin_permiso Prueba la activación de un sprint sin permiso ver sprints
+        test_activar_sprint_sin_permiso
+        Prueba la activación de un sprint sin permiso ver sprints
         """
         print("\nProbando activar un sprint sin permiso ver sprints.")
         self.client.login(username="testing", password="polijira2021")
@@ -718,7 +745,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint_sin_permiso_activar_sprints(self):
         """
-        test_activar_sprint_sin_permiso Prueba la activación de un sprint sin permiso activar sprints
+        test_activar_sprint_sin_permiso
+        Prueba la activación de un sprint sin permiso activar sprints
         """
         print("\nProbando activar un sprint sin permiso activar sprints.")
         self.client.login(username="testing", password="polijira2021")
@@ -757,15 +785,36 @@ class SprintTestCase(TestCase):
         print("\nProbando activar un sprint con estado no pendiente.")
         self.client.login(username="testing", password="polijira2021")
         sprint = Sprint.objects.get(pk=1)
+        sprint.finalizar()
         response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Sprint no se puede activar en el estado actual")
         self.assertEquals(body["error"], "forbidden")
 
+    def test_activar_sprint_teniendo_otro_sprint_activo_en_proyecto(self):
+        """
+        test_activar_sprint_teniendo_otro_sprint_activo_en_proyecto
+        Prueba la activación de un sprint teniendo otro sprint activo en proyecto
+        """
+        print("\nProbando activar un sprint teniendo otro sprint activo en proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=2)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        sprint_activo = Sprint.objects.get(pk=1)
+        sprint_activo.activar()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/activar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(
+            body["message"], "Sprint no se puede activar porque ya existe un sprint activo en el proyecto")
+        self.assertEquals(body["error"], "bad_request")
+
     def test_activar_sprint_inexistente(self):
         """
-        test_activar_sprint_inexistente Prueba la activación de un sprint inexistente
+        test_activar_sprint_inexistente
+        Prueba la activación de un sprint inexistente
         """
         print("\nProbando activar un sprint que no existe.")
         self.client.login(username="testing", password="polijira2021")
@@ -777,7 +826,8 @@ class SprintTestCase(TestCase):
 
     def test_activar_sprint_sin_ser_miembro_del_proyecto(self):
         """
-        test_activar_sprint_sin_ser_miembro_del_proyecto Prueba la activación de un sprint sin ser miembro del proyecto
+        test_activar_sprint_sin_ser_miembro_del_proyecto
+        Prueba la activación de un sprint sin ser miembro del proyecto
         """
         print("\nProbando activar un sprint sin ser miembro del proyecto.")
         self.client.login(username="testing", password="polijira2021")

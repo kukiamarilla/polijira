@@ -82,6 +82,7 @@ class Sprint(models.Model):
         iniciar Activa este Sprint
         """
         self.estado = "A"
+        self.fecha_inicio = date.today()
         self.save()
 
     def finalizar(self):
