@@ -1,4 +1,3 @@
-from rest_framework import response
 from datetime import date
 from django.test import TestCase, Client
 from backend.api.models import Miembro, \
@@ -1038,9 +1037,9 @@ class UserStoryTestCase(TestCase):
     def test_lanzar_user_story_sin_ser_miembro(self):
         """
         test_lanzar_user_story_sin_ser_miembro
-        Prueba lanzar un user story sin ser miembro
+        Prueba lanzar un user story sin ser miembro del proyecto
         """
-        print("\nProbando lanzar un user story sin ser miembro.")
+        print("\nProbando lanzar un user story sin ser miembro del proyecto.")
         self.client.login(username="user_test", password="polijira2021")
         user_story = UserStory.objects.get(pk=2)
         sprint = Sprint.objects.get(pk=2)
@@ -1128,12 +1127,12 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["message"], "No existe el User Story")
         self.assertEquals(body["error"], "not_found")
 
-    def test_cancelar_user_story(self):
+    def test_cancelar_user_story_sin_ser_miembro(self):
         """
-        test_cancelar_user_story
-        Prueba cancelar un user story
+        test_cancelar_user_story_sin_ser_miembro
+        Prueba cancelar un user story sin ser miembro del proyecto
         """
-        print("\nProbando cancelar un user story.")
+        print("\nProbando cancelar un user story sin ser miembro del proyecto.")
         self.client.login(username="user_test", password="polijira2021")
         user_story = UserStory.objects.get(pk=2)
         response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
