@@ -329,7 +329,7 @@ class SprintViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
             burndown_chart = []
-            horas_restantes = sum([sb.horas_estimadas for sb in sprint.sprint_backlogs])
+            horas_restantes = sum([sb.horas_estimadas for sb in sprint.sprint_backlogs.all()])
             fecha_ini = sprint.fecha_inicio
             fecha_fin = date.today() if sprint.estado == "A" else sprint.fecha_fin_real
             actual = fecha_ini
