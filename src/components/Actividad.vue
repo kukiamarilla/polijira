@@ -3,16 +3,18 @@
     <div class="d-flex">
       <div class="description">
         <span class="highlight">{{actividad.titulo}}</span>
-        <br>
+        <br />
         <p>{{actividad.descripcion}}</p>
       </div>
       <div class="metadata">
-        <span class="highlight">Hecho por: </span>{{actividad.desarrollador.nombre}}
-        <br>
-        <br>
-        <span class="highlight">Horas trabajadas: </span> {{actividad.horas}} hs.
-        <br>
-        <br>
+        <span class="highlight">Hecho por: </span
+        >{{actividad.desarrollador.nombre}}
+        <br />
+        <br />
+        <span class="highlight">Horas trabajadas: </span>
+        {{actividad.horas}} hs.
+        <br />
+        <br />
         <span class="highlight">Fecha: </span> {{actividad.fecha_creacion}}
       </div>
     </div>
@@ -20,30 +22,19 @@
       <a
         href="#"
         title="Modificar Actividades"
-        v-if="actividad.desarrollador.id == me.id"
+        v-if="sprint.estado === 'A' && actividad.desarrollador.id == me.id"
         @click.prevent="$emit('modificar', actividad)"
       >
-        <Icon
-          icono="edit"
-          size="16px"
-          color="#bdbdbd"
-          hover="var(--primary)"
-        />
+        <Icon icono="edit" size="16px" color="#bdbdbd" hover="var(--primary)" />
       </a>
-      &nbsp;
-      &nbsp;
+      &nbsp; &nbsp;
       <a
         href="#"
         title="Eliminar Actividades"
-        v-if="actividad.desarrollador.id == me.id"
+        v-if="sprint.estado === 'A' && actividad.desarrollador.id == me.id"
         @click.prevent="eliminar"
       >
-        <Icon
-          icono="delete"
-          size="16px"
-          color="#bdbdbd"
-          hover="#F25656"
-        />
+        <Icon icono="delete" size="16px" color="#bdbdbd" hover="#F25656" />
       </a>
     </div>
   </div>
@@ -55,7 +46,7 @@ import userStoryService from '@/services/userStoryService'
 import { mapState } from 'vuex'
 
 export default {
-  props: ['actividad'],
+  props: ['actividad', 'sprint'],
   components: {
     Icon
   },
@@ -76,19 +67,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container {
-    width: 100%;
-    padding: 24px;
-    border: var(--gray-5) solid 1px;
-    margin-bottom: 8px;
-    border-radius: 5px;
-  }
-  .description {
-    flex: 5
-
-  }
-  .metadata {
-    flex: 2;
-    margin-left: 32px;
-  }
+.container {
+  width: 100%;
+  padding: 24px;
+  border: var(--gray-5) solid 1px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+}
+.description {
+  flex: 5;
+}
+.metadata {
+  flex: 2;
+  margin-left: 32px;
+}
 </style>
