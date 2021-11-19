@@ -8,7 +8,7 @@ git checkout $1
 if [ $2 = 'produccion' ]
 then
     echo "Ingresando a Produccion"
-    sh ../prod.sh
+    sh ../prod.sh $1
 else
     echo "Ingresando a Desarrollo"
     sh ../dev.sh

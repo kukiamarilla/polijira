@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Ingresar varriables de entorno..."
+echo "Ingresar variables de entorno..."
 
 # while : ; do
 #     read -n 1 -s key <&1 > /dev/null
@@ -24,8 +24,7 @@ echo -n "Firebase Messaging Sender ID: "
 read fMessagingSenderId
 echo -n "Firebase App ID: "
 read fAppId
-echo -n "Firebase Private Key: "
-read fPrivateKey
+fPrivateKey=$(cat ../firebase_private.dev.key)
 echo -n "Firebase Client Email: "
 read fClientEmail
 echo -n "Firebase Token URI: "
@@ -73,6 +72,7 @@ fi
     echo 'FIREBASE_CLIENT_EMAIL='$fClientEmail
     echo 'FIREBASE_TOKEN_URI='$fTokenUri
     echo ''
+    echo 'VUE_APP_FIREBASE_API_KEY='$fApiKey
     echo 'VUE_APP_FIREBASE_AUTH_DOMAIN='$fAuthDomain
     echo 'VUE_APP_FIREBASE_PROJECT_ID='$fProjectId
     echo 'VUE_APP_FIREBASE_DATABASE_URL='$fDatabaseUrl
