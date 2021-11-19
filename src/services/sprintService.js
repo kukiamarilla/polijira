@@ -62,5 +62,10 @@ export default {
   },
   activar(id) {
       return api.post(`/sprints/${id}/activar/`).then(response => response.data)
+  },
+  burndownChart(id) {
+    return api
+      .get(`/sprints/${id}/burndown_chart/`)
+      .then((response) => response.data);
   }
 };

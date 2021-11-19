@@ -339,8 +339,9 @@ class SprintViewSet(viewsets.ViewSet):
             horas_restantes = sum([sb.horas_estimadas for sb in sprint.sprint_backlogs.all()])
             fecha_ini = sprint.fecha_inicio
             fecha_fin = date.today() if sprint.estado == "A" else sprint.fecha_fin_real
+            fecha_fin += timedelta(days=1)
             actual = fecha_ini
-            while actual < fecha_fin:
+            while actual <= fecha_fin:
                 burndown_chart.append(
                     {
                         "dia": str(actual),
