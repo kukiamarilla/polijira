@@ -6,7 +6,7 @@
             "numero": 1,
             "fecha_inicio": "2020-10-04",
             "fecha_fin": "2020-10-24",
-            "estado": "A",
+            "estado": "P",
             "estado_sprint_planning": "F",
             "planificador": 1,
             "proyecto": 3
