@@ -1,7 +1,6 @@
 from django.db import models
 from datetime import date
 
-
 ESTADOS_SPRINT = (
     ("P", "Pendiente"),
     ("A", "Activo"),
@@ -31,6 +30,7 @@ class Sprint(models.Model):
         estado_sprint_planning (CharField): Estado actual del Sprint Planning
         planificador (ForeignKey): Miembro que planifica el Sprint
         proyecto (ForeignKey): Proyecto al que pertenece el Sprint
+        fecha_fin_real (DateField): Fecha real en que se finaliza el Sprint
     """
     numero = models.IntegerField()
     fecha_inicio = models.DateField()
@@ -39,6 +39,7 @@ class Sprint(models.Model):
     estado_sprint_planning = models.CharField(max_length=1, choices=ESTADOS_SPRINT_PLANNING, default="P")
     planificador = models.ForeignKey("Miembro", on_delete=models.CASCADE, related_name="sprints", null=True)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="sprints", null=True)
+    fecha_fin_real = models.DateField(null=True)
 
     class NotAbleFinalizarSprintPlanning(Exception):
         """
@@ -89,6 +90,7 @@ class Sprint(models.Model):
         finalizar Finaliza este Srpint
         """
         self.estado = "F"
+        self.fecha_fin_real = date.today()
         self.save()
 
     def iniciar_sprint_planning(self, planificador):

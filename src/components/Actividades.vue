@@ -1,13 +1,33 @@
 <template>
   <div>
     <div class="d-flex justify-content-flex-end">
-      <Boton tema="primary" texto="Registrar Actividad" @click="registrar = true" v-if="sprintBacklog.desarrollador.miembro_proyecto.id == me.id"></Boton>
+      <Boton
+        tema="primary"
+        texto="Registrar Actividad"
+        @click="registrar = true"
+        v-if="sprintBacklog.sprint.estado === 'A' && sprintBacklog.desarrollador.miembro_proyecto.id == me.id"
+      ></Boton>
     </div>
     <div class="actividades" v-if="!registrar && !modificar">
-      <Actividad v-for="actividad in actividades" :key="actividad.id" :actividad="actividad" @eliminar="load" @modificar="modificarActividad"/>
+      <Actividad
+        v-for="actividad in actividades"
+        :key="actividad.id"
+        :actividad="actividad"
+        :sprint="sprintBacklog.sprint"
+        @eliminar="load"
+        @modificar="modificarActividad"
+      />
     </div>
-    <RegistrarActividad v-if="registrar &&  sprintBacklog.desarrollador.miembro_proyecto.id == me.id" @cerrar="registrar = false; load()" :sprintBacklog="sprintBacklog"/>
-    <ModificarActividad v-if="modificar &&  sprintBacklog.desarrollador.miembro_proyecto.id == me.id" @cerrar="modificar = false; load()" :actividad="actividadModificar"/>
+    <RegistrarActividad
+      v-if="sprintBacklog.sprint.estado === 'A' && registrar &&  sprintBacklog.desarrollador.miembro_proyecto.id == me.id"
+      @cerrar="registrar = false; load()"
+      :sprintBacklog="sprintBacklog"
+    />
+    <ModificarActividad
+      v-if="sprintBacklog.sprint.estado === 'A' && modificar &&  sprintBacklog.desarrollador.miembro_proyecto.id == me.id"
+      @cerrar="modificar = false; load()"
+      :actividad="actividadModificar"
+    />
   </div>
 </template>
 

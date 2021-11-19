@@ -164,6 +164,9 @@ h1,
 .text-center {
   text-align: center;
 }
+span.text-danger {
+  color: var(--danger);
+}
 
 .text-danger {
   color: var(--danger);

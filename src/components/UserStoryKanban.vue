@@ -12,7 +12,8 @@
       </div>
     </div>
     <div class="d-flex justify-content-space-between">
-      <span>Asignado a: {{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</span>
+      <span v-if="userStory.desarrollador">Asignado a: {{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</span>
+      <span v-else>Asignado a:<span class="text-danger" > Nadie</span></span>
       <span class="text-danger" v-if="userStory.user_story.estado == 'C'">Cancelado</span>
       <span class="text-success" v-if="userStory.user_story.estado == 'R'">Lanzado</span>
     </div>

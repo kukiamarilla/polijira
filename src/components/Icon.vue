@@ -28,6 +28,7 @@ const iconosValidos = [
   "options",
   "play",
   "protected",
+  "reemplazar",
   "success",
   "team",
   "warning",
