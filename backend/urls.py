@@ -25,6 +25,7 @@ from backend.api.views import \
     SprintBacklogViewSet, \
     ActividadViewSet, \
     ReviewViewSet
+from backend.api.views.MiembroSprintViewSet import MiembroSprintViewSet
 
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -44,6 +45,7 @@ router.register("sprint-planning", SprintPlanningViewSet, basename="sprint-plann
 router.register("reviews", ReviewViewSet, basename="reviews")
 router.register("sprint-backlogs", SprintBacklogViewSet, basename="sprint-backlogs")
 router.register("actividades", ActividadViewSet, basename="actividades")
+router.register("miembros-sprint", MiembroSprintViewSet, basename="miembros-sprint")
 
 urlpatterns = [
 

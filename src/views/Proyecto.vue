@@ -18,6 +18,25 @@
               @click="activarProyecto(proyecto)"
             />
           </div>
+
+          <div
+            class="terminar d-flex justify-content-flex-end"
+            v-if="proyecto.estado === 'A'"
+          >
+            <Boton
+              texto="Cancelar Proyecto"
+              tema="danger"
+              v-if="hasPermission('cancelar_proyecto')"
+              @click="cancelar"
+            />
+
+            <Boton
+              texto="Finalizar Proyecto"
+              tema="success"
+              v-if="hasPermission('finalizar_proyecto')"
+              @click="finalizar"
+            />
+          </div>
         </div>
         <div class="accesos-directos">
           <div v-for="(accesoDirecto, idx) in accesosDirectos" :key="idx">
@@ -151,6 +170,18 @@ export default {
         },
       ];
     },
+    finalizar() {
+      proyectoService.finalizar(this.proyecto.id).then(() => {
+        Alert.success("El proyecto ha sido finalizado con éxito.");
+        this.load();
+      });
+    },
+    cancelar() {
+      proyectoService.cancelar(this.proyecto.id).then(() => {
+        Alert.success("El proyecto ha sido cancelado con éxito.");
+        this.load();
+      });
+    },
   },
 };
 </script>
@@ -188,5 +219,9 @@ export default {
     max-width: 100%;
     min-width: 276px;
   }
+}
+
+.terminar > button {
+  margin-left: 16px;
 }
 </style>

@@ -98,6 +98,7 @@ h1,
   --secondary: #b342ab;
   --secondary-light: #de01ce;
   --danger: #f25656;
+  --danger-dark: #c82333;
   --success: #6be78d;
   --info: #51abff;
   --warning: #ffb800;
@@ -163,6 +164,17 @@ h1,
 
 .text-center {
   text-align: center;
+}
+span.text-danger {
+  color: var(--danger);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-success {
+  color: var(--success);
 }
 
 .shadow {

@@ -67,5 +67,8 @@ export default {
     return api
       .get(`/sprints/${id}/burndown_chart/`)
       .then((response) => response.data);
+  },
+  finalizar(id) {
+    return api.post(`/sprints/${id}/finalizar/`).then(response => response.data)
   }
 };
