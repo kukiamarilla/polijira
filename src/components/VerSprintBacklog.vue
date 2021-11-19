@@ -38,19 +38,19 @@
     </div>
     <div class="d-flex justify-content-flex-end">
       <div class="botone">
-        <Boton 
-          tema="danger" 
-          texto="Cancelar" 
-          @click="cancelar" 
+        <Boton
+          tema="danger"
+          texto="Cancelar"
+          @click="cancelar"
           v-if="
             userStory.user_story.estado == 'P' &&
             hasPermission('cancelar_user_stories')
-          " />
-        &nbsp;
-        &nbsp;
-        <Boton 
-          tema="success" 
-          texto="Lanzar" 
+          "
+        />
+        &nbsp; &nbsp;
+        <Boton
+          tema="success"
+          texto="Lanzar"
           @click="lanzar"
           v-if="
             userStory.user_story.estado == 'P' &&
@@ -62,11 +62,11 @@
     </div>
 
     <TabNavigation :tabs="tabs" default="reviews">
-      <template #reviews>
-        <Reviews/>
-      </template>
       <template #actividades>
-        <Actividades :sprintBacklog="userStory"/>
+        <Actividades :sprintBacklog="userStory" />
+      </template>
+      <template #reviews>
+        <Reviews :userStory="userStory" />
       </template>
     </TabNavigation>
   </Modal>
@@ -82,7 +82,7 @@ import Boton from "@/components/Boton";
 import userStoryService from "@/services/userStoryService";
 
 import Alert from "@/helpers/alert";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -90,7 +90,7 @@ export default {
     TabNavigation,
     Reviews,
     Actividades,
-    Boton
+    Boton,
   },
   props: ["value", "userStory"],
   computed: {
@@ -102,14 +102,14 @@ export default {
     return {
       show: false,
       tabs: [
-        { 
-          name: "reviews", 
-          title: "Reviews" 
+        {
+          name: "actividades",
+          title: "Actividades",
         },
         {
-          name: "actividades", 
-          title: "Actividades"
-        }
+          name: "reviews",
+          title: "Reviews",
+        },
       ],
     };
   },
@@ -121,7 +121,7 @@ export default {
       if (!this.show) this.$emit("input", false);
     },
   },
-  methods: {    
+  methods: {
     formatearFecha(date) {
       const fecha = new Date(date);
 
@@ -136,7 +136,9 @@ export default {
       else return numero;
     },
     lanzar() {
-      const confirmar = confirm("¿Está seguro que desea lanzar esta User Story?");
+      const confirmar = confirm(
+        "¿Está seguro que desea lanzar esta User Story?"
+      );
       if (confirmar) {
         userStoryService.lanzar(this.userStory.user_story.id).then(() => {
           Alert.success("User Story lanzado!");
@@ -145,7 +147,9 @@ export default {
       }
     },
     cancelar() {
-      const confirmar = confirm("¿Está seguro que desea cancelar esta User Story?");
+      const confirmar = confirm(
+        "¿Está seguro que desea cancelar esta User Story?"
+      );
       if (confirmar) {
         userStoryService.cancelar(this.userStory.user_story.id).then(() => {
           Alert.success("User Story cancelado.");
