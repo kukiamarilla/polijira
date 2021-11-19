@@ -87,6 +87,7 @@ class Proyecto(models.Model):
         finalizar Finaliza este Proyecto
         """
         self.estado = 'F'
+        self.fecha_fin = str(date.today())
         self.save()
 
     def cancelar(self):
