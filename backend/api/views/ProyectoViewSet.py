@@ -593,6 +593,7 @@ class ProyectoViewSet(viewsets.ViewSet):
     def finalizar(self, request, pk=None):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
             miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
             if not miembro.tiene_permiso("finalizar_proyecto"):
                 response = {
@@ -601,7 +602,6 @@ class ProyectoViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            proyecto = Proyecto.objects.get(pk=pk)
             if proyecto.estado != 'A':
                 response = {
                     "message": "No puedes finalizar el Proyecto en su estado actual",
@@ -616,11 +616,21 @@ class ProyectoViewSet(viewsets.ViewSet):
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            user_stories_pendientes = UserStory.objects.filter(proyecto=proyecto, estado='P')
+            if len(user_stories_pendientes) > 0:
+                response = {
+                    "message": "No puedes finalizar el Proyecto hasta que todos los User Stories esten lanzados o cancelados",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             proyecto.finalizar()
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:
-            response = {"message": "El proyecto no existe"}
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
         except Miembro.DoesNotExist:
             response = {
@@ -634,15 +644,15 @@ class ProyectoViewSet(viewsets.ViewSet):
     def cancelar(self, request, pk=None):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
+            proyecto = Proyecto.objects.get(pk=pk)
             miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
             if not miembro.tiene_permiso("cancelar_proyecto"):
                 response = {
-                    "message": "No tiene permiso para realizar esta accion",
+                    "message": "No tiene permiso para realizar esta acción",
                     "permission_required": ["cancelar_proyecto"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            proyecto = Proyecto.objects.get(pk=pk)
             if proyecto.estado != 'A':
                 response = {
                     "message": "No puedes cancelar el Proyecto en su estado actual",
@@ -657,7 +667,10 @@ class ProyectoViewSet(viewsets.ViewSet):
             serializer = ProyectoSerializer(proyecto, many=False)
             return Response(serializer.data)
         except Proyecto.DoesNotExist:
-            response = {"message": "El proyecto no existe"}
+            response = {
+                "message": "El proyecto no existe",
+                "error": "not_found"
+            }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
         except Miembro.DoesNotExist:
             response = {
