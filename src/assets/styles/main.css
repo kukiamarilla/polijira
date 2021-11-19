@@ -164,6 +164,9 @@ h1,
 .text-center {
   text-align: center;
 }
+span.text-danger {
+  color: var(--danger);
+}
 
 .shadow {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);

@@ -14,15 +14,27 @@
         </p>
       </div>
       <div class="fila">
-        <p>
+        <p v-if="userStory.desarrollador">
           <span class="highlight">Miembro Asignado:</span>
           {{ userStory.desarrollador.miembro_proyecto.usuario.nombre }}
+        </p>
+        <p v-else>
+          <span class="highlight">Miembro Asignado:</span>
+          Nadie
+          ( <a href="#" class="reasignar" @click.prevent="showReasignar = true">Reasignar</a> )
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
           {{ userStory.user_story.prioridad }}
         </p>
       </div>
+      <div class="fila" v-if="showReasignar">
+        <div style="flex: 1">
+          <span class="highlight">Asignar a:</span> &nbsp;<Select :options="selectOptions" v-model="miembroSelected" @input="reasignar"/>
+        </div>
+      </div>
+      <br>
+      <br>
       <div>
         <label class="highlight">Descripción:</label>
         <p class="multiline">{{ userStory.user_story.descripcion }}</p>
@@ -30,11 +42,11 @@
     </div>
 
     <TabNavigation :tabs="tabs" default="reviews">
-      <template #reviews>
-        <Reviews/>
-      </template>
       <template #actividades>
-        <Actividades :sprintBacklog="userStory"/>
+        <Actividades :sprintBacklog="userStory" />
+      </template>
+      <template #reviews>
+        <Reviews :userStory="userStory" />
       </template>
     </TabNavigation>
   </Modal>
@@ -45,39 +57,64 @@ import Modal from "@/components/Modal";
 import TabNavigation from "@/components/TabNavigation";
 import Reviews from "@/components/Reviews";
 import Actividades from "@/components/Actividades";
+import Select from './Select.vue';
+import { mapGetters } from 'vuex';
+import sprintService from '@/services/sprintService';
+import userStoryService from '@/services/userStoryService';
+import Alert from '@/helpers/alert';
 
 export default {
   components: {
     Modal,
     TabNavigation,
     Reviews,
-    Actividades
+    Actividades,
+    Select
   },
   props: ["value", "userStory"],
-  computed: {},
+  computed: {
+    ...mapGetters({
+      hasPermission: "proyecto/hasPermission",
+    }),
+    selectOptions() {
+      return this.miembrosSprint.map(miembro => miembro.miembro_proyecto.usuario.nombre);
+    }
+  },
   data() {
     return {
+      miembrosSprint: [],
+      showReasignar: false,
+      miembroSelected: -1,
       tabs: [
-        { 
-          name: "reviews", 
-          title: "Reviews" 
+        {
+          name: "actividades",
+          title: "Actividades",
         },
         {
-          name: "actividades", 
-          title: "Actividades"
-        }
+          name: "reviews",
+          title: "Reviews",
+        },
       ],
+      show: false,
     };
   },
   watch: {
     value() {
       this.show = this.value;
+      this.loadMiembros();
     },
     show() {
       if (!this.show) this.$emit("input", null);
     },
   },
   methods: {
+    loadMiembros() {
+      if (this.userStory && !this.userStory.desarrollador && this.hasPermission("modificar_miembros_sprint")) {
+        sprintService.miembros(this.userStory.sprint.id).then(response => {
+          this.miembrosSprint = response;
+        });
+      }
+    },
     formatearFecha(date) {
       const fecha = new Date(date);
 
@@ -91,6 +128,17 @@ export default {
       if (numero < 10) return `0${numero}`;
       else return numero;
     },
+    reasignar() {
+      let reasignado = this.miembrosSprint[this.miembroSelected];
+      let confirmar  = confirm(`¿Está seguro que desea reasignar el User Story a ${reasignado.miembro_proyecto.usuario.nombre}?`);
+      if(confirmar) {
+        userStoryService.reasignar(this.userStory.id, reasignado.id).then(() => {
+          this.userStory.desarrollador = reasignado;
+          this.showReasignar = false;
+          Alert.success("Se ha reasignado el User Story correctamente");
+        });
+      }
+    }
   },
 };
 </script>
@@ -137,5 +185,12 @@ p {
 
 .pl-8 {
   padding-left: 8px;
+}
+.reasignar {
+  color: var(--primary);
+  text-decoration: none;
+  &:hover {
+    color: var(--primary-dark);
+  }
 }
 </style>

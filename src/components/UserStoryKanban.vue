@@ -11,7 +11,10 @@
         </div>
       </div>
     </div>
-    <div>Asignado a: {{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</div>
+    <div>Asignado a: 
+      <span v-if="userStory.desarrollador">{{userStory.desarrollador.miembro_proyecto.usuario.nombre}}</span>
+      <span class="text-danger" v-else>Nadie</span>
+    </div>
     
   </div>
 </template>

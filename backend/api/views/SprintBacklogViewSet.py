@@ -146,3 +146,59 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['POST'])
+    def reasignar(self, request, pk=None):
+        """
+        reasignar Reasigna un user story a otro desarrollador
+
+        Args:
+            request (Any): request que se solicita
+            pk (int, optional): Primary key. Defaults to None.
+
+        Returns:
+            JSON: Metadatos del SprintBacklog
+        """
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            sprint_backlog = SprintBacklog.objects.get(pk=pk)
+            miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=sprint_backlog.sprint.proyecto)
+            miembro_sprint = MiembroSprint.objects.get(
+                id=request.data.get("miembro_sprint"), sprint=sprint_backlog.sprint)
+            if not miembro_request.tiene_permiso("modificar_miembros_sprint"):
+                response = {
+                    "message": "No tiene permiso para realizar esta acción",
+                    "permission_required": [
+                        "modificar_miembro_sprint"
+                    ],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint_backlog.sprint.estado != 'A':
+                response = {
+                    "message": "No se puede reasignar un User Story en un sprint que no está activo.",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint_backlog.desarrollador:
+                response = {
+                    "message": "No se puede reasignar un User Story que no está pendiente de asignación.",
+                    "error": "unathorized"
+                }
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            sprint_backlog.desarrollador = miembro_sprint
+            sprint_backlog.save()
+            serializer = SprintBacklogSerializer(sprint_backlog, many=False)
+            return Response(serializer.data)
+        except SprintBacklog.DoesNotExist:
+            response = {
+                "message": "El User Story no existe en el sprint.",
+                "error": "not_found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except MiembroSprint.DoesNotExist:
+            response = {
+                "message": "El Miembro del Sprint no existe",
+                "error": "unathorized"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
