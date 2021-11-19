@@ -622,6 +622,12 @@ class ProyectoViewSet(viewsets.ViewSet):
         except Proyecto.DoesNotExist:
             response = {"message": "El proyecto no existe"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
 
     @transaction.atomic
     @action(detail=True, methods=['POST'])
@@ -653,3 +659,9 @@ class ProyectoViewSet(viewsets.ViewSet):
         except Proyecto.DoesNotExist:
             response = {"message": "El proyecto no existe"}
             return Response(response, status=status.HTTP_404_NOT_FOUND)
+        except Miembro.DoesNotExist:
+            response = {
+                "message": "Usted no es miembro de este Proyecto",
+                "error": "forbidden"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
