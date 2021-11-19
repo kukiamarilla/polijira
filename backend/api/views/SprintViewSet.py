@@ -289,6 +289,13 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            sprints_activos = Sprint.objects.filter(proyecto=sprint.proyecto, estado="A")
+            if len(sprints_activos) > 0:
+                response = {
+                    "message": "Sprint no se puede activar porque ya existe un sprint activo en el proyecto",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             sprint.activar()
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
