@@ -1089,7 +1089,9 @@ class ProyectoTestCase(TestCase):
         body = response.json()
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            body["message"], "No puedes finalizar el Proyecto hasta que todos los User Stories esten lanzados o cancelados")
+            body["message"],
+            "No puedes finalizar el Proyecto hasta que todos los User Stories esten lanzados o cancelados"
+        )
         self.assertEqual(body["error"], "bad_request")
 
     def test_cancelar_proyecto(self):

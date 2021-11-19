@@ -619,7 +619,8 @@ class ProyectoViewSet(viewsets.ViewSet):
             user_stories_pendientes = UserStory.objects.filter(proyecto=proyecto, estado='P')
             if len(user_stories_pendientes) > 0:
                 response = {
-                    "message": "No puedes finalizar el Proyecto hasta que todos los User Stories esten lanzados o cancelados",
+                    "message": "No puedes finalizar el Proyecto hasta"
+                    + " que todos los User Stories esten lanzados o cancelados",
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
