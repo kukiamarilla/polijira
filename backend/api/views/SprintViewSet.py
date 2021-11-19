@@ -321,10 +321,9 @@ class SprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
-            if not sprint.estado == "A" and \
-               not sprint.estado == "F":
+            if sprint.estado == "P":
                 response = {
-                    "message": "Solo puedes ver el Burndown Chart de un Sprint Activo o Finalizado",
+                    "message": "No puedes ver el Burndown Chart de un Sprint Pendiente",
                     "error": "bad_request"
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)

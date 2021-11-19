@@ -33,6 +33,12 @@ class MiembroSprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not miembro_sprint.sprint.estado == "A":
+                response = {
+                    "message": "No se puede eliminar un miembro de un Sprint no activo",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             sbs = SprintBacklog.objects.filter(sprint=sprint, desarrollador=miembro_sprint)
             for sb in sbs:
                 sb.desarrollador = None
@@ -82,6 +88,12 @@ class MiembroSprintViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not miembro_sprint.sprint.estado == "A":
+                response = {
+                    "message": "No se puede eliminar un miembro de un Sprint no activo",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             sbs = SprintBacklog.objects.filter(sprint=sprint, desarrollador=miembro_sprint)
             miembro_sprint_nuevo = MiembroSprint.objects.create(miembro_proyecto=miembro_nuevo, sprint=sprint)
             for sb in sbs:
