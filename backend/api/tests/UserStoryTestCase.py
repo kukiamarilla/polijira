@@ -926,7 +926,7 @@ class UserStoryTestCase(TestCase):
         user_story = UserStory.objects.get(pk=2)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(body["id"], user_story.id)
-        self.assertEquals(body["estado"], user_story.estado)
+        self.assertEquals(user_story.estado, "R")
         self.assertEquals(body["fecha_release"], str(user_story.fecha_release))
 
     def test_lanzar_user_story_sin_permiso_ver_user_stories(self):
@@ -1048,6 +1048,95 @@ class UserStoryTestCase(TestCase):
         sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
         sprint_backlog.mover_kanban("N")
         response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_cancelar_user_story(self):
+        """
+        test_cancelar_user_story
+        Prueba cancelar un user story
+        """
+        print("\nProbando cancelar un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        user_story = UserStory.objects.get(pk=2)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["id"], user_story.id)
+        self.assertEquals(user_story.estado, "C")
+
+    def test_cancelar_user_story_sin_permiso_ver_user_stories(self):
+        """
+        test_cancelar_user_story_sin_permiso_ver_user_stories
+        Prueba cancelar un user story sin permiso ver user stories
+        """
+        print("\nProbando cancelar un user story sin permiso ver user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "cancelar_user_stories"])
+
+    def test_cancelar_user_story_sin_permiso_cancelar_user_stories(self):
+        """
+        test_cancelar_user_story_sin_permiso_cancelar_user_stories
+        Prueba cancelar un user story sin permiso cancelar user stories
+        """
+        print("\nProbando cancelar un user story sin permiso cancelar user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="cancelar_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "cancelar_user_stories"])
+
+    def test_cancelar_user_story_sin_sprint_backlog(self):
+        """
+        test_cancelar_user_story_sin_sprint_backlog
+        Prueba cancelar un user story sin sprint backlog
+        """
+        print("\nProbando cancelar un user story sin sprint backlog.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.delete()
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "User Story no se encuentra en ningún Sprint Backlog")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_cancelar_user_story_inexistente(self):
+        """
+        test_cancelar_user_story_inexistente
+        Prueba cancelar un user story inexistente
+        """
+        print("\nProbando cancelar un user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/user-stories/99/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el User Story")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_cancelar_user_story(self):
+        """
+        test_cancelar_user_story
+        Prueba cancelar un user story
+        """
+        print("\nProbando cancelar un user story.")
+        self.client.login(username="user_test", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
         body = response.json()
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
