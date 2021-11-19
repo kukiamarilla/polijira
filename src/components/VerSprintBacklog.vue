@@ -21,7 +21,11 @@
         <p v-else>
           <span class="highlight">Miembro Asignado:</span>
           Nadie
-          ( <a href="#" class="reasignar" @click.prevent="showReasignar = true">Reasignar</a> )
+          <span v-if="userStory.sprint.estado !== 'F'">
+            <a href="#" class="reasignar" @click.prevent="showReasignar = true">
+              (Reasignar)
+            </a>
+          </span>
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
@@ -30,11 +34,15 @@
       </div>
       <div class="fila" v-if="showReasignar">
         <div style="flex: 1">
-          <span class="highlight">Asignar a:</span> &nbsp;<Select :options="selectOptions" v-model="miembroSelected" @input="reasignar"/>
+          <span class="highlight">Asignar a:</span> &nbsp;<Select
+            :options="selectOptions"
+            v-model="miembroSelected"
+            @input="reasignar"
+          />
         </div>
       </div>
-      <br>
-      <br>
+      <br />
+      <br />
       <div>
         <label class="highlight">Descripción:</label>
         <p class="multiline">{{ userStory.user_story.descripcion }}</p>
