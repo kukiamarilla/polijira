@@ -593,10 +593,11 @@ class ProyectoViewSet(viewsets.ViewSet):
     def finalizar(self, request, pk=None):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not usuario_request.tiene_permiso("finalizar_proyectos"):
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
+            if not miembro.tiene_permiso("finalizar_proyecto"):
                 response = {
                     "message": "No tiene permiso para realizar esta accion",
-                    "permission_required": ["finalizar_proyectos"],
+                    "permission_required": ["finalizar_proyecto"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
@@ -627,10 +628,11 @@ class ProyectoViewSet(viewsets.ViewSet):
     def cancelar(self, request, pk=None):
         try:
             usuario_request = Usuario.objects.get(user=request.user)
-            if not usuario_request.tiene_permiso("cancelar_proyectos"):
+            miembro = Miembro.objects.get(usuario=usuario_request, proyecto_id=pk)
+            if not miembro.tiene_permiso("cancelar_proyecto"):
                 response = {
                     "message": "No tiene permiso para realizar esta accion",
-                    "permission_required": ["cancelar_proyectos"],
+                    "permission_required": ["cancelar_proyecto"],
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
