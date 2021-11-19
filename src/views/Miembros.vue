@@ -66,7 +66,7 @@
                   <a
                     href="#"
                     @click.prevent="modificarHorario(miembro)"
-                    v-if="hasProyectoPermissions(['modificar_miembros'])"
+                    v-if="!haTerminadoProyecto && hasProyectoPermissions(['modificar_miembros'])"
                   >
                     <Icon
                       icono="edit"
@@ -158,10 +158,14 @@ export default {
         .forEach((rol) => (rolesSelect[rol.id] = rol.nombre));
       return rolesSelect;
     },
+    haTerminadoProyecto() {
+      return this.proyecto.estado === 'F' || this.proyecto.estado === 'C';
+    },
   },
   data() {
     return {
       proyecto: {
+        estado: "",
         nombre: "",
       },
       roles: [],
