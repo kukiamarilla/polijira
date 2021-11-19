@@ -841,3 +841,79 @@ class SprintTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
         self.assertEquals(body["error"], "forbidden")
+
+    def test_finalizar_sprint(self):
+        """
+        test_finalizar_sprint
+        Prueba la finalización de un sprint
+        """
+        print("\nProbando finalizar un sprint.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        sprint.activar()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/finalizar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["estado"], "F")
+        sprint = Sprint.objects.get(pk=1)
+        self.assertEquals(sprint.estado, "F")
+
+    def test_finalizar_sprint_sin_permiso_finalizar_sprints(self):
+        """
+        test_finalizar_sprint_sin_permiso_finalizar_sprints
+        Prueba la finalización de un sprint sin permiso de finalizar sprints
+        """
+        print("\nProbando finalizar un sprint sin permiso de finalizar sprints.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="finalizar_sprints").delete()
+        sprint = Sprint.objects.get(pk=1)
+        sprint.activar()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/finalizar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["permission_required"], ["finalizar_sprints"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_finalizar_sprint_con_sprint_con_estado_no_activo(self):
+        """
+        test_finalizar_sprint_con_sprint_con_estado_no_activo
+        Prueba la finalización de un sprint con estado no activo
+        """
+        print("\nProbando finalizar un sprint con estado no activo.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=1)
+        sprint.estado_sprint_planning = 'F'
+        sprint.save()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/finalizar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(body["message"], "Solo puedes finalizar un Sprint Activo")
+        self.assertEquals(body["error"], "bad_request")
+
+    def test_finalizar_sprint_inexistente(self):
+        """
+        test_finalizar_sprint_inexistente
+        Prueba la finalización de un sprint inexistente
+        """
+        print("\nProbando finalizar un sprint inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/sprints/99/finalizar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el Sprint")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_finalizar_sprint_sin_ser_miembro_del_proyecto(self):
+        """
+        test_finalizar_sprint_sin_ser_miembro_del_proyecto
+        Prueba la finalización de un sprint sin ser miembro del proyecto
+        """
+        print("\nProbando finalizar un sprint sin ser miembro del proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint = Sprint.objects.get(pk=3)
+        sprint.activar()
+        response = self.client.post("/api/sprints/" + str(sprint.pk) + "/finalizar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEquals(body["error"], "forbidden")
