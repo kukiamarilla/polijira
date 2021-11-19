@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import date
+
 
 ESTADOS_SPRINT = (
     ("P", "Pendiente"),
@@ -79,6 +81,7 @@ class Sprint(models.Model):
         iniciar Activa este Sprint
         """
         self.estado = "A"
+        self.fecha_inicio = date.today()
         self.save()
 
     def finalizar(self):
