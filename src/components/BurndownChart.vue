@@ -29,41 +29,12 @@ export default defineComponent({
         }
       }
     })
-    const data = ref([
-      {
-        dia: "2021-11-12",
-        horas_restantes: 117,
-      },
-      {
-        dia: "2021-11-13",
-        horas_restantes: 110,
-      },
-      {
-        dia: "2021-11-14",
-        horas_restantes: 90,
-      },
-      {
-        dia: "2021-11-15",
-        horas_restantes: 84,
-      },
-      {
-        dia: "2021-11-16",
-        horas_restantes: 83,
-      },
-      {
-        dia: "2021-11-17",
-        horas_restantes: 70,
-      },
-      {
-        dia: "2021-11-18",
-        horas_restantes: 65,
-      },
-    ]);
+    const data = ref([]);
 
     const calculateIdealData = () => {
       const ini = new Date(sprint.fecha_inicio).getTime();
       const fin = new Date(sprint.fecha_fin).getTime();
-      const difDias = (fin - ini) / (1000 * 60 * 60 * 24);
+      const difDias = (fin - ini) / (1000 * 60 * 60 * 24) + 1;
       const pendiente = horasTotales.value / difDias;
 
       for(let i = 0; i <= difDias; i++) {
@@ -81,7 +52,9 @@ export default defineComponent({
       });
       calculateIdealData();
     });
-    
+    sprintService.burndownChart(sprint.id).then(burndown => {
+      data.value = burndown;
+    });
     const chartData = computed(() => ({
       datasets: [
         {
