@@ -43,6 +43,9 @@ class MiembroSprintTestCase(TestCase):
         """
         print("\nProbando eliminar un miembro sprint.")
         self.client.login(username="testing", password="polijira2021")
+        miembro_sprint = MiembroSprint.objects.get(id=4)
+        sprint = miembro_sprint.sprint
+        sprint.activar()
         response = self.client.delete("/api/miembros-sprint/4/")
         body = response.json()
         self.assertEquals(response.status_code, 200)
@@ -96,6 +99,9 @@ class MiembroSprintTestCase(TestCase):
         """
         print("\nProbando reemplazar un miembro sprint.")
         self.client.login(username="testing", password="polijira2021")
+        miembro_sprint = MiembroSprint.objects.get(id=4)
+        sprint = miembro_sprint.sprint
+        sprint.activar()
         request_data = {
             "miembro": 4
         }
