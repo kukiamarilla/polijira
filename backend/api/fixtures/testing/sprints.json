@@ -6,10 +6,11 @@
             "numero": 1,
             "fecha_inicio": "2020-10-04",
             "fecha_fin": "2020-10-24",
-            "estado": "A",
+            "estado": "P",
             "estado_sprint_planning": "F",
             "planificador": 1,
-            "proyecto": 3
+            "proyecto": 3,
+            "fecha_fin_real": "2020-10-24"
         }
     },
     {
@@ -22,7 +23,8 @@
             "estado": "P",
             "estado_sprint_planning": "P",
             "planificador": null,
-            "proyecto": 3
+            "proyecto": 3,
+            "fecha_fin_real": "2022-11-24"
         }
     },
     {
@@ -35,7 +37,22 @@
             "estado": "P",
             "estado_sprint_planning": "P",
             "planificador": null,
-            "proyecto": 4
+            "proyecto": 4,
+            "fecha_fin_real": "2022-10-20"
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 4,
+        "fields": {
+            "numero": 1,
+            "fecha_inicio": "2020-10-04",
+            "fecha_fin": "2020-10-24",
+            "estado": "P",
+            "estado_sprint_planning": "F",
+            "planificador": 1,
+            "proyecto": 1,
+            "fecha_fin_real": "2020-10-24"
         }
     }
 ]

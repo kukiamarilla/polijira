@@ -34,6 +34,7 @@
                       href="#"
                       @click.prevent="eliminarRol(rol)"
                       v-if="
+                        !haTerminadoProyecto &&
                         rol.nombre != 'Scrum Master' &&
                         rol.id != me.rol.id &&
                         hasPermission('eliminar_roles_proyecto')
@@ -50,6 +51,7 @@
                       href="#"
                       @click.prevent="abrirModificarModal(rol)"
                       v-if="
+                        !haTerminadoProyecto &&
                         rol.nombre != 'Scrum Master' &&
                         rol.id != me.rol.id &&
                         hasPermission('modificar_roles_proyecto')
@@ -71,7 +73,7 @@
 
         <div
           class="box create-role shadow"
-          v-if="hasPermission('crear_roles_proyecto')"
+          v-if="!haTerminadoProyecto && hasPermission('crear_roles_proyecto')"
         >
           <h2 class="title">Nuevo Rol</h2>
           <InputText title="Nombre" v-model="nuevoRol.nombre" />
@@ -195,6 +197,9 @@ export default {
     this.load();
   },
   computed: {
+    haTerminadoProyecto() {
+      return this.proyecto.estado === 'F' || this.proyecto.estado === 'C';
+    },
     ...mapState({
       me: (state) => state.proyecto.me,
     }),

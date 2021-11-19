@@ -34,4 +34,10 @@ export default {
     reasignar(id, miembroSprint) {
       return api.post(`/sprint-backlogs/${id}/reasignar/`, {"miembro_sprint": miembroSprint}).then(response => response.data)
     },
+    lanzar(id) {
+      return api.post(`/user-stories/${id}/lanzar/`).then(response => response.data)
+    },
+    cancelar(id) {
+      return api.post(`/user-stories/${id}/cancelar/`).then(response => response.data)
+    }
 }

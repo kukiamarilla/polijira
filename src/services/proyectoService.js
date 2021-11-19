@@ -33,5 +33,11 @@ export default {
     return api
       .get(`/proyectos/${id}/estimaciones_pendientes/`)
       .then((response) => response.data);
+  },
+  finalizar(id) {
+    return api.post(`/proyectos/${id}/finalizar/`).then(response => response.data)
+  },
+  cancelar(id) {
+    return api.post(`/proyectos/${id}/cancelar/`).then(response => response.data)
   }
 };

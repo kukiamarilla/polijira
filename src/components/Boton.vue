@@ -61,6 +61,7 @@ button {
 .secondary:active {
   background-color: #ddd;
 }
+
 .success {
   color: white;
   background-color: var(--success);
@@ -72,6 +73,19 @@ button {
 
 .success:active {
   background-color: darken(#6be78d, 20%);
+}
+
+.danger {
+  color: white;
+  background-color: var(--danger);
+}
+
+.danger:hover {
+  background-color: var(--danger-dark);
+}
+
+.danger:active {
+  background-color: var(--danger-dark);
 }
 
 .disabled {

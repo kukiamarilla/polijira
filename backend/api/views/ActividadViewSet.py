@@ -93,6 +93,12 @@ class ActividadViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if not actividad.sprint_backlog.sprint.estado == "A":
+                response = {
+                    "message": "Para modificar una actividad el Sprint debe estar Activo",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             actividad.update(
                 horas=request.data.get("horas"),
                 descripcion=request.data.get("descripcion"),

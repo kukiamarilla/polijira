@@ -1,6 +1,8 @@
 import datetime
 from django.test import TestCase, Client
 from backend.api.models import Miembro, Proyecto, RolProyecto, Usuario, Permiso, PermisoProyecto, SprintBacklog
+from backend.api.models.Sprint import Sprint
+from backend.api.models.UserStory import UserStory
 
 
 class ProyectoTestCase(TestCase):
@@ -945,3 +947,229 @@ class ProyectoTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(body["message"], "No existe el Proyecto")
         self.assertEqual(body["error"], "not_found")
+
+    def test_finalizar_proyecto(self):
+        """
+        test_finalizar_proyecto
+        Prueba finalizar un proyecto
+        """
+        print("\nProbando finalizar un proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.lanzar()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.finalizar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body["estado"], "F")
+        proyecto = Proyecto.objects.get(pk=1)
+        self.assertEqual(proyecto.estado, "F")
+
+    def test_finalizar_proyecto_sin_permiso_finalizar_proyecto(self):
+        """
+        test_finalizar_proyecto_sin_permiso
+        Prueba finalizar un proyecto sin permiso
+        """
+        print("\nProbando finalizar un proyecto sin permiso.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="finalizar_proyecto").delete()
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.lanzar()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.finalizar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "No tiene permiso para realizar esta accion")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_finalizar_proyecto_no_iniciado(self):
+        """
+        test_finalizar_proyecto_no_iniciado
+        Prueba finalizar un proyecto sin iniciar
+        """
+        print("\nProbando finalizar un proyecto sin iniciar.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.lanzar()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.finalizar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(body["message"], "No puedes finalizar el Proyecto en su estado actual")
+        self.assertEqual(body["error"], "bad_request")
+
+    def test_finalizar_proyecto_sin_ser_miembro(self):
+        """
+        test_finalizar_proyecto_sin_ser_miembro
+        Prueba finalizar un proyecto sin ser miembro
+        """
+        print("\nProbando finalizar un proyecto sin ser miembro.")
+        self.client.login(username="user_test", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.lanzar()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.finalizar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_finalizar_proyecto_inexistente(self):
+        """
+        test_finalizar_proyecto_inexistente
+        Prueba finalizar un proyecto inexistente
+        """
+        print("\nProbando finalizar un proyecto inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/proyectos/99/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(body["message"], "El proyecto no existe")
+        self.assertEqual(body["error"], "not_found")
+
+    def test_finalizar_proyecto_con_sprints_activos(self):
+        """
+        test_finalizar_proyecto_con_sprints_activos
+        Prueba finalizar un proyecto con sprints activos
+        """
+        print("\nProbando finalizar un proyecto con sprints activos.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.lanzar()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.estado = "A"
+            sprint.save()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            body["message"], "No puedes finalizar el Proyecto hasta que todos los Sprints esten finalizados")
+        self.assertEqual(body["error"], "bad_request")
+
+    def test_finalizar_proyecto_con_user_stories_pendientes(self):
+        """
+        test_finalizar_proyecto_con_user_stories_pendientes
+        Prueba finalizar un proyecto con user stories pendientes
+        """
+        print("\nProbando finalizar un proyecto con user stories pendientes.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        user_stories = UserStory.objects.filter(proyecto=proyecto)
+        for user_story in user_stories:
+            user_story.estado = "P"
+            user_story.save()
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            sprint.finalizar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/finalizar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            body["message"],
+            "No puedes finalizar el Proyecto hasta que todos los User Stories esten lanzados o cancelados"
+        )
+        self.assertEqual(body["error"], "bad_request")
+
+    def test_cancelar_proyecto(self):
+        """
+        test_cancelar_proyecto
+        Prueba cancelar un proyecto
+        """
+        print("\nProbando cancelar un proyecto.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/cancelar/")
+        sprint_activos = False
+        sprints = Sprint.objects.filter(proyecto=proyecto)
+        for sprint in sprints:
+            if sprint.estado == "A":
+                sprint_activos = True
+        body = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body["estado"], "C")
+        self.assertEqual(sprint_activos, False)
+        proyecto = Proyecto.objects.get(pk=1)
+        self.assertEqual(proyecto.estado, "C")
+
+    def test_cancelar_proyecto_sin_ser_miembro(self):
+        """
+        test_cancelar_proyecto_sin_ser_miembro
+        Prueba cancelar un proyecto sin ser miembro
+        """
+        print("\nProbando cancelar un proyecto sin ser miembro.")
+        self.client.login(username="user_test", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/cancelar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_cancelar_proyecto_inexistente(self):
+        """
+        test_cancelar_proyecto_inexistente
+        Prueba cancelar un proyecto inexistente
+        """
+        print("\nProbando cancelar un proyecto inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/proyectos/99/cancelar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(body["message"], "El proyecto no existe")
+        self.assertEqual(body["error"], "not_found")
+
+    def test_cancelar_proyecto_sin_permiso_cancelar_proyecto(self):
+        """
+        test_cancelar_proyecto_sin_permiso_cancelar_proyecto
+        Prueba cancelar un proyecto sin permisos
+        """
+        print("\nProbando cancelar un proyecto sin permisos.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="cancelar_proyecto").delete()
+        proyecto = Proyecto.objects.get(pk=1)
+        proyecto.iniciar()
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/cancelar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_cancelar_proyecto_no_activo(self):
+        """
+        test_cancelar_proyecto_no_activo
+        Prueba cancelar un proyecto no activo
+        """
+        print("\nProbando cancelar un proyecto no activo.")
+        self.client.login(username="testing", password="polijira2021")
+        proyecto = Proyecto.objects.get(pk=1)
+        response = self.client.post("/api/proyectos/" + str(proyecto.id) + "/cancelar/")
+        body = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(body["message"], "No puedes cancelar el Proyecto en su estado actual")
+        self.assertEqual(body["error"], "bad_request")

@@ -5,6 +5,14 @@
     <div class="datos-de-registro">
       <div class="fila">
         <p>
+          <span class="highlight">Estado:</span>
+          {{ userStory.user_story.estado == "P" ? "Pendiente" : "" }}
+          {{ userStory.user_story.estado == "R" ? "Lanzado" : "" }}
+          {{ userStory.user_story.estado == "C" ? "Cancelado" : "" }}
+        </p>
+      </div>
+      <div class="fila">
+        <p>
           <span class="highlight">Título:</span>
           {{ userStory.user_story.nombre }}
         </p>
@@ -21,7 +29,11 @@
         <p v-else>
           <span class="highlight">Miembro Asignado:</span>
           Nadie
-          ( <a href="#" class="reasignar" @click.prevent="showReasignar = true">Reasignar</a> )
+          <span v-if="userStory.sprint.estado !== 'F'">
+            <a href="#" class="reasignar" @click.prevent="showReasignar = true">
+              (Reasignar)
+            </a>
+          </span>
         </p>
         <p>
           <span class="highlight">Prioridad:</span>
@@ -30,14 +42,45 @@
       </div>
       <div class="fila" v-if="showReasignar">
         <div style="flex: 1">
-          <span class="highlight">Asignar a:</span> &nbsp;<Select :options="selectOptions" v-model="miembroSelected" @input="reasignar"/>
+          <span class="highlight">Asignar a:</span> &nbsp;<Select
+            :options="selectOptions"
+            v-model="miembroSelected"
+            @input="reasignar"
+          />
         </div>
       </div>
-      <br>
-      <br>
+      <br />
+      <br />
       <div>
         <label class="highlight">Descripción:</label>
         <p class="multiline">{{ userStory.user_story.descripcion }}</p>
+      </div>
+    </div>
+    <div class="d-flex justify-content-flex-end">
+      <div class="botone">
+        <Boton
+          tema="danger"
+          texto="Cancelar"
+          @click="cancelar"
+          v-if="
+            userStory.user_story.estado == 'P' &&
+            hasPermission('cancelar_user_stories') &&
+            userStory.sprint.estado == 'A'
+
+          "
+        />
+        &nbsp; &nbsp;
+        <Boton
+          tema="success"
+          texto="Lanzar"
+          @click="lanzar"
+          v-if="
+            userStory.user_story.estado == 'P' &&
+            hasPermission('lanzar_user_stories') &&
+            userStory.estado_kanban == 'N' &&
+            userStory.sprint.estado == 'A'
+          "
+        />
       </div>
     </div>
 
@@ -62,6 +105,7 @@ import { mapGetters } from 'vuex';
 import sprintService from '@/services/sprintService';
 import userStoryService from '@/services/userStoryService';
 import Alert from '@/helpers/alert';
+import Boton from "@/components/Boton";
 
 export default {
   components: {
@@ -69,7 +113,8 @@ export default {
     TabNavigation,
     Reviews,
     Actividades,
-    Select
+    Select,
+    Boton,
   },
   props: ["value", "userStory"],
   computed: {
@@ -85,6 +130,7 @@ export default {
       miembrosSprint: [],
       showReasignar: false,
       miembroSelected: -1,
+      show: false,
       tabs: [
         {
           name: "actividades",
@@ -95,7 +141,6 @@ export default {
           title: "Reviews",
         },
       ],
-      show: false,
     };
   },
   watch: {
@@ -104,7 +149,7 @@ export default {
       this.loadMiembros();
     },
     show() {
-      if (!this.show) this.$emit("input", null);
+      if (!this.show) this.$emit("input", false);
     },
   },
   methods: {
@@ -138,7 +183,29 @@ export default {
           Alert.success("Se ha reasignado el User Story correctamente");
         });
       }
-    }
+    },
+    lanzar() {
+      const confirmar = confirm(
+        "¿Está seguro que desea lanzar esta User Story?"
+      );
+      if (confirmar) {
+        userStoryService.lanzar(this.userStory.user_story.id).then(() => {
+          Alert.success("User Story lanzado!");
+          this.userStory.user_story.estado = "R";
+        });
+      }
+    },
+    cancelar() {
+      const confirmar = confirm(
+        "¿Está seguro que desea cancelar esta User Story?"
+      );
+      if (confirmar) {
+        userStoryService.cancelar(this.userStory.user_story.id).then(() => {
+          Alert.success("User Story cancelado.");
+          this.userStory.user_story.estado = "C";
+        });
+      }
+    },
   },
 };
 </script>
