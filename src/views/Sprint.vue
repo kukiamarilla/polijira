@@ -4,24 +4,31 @@
     <div class="d-flex">
       <SidebarProyecto current="sprints" :proyecto="proyecto" />
       <div class="container shadow">
-        <div class="d-flex header">
+        <div class="d-flex justify-content-space-between">
           <h2>Sprint {{ sprint.numero }}</h2>
+
+          <Boton
+            v-if="sprint.estado === 'A'"
+            texto="Finalizar Sprint"
+            tema="success"
+            @click="finalizarSprint"
+          />
         </div>
-        <br>
-        <br>
+        <br />
+        <br />
         <TabNavigation :tabs="tabs" default="kanban">
-            <template #kanban>
-                <Kanban/>
-            </template>
-            <template #miembros>
-                <MiembrosSprint/>
-            </template>
-            <template #sprint-backlog>
-                <SprintBacklog/>
-            </template>
-            <template #burndown-chart>
-                <BurndownChart :sprint="sprint"/>
-            </template>
+          <template #kanban>
+            <Kanban />
+          </template>
+          <template #miembros>
+            <MiembrosSprint :sprint="sprint" />
+          </template>
+          <template #sprint-backlog>
+            <SprintBacklog />
+          </template>
+          <template #burndown-chart>
+            <BurndownChart :sprint="sprint" />
+          </template>
         </TabNavigation>
       </div>
     </div>
@@ -36,6 +43,7 @@ import Kanban from "@/components/Kanban";
 import MiembrosSprint from "@/components/MiembrosSprint";
 import SprintBacklog from "@/components/SprintBacklog";
 import BurndownChart from "@/components/BurndownChart";
+import Boton from "@/components/Boton";
 import proyectoService from "@/services/proyectoService";
 import sprintService from "@/services/sprintService";
 import { mapGetters, mapState } from "vuex";
@@ -48,7 +56,8 @@ export default {
     Kanban,
     MiembrosSprint,
     SprintBacklog,
-    BurndownChart
+    BurndownChart,
+    Boton,
   },
   created() {},
   mounted() {
@@ -74,6 +83,7 @@ export default {
         numero: 0,
         fecha_inicio: 0,
         fecha_fin: 0,
+        estado: ""
       },
       proyecto: {
         id: 0,
@@ -108,6 +118,11 @@ export default {
         this.proyecto = proyecto
       })
     },
+    finalizarSprint() {
+      sprintService.finalizar(this.sprint.id).then(() => {
+        this.load();
+      });
+    }
   },
 };
 </script>
