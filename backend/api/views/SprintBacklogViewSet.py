@@ -183,15 +183,15 @@ class SprintBacklogViewSet(viewsets.ViewSet):
             if sprint_backlog.sprint.estado != 'A':
                 response = {
                     "message": "No se puede reasignar un User Story en un sprint que no está activo.",
-                    "error": "forbidden"
+                    "error": "bad_request"
                 }
-                return Response(response, status=status.HTTP_403_FORBIDDEN)
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             if sprint_backlog.desarrollador:
                 response = {
                     "message": "No se puede reasignar un User Story que no está pendiente de asignación.",
-                    "error": "unathorized"
+                    "error": "bad_request"
                 }
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             sprint_backlog.desarrollador = miembro_sprint
             sprint_backlog.save()
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
@@ -205,6 +205,6 @@ class SprintBacklogViewSet(viewsets.ViewSet):
         except MiembroSprint.DoesNotExist:
             response = {
                 "message": "El Miembro del Sprint no existe",
-                "error": "unathorized"
+                "error": "not_found"
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
