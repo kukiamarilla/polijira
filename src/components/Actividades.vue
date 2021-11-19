@@ -55,6 +55,11 @@ export default {
       actividadModificar: null,
     }
   },
+  watch: {
+    sprintBacklog() {
+      this.load()
+    }
+  },
   computed: {
     ...mapState("proyecto", ["me"])
   },
