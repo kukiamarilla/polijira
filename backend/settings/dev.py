@@ -151,7 +151,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 FIREBASE_CONFIG = {
     "type": "service_account",
     "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
-    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace("\\n", "\n"),
+    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY', "").replace("\\n", "\n"),
     "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
     "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
 }
