@@ -325,3 +325,100 @@ class SprintBacklogTestCase(TestCase):
         self.assertEquals(body.get("horas_estimadas"), int((h1 + request_data["horas_estimadas"])/2))
         self.assertEquals(body.get("estado_estimacion"), "C")
         self.assertEquals(body.get("desarrollador").get("id"), 2)
+
+    def test_reasignar_sprint_backlog(self):
+        """
+        test_reasignar_sprint_backlog
+        Prueba reasignar un user story a otro desarrollador
+        """
+        print("\nProbando reasignar un user story a otro desarrollador.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.desarrollador = None
+        sprint_backlog.save()
+        sprint_backlog.sprint.activar()
+        request_data = {
+            "miembro_sprint": 2
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/reasignar/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["desarrollador"]["id"], 2)
+
+    def test_reasignar_sprint_backlog_con_sprint_backlog_inexistente(self):
+        """
+        test_reasignar_sprint_backlog_con_sprint_backlog_inexistente
+        Prueba reasignar un user story a otro desarrollador con sprint backlog inexistente
+        """
+        print("\nProbando reasignar un user story a otro desarrollador con sprint backlog inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        request_data = {
+            "miembro_sprint": 2
+        }
+        response = self.client.post("/api/sprint-backlogs/99/reasignar/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "El User Story no existe en el sprint.")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_reasignar_sprint_backlog_con_miembro_sprint_inexistente(self):
+        """
+        test_reasignar_sprint_backlog_con_miembro_sprint_inexistente
+        Prueba reasignar un user story a otro desarrollador con miembro sprint inexistente
+        """
+        print("\nProbando reasignar un user story a otro desarrollador con miembro sprint inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.desarrollador = None
+        sprint_backlog.save()
+        sprint_backlog.sprint.activar()
+        request_data = {
+            "miembro_sprint": 99
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/reasignar/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "El Miembro del Sprint no existe")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_reasignar_sprint_backlog_con_sprint_inactivo(self):
+        """
+        test_reasignar_sprint_backlog_con_sprint_inactivo
+        Prueba reasignar un user story a otro desarrollador con sprint inactivo
+        """
+        print("\nProbando reasignar un user story a otro desarrollador con sprint inactivo.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.desarrollador = None
+        sprint_backlog.save()
+        request_data = {
+            "miembro_sprint": 2
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/reasignar/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(body["message"], "No se puede reasignar un User Story en un sprint que no está activo.")
+        self.assertEquals(body["error"], "bad_request")
+
+    def test_reasignar_sprint_backlog_ya_asignado(self):
+        """
+        test_reasignar_sprint_backlog_ya_asignado
+        Prueba reasignar un user story a otro desarrollador con sprint backlog ya asignado
+        """
+        print("\nProbando reasignar un user story a otro desarrollador con sprint backlog ya asignado.")
+        self.client.login(username="testing", password="polijira2021")
+        sprint_backlog = SprintBacklog.objects.get(pk=1)
+        sprint_backlog.sprint.activar()
+        request_data = {
+            "miembro_sprint": 2
+        }
+        response = self.client.post("/api/sprint-backlogs/" + str(sprint_backlog.pk) + "/reasignar/",
+                                    request_data, content_type="application/json")
+        body = response.json()
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(body["message"], "No se puede reasignar un User Story que no está pendiente de asignación.")
+        self.assertEquals(body["error"], "bad_request")

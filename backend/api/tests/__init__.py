@@ -13,3 +13,4 @@ from .SprintPlanningTestCase import SprintPlanningTestCase
 from .SprintBacklogTestCase import SprintBacklogTestCase
 from .ActividadTestCase import ActividadTestCase
 from .ReviewTestCase import ReviewTestCase
+from .MiembroSprintTestCase import MiembroSprintTestCase
