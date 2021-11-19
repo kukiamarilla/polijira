@@ -62,5 +62,8 @@ export default {
   },
   activar(id) {
       return api.post(`/sprints/${id}/activar/`).then(response => response.data)
+  },
+  finalizar(id) {
+    return api.post(`/sprints/${id}/finalizar/`).then(response => response.data)
   }
 };
