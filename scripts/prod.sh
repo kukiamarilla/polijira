@@ -11,7 +11,7 @@ heroku buildpacks:add heroku/python -a $app
 
 echo -n "Firebase Client Email: "
 read fClientEmail
-fPrivateKey=$(cat ../firebase_private.prod.key)
+fPrivateKey=`cat ../firebase_private.prod.key`
 echo -n "Firebase Project ID: "
 read fProjectId
 echo -n "Firebase Token URI: "
@@ -31,7 +31,7 @@ heroku config:set DJANGO_SECRET_KEY=92429d82a41e930486c6de5ebda9602d55c39986  -a
 heroku config:set DJANGO_SETTINGS_MODULE=backend.settings.prod  -a $app
 
 heroku config:set FIREBASE_CLIENT_EMAIL=$fClientEmail -a $app
-heroku config:set FIREBASE_PRIVATE_KEY=$fPrivateKey -a $app
+heroku config:set FIREBASE_PRIVATE_KEY="$fPrivateKey" -a $app
 heroku config:set FIREBASE_PROJECT_ID=$fProjectId -a $app
 heroku config:set FIREBASE_TOKEN_URI=$fTokenUri -a $app
 heroku config:set VUE_APP_FIREBASE_API_KEY=$fApiKey -a $app
