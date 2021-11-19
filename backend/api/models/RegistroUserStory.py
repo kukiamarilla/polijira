@@ -42,18 +42,12 @@ class RegistroUserStory(models.Model):
     """
     nombre_antes = models.CharField(max_length=255, null=True)
     descripcion_antes = models.TextField(null=True)
-    horas_estimadas_antes = models.IntegerField(null=True)
     prioridad_antes = models.IntegerField(null=True)
     estado_antes = models.CharField(max_length=1, choices=ESTADOS_US, null=True)
-    desarrollador_antes = models.ForeignKey("Miembro", on_delete=models.CASCADE,
-                                            related_name="registros_antes", null=True)
     nombre_despues = models.CharField(max_length=255, null=True)
     descripcion_despues = models.TextField(null=True)
-    horas_estimadas_despues = models.IntegerField(null=True)
     prioridad_despues = models.IntegerField(null=True)
     estado_despues = models.CharField(max_length=1, choices=ESTADOS_US, null=True)
-    desarrollador_despues = models.ForeignKey(
-        "Miembro", on_delete=models.CASCADE, related_name="registros_despues", null=True)
     user_story = models.ForeignKey("UserStory", on_delete=models.CASCADE, related_name="registros")
     accion = models.CharField(max_length=50)
     fecha = models.DateField()
@@ -78,17 +72,12 @@ class RegistroUserStory(models.Model):
         RegistroUserStory.objects.create(
             nombre_antes=registro.nombre_despues,
             descripcion_antes=registro.descripcion_despues,
-            horas_estimadas_antes=registro.horas_estimadas_despues,
             prioridad_antes=registro.prioridad_despues,
             estado_antes=registro.estado_despues,
-            desarrollador_antes=registro.desarrollador_despues,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador.miembro_proyecto
-            if user_story.desarrollador is not None else None,
             user_story=user_story,
             accion="Modificacion",
             fecha=datetime.date.today(),
@@ -100,11 +89,8 @@ class RegistroUserStory(models.Model):
         RegistroUserStory.objects.create(
             nombre_antes=user_story.nombre,
             descripcion_antes=user_story.descripcion,
-            horas_estimadas_antes=user_story.horas_estimadas,
             prioridad_antes=user_story.prioridad,
             estado_antes=user_story.estado,
-            desarrollador_antes=user_story.desarrollador.miembro_proyecto
-            if user_story.desarrollador is not None else None,
             user_story=user_story,
             accion="Eliminacion",
             fecha=datetime.date.today(),

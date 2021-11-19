@@ -6,11 +6,11 @@
 
 <script>
 export default {
-  props: { texto: String, tema: String, width: String },
+  props: { texto: String, tema: String, width: String, disabled: Boolean },
   computed: {
     colorTema() {
       const tema = this.tema;
-      return `${tema} h4`;
+      return `${tema} h4 ${this.disabled ? "disabled" : ""}`;
     },
     ancho() {
       return this.width ? this.width : "auto";
@@ -18,7 +18,9 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit("click");
+      if (!this.disabled) {
+        this.$emit("click");
+      }
     },
   },
 };
@@ -59,6 +61,7 @@ button {
 .secondary:active {
   background-color: #ddd;
 }
+
 .success {
   color: white;
   background-color: var(--success);
@@ -70,5 +73,27 @@ button {
 
 .success:active {
   background-color: darken(#6be78d, 20%);
+}
+
+.danger {
+  color: white;
+  background-color: var(--danger);
+}
+
+.danger:hover {
+  background-color: var(--danger-dark);
+}
+
+.danger:active {
+  background-color: var(--danger-dark);
+}
+
+.disabled {
+  cursor: not-allowed;
+  color: white;
+  background-color: var(--gray-4);
+}
+.disabled:hover {
+  background-color: var(--gray-4);
 }
 </style>

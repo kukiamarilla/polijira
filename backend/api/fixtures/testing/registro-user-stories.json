@@ -5,16 +5,12 @@
         "fields": {
             "nombre_antes": null,
             "descripcion_antes": null,
-            "horas_estimadas_antes": null,
             "prioridad_antes": null,
             "estado_antes": null,
-            "desarrollador_antes": null,
             "nombre_despues": "USTesting",
             "descripcion_despues": "Testing",
-            "horas_estimadas_despues": 4,
             "prioridad_despues": 6,
             "estado_despues": "P",
-            "desarrollador_despues": null,
             "user_story": 1,
             "accion": "Creacion",
             "fecha": "2021-09-24",
@@ -27,20 +23,16 @@
         "fields": {
             "nombre_antes": null,
             "descripcion_antes": null,
-            "horas_estimadas_antes": null,
             "prioridad_antes": null,
             "estado_antes": null,
-            "desarrollador_antes": null,
             "nombre_despues": "USTesting2",
             "descripcion_despues": "Testing2",
-            "horas_estimadas_despues": 0,
             "prioridad_despues": 0,
             "estado_despues": "P",
-            "desarrollador_despues": null,
             "user_story": 2,
             "accion": "Creacion",
             "fecha": "2021-09-24",
-            "autor": 1
+            "autor": 4
         }
     }
 ]

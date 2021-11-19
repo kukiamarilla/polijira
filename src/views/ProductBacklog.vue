@@ -6,7 +6,12 @@
       <div class="container shadow">
         <div class="d-flex header">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
-          <Boton texto="Crear User Story" tema="primary" @click="crearUserStoryModal=true"  v-if="hasProyectoPermissions(['crear_user_stories'])"/> 
+          <Boton
+            texto="Crear User Story"
+            tema="primary"
+            @click="crearUserStoryModal=true"
+            v-if="!haTerminadoProyecto && hasProyectoPermissions(['crear_user_stories'])"
+          />
         </div>
         <Table height="400px" v-if="userStories.length > 0">
           <TableHeader>
@@ -20,7 +25,9 @@
             <Tr v-for="(userStory, idx) in userStories" :key="idx">
               <Td width="10%">{{ userStory.id }}</Td>
               <Td width="15%">{{ userStory.nombre }}</Td>
-              <Td width="45%"><span class="cutted-text">{{ userStory.descripcion }}</span></Td>
+              <Td width="45%">
+                <span class="cutted-text">{{ userStory.descripcion }}</span>
+              </Td>
               <Td width="10%">{{ userStory.prioridad}}</Td>
               <Td width="20%">
                 <div class="acciones" style="display: flex">
@@ -42,6 +49,7 @@
                     href="#"
                     @click.prevent="modificarUserStory(userStory)"
                     v-if="
+                      !haTerminadoProyecto &&
                       hasProyectoPermissions(['modificar_user_stories'])
                     "
                   >
@@ -56,6 +64,7 @@
                     href="#"
                     @click.prevent="eliminarUserStory(userStory)"
                     v-if="
+                      !haTerminadoProyecto &&
                       hasProyectoPermissions(['eliminar_user_stories'])
                     "
                   >
@@ -72,7 +81,17 @@
           </TableBody>
         </Table>
         <div class="empty" v-else>
-            <h2>Aun no hay User Stories en el Product <br> Backlog. <a href="#" class="agregar" @click.prevent="crearUserStoryModal=true" v-if="hasProyectoPermissions(['crear_user_stories'])">Agregar uno</a></h2>
+          <h2>
+            Aun no hay User Stories en el Product <br />
+            Backlog.
+            <a
+              href="#"
+              class="agregar"
+              @click.prevent="crearUserStoryModal=true"
+              v-if="hasProyectoPermissions(['crear_user_stories'])"
+              >Agregar uno</a
+            >
+          </h2>
         </div>
       </div>
     </div>
@@ -88,7 +107,7 @@
     />
     <ModificarUserStory
       v-model="modificarUserStoryModal"
-      :userStory="userStoryUpdating" 
+      :userStory="userStoryUpdating"
       v-if="hasProyectoPermissions(['modificar_user_stories'])"
       @input="load"
     />
@@ -153,6 +172,9 @@ export default {
         .filter((rol) => rol.nombre != "Scrum Master")
         .forEach((rol) => (rolesSelect[rol.id] = rol.nombre));
       return rolesSelect;
+    },
+    haTerminadoProyecto() {
+      return this.proyecto.estado === 'F' || this.proyecto.estado === 'C';
     },
   },
   data() {
@@ -233,23 +255,23 @@ export default {
   margin-left: 16px;
 }
 .empty {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    h2 {
-        color: var(--gray-4);
-        text-align: center;
-        a.agregar {
-          color: var(--primary-light);
-          text-decoration: none;
-          &:hover{
-            color: var(--primary)
-          }
-        }
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h2 {
+    color: var(--gray-4);
+    text-align: center;
+    a.agregar {
+      color: var(--primary-light);
+      text-decoration: none;
+      &:hover {
+        color: var(--primary);
+      }
     }
+  }
 }
-span.cutted-text{
+span.cutted-text {
   width: 80%;
   display: block;
   text-overflow: ellipsis;

@@ -18,6 +18,7 @@
             <Td width="30%">{{ permiso.codigo }}</Td>
             <Td width="30%">
               <Checkbox
+                v-if="!haTerminadoProyecto"
                 v-model="permiso.selected"
                 :disabled="!canEdit"
                 @input="toggle(permiso)"
@@ -28,6 +29,7 @@
       </Table>
       <div style="display: flex; justify-content: flex-end; margin-top: 30px">
         <Boton
+          v-if="!haTerminadoProyecto"
           texto="Aceptar"
           tema="primary"
           width="163px"
@@ -62,6 +64,9 @@ export default {
   },
   props: ["value", "permisos", "rol", "disabled"],
   computed: {
+    haTerminadoProyecto() {
+      return this.rol.proyecto.estado === 'F' || this.rol.proyecto.estado === 'C';
+    },
     ...mapGetters({
       hasPermission: "proyecto/hasPermission",
     }),
@@ -120,5 +125,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style lang="scss" scoped></style>

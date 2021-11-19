@@ -53,14 +53,14 @@ export default {
     crearSprint() {
       sprintService.create(this.sprint).then(() => {
         this.$emit('input', false);
-        Alert.success("User Story creado exitosamente")
+        Alert.success("Sprint creado exitosamente")
       })
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
   .justify-content-flex-end{
     justify-content: flex-end;
   }

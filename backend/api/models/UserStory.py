@@ -8,13 +8,6 @@ ESTADOS = (
     ("E", "Eliminado")
 )
 
-ESTADOS_ESTIMADOS = (
-    ("N", "No estimado"),
-    ("p", "Parcial"),
-    ("C", "Completo"),
-    ("P", "Pendiente")
-)
-
 
 class UserStory(models.Model):
     """
@@ -37,14 +30,10 @@ class UserStory(models.Model):
     """
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(default="")
-    horas_estimadas = models.IntegerField(default=0)
     prioridad = models.IntegerField(default=0)
     estado = models.CharField(max_length=1, choices=ESTADOS, default="P")
     fecha_release = models.DateField(null=True)
     fecha_creacion = models.DateField()
-    desarrollador = models.ForeignKey("MiembroSprint", on_delete=models.CASCADE,
-                                      related_name="user_stories", null=True)
-    estado_estimacion = models.CharField(max_length=1, choices=ESTADOS_ESTIMADOS, default="P")
     product_backlog = models.BooleanField(default=False)
     proyecto = models.ForeignKey("Proyecto", on_delete=models.CASCADE, related_name="user_stories")
 
@@ -88,15 +77,11 @@ class UserStory(models.Model):
         return user_story
 
     def update(
-        self, nombre=None, descripcion=None, horas_estimadas=None, prioridad=None, estado_estimacion=None, autor=None,
-        registro_handler=None, desarrollador=None
+        self, nombre=None, descripcion=None, prioridad=None, autor=None, registro_handler=None
     ):
         self.nombre = nombre if nombre is not None else self.nombre
         self.descripcion = descripcion if descripcion is not None else self.descripcion
-        self.horas_estimadas = horas_estimadas if horas_estimadas is not None else self.horas_estimadas
         self.prioridad = prioridad if prioridad is not None else self.prioridad
-        self.estado_estimacion = estado_estimacion if estado_estimacion is not None else self.estado_estimacion
-        self.desarrollador = desarrollador if desarrollador is not None else self.desarrollador
         self.save()
         registro_handler(self, autor)
 
@@ -108,3 +93,24 @@ class UserStory(models.Model):
     def eliminar_del_product_backlog(self):
         self.product_backlog = False
         self.save()
+
+    def planificar(self, sprint=None, horas_estimadas=None, desarrollador=None, planificador=None,
+                   sprint_backlog_handler=None, product_backlog_handler=None):
+        sprint_backlog_handler(
+            sprint=sprint,
+            user_story=self,
+            horas_estimadas=horas_estimadas,
+            desarrollador=desarrollador
+        )
+        product_backlog_handler(self)
+        sprint.asignar_planificador(planificador)
+
+    def responder(self, sprint_backlog=None, horas_estimadas=None):
+        sprint_backlog.update(
+            horas_estimadas=horas_estimadas,
+            estado_estimacion="C"
+        )
+
+    def devolver(self, sprint=None, sprint_backlog_handler=None, product_backlog_handler=None):
+        sprint_backlog_handler(sprint=sprint, user_story=self)
+        product_backlog_handler(self)

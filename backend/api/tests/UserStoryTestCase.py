@@ -1,6 +1,13 @@
-from backend.api.models import Miembro, ProductBacklog, RegistroUserStory, UserStory, PermisoProyecto
-from django.test import TestCase, Client
 from datetime import date
+from django.test import TestCase, Client
+from backend.api.models import Miembro, \
+    ProductBacklog, \
+    RegistroUserStory, \
+    UserStory, \
+    PermisoProyecto, \
+    Review, \
+    Sprint, \
+    SprintBacklog
 
 
 class UserStoryTestCase(TestCase):
@@ -20,7 +27,11 @@ class UserStoryTestCase(TestCase):
         "backend/api/fixtures/testing/horarios.json",
         "backend/api/fixtures/testing/user-stories.json",
         "backend/api/fixtures/testing/product-backlogs.json",
-        "backend/api/fixtures/testing/registro-user-stories.json"
+        "backend/api/fixtures/testing/registro-user-stories.json",
+        "backend/api/fixtures/testing/reviews.json",
+        "backend/api/fixtures/testing/sprints.json",
+        "backend/api/fixtures/testing/sprintbacklogs.json",
+        "backend/api/fixtures/testing/miembrosprints.json"
     ]
 
     def setUp(self):
@@ -31,7 +42,8 @@ class UserStoryTestCase(TestCase):
 
     def test_obtener_user_story(self):
         """
-        obtener_user_story Prueba obtener los detalles de un User Story
+        obtener_user_story
+        Prueba obtener los detalles de un User Story
         """
         print("\nProbando obtener los detalles de un User Story")
         self.client.login(username="testing", password="polijira2021")
@@ -42,18 +54,16 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(body["id"], user_story.id)
         self.assertEquals(body["nombre"], user_story.nombre)
         self.assertEquals(body["descripcion"], user_story.descripcion)
-        self.assertEquals(body["horas_estimadas"], user_story.horas_estimadas)
         self.assertEquals(body["prioridad"], user_story.prioridad)
         self.assertEquals(body["estado"], user_story.estado)
         self.assertEquals(body["fecha_release"], user_story.fecha_release)
         self.assertEquals(body["fecha_creacion"], str(user_story.fecha_creacion))
-        self.assertEquals(body["desarrollador"], user_story.desarrollador)
-        self.assertEquals(body["estado_estimacion"], user_story.estado_estimacion)
         self.assertEquals(body["product_backlog"], user_story.product_backlog)
 
     def test_obtener_user_story_no_existente(self):
         """
-        test_obtener_user_story_no_existente Prueba obtener los detalles de un User Story que no existe en la BD
+        test_obtener_user_story_no_existente
+        Prueba obtener los detalles de un User Story que no existe en la BD
         """
         print("\nProbando obtener los detalles de un User Story que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -78,7 +88,8 @@ class UserStoryTestCase(TestCase):
 
     def test_listar_user_stories(self):
         """
-        test_listar_user_stories Prueba listar todos los User Stories de un Proyecto
+        test_listar_user_stories
+        Prueba listar todos los User Stories de un Proyecto
         """
         print("\nProbando listar todos los User Stories de un Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -133,12 +144,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -151,15 +159,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -187,12 +192,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["prioridad"], body["prioridad"])
         self.assertEquals(body["descripcion"], "")
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -205,15 +207,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -242,12 +241,9 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(user_story_request["nombre"], body["nombre"])
         self.assertEquals(user_story_request["descripcion"], body["descripcion"])
         self.assertEquals(body["prioridad"], 2)
-        self.assertEquals(body["horas_estimadas"], 0)
         self.assertEquals(body["estado"], "P")
         self.assertEquals(body["fecha_release"], None)
         self.assertEquals(body["fecha_creacion"], str(date.today()))
-        self.assertEquals(body["desarrollador"], None)
-        self.assertEquals(body["estado_estimacion"], "P")
         self.assertEquals(body["product_backlog"], True)
         user_story = UserStory.objects.filter(id=body["id"])
         self.assertEquals(len(user_story), 1)
@@ -260,15 +256,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=None,
             descripcion_antes=None,
-            horas_estimadas_antes=None,
             prioridad_antes=None,
             estado_antes=None,
-            desarrollador_antes=None,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Creacion",
@@ -298,7 +291,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_sin_ser_miembro(self):
         """
-        test_crear_user_story_sin_ser_miembro Prueba crear un User Story sin ser miembro del proyecto
+        test_crear_user_story_sin_ser_miembro
+        Prueba crear un User Story sin ser miembro del proyecto
         """
         print("\nProbando crear un User Story sin ser miembro del proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -316,7 +310,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_sin_nombre(self):
         """
-        test_crear_user_story_sin_nombre Prueba crear un User Story sin especificar nombre
+        test_crear_user_story_sin_nombre
+        Prueba crear un User Story sin especificar nombre
         """
         print("\nProbando crear un User Story sin especificar nombre")
         self.client.login(username="testing", password="polijira2021")
@@ -332,7 +327,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_sin_proyecto(self):
         """
-        test_crear_user_story_sin_proyecto Prueba crear un User Story sin especificar proyecto
+        test_crear_user_story_sin_proyecto
+        Prueba crear un User Story sin especificar proyecto
         """
         print("\nProbando crear un User Story sin especificar proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -369,7 +365,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_prioridad_mayor_10(self):
         """
-        test_crear_user_story_prioridad_mayor_10 Prueba crear un User Story asignando una prioridad mayor a 10
+        test_crear_user_story_prioridad_mayor_10
+        Prueba crear un User Story asignando una prioridad mayor a 10
         """
         print("\nProbando crear un User Story con una prioridad mayor a 10")
         self.client.login(username="testing", password="polijira2021")
@@ -386,7 +383,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_prioridad_negativa(self):
         """
-        test_crear_user_story_prioridad_negativa Prueba crear un User Story asignando una prioridad negativa
+        test_crear_user_story_prioridad_negativa
+        Prueba crear un User Story asignando una prioridad negativa
         """
         print("\nProbando crear un User Story con una prioridad negativa")
         self.client.login(username="testing", password="polijira2021")
@@ -403,7 +401,8 @@ class UserStoryTestCase(TestCase):
 
     def test_crear_user_story_proyecto_no_existente(self):
         """
-        test_crear_user_story_proyecto_no_existente Prueba crear un User Story asignando un proyecto que no existe
+        test_crear_user_story_proyecto_no_existente
+        Prueba crear un User Story asignando un proyecto que no existe
         """
         print("\nProbando crear un User Story con un proyecto que no existe")
         self.client.login(username="testing", password="polijira2021")
@@ -420,7 +419,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_caso_1(self):
         """
-        test_modificar_user_story Prueba modificar un User Story cuando solo tiene el registro de su creacion
+        test_modificar_user_story
+        Prueba modificar un User Story cuando solo tiene el registro de su creacion
         """
         print("\nProbando modificar un User Story que tiene solo un registro")
         self.client.login(username="testing", password="polijira2021")
@@ -443,12 +443,10 @@ class UserStoryTestCase(TestCase):
             descripcion_antes=user_story_antes.descripcion,
             prioridad_antes=user_story_antes.prioridad,
             estado_antes=user_story_antes.estado,
-            desarrollador_antes=user_story_antes.desarrollador,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Modificacion",
@@ -488,16 +486,12 @@ class UserStoryTestCase(TestCase):
         registro = RegistroUserStory.objects.filter(
             nombre_antes=user_story_antes.nombre,
             descripcion_antes=user_story_antes.descripcion,
-            horas_estimadas_antes=user_story_antes.horas_estimadas,
             prioridad_antes=user_story_antes.prioridad,
             estado_antes=user_story_antes.estado,
-            desarrollador_antes=user_story_antes.desarrollador,
             nombre_despues=user_story.nombre,
             descripcion_despues=user_story.descripcion,
-            horas_estimadas_despues=user_story.horas_estimadas,
             prioridad_despues=user_story.prioridad,
             estado_despues=user_story.estado,
-            desarrollador_despues=user_story.desarrollador,
             user_story=user_story,
             fecha=date.today(),
             accion="Modificacion",
@@ -507,7 +501,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_no_existente(self):
         """
-        test_modificar_user_story_no_existente Prueba modificar un User Story que no existe en la BD
+        test_modificar_user_story_no_existente
+        Prueba modificar un User Story que no existe en la BD
         """
         print("\nProbando modificar un User Story que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -523,7 +518,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_no_siendo_miembro(self):
         """
-        test_modificar_user_story_no_siendo_miembro Prueba modificar un User Story no siendo miembro del Proyecto
+        test_modificar_user_story_no_siendo_miembro
+        Prueba modificar un User Story no siendo miembro del Proyecto
         """
         print("\nProbando modificar un User Story no siendo miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -542,7 +538,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_con_estado_release(self):
         """
-        test_modificar_user_story_con_estado_release Prueba modificar un User Story que tiene estado liberado
+        test_modificar_user_story_con_estado_release
+        Prueba modificar un User Story que tiene estado liberado
         """
         print("\nProbando modificar un User Story que tiene estado liberado")
         self.client.login(username="testing", password="polijira2021")
@@ -560,7 +557,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_con_estado_cancelado(self):
         """
-        test_modificar_user_story_con_estado_cancelado Prueba modificar un User Story que tiene el estado Cancelado
+        test_modificar_user_story_con_estado_cancelado
+        Prueba modificar un User Story que tiene el estado Cancelado
         """
         print("\nProbando modificar un User Story que tiene estado Cancelado")
         self.client.login(username="testing", password="polijira2021")
@@ -616,7 +614,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_sin_nombre(self):
         """
-        test_modificar_user_story_sin_nombre Prueba modificar un User Story sin especificar nombre
+        test_modificar_user_story_sin_nombre
+        Prueba modificar un User Story sin especificar nombre
         """
         print("\nProbando modificar un User Story sin especificar nombre")
         self.client.login(username="testing", password="polijira2021")
@@ -631,7 +630,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_sin_descripcion(self):
         """
-        test_modificar_user_story_sin_descripcion Prueba modificar un User Story sin especificar descripcion
+        test_modificar_user_story_sin_descripcion
+        Prueba modificar un User Story sin especificar descripcion
         """
         print("\nProbando modificar un User Story sin especificar descripcion")
         self.client.login(username="testing", password="polijira2021")
@@ -646,7 +646,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_sin_prioridad(self):
         """
-        test_modificar_user_story_sin_prioridad Prueba modificar un User Story sin especificar prioridad
+        test_modificar_user_story_sin_prioridad
+        Prueba modificar un User Story sin especificar prioridad
         """
         print("\nProbando modificar un User Story sin especificar prioridad")
         self.client.login(username="testing", password="polijira2021")
@@ -681,7 +682,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_prioridad_mayor_10(self):
         """
-        test_modificar_user_story_prioridad_mayor_10 Prueba modificar un User Story asignando una prioridad mayor a 10
+        test_modificar_user_story_prioridad_mayor_10
+        Prueba modificar un User Story asignando una prioridad mayor a 10
         """
         print("\nProbando modificar un User Story con una prioridad mayor a 10")
         self.client.login(username="testing", password="polijira2021")
@@ -697,7 +699,8 @@ class UserStoryTestCase(TestCase):
 
     def test_modificar_user_story_prioridad_negativa(self):
         """
-        test_modificar_user_story_prioridad_negativa Prueba modificar un User Story asignando una prioridad negativa
+        test_modificar_user_story_prioridad_negativa
+        Prueba modificar un User Story asignando una prioridad negativa
         """
         print("\nProbando modificar un User Story con una prioridad negativa")
         self.client.login(username="testing", password="polijira2021")
@@ -713,7 +716,8 @@ class UserStoryTestCase(TestCase):
 
     def test_eliminar_user_story(self):
         """
-        test_eliminar_user_story Prueba eliminar un User Story
+        test_eliminar_user_story
+        Prueba eliminar un User Story
         """
         print("\nProbando eliminar un User Story")
         self.client.login(username="testing", password="polijira2021")
@@ -734,20 +738,17 @@ class UserStoryTestCase(TestCase):
         registro = registro[0]
         self.assertEquals(registro.nombre_antes, user_story.nombre)
         self.assertEquals(registro.descripcion_antes, user_story.descripcion)
-        self.assertEquals(registro.horas_estimadas_antes, user_story.horas_estimadas)
         self.assertEquals(registro.prioridad_antes, user_story.prioridad)
         self.assertEquals(registro.estado_antes, user_story.estado)
-        self.assertEquals(registro.desarrollador_antes, user_story.desarrollador)
         self.assertEquals(registro.nombre_despues, None)
         self.assertEquals(registro.descripcion_despues, None)
-        self.assertEquals(registro.horas_estimadas_despues, None)
         self.assertEquals(registro.prioridad_despues, None)
         self.assertEquals(registro.estado_despues, None)
-        self.assertEquals(registro.desarrollador_despues, None)
 
     def test_eliminar_user_story_no_existente(self):
         """
-        test_eliminar_user_story_no_existente Prueba eliminar un User Story que no existe en la BD
+        test_eliminar_user_story_no_existente
+        Prueba eliminar un User Story que no existe en la BD
         """
         print("\nProbando eliminar un User Story que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -758,7 +759,8 @@ class UserStoryTestCase(TestCase):
 
     def test_eliminar_user_story_no_siendo_miembro(self):
         """
-        test_eliminar_user_story_no_siendo_miembro Prueba eliminar un User Story no siendo miembro del Proyecto
+        test_eliminar_user_story_no_siendo_miembro
+        Prueba eliminar un User Story no siendo miembro del Proyecto
         """
         print("\nProbando eliminar un User Story no siendo miembro del Proyecto")
         self.client.login(username="testing", password="polijira2021")
@@ -815,7 +817,8 @@ class UserStoryTestCase(TestCase):
 
     def test_listar_registros(self):
         """
-        test_listar_registros Prueba listar todos los registros de un User Story
+        test_listar_registros
+        Prueba listar todos los registros de un User Story
         """
         print("\nProbando listar todos los registros de un User Story")
         self.client.login(username="testing", password="polijira2021")
@@ -826,7 +829,8 @@ class UserStoryTestCase(TestCase):
 
     def test_listar_registros_de_us_no_existente(self):
         """
-        test_listar_registros_de_us_no_existente Prueba listar los registros de un User Story que no existe en la BD
+        test_listar_registros_de_us_no_existente
+        Prueba listar los registros de un User Story que no existe en la BD
         """
         print("\nProbando listar los registros de un User Story que no existe en la BD")
         self.client.login(username="testing", password="polijira2021")
@@ -847,4 +851,292 @@ class UserStoryTestCase(TestCase):
         self.assertEquals(response.status_code, 403)
         body = response.json()
         self.assertEquals(body["permission_required"], ["ver_user_stories"])
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_listar_reviews_de_un_user_story(self):
+        """
+        test_listar_reviews_de_un_user_story
+        Prueba listar los reviews de un user story
+        """
+        print("\nProbando listar todos los reviews de un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 200)
+        self.assertEqual(len(body), Review.objects.filter(user_story=user_story).count())
+
+    def test_listar_reviews_de_un_user_story_sin_permiso(self):
+        """
+        test_listar_reviews_de_un_user_story_sin_permiso
+        Prueba listar los reviews de un user story sin permiso
+        """
+        print("\nProbando listar todos los reviews de un user story sin permiso.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEqual(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEqual(body["permission_required"], ["ver_user_stories"])
+
+    def test_listar_reviews_de_un_user_story_inexistente(self):
+        """
+        test_listar_reviews_de_un_user_story_inexistente
+        Prueba listar los reviews de un user story inexistente
+        """
+        print("\nProbando listar todos los reviews de un user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.get("/api/user-stories/99/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEqual(body["message"], "No existe el User Story")
+        self.assertEqual(body["error"], "not_found")
+
+    def test_listar_reviews_de_un_user_story_sin_ser_miembro(self):
+        """
+        test_listar_reviews_de_un_user_story_sin_ser_miembro
+        Prueba listar los reviews de un user story sin ser miembro
+        """
+        print("\nProbando listar todos los reviews de un user story sin ser miembro.")
+        self.client.login(username="user_test", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.get("/api/user-stories/" + str(user_story.id) + "/reviews/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEqual(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEqual(body["error"], "forbidden")
+
+    def test_lanzar_user_story(self):
+        """
+        test_lanzar_user_story
+        Prueba lanzar un user story
+        """
+        print("\nProbando lanzar un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        user_story = UserStory.objects.get(pk=2)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["id"], user_story.id)
+        self.assertEquals(user_story.estado, "R")
+        self.assertEquals(body["fecha_release"], str(user_story.fecha_release))
+
+    def test_lanzar_user_story_sin_permiso_ver_user_stories(self):
+        """
+        test_lanzar_user_story_sin_permiso_ver_user_stories
+        Prueba lanzar un user story sin permiso ver user stories
+        """
+        print("\nProbando lanzar un user story sin permiso ver user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "lanzar_user_stories"])
+
+    def test_lanzar_user_story_sin_permiso_lanzar_user_stories(self):
+        """
+        test_lanzar_user_story_sin_permiso_lanzar_user_stories
+        Prueba lanzar un user story sin permiso lanzar user stories
+        """
+        print("\nProbando lanzar un user story sin permiso lanzar user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="lanzar_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "lanzar_user_stories"])
+
+    def test_lanzar_user_story_sin_sprintbacklog(self):
+        """
+        test_lanzar_user_story_sin_sprintbacklog
+        Prueba lanzar un user story sin sprint backlog
+        """
+        print("\nProbando lanzar un user story sin sprint backlog.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        sprint_backlog.delete()
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "User Story no existe en ningún Sprint Backlog")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_lanzar_user_story_con_sprint_no_activo(self):
+        """
+        test_lanzar_user_story_con_sprint_no_activo
+        Prueba lanzar un user story con sprint no activo
+        """
+        print("\nProbando lanzar un user story con sprint no activo.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.finalizar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "User Story no está en un sprint activo")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_lanzar_user_story_con_estado_kanban_no_done(self):
+        """
+        test_lanzar_user_story_con_estado_kanban_no_done
+        Prueba lanzar un user story con estado kanban no done
+        """
+        print("\nProbando lanzar un user story con estado kanban no done.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("T")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "User Story no se encuentra en estado Done")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_lanzar_user_story_inexistente(self):
+        """
+        test_lanzar_user_story_inexistente
+        Prueba lanzar un user story inexistente
+        """
+        print("\nProbando lanzar un user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/user-stories/99/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el User Story")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_lanzar_user_story_sin_ser_miembro(self):
+        """
+        test_lanzar_user_story_sin_ser_miembro
+        Prueba lanzar un user story sin ser miembro del proyecto
+        """
+        print("\nProbando lanzar un user story sin ser miembro del proyecto.")
+        self.client.login(username="user_test", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint.activar()
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.mover_kanban("N")
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/lanzar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_cancelar_user_story(self):
+        """
+        test_cancelar_user_story
+        Prueba cancelar un user story
+        """
+        print("\nProbando cancelar un user story.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        user_story = UserStory.objects.get(pk=2)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(body["id"], user_story.id)
+        self.assertEquals(user_story.estado, "C")
+
+    def test_cancelar_user_story_sin_permiso_ver_user_stories(self):
+        """
+        test_cancelar_user_story_sin_permiso_ver_user_stories
+        Prueba cancelar un user story sin permiso ver user stories
+        """
+        print("\nProbando cancelar un user story sin permiso ver user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "cancelar_user_stories"])
+
+    def test_cancelar_user_story_sin_permiso_cancelar_user_stories(self):
+        """
+        test_cancelar_user_story_sin_permiso_cancelar_user_stories
+        Prueba cancelar un user story sin permiso cancelar user stories
+        """
+        print("\nProbando cancelar un user story sin permiso cancelar user stories.")
+        self.client.login(username="testing", password="polijira2021")
+        PermisoProyecto.objects.get(codigo="cancelar_user_stories").delete()
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "No tiene permiso para realizar esta acción")
+        self.assertEquals(body["permission_required"], ["ver_user_stories", "cancelar_user_stories"])
+
+    def test_cancelar_user_story_sin_sprint_backlog(self):
+        """
+        test_cancelar_user_story_sin_sprint_backlog
+        Prueba cancelar un user story sin sprint backlog
+        """
+        print("\nProbando cancelar un user story sin sprint backlog.")
+        self.client.login(username="testing", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        sprint = Sprint.objects.get(pk=2)
+        sprint_backlog = SprintBacklog.objects.get(user_story=user_story, sprint=sprint)
+        sprint_backlog.delete()
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "User Story no se encuentra en ningún Sprint Backlog")
+        self.assertEquals(body["error"], "forbidden")
+
+    def test_cancelar_user_story_inexistente(self):
+        """
+        test_cancelar_user_story_inexistente
+        Prueba cancelar un user story inexistente
+        """
+        print("\nProbando cancelar un user story inexistente.")
+        self.client.login(username="testing", password="polijira2021")
+        response = self.client.post("/api/user-stories/99/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 404)
+        self.assertEquals(body["message"], "No existe el User Story")
+        self.assertEquals(body["error"], "not_found")
+
+    def test_cancelar_user_story_sin_ser_miembro(self):
+        """
+        test_cancelar_user_story_sin_ser_miembro
+        Prueba cancelar un user story sin ser miembro del proyecto
+        """
+        print("\nProbando cancelar un user story sin ser miembro del proyecto.")
+        self.client.login(username="user_test", password="polijira2021")
+        user_story = UserStory.objects.get(pk=2)
+        response = self.client.post("/api/user-stories/" + str(user_story.id) + "/cancelar/")
+        body = response.json()
+        self.assertEquals(response.status_code, 403)
+        self.assertEquals(body["message"], "Usted no es miembro de este Proyecto")
         self.assertEquals(body["error"], "forbidden")

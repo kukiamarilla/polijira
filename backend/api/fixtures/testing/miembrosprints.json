@@ -12,7 +12,7 @@
         "pk": 2,
         "fields": {
             "miembro_proyecto": 4,
-            "sprint": 1
+            "sprint": 2
         }
     },
     {
@@ -28,7 +28,7 @@
         "pk": 4,
         "fields": {
             "miembro_proyecto": 5,
-            "sprint": 2
+            "sprint": 3
         }
     }
 ]
