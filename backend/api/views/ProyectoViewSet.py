@@ -589,54 +589,65 @@ class ProyectoViewSet(viewsets.ViewSet):
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-            # @action(detail=True, methods=['POST'])
-            # def finalizar(self, request, pk=None):
-            #     try:
-            #         usuario_request = Usuario.objects.get(user=request.user)
-            #         if not usuario_request.tiene_permiso("finalizar_proyectos"):
-            #             response = {
-            #                 "message": "No tiene permiso para realizar esta accion",
-            #                 "permission_required": ["finalizar_proyectos"],
-            #                 "error": "forbidden"
-            #             }
-            #             return Response(response, status=status.HTTP_403_FORBIDDEN)
-            #         proyecto = Proyecto.objects.get(pk=pk)
-            #         if proyecto.estado != 'A':
-            #             response = {
-            #                 "message": "No puedes finalizar el Proyecto en su estado actual",
-            #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
-            #                 "error": "bad_request"
-            #             }
-            #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            #         proyecto.finalizar()
-            #         serializer = ProyectoSerializer(proyecto, many=False)
-            #         return Response(serializer.data)
-            #     except Proyecto.DoesNotExist:
-            #         response = {"message": "El proyecto no existe"}
-            #         return Response(response, status=status.HTTP_404_NOT_FOUND)
+    @action(detail=True, methods=['POST'])
+    def finalizar(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("finalizar_proyectos"):
+                response = {
+                    "message": "No tiene permiso para realizar esta accion",
+                    "permission_required": ["finalizar_proyectos"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.get(pk=pk)
+            if proyecto.estado != 'A':
+                response = {
+                    "message": "No puedes finalizar el Proyecto en su estado actual",
+                    "estado": dict(proyecto.ESTADO)[proyecto.estado],
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprints_activos = Sprint.objects.filter(proyecto=proyecto, estado='A')
+            if len(sprints_activos) > 0:
+                response = {
+                    "message": "No puedes finalizar el Proyecto hasta que todos los Sprints esten finalizados",
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            proyecto.finalizar()
+            serializer = ProyectoSerializer(proyecto, many=False)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {"message": "El proyecto no existe"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-            # @action(detail=True, methods=['POST'])
-            # def cancelar(self, request, pk=None):
-            #     try:
-            #         usuario_request = Usuario.objects.get(user=request.user)
-            #         if not usuario_request.tiene_permiso("cancelar_proyectos"):
-            #             response = {
-            #                 "message": "No tiene permiso para realizar esta accion",
-            #                 "permission_required": ["cancelar_proyectos"],
-            #                 "error": "forbidden"
-            #             }
-            #             return Response(response, status=status.HTTP_403_FORBIDDEN)
-            #         proyecto = Proyecto.objects.get(pk=pk)
-            #         if proyecto.estado != 'A':
-            #             response = {
-            #                 "message": "No puedes cancelar el Proyecto en su estado actual",
-            #                 "estado": dict(proyecto.ESTADO)[proyecto.estado],
-            #                 "error": "bad_request"
-            #             }
-            #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            #         proyecto.cancelar()
-            #         serializer = ProyectoSerializer(proyecto, many=False)
-            #         return Response(serializer.data)
-            #     except Proyecto.DoesNotExist:
-            #         response = {"message": "El proyecto no existe"}
-            #         return Response(response, status=status.HTTP_404_NOT_FOUND)
+    @transaction.atomic
+    @action(detail=True, methods=['POST'])
+    def cancelar(self, request, pk=None):
+        try:
+            usuario_request = Usuario.objects.get(user=request.user)
+            if not usuario_request.tiene_permiso("cancelar_proyectos"):
+                response = {
+                    "message": "No tiene permiso para realizar esta accion",
+                    "permission_required": ["cancelar_proyectos"],
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
+            proyecto = Proyecto.objects.get(pk=pk)
+            if proyecto.estado != 'A':
+                response = {
+                    "message": "No puedes cancelar el Proyecto en su estado actual",
+                    "estado": dict(proyecto.ESTADO)[proyecto.estado],
+                    "error": "bad_request"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            sprints_activos = Sprint.objects.filter(proyecto=proyecto, estado='A')
+            for sprint in sprints_activos:
+                sprint.finalizar()
+            proyecto.cancelar()
+            serializer = ProyectoSerializer(proyecto, many=False)
+            return Response(serializer.data)
+        except Proyecto.DoesNotExist:
+            response = {"message": "El proyecto no existe"}
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
