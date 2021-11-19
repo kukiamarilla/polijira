@@ -41,4 +41,4 @@ heroku config:set VUE_APP_FIREBASE_MESSAGING_SENDER_ID=$fMessagingSenderId -a $a
 heroku config:set VUE_APP_FIREBASE_PROJECT_ID=$fProjectId -a $app
 heroku config:set VUE_APP_FIREBASE_STORAGE_BUCKET=$fStorageBucket -a $app
 
-git push heroku $1:master
+git push heroku $1^{}:master
