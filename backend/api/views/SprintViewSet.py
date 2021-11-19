@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from backend.api.models import Miembro, Sprint, SprintBacklog, Usuario, Proyecto
+from backend.api.models import Miembro, Sprint, Usuario, Proyecto
 from backend.api.models.Actividad import Actividad
 from backend.api.serializers import SprintBacklogSerializer, SprintSerializer
 from backend.api.decorators import FormValidator

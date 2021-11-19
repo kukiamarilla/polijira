@@ -64,7 +64,9 @@
           @click="cancelar"
           v-if="
             userStory.user_story.estado == 'P' &&
-            hasPermission('cancelar_user_stories')
+            hasPermission('cancelar_user_stories') &&
+            userStory.sprint.estado == 'A'
+
           "
         />
         &nbsp; &nbsp;
@@ -75,7 +77,8 @@
           v-if="
             userStory.user_story.estado == 'P' &&
             hasPermission('lanzar_user_stories') &&
-            userStory.estado_kanban == 'N'
+            userStory.estado_kanban == 'N' &&
+            userStory.sprint.estado == 'A'
           "
         />
       </div>

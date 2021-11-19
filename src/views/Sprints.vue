@@ -31,7 +31,7 @@
               <Td width="10%">{{ sprint.id }}</Td>
               <Td width="15%">Sprint {{ sprint.numero }}</Td>
               <Td width="15%">{{sprint.fecha_inicio}}</Td>
-              <Td width="15%">{{sprint.fecha_fin}}</Td>
+              <Td width="15%">{{sprint.fecha_fin_real ? sprint.fecha_fin_real : sprint.fecha_fin}}</Td>
               <Td width="15%"><span class="cutted-text">{{ sprint.estado_sprint_planning == "P" ? "Pendiente" :  sprint.estado_sprint_planning == "I" ? "Iniciado" : "Finalizado"}}</span></Td>
               <Td width="15%"><span class="cutted-text">{{ sprint.estado == "P" ? "Pendiente" :  sprint.estado == "A" ? "Activo" : "Finalizado"}}</span></Td>
               <Td width="15%">

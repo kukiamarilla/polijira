@@ -129,6 +129,7 @@ class SprintTestCase(TestCase):
             "numero": Sprint.objects.filter(proyecto_id=3).count(),
             "fecha_inicio": request_data.get("fecha_inicio"),
             "fecha_fin": request_data.get("fecha_fin"),
+            'fecha_fin_real': None,
             "estado": "P",
             "estado_sprint_planning": "P",
             "planificador": None,
