@@ -19,7 +19,8 @@
                 title="Reemplazar miembro"
                 @click.prevent="reemplazarMiembro(miembro)"
                 v-if="
-                  hasPermission('modificar_miembros_sprint')
+                  sprint.estado === 'A'
+                  && hasPermission('modificar_miembros_sprint')
                   && miembro.miembro_proyecto.id != me.id
                 "
               >
@@ -35,7 +36,8 @@
                 title="Eliminar miembro"
                 @click.prevent="eliminar(miembro)"
                 v-if="
-                  hasPermission('modificar_miembros_sprint')
+                  sprint.estado === 'A'
+                  && hasPermission('modificar_miembros_sprint')
                   && miembro.miembro_proyecto.id != me.id
                 "
               >
@@ -51,12 +53,12 @@
         </Tr>
       </TableBody>
     </Table>
-    <ReemplazarMiembro v-model="reemplazar" @input="load"/>
+    <ReemplazarMiembro v-model="reemplazar" @input="load" />
   </div>
 </template>
 
 <script>
-import { Table, TableHeader, TableBody, Th, Tr, Td } from '@/components/Table' 
+import { Table, TableHeader, TableBody, Th, Tr, Td } from '@/components/Table'
 import sprintService from '@/services/sprintService'
 import Icon from '@/components/Icon.vue'
 import miembroSprintService from '@/services/miembroSprintService'
@@ -73,6 +75,7 @@ export default {
     Icon,
     ReemplazarMiembro
   },
+  props: ['sprint'],
   data() {
     return {
       miembros: [],
@@ -109,6 +112,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
