@@ -74,6 +74,19 @@ button {
   background-color: darken(#6be78d, 20%);
 }
 
+.danger {
+  color: white;
+  background-color: var(--danger);
+}
+
+.danger:hover {
+  background-color: darken(#f25656, 20%);
+}
+
+.danger:active {
+  background-color: darken(#f25656, 20%);
+}
+
 .disabled {
   cursor: not-allowed;
   color: white;
