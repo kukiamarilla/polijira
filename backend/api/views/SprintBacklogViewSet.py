@@ -164,12 +164,12 @@ class SprintBacklogViewSet(viewsets.ViewSet):
             sprint_backlog = SprintBacklog.objects.get(pk=pk)
             miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=sprint_backlog.sprint.proyecto)
             miembro_sprint = MiembroSprint.objects.get(
-                miembro_proyecto=request.data.get("miembro_sprint"), sprint=sprint_backlog.sprint)
-            if not miembro_request.tiene_permiso("modificar_miembro_spriknt"):
+                id=request.data.get("miembro_sprint"), sprint=sprint_backlog.sprint)
+            if not miembro_request.tiene_permiso("modificar_miembros_sprint"):
                 response = {
                     "message": "No tiene permiso para realizar esta acción",
                     "permission_required": [
-                        "modificar_miembro_spriknt"
+                        "modificar_miembro_sprint"
                     ],
                     "error": "forbidden"
                 }
@@ -201,4 +201,4 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 "message": "El Miembro del Sprint no existe",
                 "error": "unathorized"
             }
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
