@@ -17,7 +17,9 @@ export default {
       .then((response) => response.data);
   },
   delete(id) {
-    return api.delete(`/user-stories/${id}/`).then((response) => response.data);
+    return api
+      .delete(`/user-stories/${id}/`)
+      .then((response) => response.data);
   },
   mover(id, estado) {
     return api
@@ -35,7 +37,9 @@ export default {
       .then((response) => response.data);
   },
   eliminarActividad(id) {
-    return api.delete(`/actividades/${id}/`).then((response) => response.data);
+    return api
+      .delete(`/actividades/${id}/`)
+      .then((response) => response.data);
   },
   actualizarActividad(id, actividad) {
     return api
@@ -47,4 +51,14 @@ export default {
       .get(`/user-stories/${id}/reviews/`)
       .then((response) => response.data);
   },
+  lanzar(id) {
+    return api
+      .post(`/user-stories/${id}/lanzar/`)
+      .then(response => response.data)
+  },
+  cancelar(id) {
+    return api
+      .post(`/user-stories/${id}/cancelar/`)
+      .then(response => response.data)
+  }
 };

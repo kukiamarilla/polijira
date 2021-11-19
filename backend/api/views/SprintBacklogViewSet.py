@@ -101,6 +101,12 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                     "error": "forbidden"
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
+            if sprint_backlog.user_story.estado == "R" or sprint_backlog.user_story.estado == "C":
+                response = {
+                    "message": "No se puede modificar el kanban de un user story lanzado o cancelado",
+                    "error": "forbidden"
+                }
+                return Response(response, status=status.HTTP_403_FORBIDDEN)
             estado = request.data.get("estado_kanban")
             sprint_backlog.mover_kanban(estado)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
