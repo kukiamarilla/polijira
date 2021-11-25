@@ -19,10 +19,20 @@
         <span v-if="sprint.estado == 'P'"> Pendiente</span>
         <span v-if="sprint.estado == 'A'"> Activo</span>
         <span v-if="sprint.estado == 'F'"> Finalizado</span>
-        
+        <br>
+        <br>
+        <span class="highlight">Fecha: </span> {{now}}
       </div>
       <div class="chart">
         <DoughnutChart v-bind="doughnutChartProps"/>
+        <br>
+        <br>
+        <div class="d-flex justify-content-space-around">
+          <p>Pendientes: {{data[0]}}</p>
+          <p>Por Terminar: {{data[1]}}</p>
+          <p>Cancelados: {{data[2]}}</p>
+          <p>Lanzados: {{data[3]}}</p>
+        </div>
       </div>
       <div class="table-container">
         <h4>User Stories</h4>
@@ -68,7 +78,7 @@
 import {Table, TableHeader, TableBody, Td, Th, Tr } from "@/components/Table";
 import { DoughnutChart, useDoughnutChart} from "vue-chart-3";
 import { Chart, registerables } from 'chart.js';
-import { defineComponent, computed  } from "@vue/composition-api";
+import { defineComponent, computed, ref  } from "@vue/composition-api";
 import Waves from '@/components/Waves.vue';
 import Logo from '@/components/Logo.vue';
 
@@ -89,7 +99,8 @@ export default defineComponent({
     },
 
     setup(props) {
-
+      const date = new Date();
+      const now = ref(`${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`);
       const data = computed(() => [
         props.sprintBacklog.filter(us => us.user_story.estado == 'P' && us.estado_kanban != 'N').length,
         props.sprintBacklog.filter(us => us.user_story.estado == 'P' && us.estado_kanban == 'N').length,
@@ -116,6 +127,8 @@ export default defineComponent({
         chartData,
         doughnutChartProps,
         doughnutChartRef,
+        now,
+        data
       };
     }
 })
