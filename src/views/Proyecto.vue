@@ -62,7 +62,7 @@ import Navbar from "@/components/Navbar";
 import Alert from "@/helpers/alert";
 import SidebarProyecto from "@/components/SidebarProyecto";
 import CardLink from "@/components/CardLink";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -95,15 +95,18 @@ export default {
     };
   },
   computed: {
-    accesosDirectosPermitidos() {
-      return this.accesosDirectos.map(
-        (accesoDirecto) => accesoDirecto.tienePermiso
-      );
-    },
+    ...mapState({
+      me: (state) => state.proyecto.me,
+    }),
     ...mapGetters({
       hasAnyPermission: "proyecto/hasAnyPermission",
       hasPermission: "proyecto/hasPermission",
     }),
+  },
+  watch: {
+    me() {
+      this.cargarAccesosDirectos()
+    }
   },
   mounted() {
     this.load();
