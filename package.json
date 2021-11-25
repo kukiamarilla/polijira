@@ -22,6 +22,7 @@
     "vue": "^2.5.17",
     "vue-chart-3": "^0.5.11",
     "vue-click-outside": "^1.1.0",
+    "vue-html2pdf": "^1.8.0",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^3.10.1",
     "vuex": "^3.0.1"

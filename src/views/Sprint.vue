@@ -24,7 +24,7 @@
             <MiembrosSprint :sprint="sprint" />
           </template>
           <template #sprint-backlog>
-            <SprintBacklog />
+            <SprintBacklog :sprint="sprint" />
           </template>
           <template #burndown-chart>
             <BurndownChart :sprint="sprint" />

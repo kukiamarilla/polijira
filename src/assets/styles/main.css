@@ -165,9 +165,6 @@ h1,
 .text-center {
   text-align: center;
 }
-span.text-danger {
-  color: var(--danger);
-}
 
 .text-danger {
   color: var(--danger);
@@ -175,6 +172,18 @@ span.text-danger {
 
 .text-success {
   color: var(--success);
+}
+
+.text-info {
+  color: var(--info);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-primary {
+  color: var(--primary);
 }
 
 .shadow {
