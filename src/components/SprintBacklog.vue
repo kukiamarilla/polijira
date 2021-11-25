@@ -42,7 +42,7 @@
     :enable-download="true"
     :show-layout="false"
     :preview-modal="false"
-    filename="sprintBacklog"
+    filename="sprint-backlog"
     :pdf-quality="2"
     :manual-pagination="true"
     pdf-format="legal"
