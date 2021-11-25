@@ -57,9 +57,8 @@
 
 <script>
 import {Table, TableHeader, TableBody, Td, Th, Tr } from "@/components/Table";
-import { DoughnutChart, useDoughnutChart} from "vue-chart-3";
 import { Chart, registerables } from 'chart.js';
-import { defineComponent, computed, ref, watch  } from "@vue/composition-api";
+import { defineComponent, ref, watch  } from "@vue/composition-api";
 import Waves from '@/components/Waves.vue';
 import Logo from '@/components/Logo.vue';
 import sprintService from "@/services/sprintService";
@@ -77,7 +76,6 @@ export default defineComponent({
         Th,
         Tr,
         Waves,
-        DoughnutChart,
         Logo,
         BurndownChart
     },
@@ -94,34 +92,8 @@ export default defineComponent({
           })
         }
       })
-      const data = computed(() => [
-        sprintBacklog.value.filter(us => us.user_story.estado == 'P' && us.estado_kanban != 'N').length,
-        sprintBacklog.value.filter(us => us.user_story.estado == 'P' && us.estado_kanban == 'N').length,
-        sprintBacklog.value.filter(us => us.user_story.estado == 'C').length,
-        sprintBacklog.value.filter(us => us.user_story.estado == 'R').length
-      ]);
-      
-      const chartData = computed(() => {
-        return {
-          labels: ["Pendiente", "Por Terminar", "Cancelado", "Lanzado"],
-          datasets: [
-            {
-              label: "Estados",
-              backgroundColor: ["#ffb800", "#7b61ff", "#f25656", "#6be78d"],
-              data: data.value,
-            },
-          ],
-       }
-      });
-      const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
-        chartData,
-      });
       return {
-        chartData,
-        doughnutChartProps,
-        doughnutChartRef,
         now,
-        data,
         sprintBacklog
       };
     }
