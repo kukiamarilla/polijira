@@ -1,5 +1,11 @@
 <template>
   <div>
+    <br>
+    <div class="d-flex justify-content-flex-end">
+      <Boton texto="Generar Reporte" tema="primary"  @click="generatePdf()"/>
+    </div>
+    <br>
+    <br>
     <Table>
       <TableHeader>
         <Th width="20%">ID</Th>
@@ -31,11 +37,7 @@
         </Tr>
       </TableBody>
     </Table>  
-    <br>
-    <br>
-    <div class="d-flex justify-content-flex-end">
-      <Boton texto="Generar Reporte" tema="primary"  @click="generatePdf()"/>
-    </div>
+    
     <VueHtml2Pdf
     :enable-download="true"
     :show-layout="false"
