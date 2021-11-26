@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import transaction
 from backend.api.models import Miembro, MiembroSprint, ProductBacklog, Sprint, SprintBacklog, UserStory, Usuario
+from backend.api.notifications.EstimacionPendienteNotification import EstimacionPendienteNotification
 from backend.api.serializers import SprintSerializer, MiembroSprintSerializer
 from backend.api.decorators import FormValidator
 from backend.api.forms import PlanificarUserStoryForm, \
@@ -288,6 +289,8 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 product_backlog_handler=ProductBacklog.eliminar_user_story
 
             )
+            notification = EstimacionPendienteNotification(user_story)
+            usuario.notify(notification)
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from backend.api.models import Permiso
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class Usuario(models.Model):
@@ -62,3 +64,8 @@ class Usuario(models.Model):
         """
         self.rol = rol
         self.save()
+
+    def notify(self, notification):
+        subject = notification.subject
+        message = notification.build_message()
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [self.email], html_message=message)
