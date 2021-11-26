@@ -290,7 +290,7 @@ class SprintPlanningViewSet(viewsets.ViewSet):
 
             )
             notification = EstimacionPendienteNotification(user_story)
-            usuario.notify(notification)
+            user_story.desarrollador.miembro_proyecto.usuario.notify(notification)
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:
