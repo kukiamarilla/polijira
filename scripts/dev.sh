@@ -40,6 +40,10 @@ echo -n "Test User Email: "
 read testEmail
 echo -n "Test User Password: "
 read -s testPassword
+echo -n "Mail Sender Email (Gmail): "
+read mailSenderEmail
+echo -n "Mail Sender Password: "
+read -s mailSenderPassword
 
 #if linux
 if [ "$OSTYPE" = "linux-gnu" ]
@@ -64,6 +68,7 @@ fi
 
 #.env en code
 {
+    echo 'BASE_URL=http://localhost:8000'
     echo 'CYPRESS_SETTINGS=backend.settings.cypress'
     echo ''
     echo 'FIREBASE_APP_ID='$fAppId
@@ -82,6 +87,9 @@ fi
     echo ''
     echo 'TESTING_USER_EMAIL='$testEmail
     echo 'TESTING_USER_PASSWORD='$testPassword
+    echo ''
+    echo 'GMAIL_USER='$mailSenderEmail
+    echo 'GMAIL_PASSWORD='$mailSenderPassword
 } > .env
 
 echo "INSTALANDO BACKEND"

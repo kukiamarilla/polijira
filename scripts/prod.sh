@@ -26,10 +26,15 @@ echo -n "Firebase Messaging Sender ID: "
 read fMessagingSenderId
 echo -n "Firebase Storage Bucket: "
 read fStorageBucket
+echo -n "Mail Sender Email (Gmail): "
+read mailSenderEmail
+echo -n "Mail Sender Password: "
+read -s mailSenderPassword
 
 heroku config:set DJANGO_SECRET_KEY=92429d82a41e930486c6de5ebda9602d55c39986  -a $app
 heroku config:set DJANGO_SETTINGS_MODULE=backend.settings.prod  -a $app
 
+heroku config:set BASE_URL=https://$app.herokuapp.com -a $app
 heroku config:set FIREBASE_CLIENT_EMAIL=$fClientEmail -a $app
 heroku config:set FIREBASE_PRIVATE_KEY="$fPrivateKey" -a $app
 heroku config:set FIREBASE_PROJECT_ID=$fProjectId -a $app
@@ -40,6 +45,8 @@ heroku config:set VUE_APP_FIREBASE_AUTH_DOMAIN=$fAuthDomain -a $app
 heroku config:set VUE_APP_FIREBASE_MESSAGING_SENDER_ID=$fMessagingSenderId -a $app
 heroku config:set VUE_APP_FIREBASE_PROJECT_ID=$fProjectId -a $app
 heroku config:set VUE_APP_FIREBASE_STORAGE_BUCKET=$fStorageBucket -a $app
+heroku config:set GMAIL_USER=$mailSenderEmail -a $app
+heroku config:set GMAIL_PASSWORD=$mailSenderPassword -a $app
 
 git push -f heroku HEAD:refs/heads/main
 heroku run python manage.py loaddata backend/api/fixtures/initial/prod/* -a $app

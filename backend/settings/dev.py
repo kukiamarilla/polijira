@@ -18,6 +18,8 @@ from firebase_admin import _FIREBASE_CONFIG_ENV_VAR
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
 
+# Base url for the project 
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -62,7 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # Add dist to
-        'DIRS': ['dist'],
+        'DIRS': ['dist', 'backend/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -162,5 +164,12 @@ FIREBASE_CLIENT_CONFIG = {
     "storageBucket": os.environ.get('VUE_APP_FIREBASE_STORAGE_BUCKET'),
 }
 
-TESTING_USER_EMAIL = os.environ.get('TESTING_USER_EMAIL'),
-TESTING_USER_PASSWORD = os.environ.get('TESTING_USER_PASSWORD'),
+TESTING_USER_EMAIL = os.environ.get('TESTING_USER_EMAIL')
+TESTING_USER_PASSWORD = os.environ.get('TESTING_USER_PASSWORD')
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('GMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
