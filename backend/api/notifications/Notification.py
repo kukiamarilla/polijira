@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 
 
-class Notification():
+class Notification:
     """
     Notification Modela las notificaciones que reciben los usuarios
 
