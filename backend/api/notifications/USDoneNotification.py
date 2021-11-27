@@ -2,10 +2,10 @@ from django.conf import settings
 from backend.api.notifications import Notification
 
 
-class MoverUSNotification(Notification):
+class USDoneNotification(Notification):
 
-    template = "emails/mover_us.html"
-    subject = "[Polijira] Se movió tablero del Kanban"
+    template = "emails/us_done.html"
+    subject = "[Polijira] El User Story está listo para control de calidad"
 
     def __init__(self, user_story):
         data = {

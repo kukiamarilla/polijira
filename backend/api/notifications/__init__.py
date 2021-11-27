@@ -1,3 +1,4 @@
 from .Notification import Notification
 from .EstimacionPendienteNotification import EstimacionPendienteNotification
-from .MoverUSNotification import MoverUSNotification
+from .USRechazadoNotification import USRechazadoNotification
+from .USDoneNotification import USDoneNotification

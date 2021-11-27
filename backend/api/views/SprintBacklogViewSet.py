@@ -6,7 +6,7 @@ from backend.api.decorators import FormValidator
 from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
 from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
 from backend.api.serializers import SprintBacklogSerializer, ActividadSerializer
-from backend.api.notifications import MoverUSNotification
+from backend.api.notifications import MoverUSNotification, USDoneNotification, USRechazadoNotification
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
@@ -109,14 +109,15 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             estado = request.data.get("estado_kanban")
-            notificacion = MoverUSNotification(sprint_backlog.user_story)
-            if estado == "T":
-                usuario_request.notify(notificacion)
-            if estado == "N" and not miembro_sprint == sprint_backlog.desarrollador:
+            if estado == "T" and not miembro_sprint == sprint_backlog.desarrollador:
+                notificacion = USRechazadoNotification(sprint_backlog.user_story)
+                sprint_backlog.desarrollador.miembro_proyecto.usuario.notify(notificacion)
+            if estado == "N" and miembro_sprint == sprint_backlog.desarrollador:
                 QAs = Usuario.objects.filter(
                     miembros__rol__permisos__codigo="lanzar_user_stories",
                     miembros__proyecto=sprint_backlog.sprint.proyecto
                 )
+                notificacion = USDoneNotification(sprint_backlog.user_story)
                 notificacion.notify_all(QAs)
             sprint_backlog.mover_kanban(estado)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
