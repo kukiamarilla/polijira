@@ -6,7 +6,7 @@ from backend.api.decorators import FormValidator
 from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
 from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
 from backend.api.serializers import SprintBacklogSerializer, ActividadSerializer
-from backend.api.notifications import MoverUSNotification, USDoneNotification, USRechazadoNotification
+from backend.api.notifications import USDoneNotification, USRechazadoNotification
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
