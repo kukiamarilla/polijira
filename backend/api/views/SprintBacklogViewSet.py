@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from backend.api.decorators import FormValidator
 from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
 from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
+from backend.api.notifications.RespuestaEstimacionNotification import RespuestaEstimacionNotification
 from backend.api.serializers import SprintBacklogSerializer, ActividadSerializer
 
 
@@ -46,6 +47,8 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 sprint_backlog=sprint_backlog,
                 horas_estimadas=(int(request.data.get("horas_estimadas")) + int(sprint_backlog.horas_estimadas))/2
             )
+            notification = RespuestaEstimacionNotification(sprint_backlog)
+            sprint_backlog.sprint.planificador.usuario.notify(notification)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)
         except SprintBacklog.DoesNotExist:
