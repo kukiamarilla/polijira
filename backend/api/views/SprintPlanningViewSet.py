@@ -289,8 +289,9 @@ class SprintPlanningViewSet(viewsets.ViewSet):
                 product_backlog_handler=ProductBacklog.eliminar_user_story
 
             )
+            sprint_backlog = SprintBacklog.objects.get(sprint=sprint, user_story=user_story)
             notification = EstimacionPendienteNotification(user_story)
-            user_story.desarrollador.miembro_proyecto.usuario.notify(notification)
+            sprint_backlog.desarrollador.miembro_proyecto.usuario.notify(notification)
             serializer = SprintSerializer(sprint, many=False)
             return Response(serializer.data)
         except Sprint.DoesNotExist:
