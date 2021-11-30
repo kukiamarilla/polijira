@@ -2,7 +2,7 @@
   <div>
     <br>
     <div class="d-flex justify-content-flex-end">
-      <Boton texto="Generar Reporte" tema="primary"  @click="generatePdf()"/>
+      <Boton texto="Generar Reporte" tema="info"  @click="generatePdf()"/>
     </div>
     <br>
     <br>
