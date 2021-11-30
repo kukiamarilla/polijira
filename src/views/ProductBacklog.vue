@@ -8,7 +8,7 @@
         <header class="d-flex">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
 
-          <div class="d-flex justify-content-flex-end">
+          <div class="d-flex justify-content-flex-end" style="gap: 16px">
             <Boton
               texto="Crear User Story"
               tema="primary"
@@ -21,7 +21,7 @@
 
             <Boton
               texto="Generar Reporte"
-              tema="primary"
+              tema="info"
               @click="generatePdf()"
             />
           </div>
