@@ -27,24 +27,33 @@
         <br />
         <br />
         <div class="d-flex justify-content-space-around">
-          <p>Pendientes: {{ data[0] }}</p>
-          <p>Cancelados: {{ data[1] }}</p>
-          <p>Lanzados: {{ data[2] }}</p>
+          <p>Proridad 1: {{ data[0] }}</p>
+          <p>Proridad 2: {{ data[1] }}</p>
+          <p>Proridad 3: {{ data[2] }}</p>
+          <p>Proridad 4: {{ data[3] }}</p>
+          <p>Proridad 5: {{ data[4] }}</p>
+          <p>Proridad 6: {{ data[5] }}</p>
+          <p>Proridad 7: {{ data[6] }}</p>
+          <p>Proridad 8: {{ data[7] }}</p>
+          <p>Proridad 9: {{ data[8] }}</p>
+          <p>Proridad 10: {{ data[9] }}</p>
         </div>
       </div>
       <div class="table-container">
         <h4>User Stories</h4>
         <Table>
           <TableHeader>
-            <Th width="20%">ID</Th>
-            <Th width="20%">Título</Th>
-            <Th width="20%">Estado</Th>
+            <Th width="10%">ID</Th>
+            <Th width="30%">Título</Th>
+            <Th width="30%">Prioridad</Th>
+            <Th width="30%">Estado</Th>
           </TableHeader>
           <TableBody>
             <Tr v-for="us in productBacklog" :key="us.id">
               <Td width="20%">{{ us.id }}</Td>
-              <Td width="20%">{{ us.nombre }}</Td>
-              <Td width="20%">
+              <Td width="40%">{{ us.nombre }}</Td>
+              <Td width="40%">{{ us.prioridad }}</Td>
+              <Td width="40%">
                 <span v-if="us.estado == 'P'">
                   <span class="text-warning">Pendiente</span>
                 </span>
@@ -98,18 +107,47 @@ export default defineComponent({
         .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
     );
     const data = computed(() => [
-      props.productBacklog.filter((us) => us.estado == "P").length,
-      props.productBacklog.filter((us) => us.estado == "C").length,
-      props.productBacklog.filter((us) => us.estado == "R").length,
+      props.productBacklog.filter((us) => us.prioridad == 1).length,
+      props.productBacklog.filter((us) => us.prioridad == 2).length,
+      props.productBacklog.filter((us) => us.prioridad == 3).length,
+      props.productBacklog.filter((us) => us.prioridad == 4).length,
+      props.productBacklog.filter((us) => us.prioridad == 5).length,
+      props.productBacklog.filter((us) => us.prioridad == 6).length,
+      props.productBacklog.filter((us) => us.prioridad == 7).length,
+      props.productBacklog.filter((us) => us.prioridad == 8).length,
+      props.productBacklog.filter((us) => us.prioridad == 9).length,
+      props.productBacklog.filter((us) => us.prioridad == 10).length
     ]);
 
     const chartData = computed(() => {
       return {
-        labels: ["Pendiente", "Cancelado", "Lanzado"],
+        labels: [
+          "Prioridad: 1", 
+          "Prioridad: 2",
+          "Prioridad: 3",
+          "Prioridad: 4",
+          "Prioridad: 5",
+          "Prioridad: 6",
+          "Prioridad: 7",
+          "Prioridad: 8",
+          "Prioridad: 9",
+          "Prioridad: 10"
+        ],
         datasets: [
           {
             label: "Estados",
-            backgroundColor: ["#ffb800", "#7b61ff", "#f25656", "#6be78d"],
+            backgroundColor: [
+              "#7BE27F", 
+              "#98D963", 
+              "#B5D048", 
+              "#D3C62B", 
+              "#F1BD0F", 
+              "#FEAE09", 
+              "#FC9B1A", 
+              "#F9872C", 
+              "#F7753C", 
+              "#F4614D"
+            ],
             data: data.value,
           },
         ],
