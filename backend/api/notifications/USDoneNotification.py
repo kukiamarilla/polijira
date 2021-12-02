@@ -7,9 +7,9 @@ class USDoneNotification(Notification):
     template = "emails/us_done.html"
     subject = "[Polijira] El User Story está listo para control de calidad"
 
-    def __init__(self, user_story):
+    def __init__(self, sprint_backlog):
         data = {
-            "user_story": user_story,
+            "sprint_backlog": sprint_backlog,
             "url": settings.BASE_URL
         }
         super().__init__(data)

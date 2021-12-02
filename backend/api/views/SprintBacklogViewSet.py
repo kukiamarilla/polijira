@@ -110,14 +110,14 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             estado = request.data.get("estado_kanban")
             if estado == "T" and not miembro_sprint == sprint_backlog.desarrollador:
-                notificacion = USRechazadoNotification(sprint_backlog.user_story)
+                notificacion = USRechazadoNotification(sprint_backlog)
                 sprint_backlog.desarrollador.miembro_proyecto.usuario.notify(notificacion)
             if estado == "N" and miembro_sprint == sprint_backlog.desarrollador:
                 QAs = Usuario.objects.filter(
                     miembros__rol__permisos__codigo="lanzar_user_stories",
                     miembros__proyecto=sprint_backlog.sprint.proyecto
                 )
-                notificacion = USDoneNotification(sprint_backlog.user_story)
+                notificacion = USDoneNotification(sprint_backlog)
                 notificacion.notify_all(QAs)
             sprint_backlog.mover_kanban(estado)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
