@@ -75,6 +75,19 @@ button {
   background-color: darken(#6be78d, 20%);
 }
 
+.info {
+  color: white;
+  background-color: var(--info);
+}
+
+.info:hover {
+  background-color: darken(#51abff, 20%);
+}
+
+.info:active {
+  background-color: darken(#51abff, 20%);
+}
+
 .danger {
   color: white;
   background-color: var(--danger);

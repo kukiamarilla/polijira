@@ -1,18 +1,31 @@
 <template>
   <div>
     <Navbar />
+
     <div class="d-flex">
       <SidebarProyecto current="backlog" :proyecto="proyecto" />
       <div class="container shadow">
-        <div class="d-flex header">
+        <header class="d-flex">
           <h2>Product Backlog de {{ proyecto.nombre }}</h2>
-          <Boton
-            texto="Crear User Story"
-            tema="primary"
-            @click="crearUserStoryModal=true"
-            v-if="!haTerminadoProyecto && hasProyectoPermissions(['crear_user_stories'])"
-          />
-        </div>
+
+          <div class="d-flex justify-content-flex-end" style="gap: 16px">
+            <Boton
+              texto="Crear User Story"
+              tema="primary"
+              @click="crearUserStoryModal = true"
+              v-if="
+                !haTerminadoProyecto &&
+                hasProyectoPermissions(['crear_user_stories'])
+              "
+            />
+
+            <Boton
+              texto="Generar Reporte"
+              tema="info"
+              @click="generatePdf()"
+            />
+          </div>
+        </header>
         <Table height="400px" v-if="userStories.length > 0">
           <TableHeader>
             <Th width="10%">ID</Th>
@@ -28,15 +41,13 @@
               <Td width="45%">
                 <span class="cutted-text">{{ userStory.descripcion }}</span>
               </Td>
-              <Td width="10%">{{ userStory.prioridad}}</Td>
+              <Td width="10%">{{ userStory.prioridad }}</Td>
               <Td width="20%">
                 <div class="acciones" style="display: flex">
                   <a
                     href="#"
                     @click.prevent="verUserStory(userStory)"
-                    v-if="
-                      hasProyectoPermissions(['ver_user_stories'])
-                    "
+                    v-if="hasProyectoPermissions(['ver_user_stories'])"
                   >
                     <Icon
                       icono="watch"
@@ -87,7 +98,7 @@
             <a
               href="#"
               class="agregar"
-              @click.prevent="crearUserStoryModal=true"
+              @click.prevent="crearUserStoryModal = true"
               v-if="hasProyectoPermissions(['crear_user_stories'])"
               >Agregar uno</a
             >
@@ -95,22 +106,43 @@
         </div>
       </div>
     </div>
+
     <UserStory
       v-model="verUserStoryModal"
       :userStory="userStory"
       v-if="hasProyectoPermissions(['ver_user_stories'])"
     />
+
     <CrearUserStory
       v-model="crearUserStoryModal"
       v-if="hasProyectoPermissions(['crear_user_stories'])"
       @input="load"
     />
+
     <ModificarUserStory
       v-model="modificarUserStoryModal"
       :userStory="userStoryUpdating"
       v-if="hasProyectoPermissions(['modificar_user_stories'])"
       @input="load"
     />
+
+    <VueHtml2Pdf
+      :enable-download="true"
+      :show-layout="false"
+      :preview-modal="false"
+      filename="product-backlog"
+      :pdf-quality="2"
+      :manual-pagination="true"
+      pdf-format="legal"
+      pdf-orientation="portrait"
+      ref="pdfGenerator"
+    >
+      <ProductBacklogReport
+        slot="pdf-content"
+        :productBacklog="userStories"
+        :proyecto="proyecto"
+      />
+    </VueHtml2Pdf>
   </div>
 </template>
 
@@ -127,6 +159,8 @@ import UserStory from "@/components/UserStory";
 import CrearUserStory from "@/components/CrearUserStory";
 import ModificarUserStory from "@/components/ModificarUserStory";
 import Boton from "@/components/Boton";
+import VueHtml2Pdf from "vue-html2pdf";
+import ProductBacklogReport from "@/components/Reportes/ProductBacklogReport";
 
 export default {
   components: {
@@ -143,6 +177,8 @@ export default {
     UserStory,
     CrearUserStory,
     ModificarUserStory,
+    ProductBacklogReport,
+    VueHtml2Pdf,
   },
   created() {},
   mounted() {
@@ -174,7 +210,7 @@ export default {
       return rolesSelect;
     },
     haTerminadoProyecto() {
-      return this.proyecto.estado === 'F' || this.proyecto.estado === 'C';
+      return this.proyecto.estado === "F" || this.proyecto.estado === "C";
     },
   },
   data() {
@@ -197,9 +233,9 @@ export default {
         this.proyecto = proyecto;
       });
       userStoryService.list(this.$route.params["id"]).then((userStories) => {
-          this.userStories = userStories;
+        this.userStories = userStories;
       });
-    } ,
+    },
     asignarRol(userStory) {
       let actualizado = {
         usuario: userStory.usuario.id,
@@ -217,19 +253,22 @@ export default {
     },
     verUserStory(userStory) {
       this.userStory = userStory;
-      this.verUserStoryModal = true
+      this.verUserStoryModal = true;
     },
     modificarUserStory(userStory) {
       this.userStoryUpdating = userStory;
       this.modificarUserStoryModal = true;
     },
     eliminarUserStory(userStory) {
-      const conf = confirm("¿Está seguro que desea eliminar este User Story?")
-      if(!conf) return
+      const conf = confirm("¿Está seguro que desea eliminar este User Story?");
+      if (!conf) return;
       userStoryService.delete(userStory.id).then(() => {
         Alert.success("User Story eliminado exitosamente");
         this.load();
-      })
+      });
+    },
+    generatePdf() {
+      this.$refs.pdfGenerator.generatePdf();
     },
   },
 };
@@ -247,7 +286,7 @@ export default {
   width: calc(100% - 380px);
 }
 
-.d-flex.header {
+header.d-flex {
   margin-bottom: 58px;
   justify-content: space-between;
 }
