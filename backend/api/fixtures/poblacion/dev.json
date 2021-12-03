@@ -1,0 +1,3910 @@
+[
+    {
+        "model": "api.permiso",
+        "pk": 1,
+        "fields": {
+            "nombre": "Ver Usuarios",
+            "codigo": "ver_usuarios"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 2,
+        "fields": {
+            "nombre": "Activar Usuarios",
+            "codigo": "activar_usuarios"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 3,
+        "fields": {
+            "nombre": "Desactivar Usuarios",
+            "codigo": "desactivar_usuarios"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 4,
+        "fields": {
+            "nombre": "Ver Permisos",
+            "codigo": "ver_permisos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 5,
+        "fields": {
+            "nombre": "Ver Roles",
+            "codigo": "ver_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 6,
+        "fields": {
+            "nombre": "Crear Roles",
+            "codigo": "crear_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 7,
+        "fields": {
+            "nombre": "Modificar Roles",
+            "codigo": "modificar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 8,
+        "fields": {
+            "nombre": "Eliminar Roles",
+            "codigo": "eliminar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 9,
+        "fields": {
+            "nombre": "Asignar Roles",
+            "codigo": "asignar_roles"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 10,
+        "fields": {
+            "nombre": "Ver Proyectos",
+            "codigo": "ver_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 11,
+        "fields": {
+            "nombre": "Crear Proyectos",
+            "codigo": "crear_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 12,
+        "fields": {
+            "nombre": "Modificar Proyectos",
+            "codigo": "modificar_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 13,
+        "fields": {
+            "nombre": "Eliminar Proyectos",
+            "codigo": "eliminar_proyectos"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 14,
+        "fields": {
+            "nombre": "Ver Plantillas de Rol de Proyecto",
+            "codigo": "ver_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 15,
+        "fields": {
+            "nombre": "Crear Plantillas de Rol de Proyecto",
+            "codigo": "crear_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 16,
+        "fields": {
+            "nombre": "Modificar Plantillas de Rol de Proyecto",
+            "codigo": "modificar_plantillas"
+        }
+    },
+    {
+        "model": "api.permiso",
+        "pk": 17,
+        "fields": {
+            "nombre": "Eliminar Plantillas de Rol de Proyecto",
+            "codigo": "eliminar_plantillas"
+        }
+    },
+    {
+        "model": "api.rol",
+        "pk": 1,
+        "fields": {
+            "nombre": "Administrador",
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17
+            ]
+        }
+    },
+    {
+        "model": "api.rol",
+        "pk": 2,
+        "fields": {
+            "nombre": "Usuario",
+            "permisos": [
+                1,
+                4,
+                5
+            ]
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Ver Permisos De Proyecto",
+            "codigo": "ver_permisos_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Ver Roles De Proyecto",
+            "codigo": "ver_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Crear Roles De Proyecto",
+            "codigo": "crear_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Modificar Roles De Proyecto",
+            "codigo": "modificar_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 5,
+        "fields": {
+            "nombre": "Eliminar Roles De Proyecto",
+            "codigo": "eliminar_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 6,
+        "fields": {
+            "nombre": "Agregar Miembros",
+            "codigo": "agregar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 7,
+        "fields": {
+            "nombre": "Ver Miembros",
+            "codigo": "ver_miembros"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 8,
+        "fields": {
+            "nombre": "Modificar Miembros",
+            "codigo": "modificar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 9,
+        "fields": {
+            "nombre": "Eliminar Miembros",
+            "codigo": "eliminar_miembros"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 10,
+        "fields": {
+            "nombre": "Activar Proyecto",
+            "codigo": "activar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 11,
+        "fields": {
+            "nombre": "Finalizar Proyecto",
+            "codigo": "finalizar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 12,
+        "fields": {
+            "nombre": "Cancelar Proyecto",
+            "codigo": "cancelar_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 13,
+        "fields": {
+            "nombre": "Ver User Stories",
+            "codigo": "ver_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 14,
+        "fields": {
+            "nombre": "Crear User Stories",
+            "codigo": "crear_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 15,
+        "fields": {
+            "nombre": "Modificar User Stories",
+            "codigo": "modificar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 16,
+        "fields": {
+            "nombre": "Cancelar User Stories",
+            "codigo": "cancelar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 17,
+        "fields": {
+            "nombre": "Lanzar User Stories",
+            "codigo": "lanzar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 18,
+        "fields": {
+            "nombre": "Ver Sprints",
+            "codigo": "ver_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 19,
+        "fields": {
+            "nombre": "Crear Sprints",
+            "codigo": "crear_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 20,
+        "fields": {
+            "nombre": "Modificar Sprints",
+            "codigo": "modificar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 21,
+        "fields": {
+            "nombre": "Eliminar Sprints",
+            "codigo": "eliminar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 22,
+        "fields": {
+            "nombre": "Activar Sprints",
+            "codigo": "activar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 23,
+        "fields": {
+            "nombre": "Finalizar Sprints",
+            "codigo": "finalizar_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 24,
+        "fields": {
+            "nombre": "Planear Sprints",
+            "codigo": "planear_sprints"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 25,
+        "fields": {
+            "nombre": "Iniciar Sprint Planning",
+            "codigo": "iniciar_sprint_planning"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 26,
+        "fields": {
+            "nombre": "Ver Kanban",
+            "codigo": "ver_kanban"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 27,
+        "fields": {
+            "nombre": "Mover User Stories",
+            "codigo": "mover_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 28,
+        "fields": {
+            "nombre": "Crear Reviews",
+            "codigo": "crear_reviews"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 29,
+        "fields": {
+            "nombre": "Modificar Reviews",
+            "codigo": "modificar_reviews"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 30,
+        "fields": {
+            "nombre": "Eliminar Reviews",
+            "codigo": "eliminar_reviews"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 31,
+        "fields": {
+            "nombre": "Ver Burndown Chart",
+            "codigo": "ver_burndown_chart"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 32,
+        "fields": {
+            "nombre": "Importar Roles Proyecto",
+            "codigo": "importar_roles_proyecto"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 33,
+        "fields": {
+            "nombre": "Eliminar User Stories",
+            "codigo": "eliminar_user_stories"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 34,
+        "fields": {
+            "nombre": "Ver Miembros Sprint",
+            "codigo": "ver_miembros_sprint"
+        }
+    },
+    {
+        "model": "api.permisoproyecto",
+        "pk": 35,
+        "fields": {
+            "nombre": "Modificar Miembros Sprint",
+            "codigo": "modificar_miembros_sprint"
+        }
+    },
+    {
+        "model": "api.plantillarolproyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Scrum Master",
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+            ]
+        }
+    },
+    {
+        "model": "api.plantillarolproyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Team Member",
+            "permisos": [
+                7,
+                13,
+                15,
+                18,
+                26,
+                27,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.plantillarolproyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Product Owner",
+            "permisos": [
+                7,
+                13,
+                18,
+                26,
+                28,
+                29,
+                30,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.plantillarolproyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Stake Holder",
+            "permisos": [
+                18,
+                26,
+                13,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Proyecto Avanzado",
+            "fecha_inicio": "2021-11-19",
+            "fecha_fin": "2021-11-30",
+            "estado": "A",
+            "scrum_master": 1
+        }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Proyecto Nuevo",
+            "fecha_inicio": "2021-12-05",
+            "fecha_fin": "2022-03-26",
+            "estado": "P",
+            "scrum_master": 1
+        }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Proyecto Configurado",
+            "fecha_inicio": "2021-12-05",
+            "fecha_fin": "2022-03-31",
+            "estado": "P",
+            "scrum_master": 1
+        }
+    },
+    {
+        "model": "api.proyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Proyecto Finalizado",
+            "fecha_inicio": "2021-12-03",
+            "fecha_fin": "2021-12-03",
+            "estado": "F",
+            "scrum_master": 1
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Scrum Master",
+            "proyecto": 1,
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Team Member",
+            "proyecto": 1,
+            "permisos": [
+                7,
+                13,
+                15,
+                18,
+                26,
+                27,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Product Owner",
+            "proyecto": 1,
+            "permisos": [
+                7,
+                13,
+                18,
+                26,
+                28,
+                29,
+                30,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 1,
+            "permisos": [
+                18,
+                26,
+                13,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 5,
+        "fields": {
+            "nombre": "Scrum Master",
+            "proyecto": 2,
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 6,
+        "fields": {
+            "nombre": "Team Member",
+            "proyecto": 2,
+            "permisos": [
+                7,
+                13,
+                15,
+                18,
+                26,
+                27,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 7,
+        "fields": {
+            "nombre": "Product Owner",
+            "proyecto": 2,
+            "permisos": [
+                7,
+                13,
+                18,
+                26,
+                28,
+                29,
+                30,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 8,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 2,
+            "permisos": [
+                18,
+                26,
+                13,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 9,
+        "fields": {
+            "nombre": "Scrum Master",
+            "proyecto": 3,
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 10,
+        "fields": {
+            "nombre": "Team Member",
+            "proyecto": 3,
+            "permisos": [
+                7,
+                13,
+                15,
+                18,
+                26,
+                27,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 11,
+        "fields": {
+            "nombre": "Product Owner",
+            "proyecto": 3,
+            "permisos": [
+                7,
+                13,
+                18,
+                26,
+                28,
+                29,
+                30,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 12,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 3,
+            "permisos": [
+                18,
+                26,
+                13,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 13,
+        "fields": {
+            "nombre": "Scrum Master",
+            "proyecto": 4,
+            "permisos": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 14,
+        "fields": {
+            "nombre": "Team Member",
+            "proyecto": 4,
+            "permisos": [
+                7,
+                13,
+                15,
+                18,
+                26,
+                27,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 15,
+        "fields": {
+            "nombre": "Product Owner",
+            "proyecto": 4,
+            "permisos": [
+                7,
+                13,
+                18,
+                26,
+                28,
+                29,
+                30,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.rolproyecto",
+        "pk": 16,
+        "fields": {
+            "nombre": "Stake Holder",
+            "proyecto": 4,
+            "permisos": [
+                18,
+                26,
+                13,
+                31
+            ]
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 1,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 1,
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 2,
+        "fields": {
+            "usuario": 5,
+            "proyecto": 1,
+            "rol": 2
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 3,
+        "fields": {
+            "usuario": 2,
+            "proyecto": 1,
+            "rol": 2
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 4,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 2,
+            "rol": 5
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 5,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 3,
+            "rol": 9
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 6,
+        "fields": {
+            "usuario": 1,
+            "proyecto": 4,
+            "rol": 13
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 7,
+        "fields": {
+            "usuario": 2,
+            "proyecto": 3,
+            "rol": 10
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 8,
+        "fields": {
+            "usuario": 3,
+            "proyecto": 3,
+            "rol": 11
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 9,
+        "fields": {
+            "usuario": 4,
+            "proyecto": 3,
+            "rol": 12
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 10,
+        "fields": {
+            "usuario": 5,
+            "proyecto": 3,
+            "rol": 10
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 11,
+        "fields": {
+            "usuario": 5,
+            "proyecto": 4,
+            "rol": 14
+        }
+    },
+    {
+        "model": "api.miembro",
+        "pk": 12,
+        "fields": {
+            "usuario": 3,
+            "proyecto": 4,
+            "rol": 15
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 1,
+        "fields": {
+            "lunes": 0,
+            "martes": 0,
+            "miercoles": 0,
+            "jueves": 0,
+            "viernes": 0,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 1
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 2,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 2
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 3,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 3
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 4,
+        "fields": {
+            "lunes": 0,
+            "martes": 0,
+            "miercoles": 0,
+            "jueves": 0,
+            "viernes": 0,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 4
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 5,
+        "fields": {
+            "lunes": 0,
+            "martes": 0,
+            "miercoles": 0,
+            "jueves": 0,
+            "viernes": 0,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 5
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 6,
+        "fields": {
+            "lunes": 0,
+            "martes": 0,
+            "miercoles": 0,
+            "jueves": 0,
+            "viernes": 0,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 6
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 7,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 7
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 8,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 8
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 9,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 9
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 10,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 10
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 11,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 11
+        }
+    },
+    {
+        "model": "api.horario",
+        "pk": 12,
+        "fields": {
+            "lunes": 8,
+            "martes": 8,
+            "miercoles": 8,
+            "jueves": 8,
+            "viernes": 8,
+            "sabado": 0,
+            "domingo": 0,
+            "miembro": 12
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 1,
+        "fields": {
+            "nombre": "US 1",
+            "descripcion": "Lorem",
+            "prioridad": 3,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": false,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 2,
+        "fields": {
+            "nombre": "US 2",
+            "descripcion": "Lorem",
+            "prioridad": 5,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": false,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 3,
+        "fields": {
+            "nombre": "US 3",
+            "descripcion": "Lorem",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": false,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 4,
+        "fields": {
+            "nombre": "US 4",
+            "descripcion": "Lorem",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": false,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 5,
+        "fields": {
+            "nombre": "US 5",
+            "descripcion": "Lorem",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": true,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 6,
+        "fields": {
+            "nombre": "US 6",
+            "descripcion": "Lorem",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-11-19",
+            "product_backlog": true,
+            "proyecto": 1
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 7,
+        "fields": {
+            "nombre": "US 1",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 1,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 8,
+        "fields": {
+            "nombre": "US 2",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 1,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 9,
+        "fields": {
+            "nombre": "US 3",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 2,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 10,
+        "fields": {
+            "nombre": "US 4",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 2,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 11,
+        "fields": {
+            "nombre": "US 5",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 2,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 12,
+        "fields": {
+            "nombre": "US 6",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 3,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 13,
+        "fields": {
+            "nombre": "US 7",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 4,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 14,
+        "fields": {
+            "nombre": "US 8",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 15,
+        "fields": {
+            "nombre": "US 9",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 5,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 16,
+        "fields": {
+            "nombre": "US 10",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 6,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 17,
+        "fields": {
+            "nombre": "US 11",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 7,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 18,
+        "fields": {
+            "nombre": "US 12",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 8,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 19,
+        "fields": {
+            "nombre": "US 13",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 8,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 20,
+        "fields": {
+            "nombre": "US 14",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 9,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 21,
+        "fields": {
+            "nombre": "US 15",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 9,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 22,
+        "fields": {
+            "nombre": "US 16",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 9,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 23,
+        "fields": {
+            "nombre": "US 17",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 10,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 24,
+        "fields": {
+            "nombre": "US 18",
+            "descripcion": "Lorem ipsum",
+            "prioridad": 10,
+            "estado": "P",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": true,
+            "proyecto": 3
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 25,
+        "fields": {
+            "nombre": "US 1",
+            "descripcion": "Lorem ",
+            "prioridad": 4,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 26,
+        "fields": {
+            "nombre": "US 2",
+            "descripcion": "Lorem ",
+            "prioridad": 6,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 27,
+        "fields": {
+            "nombre": "US 3",
+            "descripcion": "Lorem ",
+            "prioridad": 2,
+            "estado": "C",
+            "fecha_release": null,
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 28,
+        "fields": {
+            "nombre": "US 4",
+            "descripcion": "Lorem ",
+            "prioridad": 7,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 29,
+        "fields": {
+            "nombre": "US 5",
+            "descripcion": "Lorem ",
+            "prioridad": 9,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.userstory",
+        "pk": 30,
+        "fields": {
+            "nombre": "US 2",
+            "descripcion": "Lorem ",
+            "prioridad": 9,
+            "estado": "R",
+            "fecha_release": "2021-12-03",
+            "fecha_creacion": "2021-12-03",
+            "product_backlog": false,
+            "proyecto": 4
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 5,
+        "fields": {
+            "proyecto": 1,
+            "user_story": 5
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 6,
+        "fields": {
+            "proyecto": 1,
+            "user_story": 6
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 7,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 7
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 8,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 8
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 9,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 9
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 10,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 10
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 11,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 11
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 12,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 12
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 13,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 13
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 14,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 14
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 15,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 15
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 16,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 16
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 17,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 17
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 18,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 18
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 19,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 19
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 20,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 20
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 21,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 21
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 22,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 22
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 23,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 23
+        }
+    },
+    {
+        "model": "api.productbacklog",
+        "pk": 24,
+        "fields": {
+            "proyecto": 3,
+            "user_story": 24
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 1,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 1",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 3,
+            "estado_despues": "P",
+            "user_story": 1,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 2,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 2",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 2,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 3,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 3",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 3,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 4,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 4",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 4,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 5,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 5",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 5,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 6,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 6",
+            "descripcion_despues": "Lorem",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 6,
+            "accion": "Creacion",
+            "fecha": "2021-11-19",
+            "autor": 1
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 7,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 1",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 1,
+            "estado_despues": "P",
+            "user_story": 7,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 8,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 2",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 1,
+            "estado_despues": "P",
+            "user_story": 8,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 9,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 3",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 2,
+            "estado_despues": "P",
+            "user_story": 9,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 10,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 4",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 2,
+            "estado_despues": "P",
+            "user_story": 10,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 11,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 5",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 2,
+            "estado_despues": "P",
+            "user_story": 11,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 12,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 6",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 3,
+            "estado_despues": "P",
+            "user_story": 12,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 13,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 7",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 4,
+            "estado_despues": "P",
+            "user_story": 13,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 14,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 8",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 14,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 15,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 9",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 5,
+            "estado_despues": "P",
+            "user_story": 15,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 16,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 10",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 6,
+            "estado_despues": "P",
+            "user_story": 16,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 17,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 11",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 7,
+            "estado_despues": "P",
+            "user_story": 17,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 18,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 12",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 8,
+            "estado_despues": "P",
+            "user_story": 18,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 19,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 13",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 8,
+            "estado_despues": "P",
+            "user_story": 19,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 20,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 14",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 9,
+            "estado_despues": "P",
+            "user_story": 20,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 21,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 15",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 9,
+            "estado_despues": "P",
+            "user_story": 21,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 22,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 16",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 9,
+            "estado_despues": "P",
+            "user_story": 22,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 23,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 17",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 10,
+            "estado_despues": "P",
+            "user_story": 23,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 24,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 18",
+            "descripcion_despues": "Lorem ipsum",
+            "prioridad_despues": 10,
+            "estado_despues": "P",
+            "user_story": 24,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 5
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 25,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 1",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 4,
+            "estado_despues": "P",
+            "user_story": 25,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 26,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 1",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 6,
+            "estado_despues": "P",
+            "user_story": 26,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 27,
+        "fields": {
+            "nombre_antes": "US 1",
+            "descripcion_antes": "Lorem ",
+            "prioridad_antes": 6,
+            "estado_antes": "P",
+            "nombre_despues": "US 2",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 6,
+            "estado_despues": "P",
+            "user_story": 26,
+            "accion": "Modificacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 28,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 3",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 2,
+            "estado_despues": "P",
+            "user_story": 27,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 29,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 4",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 7,
+            "estado_despues": "P",
+            "user_story": 28,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 30,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 5",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 9,
+            "estado_despues": "P",
+            "user_story": 29,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.registrouserstory",
+        "pk": 31,
+        "fields": {
+            "nombre_antes": null,
+            "descripcion_antes": null,
+            "prioridad_antes": null,
+            "estado_antes": null,
+            "nombre_despues": "US 2",
+            "descripcion_despues": "Lorem ",
+            "prioridad_despues": 9,
+            "estado_despues": "P",
+            "user_story": 30,
+            "accion": "Creacion",
+            "fecha": "2021-12-03",
+            "autor": 6
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 1,
+        "fields": {
+            "numero": 1,
+            "fecha_inicio": "2021-11-13",
+            "fecha_fin": "2021-11-30",
+            "estado": "F",
+            "estado_sprint_planning": "F",
+            "planificador": 1,
+            "proyecto": 1,
+            "fecha_fin_real": "2021-12-03"
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 2,
+        "fields": {
+            "numero": 2,
+            "fecha_inicio": "2021-12-04",
+            "fecha_fin": "2021-12-24",
+            "estado": "P",
+            "estado_sprint_planning": "F",
+            "planificador": 1,
+            "proyecto": 1,
+            "fecha_fin_real": null
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 3,
+        "fields": {
+            "numero": 1,
+            "fecha_inicio": "2021-11-01",
+            "fecha_fin": "2021-11-14",
+            "estado": "F",
+            "estado_sprint_planning": "F",
+            "planificador": 6,
+            "proyecto": 4,
+            "fecha_fin_real": "2021-11-14"
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 4,
+        "fields": {
+            "numero": 2,
+            "fecha_inicio": "2021-11-15",
+            "fecha_fin": "2021-11-22",
+            "estado": "F",
+            "estado_sprint_planning": "F",
+            "planificador": 6,
+            "proyecto": 4,
+            "fecha_fin_real": "2021-11-17"
+        }
+    },
+    {
+        "model": "api.sprint",
+        "pk": 5,
+        "fields": {
+            "numero": 3,
+            "fecha_inicio": "2021-11-20",
+            "fecha_fin": "2021-11-23",
+            "estado": "F",
+            "estado_sprint_planning": "F",
+            "planificador": 6,
+            "proyecto": 4,
+            "fecha_fin_real": "2021-11-23"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 1,
+        "fields": {
+            "sprint": 1,
+            "user_story": 1,
+            "estado_kanban": "N",
+            "desarrollador": 2,
+            "horas_estimadas": 4,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 2,
+        "fields": {
+            "sprint": 1,
+            "user_story": 2,
+            "estado_kanban": "N",
+            "desarrollador": 2,
+            "horas_estimadas": 23,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 3,
+        "fields": {
+            "sprint": 2,
+            "user_story": 3,
+            "estado_kanban": "T",
+            "desarrollador": 3,
+            "horas_estimadas": 12,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 4,
+        "fields": {
+            "sprint": 2,
+            "user_story": 4,
+            "estado_kanban": "T",
+            "desarrollador": 3,
+            "horas_estimadas": 43,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 5,
+        "fields": {
+            "sprint": 3,
+            "user_story": 25,
+            "estado_kanban": "N",
+            "desarrollador": 6,
+            "horas_estimadas": 32,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 7,
+        "fields": {
+            "sprint": 3,
+            "user_story": 26,
+            "estado_kanban": "N",
+            "desarrollador": 6,
+            "horas_estimadas": 42,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 8,
+        "fields": {
+            "sprint": 4,
+            "user_story": 27,
+            "estado_kanban": "T",
+            "desarrollador": 7,
+            "horas_estimadas": 23,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 10,
+        "fields": {
+            "sprint": 4,
+            "user_story": 28,
+            "estado_kanban": "N",
+            "desarrollador": 7,
+            "horas_estimadas": 26,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 11,
+        "fields": {
+            "sprint": 5,
+            "user_story": 29,
+            "estado_kanban": "N",
+            "desarrollador": 9,
+            "horas_estimadas": 10,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.sprintbacklog",
+        "pk": 12,
+        "fields": {
+            "sprint": 5,
+            "user_story": 30,
+            "estado_kanban": "N",
+            "desarrollador": 9,
+            "horas_estimadas": 4,
+            "estado_estimacion": "C"
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 1,
+        "fields": {
+            "miembro_proyecto": 1,
+            "sprint": 1
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 2,
+        "fields": {
+            "miembro_proyecto": 2,
+            "sprint": 1
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 3,
+        "fields": {
+            "miembro_proyecto": 2,
+            "sprint": 2
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 4,
+        "fields": {
+            "miembro_proyecto": 1,
+            "sprint": 2
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 5,
+        "fields": {
+            "miembro_proyecto": 3,
+            "sprint": 2
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 6,
+        "fields": {
+            "miembro_proyecto": 11,
+            "sprint": 3
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 7,
+        "fields": {
+            "miembro_proyecto": 11,
+            "sprint": 4
+        }
+    },
+    {
+        "model": "api.miembrosprint",
+        "pk": 9,
+        "fields": {
+            "miembro_proyecto": 12,
+            "sprint": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 1,
+        "fields": {
+            "titulo": "Act 1",
+            "descripcion": "act",
+            "horas": 3,
+            "fecha_creacion": "2021-11-13",
+            "sprint_backlog": 1,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 2,
+        "fields": {
+            "titulo": "Act 2",
+            "descripcion": "Act",
+            "horas": 5,
+            "fecha_creacion": "2021-11-13",
+            "sprint_backlog": 1,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 3,
+        "fields": {
+            "titulo": "Act 3",
+            "descripcion": "Act",
+            "horas": 5,
+            "fecha_creacion": "2021-11-14",
+            "sprint_backlog": 1,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 4,
+        "fields": {
+            "titulo": "Act 4",
+            "descripcion": "Act ",
+            "horas": 4,
+            "fecha_creacion": "2021-11-14",
+            "sprint_backlog": 1,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 5,
+        "fields": {
+            "titulo": "Act 5",
+            "descripcion": "Act",
+            "horas": 2,
+            "fecha_creacion": "2021-11-16",
+            "sprint_backlog": 2,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 6,
+        "fields": {
+            "titulo": "Act 6",
+            "descripcion": "Act",
+            "horas": 4,
+            "fecha_creacion": "2021-11-17",
+            "sprint_backlog": 2,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 7,
+        "fields": {
+            "titulo": "Act 7",
+            "descripcion": "Act",
+            "horas": 9,
+            "fecha_creacion": "2021-11-17",
+            "sprint_backlog": 2,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 8,
+        "fields": {
+            "titulo": "Act 8",
+            "descripcion": "Act",
+            "horas": 7,
+            "fecha_creacion": "2021-11-18",
+            "sprint_backlog": 2,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 9,
+        "fields": {
+            "titulo": "Act 9",
+            "descripcion": "Act",
+            "horas": 4,
+            "fecha_creacion": "2021-11-19",
+            "sprint_backlog": 2,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 10,
+        "fields": {
+            "titulo": "Actividad 1",
+            "descripcion": "act 1",
+            "horas": 8,
+            "fecha_creacion": "2021-11-01",
+            "sprint_backlog": 5,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 11,
+        "fields": {
+            "titulo": "Actividad 2",
+            "descripcion": "act 2",
+            "horas": 7,
+            "fecha_creacion": "2021-11-02",
+            "sprint_backlog": 5,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 12,
+        "fields": {
+            "titulo": "Actividad 3",
+            "descripcion": "act 3",
+            "horas": 8,
+            "fecha_creacion": "2021-11-03",
+            "sprint_backlog": 5,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 13,
+        "fields": {
+            "titulo": "Actividad 4",
+            "descripcion": "act 4",
+            "horas": 10,
+            "fecha_creacion": "2021-11-05",
+            "sprint_backlog": 5,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 14,
+        "fields": {
+            "titulo": "Actividad 5",
+            "descripcion": "act 5",
+            "horas": 6,
+            "fecha_creacion": "2021-11-07",
+            "sprint_backlog": 7,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 15,
+        "fields": {
+            "titulo": "Actividad 6",
+            "descripcion": "act 6",
+            "horas": 7,
+            "fecha_creacion": "2021-11-10",
+            "sprint_backlog": 7,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 16,
+        "fields": {
+            "titulo": "Actividad 8",
+            "descripcion": "act 8",
+            "horas": 5,
+            "fecha_creacion": "2021-11-13",
+            "sprint_backlog": 7,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 17,
+        "fields": {
+            "titulo": "Actividad 9",
+            "descripcion": "act 9",
+            "horas": 10,
+            "fecha_creacion": "2021-11-14",
+            "sprint_backlog": 7,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 18,
+        "fields": {
+            "titulo": "Actividad 1",
+            "descripcion": "act 1",
+            "horas": 12,
+            "fecha_creacion": "2021-11-15",
+            "sprint_backlog": 10,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 19,
+        "fields": {
+            "titulo": "Actividad 2",
+            "descripcion": "act 2",
+            "horas": 8,
+            "fecha_creacion": "2021-11-16",
+            "sprint_backlog": 10,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 20,
+        "fields": {
+            "titulo": "Actividad 3",
+            "descripcion": "act 3",
+            "horas": 7,
+            "fecha_creacion": "2021-11-17",
+            "sprint_backlog": 10,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 21,
+        "fields": {
+            "titulo": "Actividad 1",
+            "descripcion": "act 1",
+            "horas": 5,
+            "fecha_creacion": "2021-11-20",
+            "sprint_backlog": 11,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 22,
+        "fields": {
+            "titulo": "Actividad 2",
+            "descripcion": "act 2",
+            "horas": 5,
+            "fecha_creacion": "2021-11-21",
+            "sprint_backlog": 11,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 23,
+        "fields": {
+            "titulo": "Actividad 3",
+            "descripcion": "act 3",
+            "horas": 3,
+            "fecha_creacion": "2021-11-22",
+            "sprint_backlog": 12,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.actividad",
+        "pk": 24,
+        "fields": {
+            "titulo": "Actividad 4",
+            "descripcion": "act 4",
+            "horas": 1,
+            "fecha_creacion": "2021-11-23",
+            "sprint_backlog": 12,
+            "desarrollador": 5
+        }
+    },
+    {
+        "model": "api.review",
+        "pk": 1,
+        "fields": {
+            "user_story": 26,
+            "observacion": "Review review review",
+            "fecha_creacion": "2021-12-03",
+            "autor": 1
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "name": "Can add log entry",
+            "content_type": 1,
+            "codename": "add_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "name": "Can change log entry",
+            "content_type": 1,
+            "codename": "change_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "name": "Can delete log entry",
+            "content_type": 1,
+            "codename": "delete_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 4,
+        "fields": {
+            "name": "Can view log entry",
+            "content_type": 1,
+            "codename": "view_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 5,
+        "fields": {
+            "name": "Can add permission",
+            "content_type": 2,
+            "codename": "add_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 6,
+        "fields": {
+            "name": "Can change permission",
+            "content_type": 2,
+            "codename": "change_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 7,
+        "fields": {
+            "name": "Can delete permission",
+            "content_type": 2,
+            "codename": "delete_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 8,
+        "fields": {
+            "name": "Can view permission",
+            "content_type": 2,
+            "codename": "view_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 9,
+        "fields": {
+            "name": "Can add group",
+            "content_type": 3,
+            "codename": "add_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 10,
+        "fields": {
+            "name": "Can change group",
+            "content_type": 3,
+            "codename": "change_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 11,
+        "fields": {
+            "name": "Can delete group",
+            "content_type": 3,
+            "codename": "delete_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 12,
+        "fields": {
+            "name": "Can view group",
+            "content_type": 3,
+            "codename": "view_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 13,
+        "fields": {
+            "name": "Can add user",
+            "content_type": 4,
+            "codename": "add_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 14,
+        "fields": {
+            "name": "Can change user",
+            "content_type": 4,
+            "codename": "change_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 15,
+        "fields": {
+            "name": "Can delete user",
+            "content_type": 4,
+            "codename": "delete_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 16,
+        "fields": {
+            "name": "Can view user",
+            "content_type": 4,
+            "codename": "view_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 17,
+        "fields": {
+            "name": "Can add content type",
+            "content_type": 5,
+            "codename": "add_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 18,
+        "fields": {
+            "name": "Can change content type",
+            "content_type": 5,
+            "codename": "change_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 19,
+        "fields": {
+            "name": "Can delete content type",
+            "content_type": 5,
+            "codename": "delete_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 20,
+        "fields": {
+            "name": "Can view content type",
+            "content_type": 5,
+            "codename": "view_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 21,
+        "fields": {
+            "name": "Can add session",
+            "content_type": 6,
+            "codename": "add_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 22,
+        "fields": {
+            "name": "Can change session",
+            "content_type": 6,
+            "codename": "change_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 23,
+        "fields": {
+            "name": "Can delete session",
+            "content_type": 6,
+            "codename": "delete_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 24,
+        "fields": {
+            "name": "Can view session",
+            "content_type": 6,
+            "codename": "view_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 25,
+        "fields": {
+            "name": "Can add permiso",
+            "content_type": 7,
+            "codename": "add_permiso"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 26,
+        "fields": {
+            "name": "Can change permiso",
+            "content_type": 7,
+            "codename": "change_permiso"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 27,
+        "fields": {
+            "name": "Can delete permiso",
+            "content_type": 7,
+            "codename": "delete_permiso"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 28,
+        "fields": {
+            "name": "Can view permiso",
+            "content_type": 7,
+            "codename": "view_permiso"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 29,
+        "fields": {
+            "name": "Can add usuario",
+            "content_type": 8,
+            "codename": "add_usuario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 30,
+        "fields": {
+            "name": "Can change usuario",
+            "content_type": 8,
+            "codename": "change_usuario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 31,
+        "fields": {
+            "name": "Can delete usuario",
+            "content_type": 8,
+            "codename": "delete_usuario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 32,
+        "fields": {
+            "name": "Can view usuario",
+            "content_type": 8,
+            "codename": "view_usuario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 33,
+        "fields": {
+            "name": "Can add rol",
+            "content_type": 9,
+            "codename": "add_rol"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 34,
+        "fields": {
+            "name": "Can change rol",
+            "content_type": 9,
+            "codename": "change_rol"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 35,
+        "fields": {
+            "name": "Can delete rol",
+            "content_type": 9,
+            "codename": "delete_rol"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 36,
+        "fields": {
+            "name": "Can view rol",
+            "content_type": 9,
+            "codename": "view_rol"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 37,
+        "fields": {
+            "name": "Can add permiso proyecto",
+            "content_type": 10,
+            "codename": "add_permisoproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 38,
+        "fields": {
+            "name": "Can change permiso proyecto",
+            "content_type": 10,
+            "codename": "change_permisoproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 39,
+        "fields": {
+            "name": "Can delete permiso proyecto",
+            "content_type": 10,
+            "codename": "delete_permisoproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 40,
+        "fields": {
+            "name": "Can view permiso proyecto",
+            "content_type": 10,
+            "codename": "view_permisoproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 41,
+        "fields": {
+            "name": "Can add plantilla rol proyecto",
+            "content_type": 11,
+            "codename": "add_plantillarolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 42,
+        "fields": {
+            "name": "Can change plantilla rol proyecto",
+            "content_type": 11,
+            "codename": "change_plantillarolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 43,
+        "fields": {
+            "name": "Can delete plantilla rol proyecto",
+            "content_type": 11,
+            "codename": "delete_plantillarolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 44,
+        "fields": {
+            "name": "Can view plantilla rol proyecto",
+            "content_type": 11,
+            "codename": "view_plantillarolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 45,
+        "fields": {
+            "name": "Can add proyecto",
+            "content_type": 12,
+            "codename": "add_proyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 46,
+        "fields": {
+            "name": "Can change proyecto",
+            "content_type": 12,
+            "codename": "change_proyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 47,
+        "fields": {
+            "name": "Can delete proyecto",
+            "content_type": 12,
+            "codename": "delete_proyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 48,
+        "fields": {
+            "name": "Can view proyecto",
+            "content_type": 12,
+            "codename": "view_proyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 49,
+        "fields": {
+            "name": "Can add rol proyecto",
+            "content_type": 13,
+            "codename": "add_rolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 50,
+        "fields": {
+            "name": "Can change rol proyecto",
+            "content_type": 13,
+            "codename": "change_rolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 51,
+        "fields": {
+            "name": "Can delete rol proyecto",
+            "content_type": 13,
+            "codename": "delete_rolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 52,
+        "fields": {
+            "name": "Can view rol proyecto",
+            "content_type": 13,
+            "codename": "view_rolproyecto"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 53,
+        "fields": {
+            "name": "Can add miembro",
+            "content_type": 14,
+            "codename": "add_miembro"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 54,
+        "fields": {
+            "name": "Can change miembro",
+            "content_type": 14,
+            "codename": "change_miembro"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 55,
+        "fields": {
+            "name": "Can delete miembro",
+            "content_type": 14,
+            "codename": "delete_miembro"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 56,
+        "fields": {
+            "name": "Can view miembro",
+            "content_type": 14,
+            "codename": "view_miembro"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 57,
+        "fields": {
+            "name": "Can add horario",
+            "content_type": 15,
+            "codename": "add_horario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 58,
+        "fields": {
+            "name": "Can change horario",
+            "content_type": 15,
+            "codename": "change_horario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 59,
+        "fields": {
+            "name": "Can delete horario",
+            "content_type": 15,
+            "codename": "delete_horario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 60,
+        "fields": {
+            "name": "Can view horario",
+            "content_type": 15,
+            "codename": "view_horario"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 61,
+        "fields": {
+            "name": "Can add user story",
+            "content_type": 16,
+            "codename": "add_userstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 62,
+        "fields": {
+            "name": "Can change user story",
+            "content_type": 16,
+            "codename": "change_userstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 63,
+        "fields": {
+            "name": "Can delete user story",
+            "content_type": 16,
+            "codename": "delete_userstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 64,
+        "fields": {
+            "name": "Can view user story",
+            "content_type": 16,
+            "codename": "view_userstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 65,
+        "fields": {
+            "name": "Can add product backlog",
+            "content_type": 17,
+            "codename": "add_productbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 66,
+        "fields": {
+            "name": "Can change product backlog",
+            "content_type": 17,
+            "codename": "change_productbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 67,
+        "fields": {
+            "name": "Can delete product backlog",
+            "content_type": 17,
+            "codename": "delete_productbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 68,
+        "fields": {
+            "name": "Can view product backlog",
+            "content_type": 17,
+            "codename": "view_productbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 69,
+        "fields": {
+            "name": "Can add registro user story",
+            "content_type": 18,
+            "codename": "add_registrouserstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 70,
+        "fields": {
+            "name": "Can change registro user story",
+            "content_type": 18,
+            "codename": "change_registrouserstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 71,
+        "fields": {
+            "name": "Can delete registro user story",
+            "content_type": 18,
+            "codename": "delete_registrouserstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 72,
+        "fields": {
+            "name": "Can view registro user story",
+            "content_type": 18,
+            "codename": "view_registrouserstory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 73,
+        "fields": {
+            "name": "Can add sprint",
+            "content_type": 19,
+            "codename": "add_sprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 74,
+        "fields": {
+            "name": "Can change sprint",
+            "content_type": 19,
+            "codename": "change_sprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 75,
+        "fields": {
+            "name": "Can delete sprint",
+            "content_type": 19,
+            "codename": "delete_sprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 76,
+        "fields": {
+            "name": "Can view sprint",
+            "content_type": 19,
+            "codename": "view_sprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 77,
+        "fields": {
+            "name": "Can add sprint backlog",
+            "content_type": 20,
+            "codename": "add_sprintbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 78,
+        "fields": {
+            "name": "Can change sprint backlog",
+            "content_type": 20,
+            "codename": "change_sprintbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 79,
+        "fields": {
+            "name": "Can delete sprint backlog",
+            "content_type": 20,
+            "codename": "delete_sprintbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 80,
+        "fields": {
+            "name": "Can view sprint backlog",
+            "content_type": 20,
+            "codename": "view_sprintbacklog"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 81,
+        "fields": {
+            "name": "Can add miembro sprint",
+            "content_type": 21,
+            "codename": "add_miembrosprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 82,
+        "fields": {
+            "name": "Can change miembro sprint",
+            "content_type": 21,
+            "codename": "change_miembrosprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 83,
+        "fields": {
+            "name": "Can delete miembro sprint",
+            "content_type": 21,
+            "codename": "delete_miembrosprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 84,
+        "fields": {
+            "name": "Can view miembro sprint",
+            "content_type": 21,
+            "codename": "view_miembrosprint"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 85,
+        "fields": {
+            "name": "Can add actividad",
+            "content_type": 22,
+            "codename": "add_actividad"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 86,
+        "fields": {
+            "name": "Can change actividad",
+            "content_type": 22,
+            "codename": "change_actividad"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 87,
+        "fields": {
+            "name": "Can delete actividad",
+            "content_type": 22,
+            "codename": "delete_actividad"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 88,
+        "fields": {
+            "name": "Can view actividad",
+            "content_type": 22,
+            "codename": "view_actividad"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 89,
+        "fields": {
+            "name": "Can add review",
+            "content_type": 23,
+            "codename": "add_review"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 90,
+        "fields": {
+            "name": "Can change review",
+            "content_type": 23,
+            "codename": "change_review"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 91,
+        "fields": {
+            "name": "Can delete review",
+            "content_type": 23,
+            "codename": "delete_review"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 92,
+        "fields": {
+            "name": "Can view review",
+            "content_type": 23,
+            "codename": "view_review"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$120000$tbdj18HEMbYz$6WXFsKjPrJbk8/sD123sWhuii2KFrEcBcPEQ2gLhZJg=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "1630623605isaacamarilla",
+            "first_name": "Isaac Amarilla",
+            "last_name": "",
+            "email": "sc.amarilla@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-09-02T23:00:05.600",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$120000$tbdj18HEMbYz$6WXFsKjPrJbk8/sD123sWhuii2KFrEcBcPEQ2gLhZJg=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "1630623605nereaortiz",
+            "first_name": "Nerea Ortiz",
+            "last_name": "",
+            "email": "nmoortiz@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-09-02T23:00:05.600",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$120000$tbdj18HEMbYz$6WXFsKjPrJbk8/sD123sWhuii2KFrEcBcPEQ2gLhZJg=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "1630623605ramonperdomo",
+            "first_name": "Ramon Perdomo",
+            "last_name": "",
+            "email": "rperdomorivas@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-09-02T23:00:05.600",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "password": "pbkdf2_sha256$120000$X6ZGxovtKg9J$JP3IL2FFggIEB2cr4yMmEEhpJdD/f59mWxOJe7nWSM8=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "1633597474sebascane",
+            "first_name": "Sebas Cane",
+            "last_name": "",
+            "email": "canesi12@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-10-07T09:04:34.290",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$120000$GcQfi7cm6xyD$44Ic3nelCmleB1shCE2UWBbqS+yGFJbSqo8ikio4PrM=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "1637338376isaacgabrielamarillabenitez",
+            "first_name": "Isaac Gabriel Amarilla Benitez",
+            "last_name": "",
+            "email": "sc.amarilla@fpuna.edu.py",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-11-19T16:12:56.133",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "nombre": "Isaac Amarilla",
+            "email": "sc.amarilla@gmail.com",
+            "estado": "A",
+            "firebase_uid": "ytuo1pkhFiOG5BN5XhnDd0gplW42",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "nombre": "Nerea Ortiz",
+            "email": "nmoortiz@gmail.com ",
+            "estado": "A",
+            "firebase_uid": "inatCNlTBVgntPuAjnWRNIKnvHN2",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "nombre": "Ramon Perdomo",
+            "email": "rperdomorivas@gmail.com ",
+            "estado": "A",
+            "firebase_uid": "YIWQchfL8OXbKLcEw5ih5hwI1Cj2",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "nombre": "Sebas Cane",
+            "email": "canesi12@gmail.com",
+            "estado": "A",
+            "firebase_uid": "euZfUKH8zra8DLcSXnJO8qeR0aC2",
+            "rol": 1
+        }
+    },
+    {
+        "model": "api.usuario",
+        "pk": 5,
+        "fields": {
+            "user": 5,
+            "nombre": "Isaac Gabriel Amarilla Benitez",
+            "email": "sc.amarilla@fpuna.edu.py",
+            "estado": "A",
+            "firebase_uid": "dVSXl2HTL5hc7W1B0sYpgBYLAjY2",
+            "rol": 2
+        }
+    }
+]
