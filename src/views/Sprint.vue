@@ -6,13 +6,20 @@
       <div class="container shadow">
         <div class="d-flex justify-content-space-between">
           <h2>Sprint {{ sprint.numero }}</h2>
-
-          <Boton
-            v-if="sprint.estado === 'A'"
-            texto="Finalizar Sprint"
-            tema="success"
-            @click="finalizarSprint"
-          />
+          <div class="d-flex" style="gap:16px">
+            <Boton
+              v-if="sprint.estado === 'A'"
+              texto="Generar Reporte de Sprint Activo"
+              tema="primary"
+              @click="generatePdf"
+            />
+            <Boton
+              v-if="sprint.estado === 'A'"
+              texto="Finalizar Sprint"
+              tema="success"
+              @click="finalizarSprint"
+            />
+          </div>
         </div>
         <br />
         <br />
@@ -24,14 +31,27 @@
             <MiembrosSprint :sprint="sprint" />
           </template>
           <template #sprint-backlog>
-            <SprintBacklog />
+            <SprintBacklog :sprint="sprint" />
           </template>
           <template #burndown-chart>
-            <BurndownChart :sprint="sprint" />
+            <BurndownChart :sprint="sprint"/>
           </template>
         </TabNavigation>
       </div>
     </div>
+    <VueHtml2Pdf
+    :enable-download="true"
+    :show-layout="false"
+    :preview-modal="false"
+    filename="sprint-activo"
+    :pdf-quality="2"
+    :manual-pagination="true"
+    pdf-format="legal"
+    pdf-orientation="portrait"
+    ref="pdfGenerator"
+    >
+      <SprintActivoReport slot="pdf-content" :sprint="sprint"/>
+    </VueHtml2Pdf>
   </div>
 </template>
 
@@ -44,9 +64,11 @@ import MiembrosSprint from "@/components/MiembrosSprint";
 import SprintBacklog from "@/components/SprintBacklog";
 import BurndownChart from "@/components/BurndownChart";
 import Boton from "@/components/Boton";
+import SprintActivoReport from "@/components/Reportes/SprintActivoReport";
 import proyectoService from "@/services/proyectoService";
 import sprintService from "@/services/sprintService";
 import { mapGetters, mapState } from "vuex";
+import VueHtml2Pdf from "vue-html2pdf";
 
 export default {
   components: {
@@ -58,6 +80,8 @@ export default {
     SprintBacklog,
     BurndownChart,
     Boton,
+    VueHtml2Pdf,
+    SprintActivoReport
   },
   created() {},
   mounted() {
@@ -122,6 +146,9 @@ export default {
       sprintService.finalizar(this.sprint.id).then(() => {
         this.load();
       });
+    },
+    generatePdf(){
+      this.$refs.pdfGenerator.generatePdf()
     }
   },
 };

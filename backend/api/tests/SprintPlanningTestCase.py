@@ -1,6 +1,5 @@
 from django.test import TestCase, Client
-from backend.api.models import Permiso, \
-    PermisoProyecto, \
+from backend.api.models import PermisoProyecto, \
     Sprint,\
     Miembro,\
     SprintBacklog,\
@@ -92,19 +91,6 @@ class SprintPlanningTestCase(TestCase):
         print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Proyecto: Ver User Stories")
         self.client.login(username="testing", password="polijira2021")
         PermisoProyecto.objects.get(codigo="ver_user_stories").delete()
-        response = self.client.post("/api/sprint-planning/2/iniciar/")
-        self.assertEquals(response.status_code, 403)
-        body = response.json()
-        self.assertEquals(body.get("error"), "forbidden")
-
-    def test_iniciar_sprint_planning_sin_permiso_ver_proyectos(self):
-        """
-        test_iniciar_sprint_planning_sin_permiso_ver_proyectos
-        Prueba Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos
-        """
-        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos")
-        self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(codigo="ver_proyectos").delete()
         response = self.client.post("/api/sprint-planning/2/iniciar/")
         self.assertEquals(response.status_code, 403)
         body = response.json()

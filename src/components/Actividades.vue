@@ -5,7 +5,7 @@
         tema="primary"
         texto="Registrar Actividad"
         @click="registrar = true"
-        v-if="sprintBacklog.sprint.estado === 'A' && sprintBacklog.desarrollador.miembro_proyecto.id == me.id"
+        v-if="sprintBacklog.sprint.estado === 'A' && sprintBacklog.desarrollador.miembro_proyecto.id == me.id && sprintBacklog.estado_kanban === 'D'"
       ></Boton>
     </div>
     <div class="actividades" v-if="!registrar && !modificar">

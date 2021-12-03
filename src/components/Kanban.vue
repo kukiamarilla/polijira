@@ -48,8 +48,14 @@ export default {
       this.userStorySelected = us;
     },
     moverUserStory(id, estado) {
-      userStoryService.mover(id, estado).then(() => {
-        this.load()
+      this.sprintBacklog = this.sprintBacklog.map(sb => {
+        if(sb.id == id) {
+          sb.estado_kanban = estado;
+        }
+        return sb;
+      })
+      userStoryService.mover(id, estado).finally(() => {
+        this.load();
       })
     }
   }

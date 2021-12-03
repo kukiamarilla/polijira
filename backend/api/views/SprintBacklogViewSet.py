@@ -5,7 +5,9 @@ from rest_framework.response import Response
 from backend.api.decorators import FormValidator
 from backend.api.forms import ResponderEstimacionForm, MoverUserStoryForm
 from backend.api.models import Miembro, MiembroSprint, SprintBacklog, Usuario
+from backend.api.notifications.RespuestaEstimacionNotification import RespuestaEstimacionNotification
 from backend.api.serializers import SprintBacklogSerializer, ActividadSerializer
+from backend.api.notifications import USDoneNotification, USRechazadoNotification
 
 
 class SprintBacklogViewSet(viewsets.ViewSet):
@@ -46,6 +48,8 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 sprint_backlog=sprint_backlog,
                 horas_estimadas=(int(request.data.get("horas_estimadas")) + int(sprint_backlog.horas_estimadas))/2
             )
+            notification = RespuestaEstimacionNotification(sprint_backlog)
+            sprint_backlog.sprint.planificador.usuario.notify(notification)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)
         except SprintBacklog.DoesNotExist:
@@ -78,11 +82,10 @@ class SprintBacklogViewSet(viewsets.ViewSet):
             usuario_request = Usuario.objects.get(user=request.user)
             sprint_backlog = SprintBacklog.objects.get(pk=pk)
             miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=sprint_backlog.sprint.proyecto)
-            miembro_sprint = MiembroSprint.objects.get(miembro_proyecto=miembro_request, sprint=sprint_backlog.sprint)
             if not miembro_request.tiene_permiso("ver_kanban") \
                 or not miembro_request.tiene_permiso("ver_user_stories") \
                 or (
-                    not sprint_backlog.desarrollador == miembro_sprint
+                    not sprint_backlog.desarrollador.miembro_proyecto == miembro_request
                     and not miembro_request.tiene_permiso("mover_user_stories")
             ):
                 response = {
@@ -108,6 +111,16 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             estado = request.data.get("estado_kanban")
+            if estado == "T" and not miembro_request == sprint_backlog.desarrollador.miembro_proyecto:
+                notificacion = USRechazadoNotification(sprint_backlog)
+                sprint_backlog.desarrollador.miembro_proyecto.usuario.notify(notificacion)
+            if estado == "N" and miembro_request == sprint_backlog.desarrollador.miembro_proyecto:
+                QAs = Usuario.objects.filter(
+                    miembros__rol__permisos__codigo="lanzar_user_stories",
+                    miembros__proyecto=sprint_backlog.sprint.proyecto
+                )
+                notificacion = USDoneNotification(sprint_backlog)
+                notificacion.notify_all(QAs)
             sprint_backlog.mover_kanban(estado)
             serializer = SprintBacklogSerializer(sprint_backlog, many=False)
             return Response(serializer.data)

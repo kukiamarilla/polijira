@@ -1,5 +1,11 @@
 <template>
   <div>
+    <br>
+    <div class="d-flex justify-content-flex-end">
+      <Boton texto="Generar Reporte" tema="info"  @click="generatePdf()"/>
+    </div>
+    <br>
+    <br>
     <Table>
       <TableHeader>
         <Th width="20%">ID</Th>
@@ -30,7 +36,21 @@
           </Td>
         </Tr>
       </TableBody>
-    </Table>
+    </Table>  
+    
+    <VueHtml2Pdf
+    :enable-download="true"
+    :show-layout="false"
+    :preview-modal="false"
+    filename="sprint-backlog"
+    :pdf-quality="2"
+    :manual-pagination="true"
+    pdf-format="legal"
+    pdf-orientation="portrait"
+    ref="pdfGenerator"
+    >
+      <SprintBacklogReport slot="pdf-content" :sprintBacklog="sprintBacklog" :sprint="sprint"/>
+    </VueHtml2Pdf>
     <VerSprintBacklog v-model="verSprintBacklogShow" :userStory="verSprintBacklogSelected"/>
   </div>
 </template>
@@ -40,8 +60,12 @@ import { Table, TableHeader, TableBody, Th, Tr, Td } from '@/components/Table'
 import sprintService from '@/services/sprintService'
 import VerSprintBacklog from '@/components/VerSprintBacklog'
 import Icon from '@/components/Icon'
+import Boton from '@/components/Boton'
+import SprintBacklogReport from '@/components/Reportes/SprintBacklogReport'
+import VueHtml2Pdf from 'vue-html2pdf'
 
 export default {
+  props: ['sprint'],
   components: {
     Table,
     TableHeader,
@@ -50,7 +74,10 @@ export default {
     Tr,
     Td,
     VerSprintBacklog,
-    Icon
+    Icon,
+    VueHtml2Pdf,
+    Boton,
+    SprintBacklogReport
   },
   data() {
     return {
@@ -71,6 +98,9 @@ export default {
     verSprintBacklog(us) {
       this.verSprintBacklogSelected = us
       this.verSprintBacklogShow = true
+    },
+    generatePdf(){
+      this.$refs.pdfGenerator.generatePdf()
     }
   },
 }

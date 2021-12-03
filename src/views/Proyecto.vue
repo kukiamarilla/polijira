@@ -39,15 +39,16 @@
           </div>
         </div>
         <div class="accesos-directos">
-          <div v-for="(accesoDirecto, idx) in accesosDirectos" :key="idx">
-            <CardLink
-              :titulo="accesoDirecto.titulo"
-              :icono="accesoDirecto.icono"
-              :link="accesoDirecto.link"
-              :resaltado="accesoDirecto.resaltado"
-              v-if="accesoDirecto.tienePermiso"
-            />
-          </div>
+          <template v-for="(accesoDirecto, idx) in accesosDirectos" >
+            <div :key="idx" v-if="accesoDirecto.tienePermiso">
+              <CardLink
+                :titulo="accesoDirecto.titulo"
+                :icono="accesoDirecto.icono"
+                :link="accesoDirecto.link"
+                :resaltado="accesoDirecto.resaltado"
+              />
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -62,7 +63,7 @@ import Navbar from "@/components/Navbar";
 import Alert from "@/helpers/alert";
 import SidebarProyecto from "@/components/SidebarProyecto";
 import CardLink from "@/components/CardLink";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -95,15 +96,18 @@ export default {
     };
   },
   computed: {
-    accesosDirectosPermitidos() {
-      return this.accesosDirectos.map(
-        (accesoDirecto) => accesoDirecto.tienePermiso
-      );
-    },
+    ...mapState({
+      me: (state) => state.proyecto.me,
+    }),
     ...mapGetters({
       hasAnyPermission: "proyecto/hasAnyPermission",
       hasPermission: "proyecto/hasPermission",
     }),
+  },
+  watch: {
+    me() {
+      this.cargarAccesosDirectos()
+    }
   },
   mounted() {
     this.load();
@@ -121,7 +125,7 @@ export default {
         this.cargarAccesosDirectos();
       });
       sprintService.list(this.$route.params["id"]).then((sprints) => {
-        this.sprintActivo = sprints.find((sprint) => sprint.estado == 'A');
+        this.sprintActivo = sprints.find((sprint) => sprint.estado == 'A') ?? this.sprintActivo;
       });
     },
     cargarAccesosDirectos() {

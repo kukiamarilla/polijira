@@ -73,7 +73,7 @@
       />
 
       <div class="d-flex justify-content-flex-end">
-        <Boton texto="Estimar" tema="primary" @click="enviarEstimacion"/>
+        <Boton texto="Estimar" tema="primary" @click="enviarEstimacion" :disabled="loading"/>
       </div>
     </Modal>
     <UserStory v-model="userStory" :userStory="userStory"/>
@@ -133,6 +133,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       proyecto: {
         nombre: "",
       },
@@ -171,7 +172,9 @@ export default {
       this.verUSPlanning = true;
     },
     enviarEstimacion() {
+      this.loading = true;
       sprintService.responderEstimacion(this.estimating.id, this.estimating).then(() => {
+        this.loading = false;
         Alert.success("User Story estimado.");
         this.load();
         this.verUSPlanning = false;
