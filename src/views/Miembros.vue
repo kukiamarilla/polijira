@@ -51,6 +51,7 @@
                     href="#"
                     @click.prevent="eliminarMiembro(miembro)"
                     v-if="
+                      !haTerminadoProyecto &&
                       me.id != miembro.usuario.id &&
                       miembro.rol.nombre != 'Scrum Master' &&
                       hasProyectoPermissions(['eliminar_miembros'])

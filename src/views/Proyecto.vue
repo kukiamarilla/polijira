@@ -39,15 +39,16 @@
           </div>
         </div>
         <div class="accesos-directos">
-          <div v-for="(accesoDirecto, idx) in accesosDirectos" :key="idx">
-            <CardLink
-              :titulo="accesoDirecto.titulo"
-              :icono="accesoDirecto.icono"
-              :link="accesoDirecto.link"
-              :resaltado="accesoDirecto.resaltado"
-              v-if="accesoDirecto.tienePermiso"
-            />
-          </div>
+          <template v-for="(accesoDirecto, idx) in accesosDirectos" >
+            <div :key="idx" v-if="accesoDirecto.tienePermiso">
+              <CardLink
+                :titulo="accesoDirecto.titulo"
+                :icono="accesoDirecto.icono"
+                :link="accesoDirecto.link"
+                :resaltado="accesoDirecto.resaltado"
+              />
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -124,7 +125,7 @@ export default {
         this.cargarAccesosDirectos();
       });
       sprintService.list(this.$route.params["id"]).then((sprints) => {
-        this.sprintActivo = sprints.find((sprint) => sprint.estado == 'A');
+        this.sprintActivo = sprints.find((sprint) => sprint.estado == 'A') ?? this.sprintActivo;
       });
     },
     cargarAccesosDirectos() {

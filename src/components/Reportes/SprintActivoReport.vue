@@ -18,7 +18,7 @@
         <span class="highlight">Fecha: </span> {{now}}
       </div>
       <div class="chart">
-        <BurndownChart :sprint="sprint" v-if="sprint.id != 0"/>
+        <BurndownChart :sprint="sprint" v-if="sprint.id != 0" :disableAnimation="true"/>
         <br>
         <br>
         <div class="d-flex justify-content-space-around">

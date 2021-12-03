@@ -24,7 +24,7 @@
         <span class="highlight">Fecha: </span> {{now}}
       </div>
       <div class="chart">
-        <DoughnutChart v-bind="doughnutChartProps"/>
+        <DoughnutChart v-bind="doughnutChartProps"  :options="{animation: {duration: 0 }}"/>
         <br>
         <br>
         <div class="d-flex justify-content-space-around">

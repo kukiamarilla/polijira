@@ -82,11 +82,10 @@ class SprintBacklogViewSet(viewsets.ViewSet):
             usuario_request = Usuario.objects.get(user=request.user)
             sprint_backlog = SprintBacklog.objects.get(pk=pk)
             miembro_request = Miembro.objects.get(usuario=usuario_request, proyecto=sprint_backlog.sprint.proyecto)
-            miembro_sprint = MiembroSprint.objects.get(miembro_proyecto=miembro_request, sprint=sprint_backlog.sprint)
             if not miembro_request.tiene_permiso("ver_kanban") \
                 or not miembro_request.tiene_permiso("ver_user_stories") \
                 or (
-                    not sprint_backlog.desarrollador == miembro_sprint
+                    not sprint_backlog.desarrollador.miembro_proyecto == miembro_request
                     and not miembro_request.tiene_permiso("mover_user_stories")
             ):
                 response = {
@@ -112,10 +111,10 @@ class SprintBacklogViewSet(viewsets.ViewSet):
                 }
                 return Response(response, status=status.HTTP_403_FORBIDDEN)
             estado = request.data.get("estado_kanban")
-            if estado == "T" and not miembro_sprint == sprint_backlog.desarrollador:
+            if estado == "T" and not miembro_request == sprint_backlog.desarrollador.miembro_proyecto:
                 notificacion = USRechazadoNotification(sprint_backlog)
                 sprint_backlog.desarrollador.miembro_proyecto.usuario.notify(notificacion)
-            if estado == "N" and miembro_sprint == sprint_backlog.desarrollador:
+            if estado == "N" and miembro_request == sprint_backlog.desarrollador.miembro_proyecto:
                 QAs = Usuario.objects.filter(
                     miembros__rol__permisos__codigo="lanzar_user_stories",
                     miembros__proyecto=sprint_backlog.sprint.proyecto
