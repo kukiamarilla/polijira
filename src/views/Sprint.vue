@@ -34,7 +34,7 @@
             <SprintBacklog :sprint="sprint" />
           </template>
           <template #burndown-chart>
-            <BurndownChart :sprint="sprint" />
+            <BurndownChart :sprint="sprint"/>
           </template>
         </TabNavigation>
       </div>

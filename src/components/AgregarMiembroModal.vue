@@ -176,7 +176,7 @@ export default {
         this.miembro = {
           usuario: -1,
           rol: -1,
-          proyecto: 0,
+          proyecto: this.$route.params["id"],
           horario: {
             lunes: 8,
             martes: 8,

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LineChart v-bind="lineChartProps" />
+    <LineChart v-bind="lineChartProps" :options="{animation: {duration: disableAnimation ? 0 : 1000 }}"/>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ import { ref, computed, defineComponent } from '@vue/composition-api';
 Chart.register(...registerables);
 
 export default defineComponent({
-  props: ['sprint'],
+  props: ['sprint', 'disableAnimation'],
   components: {
     LineChart,
   },

@@ -100,7 +100,7 @@
       />
 
       <div class="d-flex justify-content-flex-end">
-        <Boton texto="Guardar" tema="primary" @click="planificarUS" />
+        <Boton texto="Guardar" tema="primary" @click="planificarUS" :disabled="loading"/>
       </div>
     </Modal>
     <UserStory v-model="verUserStorySelected" :userStory="verUserStorySelected"/>
@@ -220,6 +220,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       proyecto: {
         nombre: "",
       },
@@ -318,8 +319,9 @@ export default {
         horas_estimadas: this.userStory.estimacion,
         desarrollador: this.userStory.desarrollador.id,
       };
-
+      this.loading = true;
       sprintService.agregarUserStory(this.sprint.id, payload).then(() => {
+        this.loading = false;
         this.verUSPlanning = false;
         this.load();
         Alert.success("Se ha agregado el user story al sprint backlog");

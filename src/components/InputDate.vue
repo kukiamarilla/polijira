@@ -26,12 +26,12 @@ export default {
   props: ["title", "value", "disabled"],
   data() {
     return {
-      text: new Date(this.value),
+      text: new Date(`${this.value}T00:00:00.000-0300`),
     };
   },
   watch: {
     value() {
-      this.text = new Date(this.value);
+      this.text = new Date(`${this.value}T00:00:00.000-0300`);
     },
   },
 };
