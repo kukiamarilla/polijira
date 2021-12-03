@@ -48,5 +48,15 @@ heroku config:set VUE_APP_FIREBASE_STORAGE_BUCKET=$fStorageBucket -a $app
 heroku config:set GMAIL_USER=$mailSenderEmail -a $app
 heroku config:set GMAIL_PASSWORD=$mailSenderPassword -a $app
 
+echo "Desea prepoblar la DB con datos de prueba? (y/n)"
+read prepoblar
 git push -f heroku HEAD:refs/heads/main
-heroku run python manage.py loaddata backend/api/fixtures/initial/prod/* -a $app
+
+if [ $prepoblar = "y" ]
+then
+    echo "Poblando DB con datos de prueba..."
+    heroku run loaddata backend/api/fixtures/poblacion/prod.json
+else
+    echo "Poblando DB con el estado inicial..."
+    heroku run loaddata backend/api/fixtures/initial/prod/*.json
+fi

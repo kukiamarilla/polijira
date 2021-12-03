@@ -105,9 +105,20 @@ echo ""
 echo "Migrando DB..."
 python manage.py migrate
 echo ""
-echo "Poblando DB..."
-python manage.py flush
-python manage.py loaddata backend/api/fixtures/initial/dev/*.json
+echo "Desea prepoblar la DB con datos de prueba? (y/n)"
+read prepoblar
+
+if [ $prepoblar = "y" ]
+then
+    echo "Poblando DB con datos de prueba..."
+    python manage.py flush
+    python manage.py loaddata backend/api/fixtures/poblacion/dev.json
+else
+    echo "Poblando DB con el estado inicial..."
+    python manage.py flush
+    python manage.py loaddata backend/api/fixtures/initial/dev/*.json
+fi
+
 echo ""
 echo "PROYECTO DJANGO INSTALADO"
 deactivate
