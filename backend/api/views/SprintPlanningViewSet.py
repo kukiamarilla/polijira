@@ -36,7 +36,6 @@ class SprintPlanningViewSet(viewsets.ViewSet):
             sprint = Sprint.objects.get(pk=pk)
             miembro = Miembro.objects.get(usuario=usuario, proyecto=sprint.proyecto)
             if not miembro.tiene_permiso("ver_user_stories") or \
-               not usuario.tiene_permiso("ver_proyectos") or \
                not miembro.tiene_permiso("ver_miembros") or \
                not miembro.tiene_permiso("ver_sprints") or \
                not miembro.tiene_permiso("planear_sprints"):

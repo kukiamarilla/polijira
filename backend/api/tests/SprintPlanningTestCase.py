@@ -97,19 +97,6 @@ class SprintPlanningTestCase(TestCase):
         body = response.json()
         self.assertEquals(body.get("error"), "forbidden")
 
-    def test_iniciar_sprint_planning_sin_permiso_ver_proyectos(self):
-        """
-        test_iniciar_sprint_planning_sin_permiso_ver_proyectos
-        Prueba Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos
-        """
-        print("\nProbando Iniciar un Sprint Planning sin tener el permiso de Sistema: Ver Proyectos")
-        self.client.login(username="testing", password="polijira2021")
-        Permiso.objects.get(codigo="ver_proyectos").delete()
-        response = self.client.post("/api/sprint-planning/2/iniciar/")
-        self.assertEquals(response.status_code, 403)
-        body = response.json()
-        self.assertEquals(body.get("error"), "forbidden")
-
     def test_iniciar_sprint_planning_sin_permiso_ver_miembros(self):
         """
         test_iniciar_sprint_planning_sin_permiso_ver_miembros
